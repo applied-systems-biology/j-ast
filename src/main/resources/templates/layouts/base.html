@@ -11,7 +11,7 @@
 <body>
 <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
     <a class="navbar-brand" href="/">
-        <img src="/img/jipipe-logo.png" class="logo" alt="logo"/>
+        <img src="/img/jipipe-webapp-logo.png" class="logo" alt="logo"/>
     </a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar" aria-controls="mainNavbar" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -35,10 +35,17 @@
 </nav>
 <section layout:fragment="jumbotron">
 </section>
-<div class="container-fluid mt-2 template-content">
-    <section layout:fragment="content">
-        <p>Page content goes here</p>
-    </section>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-3 col-xl-2 px-sm-2 px-0 bg-light border-end">
+
+        </div>
+        <div class="col template-content">
+            <section layout:fragment="content">
+                <p>Page content goes here</p>
+            </section>
+        </div>
+    </div>
 </div>
 <footer class="bg-light mt-5 pt-5 pb-5 border-top">
     <div class="container text-center">
