@@ -1,4 +1,4 @@
-package com.example.growthassayanalyzerwebapp;
+package org.hkijena.jipipe.growthassayanalyzerwebapp;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

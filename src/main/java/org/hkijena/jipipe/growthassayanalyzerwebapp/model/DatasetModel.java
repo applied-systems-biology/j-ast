@@ -1,4 +1,4 @@
-package com.example.growthassayanalyzerwebapp.model;
+package org.hkijena.jipipe.growthassayanalyzerwebapp.model;
 
 import jakarta.persistence.*;
 

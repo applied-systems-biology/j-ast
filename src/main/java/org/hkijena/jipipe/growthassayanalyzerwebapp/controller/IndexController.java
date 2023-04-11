@@ -1,4 +1,4 @@
-package com.example.growthassayanalyzerwebapp.controller;
+package org.hkijena.jipipe.growthassayanalyzerwebapp.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
