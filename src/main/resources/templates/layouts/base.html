@@ -5,7 +5,7 @@
     <link rel="icon" href="/img/favicon.ico" type="image/x-icon">
     <link rel="stylesheet" type="text/css" href="/bootstrap/css/bootstrap.css"/>
     <link href="/fontawesome/css/all.css" rel="stylesheet">
-    <link rel="stylesheet" href="custom.css" />
+    <link rel="stylesheet" href="/custom.css" />
     <title>Growth Assay Analyzer</title>
 </head>
 <body>
@@ -35,18 +35,24 @@
 </nav>
 <section layout:fragment="jumbotron">
 </section>
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-md-3 col-xl-2 px-sm-2 px-0 bg-light border-end pt-1">
-            <div class="list-group">
-                <a class="list-group-item list-group-item-action list-group-item-success d-flex justify-content-between align-items-center">
+<div class="container-fluid ps-0 pe-0">
+    <div class="d-flex">
+        <div class="bg-light border-end pt-1">
+            <div class="list-group m-2">
+                <a class="list-group-item list-group-item-action list-group-item-success d-flex justify-content-between align-items-center" href="/new">
                     <span>Upload new data set</span>
-                    <i class="fas fa-plus-circle"></i>
+                    <i class="fas fa-plus-circle ms-3"></i>
                 </a>
-            </div>
+                <th:block th:each="dataset: ${datasets}">
+                    <a class="list-group-item list-group-item-action d-flex justify-content-between align-items-center" th:classappend="${dataset.id == currentDatasetId ? 'active' : ''}" th:href="'/dataset/' + ${dataset.id}">
+                        <span th:text="${dataset.name}"></span>
+                        <i class="fas fa-folder-open ms-3"></i>
+                    </a>
+                </th:block>
 
+            </div>
         </div>
-        <div class="col template-content">
+        <div class="template-content flex-grow-1">
             <section layout:fragment="content">
                 <p>Page content goes here</p>
             </section>
