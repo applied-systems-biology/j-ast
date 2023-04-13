@@ -92,7 +92,7 @@ public class InputData {
     public void tryAutoFill(String originalFileName) {
         originalFileName = originalFileName.trim();
         if(originalFileName.toLowerCase().endsWith(".png")) {
-            originalFileName = originalFileName.substring(originalFileName.length() - 5);
+            originalFileName = originalFileName.substring(0, originalFileName.length() - 4);
         }
         while(originalFileName.contains("__")) {
             originalFileName = originalFileName.replace("__", "_");
