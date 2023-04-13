@@ -1,8 +1,14 @@
 package org.hkijena.jipipe.webapp.growthassay.utils;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.web.servlet.support.RequestContextUtils;
 
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Map;
 
 public class RequestUtils {
@@ -20,5 +26,16 @@ public class RequestUtils {
         else {
             return null;
         }
+    }
+
+    public static void sendFile(HttpServletResponse response, Path absoluteCurrentEntryPath, String fileName) throws IOException {
+        response.setContentType(Files.probeContentType(absoluteCurrentEntryPath));
+        response.setHeader("Content-Length", Long.toString(Files.size(absoluteCurrentEntryPath)));
+        response.setHeader("Content-Disposition", "attachment; filename=\"" + fileName +"\"");
+
+        var ins = new FileInputStream(absoluteCurrentEntryPath.toFile());
+        IOUtils.copy(ins, response.getOutputStream());
+        IOUtils.closeQuietly(ins);
+        IOUtils.closeQuietly(response.getOutputStream());
     }
 }

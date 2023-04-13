@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 import java.io.Serial;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "datasets")
@@ -26,6 +28,9 @@ public class Dataset {
     @Column(name = "status", nullable = false)
     @Enumerated(EnumType.STRING)
     private Status status = Status.Preparing;
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    private List<InputData> inputData = new ArrayList<>();
 
     public Long getId() {
         return id;
@@ -57,6 +62,14 @@ public class Dataset {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public List<InputData> getInputData() {
+        return inputData;
+    }
+
+    public void setInputData(List<InputData> inputData) {
+        this.inputData = inputData;
     }
 
     public enum Status {

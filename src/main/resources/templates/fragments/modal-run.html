@@ -1,0 +1,19 @@
+<div th:fragment="modal-run" class="modal" tabindex="-1" id="modal-run">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Run analysis</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p>Are all the settings correct?</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+        <form th:action="'/run/' + ${currentDatasetId}" method="post">
+          <button type="submit" class="btn btn-success">Yes, run the analysis!</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

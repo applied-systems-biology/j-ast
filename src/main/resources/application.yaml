@@ -11,6 +11,10 @@ spring:
     redis:
       host: localhost
       port: 6379
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 10MB
 org:
   jobrunr:
     background-job-server:
