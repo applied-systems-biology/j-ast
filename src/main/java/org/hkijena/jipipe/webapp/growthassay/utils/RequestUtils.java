@@ -1,4 +1,4 @@
-package org.hkijena.jipipe.growthassayanalyzerwebapp.utils;
+package org.hkijena.jipipe.webapp.growthassay.utils;
 
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.web.servlet.support.RequestContextUtils;

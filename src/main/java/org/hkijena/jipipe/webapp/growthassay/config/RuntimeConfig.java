@@ -1,4 +1,4 @@
-package org.hkijena.jipipe.growthassayanalyzerwebapp.config;
+package org.hkijena.jipipe.webapp.growthassay.config;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;

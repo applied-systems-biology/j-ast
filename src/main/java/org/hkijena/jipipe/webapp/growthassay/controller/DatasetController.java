@@ -1,12 +1,11 @@
-package org.hkijena.jipipe.growthassayanalyzerwebapp.controller;
+package org.hkijena.jipipe.webapp.growthassay.controller;
 
-import org.hkijena.jipipe.growthassayanalyzerwebapp.config.RuntimeConfig;
-import org.hkijena.jipipe.growthassayanalyzerwebapp.model.Dataset;
-import org.hkijena.jipipe.growthassayanalyzerwebapp.repositories.DatasetRepository;
-import org.hkijena.jipipe.growthassayanalyzerwebapp.utils.StringUtils;
+import org.hkijena.jipipe.webapp.growthassay.config.RuntimeConfig;
+import org.hkijena.jipipe.webapp.growthassay.model.Dataset;
+import org.hkijena.jipipe.webapp.growthassay.repositories.DatasetRepository;
+import org.hkijena.jipipe.webapp.growthassay.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;

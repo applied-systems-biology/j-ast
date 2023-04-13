@@ -1,4 +1,4 @@
-package org.hkijena.jipipe.growthassayanalyzerwebapp;
+package org.hkijena.jipipe.webapp.growthassay;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

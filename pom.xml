@@ -9,10 +9,10 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>org.hkijena</groupId>
-    <artifactId>growth-assay-analyzer-webapp</artifactId>
+    <artifactId>jipipe-webapp-growth-assay-analyzer</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>growth-assay-analyzer-webapp</name>
-    <description>growth-assay-analyzer-webapp</description>
+    <name>JIPipe Growth Assay Analyzer WebApp</name>
+    <description>JIPipe Growth Assay Analyzer WebApp</description>
     <properties>
         <java.version>17</java.version>
     </properties>

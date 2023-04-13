@@ -1,4 +1,4 @@
-package org.hkijena.jipipe.growthassayanalyzerwebapp.utils;
+package org.hkijena.jipipe.webapp.growthassay.utils;
 
 import java.io.IOException;
 import java.nio.file.Files;

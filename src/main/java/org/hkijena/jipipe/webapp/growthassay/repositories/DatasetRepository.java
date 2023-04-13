@@ -1,7 +1,7 @@
-package org.hkijena.jipipe.growthassayanalyzerwebapp.repositories;
+package org.hkijena.jipipe.webapp.growthassay.repositories;
 
 import com.google.common.collect.Lists;
-import org.hkijena.jipipe.growthassayanalyzerwebapp.model.Dataset;
+import org.hkijena.jipipe.webapp.growthassay.model.Dataset;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 import org.springframework.ui.Model;

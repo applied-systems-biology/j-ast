@@ -1,17 +1,11 @@
-package org.hkijena.jipipe.growthassayanalyzerwebapp.controller;
+package org.hkijena.jipipe.webapp.growthassay.controller;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Lists;
-import org.hkijena.jipipe.growthassayanalyzerwebapp.model.Dataset;
-import org.hkijena.jipipe.growthassayanalyzerwebapp.repositories.DatasetRepository;
+import org.hkijena.jipipe.webapp.growthassay.repositories.DatasetRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.servlet.ModelAndView;
-
-import java.util.ArrayList;
-import java.util.Comparator;
 
 @Controller
 public class IndexController {
