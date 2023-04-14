@@ -5,21 +5,77 @@
     <div class="row">
         <div class="col">
             <nav class="navbar bg-light rounded border p-3 d-flex flex-row gap-2">
-                <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#modal-rename" ><i class="fa fas fa-edit"></i> Rename</button>
-                <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#modal-delete" ><i class="fa fas fa-xmark-circle"></i> Delete</button>
+                <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal"
+                        data-bs-target="#modal-rename"><i class="fa fas fa-edit"></i> Rename
+                </button>
+                <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal"
+                        data-bs-target="#modal-delete"><i class="fa fas fa-xmark-circle"></i> Delete
+                </button>
                 <div class="flex-grow-1"></div>
-                <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modal-run" ><i class="fa fas fa-play-circle"></i> Run analysis</button>
+                <div class="text-muted me-2 data-save-info-default" style="display: none">
+                    <i class="fa fas fa-save"></i>
+                    <span>All settings are automatically saved</span>
+                </div>
+                <div class="text-muted me-2 data-save-info-saving" style="display: none">
+                    <i class="fa-solid fa-circle-notch fa-spin"></i>
+                    <span>Uploading changes ...</span>
+                </div>
+                <div class="text-danger me-2 data-validation-invalid" style="display: none">
+                    <i class="fa-solid fa-warning"></i>
+                    <span>Problems detected!</span>
+                </div>
+                <button type="button" class="btn btn-success button-run" data-bs-toggle="modal" data-bs-target="#modal-run" disabled>
+                    <i class="fa fas fa-play-circle"></i> Run analysis
+                </button>
             </nav>
         </div>
     </div>
     <div class="row mt-3">
-        <div class="col-lg-4">
+        <div class="col-lg-4 d-flex flex-column gap-2">
             <div class="card bg-light">
                 <div class="card-header">
                     <span>Parameters</span>
                 </div>
                 <div class="card-body">
-                    A
+                    <form>
+                        <div class="mb-3">
+                            <label for="parameter-percentage-of-inhibition" class="form-label">Percentage of inhibition</label>
+                            <div class="input-group">
+                                <input type="number" min="1" max="99" class="form-control" id="parameter-percentage-of-inhibition">
+                                <span class="input-group-text">%</span>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="parameter-time-point-early" class="form-label">Early time point</label>
+                            <input type="text" class="form-control" id="parameter-time-point-early">
+                            <div class="form-text">
+                                The <code>Time point</code> that contains the early snapshot of the assays (e.g., 24hr).
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="parameter-time-point-late" class="form-label">Late time point</label>
+                            <input type="text" class="form-control" id="parameter-time-point-late">
+                            <div class="form-text">
+                                The <code>Time point</code> that contains the late snapshot of the assays (e.g., 48hr).
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="card bg-light">
+                <div class="card-header">
+                    <span>Validation</span>
+                </div>
+                <div class="card-body validation-status-running">
+                    <i class="fa-solid fa-circle-notch fa-spin"></i>
+                    <span>Validating ...</span>
+                </div>
+                <div class="card-body border-top bg-success bg-opacity-75 text-bg-success validation-status-success" style="display: none">
+                    <h5 class="card-title"><i class="fa-solid fa-check-circle"></i> Validation successful</h5>
+                    <p class="card-text">You can now run the analysis.</p>
+                </div>
+                <div class="validation-issues">
+
                 </div>
             </div>
         </div>
@@ -27,45 +83,66 @@
             <div class="card bg-light">
                 <div class="card-header d-flex align-items-center justify-content-between">
                     <span>Data</span>
-                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal-upload"><i class="fa fas fa-plus-circle"></i> Add data</button>
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal-upload">
+                        <i class="fa fas fa-plus-circle"></i> Add data
+                    </button>
                 </div>
                 <ul class="list-group list-group-flush">
-                    <li class="list-group-item bg-light"> <i class="fa fas fa-hand-point-right"></i> Please note that the images are organized by <code>experiment</code>, <code>name</code>, and <code>time point</code>.</li>
-                    <li class="list-group-item bg-light"> <i class="fa fas fa-info-circle"></i> You can speed up the data organization by naming your files according to the following pattern: <code>[experiment]_[name]_[time point].png</code>.</li>
+                    <li class="list-group-item bg-light"><i class="fa fas fa-hand-point-right"></i> Please note that the
+                        images are organized by <code>experiment</code>, <code>sample</code>, and <code>time point</code>.
+                    </li>
+                    <li class="list-group-item bg-light"><i class="fa fas fa-clock"></i> Each (<code>experiment</code>, <code>sample</code>) combination
+                        must have exactly two time points.
+                    </li>
+                    <li class="list-group-item bg-light"><i class="fa fas fa-info-circle"></i> You can speed up the data
+                        organization by naming your files according to the following patterns: <code>[experiment]_[sample]_[time point].png</code> or <code>[sample]_[time point].png</code>.
+                    </li>
                 </ul>
                 <div class="card-body">
-                    <table class="table align-middle">
-                        <thead>
-                        <tr>
-                            <th scope="col"></th>
-                            <th scope="col"></th>
-                            <th scope="col">Original file name</th>
-                            <th scope="col">Experiment</th>
-                            <th scope="col">Name</th>
-                            <th scope="col">Time point</th>
+                    <div class="table-responsive">
 
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr th:each="inputData: ${currentDataset?.inputData}" th:id="'input-data-' + ${inputData.id}">
-                            <th scope="col"><button class="btn btn-sm btn-outline-danger"><i class="fa fas fa-times"></i></button></th>
-                            <th scope="col"><img th:src="'/inputdata/thumbnail/' + ${inputData.id}" alt="Thumbnail" /></th>
-                            <th scope="col" th:text="${inputData.originalFileName}">Original file name</th>
-                            <th scope="col" th:text="${inputData.experiment}">Experiment</th>
-                            <th scope="col" th:text="${inputData.name}">Name</th>
-                            <th scope="col" th:text="${inputData.timePoint}">Time point</th>
-                        </tr>
-                        </tbody>
-                    </table>
+                        <table class="table align-middle">
+                            <thead>
+                            <tr>
+                                <th scope="col"></th>
+                                <th scope="col"></th>
+                                <th scope="col">Original file name</th>
+                                <th scope="col">Experiment</th>
+                                <th scope="col">Sample</th>
+                                <th scope="col">Time point</th>
 
-                    <div class="d-flex justify-content-between mt-4 gap-3">
-                        <div th:if="${currentDataset?.inputData != null && currentDataset?.inputData.isEmpty()}" class="card bg-danger text-bg-danger flex-grow-1">
-                            <div class="card-body">
-                                <i class="fa fas fa-info-circle"></i> No data uploaded
-                            </div>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="inputData: ${currentDataset?.inputData}"
+                                th:id="'input-data-editor-' + ${inputData.id}" class="input-data-editor">
+                                <th scope="col">
+                                    <div class="d-flex flex-row">
+                                        <button class="button-delete-input-data btn btn-sm btn-outline-danger"
+                                                th:data-input-data-id="${inputData.id}"><i class="fa fas fa-times"></i>
+                                        </button>
+                                        <a class="ms-1 btn btn-sm btn-outline-primary"
+                                           th:href="@{'/input-data/download/' + ${inputData.id}}"><i
+                                                class="fa fas fa-download"></i></a>
+                                    </div>
+                                </th>
+                                <th scope="col"><a th:href="@{'/input-data/view/' + ${inputData.id}}"
+                                                   target="_blank"><img
+                                        th:src="@{'/input-data/thumbnail/' + ${inputData.id}}" alt="Thumbnail"/></a>
+                                </th>
+                                <th scope="col" th:text="${inputData.originalFileName}"></th>
+                                <th scope="col"><input class="form-control input-data-editor" type="text" data-input-data-property="experiment" th:data-input-data-id="${inputData.id}" th:value="${inputData.experiment}" autocomplete="off"/></th>
+                                <th scope="col"><input class="form-control input-data-editor" type="text" data-input-data-property="name" th:data-input-data-id="${inputData.id}" th:value="${inputData.name}" autocomplete="off"/></th>
+                                <th scope="col"><input class="form-control input-data-editor" type="text" data-input-data-property="timePoint" th:data-input-data-id="${inputData.id}" th:value="${inputData.timePoint}" autocomplete="off"/></th>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
 
-                        </div>
-                        <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#modal-upload"><i class="fa fas fa-plus-circle"></i> Add data</button>
+                    <div class="d-flex justify-content-end mt-4 gap-3">
+                        <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal"
+                                data-bs-target="#modal-upload"><i class="fa fas fa-plus-circle"></i> Add data
+                        </button>
                     </div>
                 </div>
             </div>
@@ -75,6 +152,127 @@
     <div th:replace="~{fragments/modal-rename.html :: modal-rename}"></div>
     <div th:replace="~{fragments/modal-delete.html :: modal-delete}"></div>
     <div th:replace="~{fragments/modal-run.html :: modal-run}"></div>
+    <script th:inline="javascript">
+        const currentDatasetId = [[${currentDatasetId}]]
+        let updateTimerHandle = 0;
+
+        function getURL(path) {
+            return [[@{'/'}]] + path
+        }
+
+        function updateSaveProgress(inProgress) {
+            $(".data-save-info-default").toggle(!inProgress)
+            $(".data-save-info-saving").toggle(inProgress)
+        }
+
+        function updateInputDataAndParameters() {
+            let message = {
+                parameters: {},
+                inputData: {}
+            }
+            $(".input-data-editor").each(function() {
+                const inputDataId = $(this).data("inputDataId")
+                const inputDataIdKey = "" + inputDataId
+                const inputDataProperty = $(this).data("inputDataProperty")
+                const value = $(this).val()
+
+                if(inputDataId === undefined) {
+                    return
+                }
+
+                // Add to map if not exists
+                if(!(inputDataIdKey in message.inputData)) {
+                    message["inputData"][inputDataIdKey] = {
+                        id: inputDataId
+                    }
+                }
+
+                // set the property
+                message.inputData[inputDataIdKey][inputDataProperty] = $(this).val()
+            })
+
+            return $.ajax(getURL("dataset/update/" + currentDatasetId), {
+                type: "POST",
+                data: JSON.stringify(message),
+                dataType: "html",
+                contentType: 'application/json',
+                mimeType: 'application/json'
+            })
+        }
+
+        function registerDeleteInputData() {
+            $(".input-data-editor .button-delete-input-data").click(function () {
+                const inputDataId = $(this).data("inputDataId")
+                $("#input-data-editor-" + inputDataId).fadeOut(function () {
+                    $(this).remove()
+                })
+                $.post(getURL("input-data/delete/" + inputDataId))
+                    .always(function () {
+                        runValidation()
+                    })
+            })
+        }
+
+        function runValidation() {
+            $(".button-run").prop("disabled", true)
+            $(".validation-status-running").show()
+            $(".validation-status-success").hide()
+            $(".validation-issues").html("")
+            $(".data-validation-invalid").hide()
+
+            $.getJSON(getURL("dataset/validate/" + currentDatasetId), function (data) {
+                if(data["is-valid"]) {
+                    $(".button-run").prop("disabled", false)
+                    $(".validation-status-success").show()
+                }
+                else {
+                    $(".data-validation-invalid").show()
+                    for (const issue of data["issues"]) {
+                        $(".validation-issues").append(`
+                         <div class="card-body border-top bg-danger bg-opacity-75 text-bg-danger validation-status-success">
+                            <h5 class="card-title"><i class="fa-solid fa-warning"></i> ${issue["title"]}</h5>
+                            <p class="card-text">${issue["message"]}</p>
+                        </div>
+                        `)
+                    }
+                }
+            })
+                .fail(function () {
+
+                })
+                .always(function () {
+                    $(".validation-status-running").hide()
+                })
+        }
+
+        function scheduleUpdateTimer() {
+            if(updateTimerHandle !== 0) {
+                clearTimeout(updateTimerHandle);
+            }
+            $(".data-save-info-default").hide()
+            $(".data-save-info-saving").show()
+            updateTimerHandle = setTimeout(function () {
+                updateInputDataAndParameters().always(function () {
+                    $(".data-save-info-saving").hide()
+                    $(".data-save-info-default").show()
+                    runValidation()
+                })
+            }, 1000)
+        }
+
+        function registerUpdateSchedulerListeners() {
+            $(".input-data-editor").on("input", function () {
+                scheduleUpdateTimer()
+            })
+        }
+
+        $(document).ready(() => {
+            updateSaveProgress(false)
+            registerDeleteInputData()
+            registerUpdateSchedulerListeners()
+            runValidation()
+        })
+    </script>
 </section>
 </body>
 </html>

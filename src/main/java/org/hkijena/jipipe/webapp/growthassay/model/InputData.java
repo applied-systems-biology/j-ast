@@ -1,8 +1,14 @@
 package org.hkijena.jipipe.webapp.growthassay.model;
 
 import jakarta.persistence.*;
+import org.hkijena.jipipe.webapp.growthassay.utils.PathUtils;
+import org.hkijena.jipipe.webapp.growthassay.utils.StringUtils;
 
+import java.io.IOException;
 import java.io.Serial;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 @Entity
 @Table(name = "input_data")
@@ -32,6 +38,17 @@ public class InputData {
 
     @Column(name = "original_file_name", nullable = false, columnDefinition = "TEXT")
     private String originalFileName;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Dataset dataset;
+
+    public Dataset getDataset() {
+        return dataset;
+    }
+
+    public void setDataset(Dataset dataset) {
+        this.dataset = dataset;
+    }
 
     public String getThumbnailStoragePath() {
         return thumbnailStoragePath;
@@ -89,6 +106,10 @@ public class InputData {
         this.originalFileName = originalFileName;
     }
 
+    public String getFinalFileName() {
+        return getExperiment() + "_" + getName() + "_" + getTimePoint();
+    }
+
     public void tryAutoFill(String originalFileName) {
         originalFileName = originalFileName.trim();
         if(originalFileName.toLowerCase().endsWith(".png")) {
@@ -103,10 +124,24 @@ public class InputData {
             setName(components[1]);
             setTimePoint(components[2]);
         }
+        else if(components.length == 2) {
+            setExperiment("Experiment");
+            setName(components[0]);
+            setTimePoint(components[1]);
+        }
         else {
             setExperiment("");
             setName("");
             setTimePoint("");
+        }
+    }
+
+    public void deleteStorage(Path parentStoragePath) {
+        if(!StringUtils.isNullOrEmpty(storagePath)) {
+            PathUtils.trySafeDeleteFile(Paths.get(storagePath), parentStoragePath);
+        }
+        if(!StringUtils.isNullOrEmpty(thumbnailStoragePath)) {
+            PathUtils.trySafeDeleteFile(Paths.get(thumbnailStoragePath), parentStoragePath);
         }
     }
 }

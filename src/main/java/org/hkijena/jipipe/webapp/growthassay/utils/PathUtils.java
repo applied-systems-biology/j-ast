@@ -13,4 +13,19 @@ public class PathUtils {
             return stream.collect(Collectors.toList());
         }
     }
+
+    public static void trySafeDeleteFile(Path file, Path parentStoragePath) {
+        file = file.normalize().toAbsolutePath();
+        parentStoragePath = parentStoragePath.normalize().toAbsolutePath();
+        if(file.startsWith(parentStoragePath)) {
+            try {
+               Files.deleteIfExists(file);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        else {
+            System.err.println("Tried to delete " + file + ", which is not a sub-path of " + parentStoragePath);
+        }
+    }
 }

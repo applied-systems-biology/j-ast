@@ -2,6 +2,8 @@ package org.hkijena.jipipe.webapp.growthassay.utils;
 
 public class StringUtils {
 
+    public static final char[] INVALID_FILESYSTEM_CHARACTERS = new char[]{'<', '>', ':', '"', '/', '\\', '|', '?', '*', '{', '}'};
+
     /**
      * Returns true if the string is null or empty
      *
@@ -36,5 +38,21 @@ public class StringUtils {
      */
     public static String nullToEmpty(Object s) {
         return s == null ? "" : "" + s;
+    }
+
+    /**
+     * Returns if the string does not contain invalid characters.
+     * Assumes that the string is a filename, so path operators are not allowed.
+     *
+     * @param string the filename
+     * @return if the filename is valid
+     */
+    public static boolean isFilesystemCompatible(String string) {
+        for (char c : INVALID_FILESYSTEM_CHARACTERS) {
+            if (string.contains(c + "")) {
+                return false;
+            }
+        }
+        return true;
     }
 }

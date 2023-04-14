@@ -1,5 +1,5 @@
 <div th:fragment="modal-upload" class="modal" tabindex="-1" id="modal-upload">
-    <form th:action="'/upload/' + ${currentDatasetId}" method="post" enctype="multipart/form-data">
+    <form th:action="@{'/dataset/upload-input/' + ${currentDatasetId}}" method="post" enctype="multipart/form-data">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">

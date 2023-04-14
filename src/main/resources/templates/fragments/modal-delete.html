@@ -10,7 +10,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
-        <form th:action="'/delete/' + ${currentDatasetId}" method="post">
+        <form th:action="@{'/dataset/delete/' + ${currentDatasetId}}" method="post">
           <button type="submit" class="btn btn-danger">Yes</button>
         </form>
       </div>

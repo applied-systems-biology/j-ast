@@ -1,19 +1,17 @@
 package org.hkijena.jipipe.webapp.growthassay.controller;
 
+import jakarta.servlet.http.HttpServletResponse;
 import org.hkijena.jipipe.webapp.growthassay.config.RuntimeConfig;
-import org.hkijena.jipipe.webapp.growthassay.model.Dataset;
-import org.hkijena.jipipe.webapp.growthassay.model.InputData;
-import org.hkijena.jipipe.webapp.growthassay.model.Notification;
+import org.hkijena.jipipe.webapp.growthassay.model.*;
 import org.hkijena.jipipe.webapp.growthassay.repositories.DatasetRepository;
+import org.hkijena.jipipe.webapp.growthassay.repositories.InputDataRepository;
 import org.hkijena.jipipe.webapp.growthassay.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.ModelAndView;
@@ -37,13 +35,16 @@ public class DatasetController {
     private final RuntimeConfig runtimeConfig;
     private final DatasetRepository datasetRepository;
 
+    private final InputDataRepository inputDataRepository;
+
     @Autowired
-    public DatasetController(RuntimeConfig runtimeConfig, DatasetRepository datasetRepository) {
+    public DatasetController(RuntimeConfig runtimeConfig, DatasetRepository datasetRepository, InputDataRepository inputDataRepository) {
         this.runtimeConfig = runtimeConfig;
         this.datasetRepository = datasetRepository;
+        this.inputDataRepository = inputDataRepository;
     }
 
-    @GetMapping("/new")
+    @GetMapping("/dataset/new")
     public ModelAndView newDataset(Model model) throws IOException {
         Dataset dataset = new Dataset();
         Path storageDir;
@@ -55,10 +56,10 @@ public class DatasetController {
         }
         dataset.setStoragePath(storageDir.toString());
         dataset = datasetRepository.save(dataset);
-        return new ModelAndView("redirect:/dataset/" + dataset.getId());
+        return new ModelAndView("redirect:/dataset/view/" + dataset.getId());
     }
 
-    @GetMapping("/dataset/{id}")
+    @GetMapping("/dataset/view/{id}")
     public ModelAndView viewDataset(Model model, @PathVariable long id) {
         Optional<Dataset> dataset_ = datasetRepository.findById(id);
         if (dataset_.isPresent()) {
@@ -74,7 +75,7 @@ public class DatasetController {
         }
     }
 
-    @PostMapping("/delete/{id}")
+    @PostMapping("/dataset/delete/{id}")
     public ModelAndView deleteDataset(Model model, RedirectAttributes redirectAttributes, @PathVariable long id) {
         Optional<Dataset> dataset_ = datasetRepository.findById(id);
         if(dataset_.isPresent()) {
@@ -90,7 +91,7 @@ public class DatasetController {
         }
     }
 
-    @PostMapping("/rename/{id}")
+    @PostMapping("/dataset/rename/{id}")
     public ModelAndView renameDataset(Model model, @PathVariable long id, @RequestParam("datasetName") String datasetName) {
         Optional<Dataset> dataset_ = datasetRepository.findById(id);
         if(dataset_.isPresent()) {
@@ -101,23 +102,29 @@ public class DatasetController {
             }
             dataset.setName(datasetName);
             datasetRepository.save(dataset);
-            return new ModelAndView("redirect:/dataset/" + id);
+            return new ModelAndView("redirect:/dataset/view/" + id);
         }
         else {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
     }
 
-    @PostMapping("/upload/{id}")
+    @GetMapping("/dataset/validate/{id}")
+    public ResponseEntity<ValidationResult> validateDataset(@PathVariable long id) {
+        Optional<Dataset> dataset_ = datasetRepository.findById(id);
+        if(dataset_.isPresent()) {
+            return ResponseEntity.ok(dataset_.get().validate());
+        }
+        else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @PostMapping("/dataset/upload-input/{id}")
     public ModelAndView uploadFileToDataset(Model model, @PathVariable long id, RedirectAttributes redirectAttributes, @RequestParam("imageFiles") MultipartFile[] imageFiles) {
         Optional<Dataset> dataset_ = datasetRepository.findById(id);
         if(dataset_.isPresent()) {
             Dataset dataset = dataset_.get();
-            List<InputData> inputDataList = dataset.getInputData();
-            if(inputDataList == null) {
-                inputDataList = new ArrayList<>();
-                dataset.setInputData(inputDataList);
-            }
 
             // Create target directory
             Path targetDir = Paths.get(dataset.getStoragePath()).resolve("inputs_raw");
@@ -163,7 +170,7 @@ public class DatasetController {
                             inputData.setThumbnailStoragePath(thumbnailStoragePath.toString());
                             inputData.tryAutoFill(StringUtils.nullToEmpty(imageFile.getOriginalFilename()));
 
-                            inputDataList.add(inputData);
+                            dataset.addInputData(inputData);
                             ++numSuccess;
                         }
                     }
@@ -192,7 +199,26 @@ public class DatasetController {
             }
 
 
-            return new ModelAndView("redirect:/dataset/" + id);
+            return new ModelAndView("redirect:/dataset/view/" + id);
+        }
+        else {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @PostMapping("/dataset/update/{id}")
+    public void update(HttpServletResponse response, @PathVariable long id, @RequestBody DatasetUpdateMessage message) {
+        Optional<Dataset> dataset_ = datasetRepository.findById(id);
+        if(dataset_.isPresent()) {
+            Dataset dataset = dataset_.get();
+            for (DatasetUpdateMessage.InputDataUpdateMessage inputDataUpdateMessage : message.getInputDataUpdateMessageMap().values()) {
+                Optional<InputData> inputData_ = inputDataRepository.findById(inputDataUpdateMessage.getId());
+                if(inputData_.isPresent()) {
+                    InputData inputData = inputData_.get();
+                    inputDataUpdateMessage.update(inputData);
+                    inputDataRepository.save(inputData);
+                }
+            }
         }
         else {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);

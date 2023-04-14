@@ -28,10 +28,20 @@ public class RequestUtils {
         }
     }
 
-    public static void sendFile(HttpServletResponse response, Path absoluteCurrentEntryPath, String fileName) throws IOException {
+    public static void sendAttachment(HttpServletResponse response, Path absoluteCurrentEntryPath, String fileName) throws IOException {
         response.setContentType(Files.probeContentType(absoluteCurrentEntryPath));
         response.setHeader("Content-Length", Long.toString(Files.size(absoluteCurrentEntryPath)));
         response.setHeader("Content-Disposition", "attachment; filename=\"" + fileName +"\"");
+
+        var ins = new FileInputStream(absoluteCurrentEntryPath.toFile());
+        IOUtils.copy(ins, response.getOutputStream());
+        IOUtils.closeQuietly(ins);
+        IOUtils.closeQuietly(response.getOutputStream());
+    }
+
+    public static void sendContent(HttpServletResponse response, Path absoluteCurrentEntryPath) throws IOException {
+        response.setContentType(Files.probeContentType(absoluteCurrentEntryPath));
+        response.setHeader("Content-Length", Long.toString(Files.size(absoluteCurrentEntryPath)));
 
         var ins = new FileInputStream(absoluteCurrentEntryPath.toFile());
         IOUtils.copy(ins, response.getOutputStream());

@@ -1,5 +1,5 @@
 <div th:fragment="modal-rename" class="modal" tabindex="-1" id="modal-rename">
-    <form th:action="'/rename/' + ${currentDatasetId}" method="post">
+    <form th:action="@{'/dataset/rename/' + ${currentDatasetId}}" method="post">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
