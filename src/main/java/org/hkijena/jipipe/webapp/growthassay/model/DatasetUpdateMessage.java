@@ -11,6 +11,8 @@ public class DatasetUpdateMessage {
 
     private Map<String, InputDataUpdateMessage> inputDataUpdateMessageMap = new HashMap<>();
 
+    private ParametersUpdateMessage parametersUpdateMessage = new ParametersUpdateMessage();
+
     @JsonGetter("inputData")
     public Map<String, InputDataUpdateMessage> getInputDataUpdateMessageMap() {
         return inputDataUpdateMessageMap;
@@ -18,6 +20,58 @@ public class DatasetUpdateMessage {
     @JsonSetter("inputData")
     public void setInputDataUpdateMessageMap(Map<String, InputDataUpdateMessage> inputDataUpdateMessageMap) {
         this.inputDataUpdateMessageMap = inputDataUpdateMessageMap;
+    }
+
+    @JsonGetter("parameters")
+    public ParametersUpdateMessage getParametersUpdateMessage() {
+        return parametersUpdateMessage;
+    }
+
+    @JsonSetter("parameters")
+    public void setParametersUpdateMessage(ParametersUpdateMessage parametersUpdateMessage) {
+        this.parametersUpdateMessage = parametersUpdateMessage;
+    }
+
+    public static class ParametersUpdateMessage {
+        private double percentageOfInhibition;
+        private String earlyTimePoint;
+        private String lateTimePoint;
+
+        @JsonGetter("percentage-of-inhibition")
+        public double getPercentageOfInhibition() {
+            return percentageOfInhibition;
+        }
+
+        @JsonSetter("percentage-of-inhibition")
+        public void setPercentageOfInhibition(double percentageOfInhibition) {
+            this.percentageOfInhibition = percentageOfInhibition;
+        }
+
+        @JsonGetter("time-point-early")
+        public String getEarlyTimePoint() {
+            return earlyTimePoint;
+        }
+
+        @JsonSetter("time-point-early")
+        public void setEarlyTimePoint(String earlyTimePoint) {
+            this.earlyTimePoint = earlyTimePoint;
+        }
+
+        @JsonGetter("time-point-late")
+        public String getLateTimePoint() {
+            return lateTimePoint;
+        }
+
+        @JsonSetter("time-point-late")
+        public void setLateTimePoint(String lateTimePoint) {
+            this.lateTimePoint = lateTimePoint;
+        }
+
+        public void update(Dataset dataset) {
+            dataset.setPercentageOfInhibition(percentageOfInhibition);
+            dataset.setTimePointEarly(StringUtils.nullToEmpty(earlyTimePoint));
+            dataset.setTimePointLate(StringUtils.nullToEmpty(lateTimePoint));
+        }
     }
 
     public static class InputDataUpdateMessage {

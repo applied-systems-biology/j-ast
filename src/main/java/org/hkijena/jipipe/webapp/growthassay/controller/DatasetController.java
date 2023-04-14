@@ -211,6 +211,8 @@ public class DatasetController {
         Optional<Dataset> dataset_ = datasetRepository.findById(id);
         if(dataset_.isPresent()) {
             Dataset dataset = dataset_.get();
+            message.getParametersUpdateMessage().update(dataset);
+            datasetRepository.save(dataset);
             for (DatasetUpdateMessage.InputDataUpdateMessage inputDataUpdateMessage : message.getInputDataUpdateMessageMap().values()) {
                 Optional<InputData> inputData_ = inputDataRepository.findById(inputDataUpdateMessage.getId());
                 if(inputData_.isPresent()) {

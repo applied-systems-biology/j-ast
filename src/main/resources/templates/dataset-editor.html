@@ -37,29 +37,27 @@
                     <span>Parameters</span>
                 </div>
                 <div class="card-body">
-                    <form>
-                        <div class="mb-3">
-                            <label for="parameter-percentage-of-inhibition" class="form-label">Percentage of inhibition</label>
-                            <div class="input-group">
-                                <input type="number" min="1" max="99" class="form-control" id="parameter-percentage-of-inhibition">
-                                <span class="input-group-text">%</span>
-                            </div>
+                    <div class="mb-3">
+                        <label for="parameter-percentage-of-inhibition" class="form-label">Percentage of inhibition</label>
+                        <div class="input-group">
+                            <input type="number" min="0" max="100" class="form-control input-parameter-editor" id="parameter-percentage-of-inhibition" data-parameter-property="percentage-of-inhibition" autocomplete="off" th:value="${currentDataset.percentageOfInhibition}">
+                            <span class="input-group-text">%</span>
                         </div>
-                        <div class="mb-3">
-                            <label for="parameter-time-point-early" class="form-label">Early time point</label>
-                            <input type="text" class="form-control" id="parameter-time-point-early">
-                            <div class="form-text">
-                                The <code>Time point</code> that contains the early snapshot of the assays (e.g., 24hr).
-                            </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="parameter-time-point-early" class="form-label">Early time point</label>
+                        <input type="text" class="form-control input-parameter-editor" id="parameter-time-point-early" data-parameter-property="time-point-early" autocomplete="off" th:value="${currentDataset.timePointEarly}">
+                        <div class="form-text">
+                            The <code>Time point</code> that contains the early snapshot of the assays (e.g., 24hr).
                         </div>
-                        <div class="mb-3">
-                            <label for="parameter-time-point-late" class="form-label">Late time point</label>
-                            <input type="text" class="form-control" id="parameter-time-point-late">
-                            <div class="form-text">
-                                The <code>Time point</code> that contains the late snapshot of the assays (e.g., 48hr).
-                            </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="parameter-time-point-late" class="form-label">Late time point</label>
+                        <input type="text" class="form-control input-parameter-editor" id="parameter-time-point-late" data-parameter-property="time-point-late" th:value="${currentDataset.timePointLate}">
+                        <div class="form-text">
+                            The <code>Time point</code> that contains the late snapshot of the assays (e.g., 48hr).
                         </div>
-                    </form>
+                    </div>
                 </div>
             </div>
             <div class="card bg-light">
@@ -190,6 +188,16 @@
                 // set the property
                 message.inputData[inputDataIdKey][inputDataProperty] = $(this).val()
             })
+            $(".input-parameter-editor").each(function () {
+                const parameterProperty = $(this).data("parameterProperty")
+                const value = $(this).val()
+
+                if(parameterProperty === undefined) {
+                    return
+                }
+
+                message["parameters"][parameterProperty] = value
+            })
 
             return $.ajax(getURL("dataset/update/" + currentDatasetId), {
                 type: "POST",
@@ -249,6 +257,7 @@
             if(updateTimerHandle !== 0) {
                 clearTimeout(updateTimerHandle);
             }
+            $(".button-run").prop("disabled", true)
             $(".data-save-info-default").hide()
             $(".data-save-info-saving").show()
             updateTimerHandle = setTimeout(function () {
@@ -262,6 +271,9 @@
 
         function registerUpdateSchedulerListeners() {
             $(".input-data-editor").on("input", function () {
+                scheduleUpdateTimer()
+            })
+            $(".input-parameter-editor").on("input", function () {
                 scheduleUpdateTimer()
             })
         }

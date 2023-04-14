@@ -45,6 +45,30 @@ public class Dataset {
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true, mappedBy = "dataset")
     private List<InputData> inputData = new ArrayList<>();
 
+    public double getPercentageOfInhibition() {
+        return percentageOfInhibition;
+    }
+
+    public void setPercentageOfInhibition(double percentageOfInhibition) {
+        this.percentageOfInhibition = percentageOfInhibition;
+    }
+
+    public String getTimePointEarly() {
+        return timePointEarly;
+    }
+
+    public void setTimePointEarly(String timePointEarly) {
+        this.timePointEarly = timePointEarly;
+    }
+
+    public String getTimePointLate() {
+        return timePointLate;
+    }
+
+    public void setTimePointLate(String timePointLate) {
+        this.timePointLate = timePointLate;
+    }
+
     public Long getId() {
         return id;
     }
