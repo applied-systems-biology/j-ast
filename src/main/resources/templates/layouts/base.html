@@ -32,12 +32,12 @@
     <div class="d-flex flex-column flex-lg-row">
         <div class="bg-light border-end pt-1">
             <div class="list-group m-2">
-                <a class="list-group-item list-group-item-action list-group-item-success d-flex justify-content-between align-items-center" href="/dataset/new">
+                <a class="list-group-item list-group-item-action list-group-item-success d-flex justify-content-between align-items-center text-nowrap" href="/dataset/new">
                     <span>Upload new dataset</span>
                     <i class="fas fa-plus-circle ms-3"></i>
                 </a>
                 <th:block th:each="dataset: ${datasets}">
-                    <a class="list-group-item list-group-item-action d-flex justify-content-between align-items-center" th:classappend="${dataset.id == currentDatasetId ? 'active' : ''}" th:href="@{'/dataset/view/' + ${dataset.id}}">
+                    <a class="list-group-item list-group-item-action d-flex justify-content-between align-items-center text-nowrap" th:classappend="${dataset.id == currentDatasetId ? 'active' : ''}" th:href="@{'/dataset/view/' + ${dataset.id}}">
                         <span th:text="${dataset.name}"></span>
                         <i class="fas fa-folder-open ms-3"></i>
                     </a>

@@ -1,0 +1,4 @@
+Info
+----
+
+Put Fiji.app into this directory

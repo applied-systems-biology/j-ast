@@ -5,8 +5,12 @@ import org.hkijena.jipipe.webapp.growthassay.config.RuntimeConfig;
 import org.hkijena.jipipe.webapp.growthassay.model.*;
 import org.hkijena.jipipe.webapp.growthassay.repositories.DatasetRepository;
 import org.hkijena.jipipe.webapp.growthassay.repositories.InputDataRepository;
+import org.hkijena.jipipe.webapp.growthassay.services.AnalysisService;
 import org.hkijena.jipipe.webapp.growthassay.utils.StringUtils;
+import org.jobrunr.scheduling.JobScheduler;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.event.EventListener;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -34,14 +38,18 @@ public class DatasetController {
 
     private final RuntimeConfig runtimeConfig;
     private final DatasetRepository datasetRepository;
-
     private final InputDataRepository inputDataRepository;
 
+    private final JobScheduler jobScheduler;
+    private final AnalysisService analysisService;
+
     @Autowired
-    public DatasetController(RuntimeConfig runtimeConfig, DatasetRepository datasetRepository, InputDataRepository inputDataRepository) {
+    public DatasetController(RuntimeConfig runtimeConfig, DatasetRepository datasetRepository, InputDataRepository inputDataRepository, JobScheduler jobScheduler, AnalysisService analysisService) {
         this.runtimeConfig = runtimeConfig;
         this.datasetRepository = datasetRepository;
         this.inputDataRepository = inputDataRepository;
+        this.jobScheduler = jobScheduler;
+        this.analysisService = analysisService;
     }
 
     @GetMapping("/dataset/new")
@@ -225,5 +233,11 @@ public class DatasetController {
         else {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
+    }
+
+    @EventListener(ApplicationReadyEvent.class)
+    public void onApplicationStarting(ApplicationReadyEvent event) {
+        // Schedule full cleanup/invalidation of all running tasks
+        jobScheduler.enqueue(analysisService::cleanupAllOrphanedRunningTasks);
     }
 }
