@@ -1,0 +1,19 @@
+<div th:fragment="modal-reset" class="modal" tabindex="-1" id="modal-reset">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Reset analysis</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p>Do you want to return back to the dataset editor?</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+        <form th:action="@{'/dataset/reset/' + ${currentDatasetId}}" method="post">
+          <button type="submit" class="btn btn-info">Yes</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

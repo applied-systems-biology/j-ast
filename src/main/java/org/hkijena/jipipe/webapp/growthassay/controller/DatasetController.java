@@ -7,6 +7,7 @@ import org.hkijena.jipipe.webapp.growthassay.repositories.DatasetRepository;
 import org.hkijena.jipipe.webapp.growthassay.repositories.InputDataRepository;
 import org.hkijena.jipipe.webapp.growthassay.services.AnalysisService;
 import org.hkijena.jipipe.webapp.growthassay.utils.StringUtils;
+import org.jobrunr.jobs.context.JobContext;
 import org.jobrunr.scheduling.JobScheduler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
@@ -77,7 +78,22 @@ public class DatasetController {
             model.addAttribute("currentDataset", dataset);
             model.addAttribute("currentDatasetId", dataset.getId());
 
-            return new ModelAndView("dataset-editor");
+            switch (dataset.getStatus()) {
+                case Preparing -> {
+                    return new ModelAndView("dataset-editor");
+                }
+                case Running -> {
+                    return new ModelAndView("dataset-run");
+                }
+                case RunInterrupted -> {
+                    return new ModelAndView("dataset-run-interrupted");
+                }
+                case RunFinished -> {
+                    return new ModelAndView("dataset-run-finished");
+                }
+                default -> throw new UnsupportedOperationException();
+            }
+
         } else {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
@@ -89,6 +105,11 @@ public class DatasetController {
         if(dataset_.isPresent()) {
 
             Dataset dataset = dataset_.get();
+
+            if(dataset.getStatus() == Dataset.Status.Running) {
+                throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+            }
+
             datasetRepository.delete(dataset);
 
             Notification.pushToRedirect("Dataset deleted", "The dataset '" + dataset.getName() + "' was deleted.", Notification.Style.success, redirectAttributes);
@@ -104,6 +125,7 @@ public class DatasetController {
         Optional<Dataset> dataset_ = datasetRepository.findById(id);
         if(dataset_.isPresent()) {
             Dataset dataset = dataset_.get();
+
             datasetName = StringUtils.nullToEmpty(datasetName).trim();
             if(StringUtils.isNullOrEmpty(datasetName)) {
                 datasetName = "Unnamed";
@@ -133,6 +155,10 @@ public class DatasetController {
         Optional<Dataset> dataset_ = datasetRepository.findById(id);
         if(dataset_.isPresent()) {
             Dataset dataset = dataset_.get();
+
+            if(dataset.getStatus() != Dataset.Status.Preparing) {
+                throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+            }
 
             // Create target directory
             Path targetDir = Paths.get(dataset.getStoragePath()).resolve("inputs_raw");
@@ -219,15 +245,20 @@ public class DatasetController {
         Optional<Dataset> dataset_ = datasetRepository.findById(id);
         if(dataset_.isPresent()) {
             Dataset dataset = dataset_.get();
-            message.getParametersUpdateMessage().update(dataset);
-            datasetRepository.save(dataset);
-            for (DatasetUpdateMessage.InputDataUpdateMessage inputDataUpdateMessage : message.getInputDataUpdateMessageMap().values()) {
-                Optional<InputData> inputData_ = inputDataRepository.findById(inputDataUpdateMessage.getId());
-                if(inputData_.isPresent()) {
-                    InputData inputData = inputData_.get();
-                    inputDataUpdateMessage.update(inputData);
-                    inputDataRepository.save(inputData);
+            if(dataset.getStatus() == Dataset.Status.Preparing) {
+                message.getParametersUpdateMessage().update(dataset);
+                datasetRepository.save(dataset);
+                for (DatasetUpdateMessage.InputDataUpdateMessage inputDataUpdateMessage : message.getInputDataUpdateMessageMap().values()) {
+                    Optional<InputData> inputData_ = inputDataRepository.findById(inputDataUpdateMessage.getId());
+                    if (inputData_.isPresent()) {
+                        InputData inputData = inputData_.get();
+                        inputDataUpdateMessage.update(inputData);
+                        inputDataRepository.save(inputData);
+                    }
                 }
+            }
+            else {
+                throw new ResponseStatusException(HttpStatus.FORBIDDEN);
             }
         }
         else {
@@ -235,9 +266,69 @@ public class DatasetController {
         }
     }
 
+    @PostMapping("/dataset/run/{id}")
+    public ModelAndView run(RedirectAttributes redirectAttributes, @PathVariable long id) {
+        Optional<Dataset> dataset_ = datasetRepository.findById(id);
+        if(dataset_.isPresent()) {
+            Dataset dataset = dataset_.get();
+            if(dataset.getStatus() == Dataset.Status.Preparing) {
+                if (dataset.validate().isValid()) {
+                    dataset.setStatus(Dataset.Status.Running);
+                    datasetRepository.save(dataset);
+                    jobScheduler.enqueue(() -> analysisService.runAnalysis(id, JobContext.Null));
+                    return new ModelAndView("redirect:/dataset/view/" + id);
+                } else {
+                    Notification.pushToRedirect("Dataset is invalid!", "Validation checks failed.", Notification.Style.danger, redirectAttributes);
+                    return new ModelAndView("redirect:/dataset/view/" + id);
+                }
+            }
+            else {
+                Notification.pushToRedirect("Dataset is not ready!", "An analysis is currently in progress.", Notification.Style.danger, redirectAttributes);
+                return new ModelAndView("redirect:/dataset/view/" + id);
+            }
+        }
+        else {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @PostMapping("/dataset/reset/{id}")
+    public ModelAndView reset(RedirectAttributes redirectAttributes, @PathVariable long id) {
+        Optional<Dataset> dataset_ = datasetRepository.findById(id);
+        if(dataset_.isPresent()) {
+            Dataset dataset = dataset_.get();
+            if (dataset.getStatus() != Dataset.Status.Running) {
+                dataset.setStatus(Dataset.Status.Preparing);
+                datasetRepository.save(dataset);
+                Notification.pushToRedirect("Dataset reset", "You can now edit all parameters and modify the inputs.", Notification.Style.info, redirectAttributes);
+                return new ModelAndView("redirect:/dataset/view/" + id);
+            }
+            else {
+                throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+            }
+        }
+        else {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @GetMapping("/dataset/query-status/{id}")
+    public ResponseEntity<AnalysisStatusMessage> queryDatasetStatus(@PathVariable long id) {
+        Optional<Dataset> dataset_ = datasetRepository.findById(id);
+        if(dataset_.isPresent()) {
+            Dataset dataset = dataset_.get();
+            AnalysisStatusMessage message = new AnalysisStatusMessage();
+            message.setStatus(dataset.getStatus());
+            return ResponseEntity.ok(message);
+        }
+        else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
     @EventListener(ApplicationReadyEvent.class)
     public void onApplicationStarting(ApplicationReadyEvent event) {
         // Schedule full cleanup/invalidation of all running tasks
-        jobScheduler.enqueue(analysisService::cleanupAllOrphanedRunningTasks);
+        jobScheduler.enqueue(() -> analysisService.cleanupAllOrphanedRunningTasks(JobContext.Null));
     }
 }

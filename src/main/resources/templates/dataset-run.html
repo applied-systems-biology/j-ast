@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layouts/base.html}">
+<body>
+<section layout:fragment="content" class="container-fluid pt-3">
+    <div class="row">
+        <div class="col">
+            <nav class="navbar bg-light rounded border p-3 d-flex flex-row gap-2">
+                <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal"
+                        data-bs-target="#modal-rename"><i class="fa fas fa-edit"></i> Rename
+                </button>
+                <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal"
+                        data-bs-target="#modal-cancel"><i class="fa fas fa-xmark-circle"></i> Cancel
+                </button>
+                <div class="flex-grow-1"></div>
+                <div class="text-muted me-2 data-save-info-saving" style="display: none">
+                    <i class="fa-solid fa-circle-notch fa-spin"></i>
+                    <span>Analysis is running ...</span>
+                </div>
+            </nav>
+        </div>
+    </div>
+    <div class="row mt-3">
+        <div class="col d-flex flex-column gap-2">
+            <div class="card bg-light">
+                <div class="card-header">
+                    <span>Log</span>
+                </div>
+                <div class="card-body">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div th:replace="~{fragments/modal-rename.html :: modal-rename}"></div>
+    <div th:replace="~{fragments/modal-cancel.html :: modal-cancel}"></div>
+    <script th:inline="javascript">
+        const currentDatasetId = [[${currentDatasetId}]]
+
+        function getURL(path) {
+            return [[@{'/'}]] + path
+        }
+
+        function reloadOnStatusChange() {
+            $.getJSON(getURL("dataset/query-status/" + currentDatasetId), function (data) {
+                if(data["status"] !== "Running") {
+                    location.reload()
+                }
+            });
+        }
+
+        $(document).ready(() => {
+            setInterval(function () {
+                reloadOnStatusChange()
+            }, 1000)
+        })
+    </script>
+</section>
+</body>
+</html>
