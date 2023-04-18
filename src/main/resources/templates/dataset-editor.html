@@ -151,7 +151,6 @@
     <div th:replace="~{fragments/modal-delete.html :: modal-delete}"></div>
     <div th:replace="~{fragments/modal-run.html :: modal-run}"></div>
     <script th:inline="javascript">
-        const currentDatasetId = [[${currentDatasetId}]]
         let updateTimerHandle = 0;
 
         function getURL(path) {
@@ -286,12 +285,6 @@
         })
     </script>
     <script th:inline="javascript">
-        const currentDatasetId = [[${currentDatasetId}]]
-
-        function getURL(path) {
-            return [[@{'/'}]] + path
-        }
-
         function reloadOnStatusChange() {
             $.getJSON(getURL("dataset/query-status/" + currentDatasetId), function (data) {
                 if(data["status"] !== "Preparing") {

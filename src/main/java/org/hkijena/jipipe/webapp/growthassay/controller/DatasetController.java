@@ -6,6 +6,7 @@ import org.hkijena.jipipe.webapp.growthassay.model.*;
 import org.hkijena.jipipe.webapp.growthassay.repositories.DatasetRepository;
 import org.hkijena.jipipe.webapp.growthassay.repositories.InputDataRepository;
 import org.hkijena.jipipe.webapp.growthassay.services.AnalysisService;
+import org.hkijena.jipipe.webapp.growthassay.utils.RequestUtils;
 import org.hkijena.jipipe.webapp.growthassay.utils.StringUtils;
 import org.jobrunr.jobs.context.JobContext;
 import org.jobrunr.scheduling.JobScheduler;
@@ -13,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -40,7 +42,6 @@ public class DatasetController {
     private final RuntimeConfig runtimeConfig;
     private final DatasetRepository datasetRepository;
     private final InputDataRepository inputDataRepository;
-
     private final JobScheduler jobScheduler;
     private final AnalysisService analysisService;
 
@@ -273,6 +274,14 @@ public class DatasetController {
             Dataset dataset = dataset_.get();
             if(dataset.getStatus() == Dataset.Status.Preparing) {
                 if (dataset.validate().isValid()) {
+
+                    Path logFilePath = Paths.get(dataset.getStoragePath()).resolve("log.txt");
+                    try {
+                        Files.deleteIfExists(logFilePath);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
                     dataset.setStatus(Dataset.Status.Running);
                     datasetRepository.save(dataset);
                     jobScheduler.enqueue(() -> analysisService.runAnalysis(id, JobContext.Null));
@@ -319,10 +328,48 @@ public class DatasetController {
             Dataset dataset = dataset_.get();
             AnalysisStatusMessage message = new AnalysisStatusMessage();
             message.setStatus(dataset.getStatus());
+
+            StringBuilder stringBuilder = new StringBuilder();
+
+            try {
+                Path logFilePath = Paths.get(dataset.getStoragePath()).resolve("log.txt");
+                if(Files.isRegularFile(logFilePath)) {
+                    List<String> lines = Files.readAllLines(logFilePath);
+                    for (int i = Math.max(0, lines.size() - 500 - 1); i < lines.size(); i++) {
+                        stringBuilder.append(lines.get(i)).append("\n");
+                    }
+                }
+                else {
+                    stringBuilder.append("[QUEUE] Job is enqueued. Please wait ...");
+                }
+            }
+            catch (IOException ignored) {
+            }
+
+            message.setLog(stringBuilder.toString());
+
             return ResponseEntity.ok(message);
         }
         else {
             return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping("/dataset/download-log/{id}")
+    public void downloadDatasetLog(HttpServletResponse httpServletResponse, @PathVariable long id) throws IOException {
+        Optional<Dataset> dataset_ = datasetRepository.findById(id);
+        if(dataset_.isPresent() && dataset_.get().getStatus() != Dataset.Status.Preparing) {
+            Dataset dataset = dataset_.get();
+            Path logFilePath = Paths.get(dataset.getStoragePath()).resolve("log.txt");
+            if(Files.isRegularFile(logFilePath)) {
+                RequestUtils.sendAttachment(httpServletResponse, logFilePath, "log.txt");
+            }
+            else {
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+            }
+        }
+        else {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
     }
 
