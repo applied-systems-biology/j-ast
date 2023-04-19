@@ -2,160 +2,22 @@
 <html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layouts/base.html}">
 <body>
 <section layout:fragment="content" class="container-fluid pt-3">
-    <div class="row">
-        <div class="col">
-            <nav class="navbar bg-light rounded border p-3 d-flex flex-row gap-2">
-                <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal"
-                        data-bs-target="#modal-rename"><i class="fa fas fa-edit"></i> Rename
-                </button>
-                <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal"
-                        data-bs-target="#modal-delete"><i class="fa fas fa-xmark-circle"></i> Delete
-                </button>
-                <div class="flex-grow-1"></div>
-                <div class="text-muted me-2 data-save-info-default" style="display: none">
-                    <i class="fa fas fa-save"></i>
-                    <span>All settings are automatically saved</span>
-                </div>
-                <div class="text-muted me-2 data-save-info-saving" style="display: none">
-                    <i class="fa-solid fa-circle-notch fa-spin"></i>
-                    <span>Uploading changes ...</span>
-                </div>
-                <div class="text-danger me-2 data-validation-invalid" style="display: none">
-                    <i class="fa-solid fa-warning"></i>
-                    <span>Problems detected!</span>
-                </div>
-                <button type="button" class="btn btn-success button-run" data-bs-toggle="modal" data-bs-target="#modal-run" disabled>
-                    <i class="fa fas fa-play-circle"></i> Run analysis
-                </button>
-            </nav>
-        </div>
-    </div>
-    <div class="row mt-3">
+   <div th:replace="~{fragments/dataset-editor-toolbar.html :: dataset-editor-toolbar}"></div>
+    <div class="row mt-3 mb-3">
         <div class="col-lg-4 d-flex flex-column gap-2">
-            <div class="card bg-light">
-                <div class="card-header">
-                    <span>Parameters</span>
-                </div>
-                <div class="card-body">
-                    <div class="mb-3">
-                        <label for="parameter-percentage-of-inhibition" class="form-label">Percentage of inhibition</label>
-                        <div class="input-group">
-                            <input type="number" min="0" max="100" class="form-control input-parameter-editor" id="parameter-percentage-of-inhibition" data-parameter-property="percentage-of-inhibition" autocomplete="off" th:value="${currentDataset.percentageOfInhibition}">
-                            <span class="input-group-text">%</span>
-                        </div>
-                    </div>
-                    <div class="mb-3">
-                        <label for="parameter-time-point-early" class="form-label">Early time point</label>
-                        <input type="text" class="form-control input-parameter-editor" id="parameter-time-point-early" data-parameter-property="time-point-early" autocomplete="off" th:value="${currentDataset.timePointEarly}">
-                        <div class="form-text">
-                            The <code>Time point</code> that contains the early snapshot of the assays (e.g., 24hr).
-                        </div>
-                    </div>
-                    <div class="mb-3">
-                        <label for="parameter-time-point-late" class="form-label">Late time point</label>
-                        <input type="text" class="form-control input-parameter-editor" id="parameter-time-point-late" data-parameter-property="time-point-late" th:value="${currentDataset.timePointLate}">
-                        <div class="form-text">
-                            The <code>Time point</code> that contains the late snapshot of the assays (e.g., 48hr).
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="card bg-light">
-                <div class="card-header">
-                    <span>Validation</span>
-                </div>
-                <div class="card-body validation-status-running">
-                    <i class="fa-solid fa-circle-notch fa-spin"></i>
-                    <span>Validating ...</span>
-                </div>
-                <div class="card-body border-top bg-success bg-opacity-75 text-bg-success validation-status-success" style="display: none">
-                    <h5 class="card-title"><i class="fa-solid fa-check-circle"></i> Validation successful</h5>
-                    <p class="card-text">You can now run the analysis.</p>
-                </div>
-                <div class="validation-issues">
-
-                </div>
-            </div>
+            <div th:replace="~{fragments/dataset-editor-parameters.html :: dataset-editor-parameters}"></div>
+            <div th:replace="~{fragments/dataset-editor-validation.html :: dataset-editor-validation}"></div>
         </div>
-        <div class="col-lg">
-            <div class="card bg-light">
-                <div class="card-header d-flex align-items-center justify-content-between">
-                    <span>Data</span>
-                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal-upload">
-                        <i class="fa fas fa-plus-circle"></i> Add data
-                    </button>
-                </div>
-                <ul class="list-group list-group-flush">
-                    <li class="list-group-item bg-light"><i class="fa fas fa-hand-point-right"></i> Please note that the
-                        images are organized by <code>experiment</code>, <code>sample</code>, and <code>time point</code>.
-                    </li>
-                    <li class="list-group-item bg-light"><i class="fa fas fa-clock"></i> Each (<code>experiment</code>, <code>sample</code>) combination
-                        must have exactly two time points.
-                    </li>
-                    <li class="list-group-item bg-light"><i class="fa fas fa-info-circle"></i> You can speed up the data
-                        organization by naming your files according to the following patterns: <code>[experiment]_[sample]_[time point].png</code> or <code>[sample]_[time point].png</code>.
-                    </li>
-                </ul>
-                <div class="card-body">
-                    <div class="table-responsive">
-
-                        <table class="table align-middle">
-                            <thead>
-                            <tr>
-                                <th scope="col"></th>
-                                <th scope="col"></th>
-                                <th scope="col">Original file name</th>
-                                <th scope="col">Experiment</th>
-                                <th scope="col">Sample</th>
-                                <th scope="col">Time point</th>
-
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr th:each="inputData: ${currentDataset?.inputData}"
-                                th:id="'input-data-editor-' + ${inputData.id}" class="input-data-editor">
-                                <th scope="col">
-                                    <div class="d-flex flex-row">
-                                        <button class="button-delete-input-data btn btn-sm btn-outline-danger"
-                                                th:data-input-data-id="${inputData.id}"><i class="fa fas fa-times"></i>
-                                        </button>
-                                        <a class="ms-1 btn btn-sm btn-outline-primary"
-                                           th:href="@{'/input-data/download/' + ${inputData.id}}"><i
-                                                class="fa fas fa-download"></i></a>
-                                    </div>
-                                </th>
-                                <th scope="col"><a th:href="@{'/input-data/view/' + ${inputData.id}}"
-                                                   target="_blank"><img
-                                        th:src="@{'/input-data/thumbnail/' + ${inputData.id}}" alt="Thumbnail"/></a>
-                                </th>
-                                <th scope="col" th:text="${inputData.originalFileName}"></th>
-                                <th scope="col"><input class="form-control input-data-editor" type="text" data-input-data-property="experiment" th:data-input-data-id="${inputData.id}" th:value="${inputData.experiment}" autocomplete="off"/></th>
-                                <th scope="col"><input class="form-control input-data-editor" type="text" data-input-data-property="name" th:data-input-data-id="${inputData.id}" th:value="${inputData.name}" autocomplete="off"/></th>
-                                <th scope="col"><input class="form-control input-data-editor" type="text" data-input-data-property="timePoint" th:data-input-data-id="${inputData.id}" th:value="${inputData.timePoint}" autocomplete="off"/></th>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <div class="d-flex justify-content-end mt-4 gap-3">
-                        <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal"
-                                data-bs-target="#modal-upload"><i class="fa fas fa-plus-circle"></i> Add data
-                        </button>
-                    </div>
-                </div>
-            </div>
+        <div class="col-lg d-flex flex-column gap-2">
+            <div th:replace="~{fragments/dataset-editor-uploader.html :: dataset-editor-uploader}"></div>
+            <div th:replace="~{fragments/dataset-editor-table.html :: dataset-editor-table}"></div>
         </div>
     </div>
-    <div th:replace="~{fragments/modal-upload.html :: modal-upload}"></div>
     <div th:replace="~{fragments/modal-rename.html :: modal-rename}"></div>
     <div th:replace="~{fragments/modal-delete.html :: modal-delete}"></div>
     <div th:replace="~{fragments/modal-run.html :: modal-run}"></div>
     <script th:inline="javascript">
         let updateTimerHandle = 0;
-
-        function getURL(path) {
-            return [[@{'/'}]] + path
-        }
 
         function updateSaveProgress(inProgress) {
             $(".data-save-info-default").toggle(!inProgress)

@@ -152,7 +152,7 @@ public class DatasetController {
     }
 
     @PostMapping("/dataset/upload-input/{id}")
-    public ModelAndView uploadFileToDataset(Model model, @PathVariable long id, RedirectAttributes redirectAttributes, @RequestParam("imageFiles") MultipartFile[] imageFiles) {
+    public ResponseEntity<?> uploadFileToDataset(Model model, @PathVariable long id, RedirectAttributes redirectAttributes, @RequestParam("imageFile") MultipartFile imageFile) {
         Optional<Dataset> dataset_ = datasetRepository.findById(id);
         if(dataset_.isPresent()) {
             Dataset dataset = dataset_.get();
@@ -175,46 +175,44 @@ public class DatasetController {
             int numSuccess = 0;
             int numFailures = 0;
             List<String> failureNames = new ArrayList<>();
-            for (MultipartFile imageFile : imageFiles) {
-                if(imageFile != null && !imageFile.isEmpty()) {
-                    try {
-                        try (InputStream stream = imageFile.getInputStream()) {
-                            BufferedImage image = ImageIO.read(stream);
-                            if (image == null) {
-                                throw new NullPointerException("Unable to load image!");
-                            }
-
-                            // Re-save as PNG
-                            Path imageStoragePath = Files.createTempFile(targetDir, "img", ".png");
-                            ImageIO.write(image, "PNG", imageStoragePath.toFile());
-
-                            // Create thumbnail
-                            double thumbnailScale = Math.max(64.0 / image.getWidth(), 64.0 / image.getHeight());
-                            Image scaledImage = image.getScaledInstance((int) (image.getWidth() * thumbnailScale), (int) (image.getHeight() * thumbnailScale), Image.SCALE_SMOOTH);
-                            BufferedImage thumbnail = new BufferedImage(64,64, BufferedImage.TYPE_3BYTE_BGR);
-                            Graphics2D graphics2D = thumbnail.createGraphics();
-                            graphics2D.drawImage(scaledImage, 32 - scaledImage.getWidth(null) / 2, 32 - scaledImage.getHeight(null) / 2, null);
-                            graphics2D.dispose();
-                            Path thumbnailStoragePath = targetDirThumbnails.resolve(imageStoragePath.getFileName());
-                            ImageIO.write(thumbnail, "PNG", thumbnailStoragePath.toFile());
-
-                            // Create object
-                            InputData inputData = new InputData();
-                            inputData.setOriginalFileName(StringUtils.nullToEmpty(imageFile.getOriginalFilename()));
-                            inputData.setStoragePath(imageStoragePath.toString());
-                            inputData.setThumbnailStoragePath(thumbnailStoragePath.toString());
-                            inputData.tryAutoFill(StringUtils.nullToEmpty(imageFile.getOriginalFilename()));
-
-                            dataset.addInputData(inputData);
-                            ++numSuccess;
+            if(imageFile != null && !imageFile.isEmpty()) {
+                try {
+                    try (InputStream stream = imageFile.getInputStream()) {
+                        BufferedImage image = ImageIO.read(stream);
+                        if (image == null) {
+                            throw new NullPointerException("Unable to load image!");
                         }
+
+                        // Re-save as PNG
+                        Path imageStoragePath = Files.createTempFile(targetDir, "img", ".png");
+                        ImageIO.write(image, "PNG", imageStoragePath.toFile());
+
+                        // Create thumbnail
+                        double thumbnailScale = Math.max(64.0 / image.getWidth(), 64.0 / image.getHeight());
+                        Image scaledImage = image.getScaledInstance((int) (image.getWidth() * thumbnailScale), (int) (image.getHeight() * thumbnailScale), Image.SCALE_SMOOTH);
+                        BufferedImage thumbnail = new BufferedImage(64,64, BufferedImage.TYPE_3BYTE_BGR);
+                        Graphics2D graphics2D = thumbnail.createGraphics();
+                        graphics2D.drawImage(scaledImage, 32 - scaledImage.getWidth(null) / 2, 32 - scaledImage.getHeight(null) / 2, null);
+                        graphics2D.dispose();
+                        Path thumbnailStoragePath = targetDirThumbnails.resolve(imageStoragePath.getFileName());
+                        ImageIO.write(thumbnail, "PNG", thumbnailStoragePath.toFile());
+
+                        // Create object
+                        InputData inputData = new InputData();
+                        inputData.setOriginalFileName(StringUtils.nullToEmpty(imageFile.getOriginalFilename()));
+                        inputData.setStoragePath(imageStoragePath.toString());
+                        inputData.setThumbnailStoragePath(thumbnailStoragePath.toString());
+                        inputData.tryAutoFill(StringUtils.nullToEmpty(imageFile.getOriginalFilename()));
+
+                        dataset.addInputData(inputData);
+                        ++numSuccess;
                     }
-                    catch (Throwable e) {
-                        ++numFailures;
+                }
+                catch (Throwable e) {
+                    ++numFailures;
 
-                        if(!StringUtils.isNullOrEmpty(imageFile.getOriginalFilename())) {
-                            failureNames.add(imageFile.getOriginalFilename());
-                        }
+                    if(!StringUtils.isNullOrEmpty(imageFile.getOriginalFilename())) {
+                        failureNames.add(imageFile.getOriginalFilename());
                     }
                 }
             }
@@ -233,11 +231,10 @@ public class DatasetController {
                         redirectAttributes);
             }
 
-
-            return new ModelAndView("redirect:/dataset/view/" + id);
+            return ResponseEntity.ok("Upload successful");
         }
         else {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+            return ResponseEntity.notFound().build();
         }
     }
 

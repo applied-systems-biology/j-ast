@@ -102,10 +102,13 @@ public class AnalysisService {
                     Files.copy(Paths.get(data.getStoragePath()), inputDirectory.resolve(data.getFinalFileName() + ".png"));
                 }
 
-                for (int i = 0; i < 10; i++) {
-                    logInfo("sleep " + i + "/" + 10, context, dataset);
-                    Thread.sleep(1000);
-                }
+                // Extract project file
+
+                // Run analysis
+
+                // Generate thumbnails
+
+                // ZIP analysis results
 
                 // Finalize the analysis
                 dataset.setStatus(Dataset.Status.RunFinished);

@@ -1,0 +1,60 @@
+<div class="card bg-light" th:fragment="dataset-editor-table">
+    <div class="card-header d-flex align-items-center justify-content-between">
+        <span>Data</span>
+        <button type="button" class="btn btn-primary button-add-data">
+            <i class="fa fas fa-plus-circle"></i> Add data
+        </button>
+    </div>
+    <ul class="list-group list-group-flush">
+        <li class="list-group-item bg-light"><i class="fa fas fa-hand-point-right"></i> Please note that the
+            images are organized by <code>experiment</code>, <code>sample</code>, and <code>time point</code>.
+        </li>
+        <li class="list-group-item bg-light"><i class="fa fas fa-clock"></i> Each (<code>experiment</code>, <code>sample</code>) combination
+            must have exactly two time points.
+        </li>
+    </ul>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table align-middle">
+                <thead>
+                <tr>
+                    <th scope="col"></th>
+                    <th scope="col"></th>
+                    <th scope="col">Original file name</th>
+                    <th scope="col">Experiment</th>
+                    <th scope="col">Sample</th>
+                    <th scope="col">Time point</th>
+
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="inputData: ${currentDataset?.inputData}"
+                    th:id="'input-data-editor-' + ${inputData.id}" class="input-data-editor">
+                    <th scope="col">
+                        <div class="d-flex flex-row">
+                            <button class="button-delete-input-data btn btn-sm btn-outline-danger"
+                                    th:data-input-data-id="${inputData.id}"><i class="fa fas fa-times"></i>
+                            </button>
+                            <a class="ms-1 btn btn-sm btn-outline-primary"
+                               th:href="@{'/input-data/download/' + ${inputData.id}}"><i
+                                    class="fa fas fa-download"></i></a>
+                        </div>
+                    </th>
+                    <th scope="col"><a th:href="@{'/input-data/view/' + ${inputData.id}}"
+                                       target="_blank"><img
+                            th:src="@{'/input-data/thumbnail/' + ${inputData.id}}" alt="Thumbnail"/></a>
+                    </th>
+                    <th scope="col" th:text="${inputData.originalFileName}"></th>
+                    <th scope="col"><input class="form-control input-data-editor" type="text" data-input-data-property="experiment" th:data-input-data-id="${inputData.id}" th:value="${inputData.experiment}" autocomplete="off"/></th>
+                    <th scope="col"><input class="form-control input-data-editor" type="text" data-input-data-property="name" th:data-input-data-id="${inputData.id}" th:value="${inputData.name}" autocomplete="off"/></th>
+                    <th scope="col"><input class="form-control input-data-editor" type="text" data-input-data-property="timePoint" th:data-input-data-id="${inputData.id}" th:value="${inputData.timePoint}" autocomplete="off"/></th>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="d-flex justify-content-end mt-4 gap-3">
+            <button type="button" class="btn btn-outline-primary button-add-data"><i class="fa fas fa-plus-circle"></i> Add data</button>
+        </div>
+    </div>
+</div>
