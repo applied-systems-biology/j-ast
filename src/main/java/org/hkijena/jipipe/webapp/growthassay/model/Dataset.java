@@ -128,12 +128,20 @@ public class Dataset {
         boolean foundEmptyTimePoints = false;
         Multiset<String> allNames = HashMultiset.create();
         Multiset<String> allNamesNoTimePoint = HashMultiset.create();
+        Set<String> invalidExperiments = new HashSet<>();
+        Set<String> invalidSamples = new HashSet<>();
         for (InputData data : inputData) {
             if(StringUtils.isNullOrEmpty(data.getExperiment())) {
                 foundEmptyExperiments = true;
             }
+            else if(data.getExperiment().contains("_") || !StringUtils.isFilesystemCompatible(data.getExperiment())) {
+                invalidExperiments.add(data.getExperiment());
+            }
             if(StringUtils.isNullOrEmpty(data.getName())) {
                 foundEmptyNames = true;
+            }
+            else if(data.getName().contains("_") || !StringUtils.isFilesystemCompatible(data.getName())) {
+                invalidSamples.add(data.getExperiment());
             }
             if(StringUtils.isNullOrEmpty(data.getTimePoint())) {
                 foundEmptyTimePoints = true;
@@ -156,10 +164,19 @@ public class Dataset {
             result.addIssue("Not all experiments set", "Please provide an experiment annotation to all inputs.");
         }
         if(foundEmptyNames) {
-            result.addIssue("Not all names set", "Please provide a name to all inputs.");
+            result.addIssue("Not all samples set", "Please provide a sample to all inputs.");
         }
         if(foundEmptyTimePoints) {
             result.addIssue("Not all time points set", "Please provide a time point annotation (e.g., 24hr and 48hr) to all inputs.");
+        }
+
+        if(!invalidExperiments.isEmpty()) {
+            result.addIssue("Invalid experiments", "Please ensure that experiments do not have invalid characters (_, non-alphanumeric characters). " +
+                    "The following entries are affected: " + String.join(", ", invalidExperiments));
+        }
+        if(!invalidSamples.isEmpty()) {
+            result.addIssue("Invalid samples", "Please ensure that samples do not have invalid characters (_, non-alphanumeric characters). " +
+                    "The following entries are affected: " + String.join(", ", invalidSamples));
         }
 
         List<String> duplicateElements = allNames.elementSet().stream().filter(element -> allNames.count(element) > 1).collect(Collectors.toList());
@@ -176,6 +193,9 @@ public class Dataset {
             if(!timePoints.contains(timePointEarly)) {
                 result.addIssue("Time point not present in data", "Please ensure that 'Early time point' is set to one of the time points in the data table.");
             }
+            if(timePointEarly.contains("_") || !StringUtils.isFilesystemCompatible(timePointEarly)) {
+                result.addIssue("Invalid time point name", "The 'Early time point' name contains unsupported characters (_, non-alphanumeric characters)");
+            }
         }
         else {
             result.addIssue("Early time point not configured", "Please ensure that 'Early time point' is set to one of the time points in the data table.");
@@ -184,6 +204,9 @@ public class Dataset {
         if(!StringUtils.isNullOrEmpty(timePointLate)) {
             if(!timePoints.contains(timePointLate)) {
                 result.addIssue("Time point not present in data", "Please ensure that 'Late time point' is set to one of the time points in the data table.");
+            }
+            if(timePointLate.contains("_") || !StringUtils.isFilesystemCompatible(timePointLate)) {
+                result.addIssue("Invalid time point name", "The 'Late time point' name contains unsupported characters (_, non-alphanumeric characters)");
             }
         }
         else {

@@ -25,4 +25,5 @@ org:
       enabled: true
 runtime:
   fiji-path: 'fiji-bin/Fiji.app'
+  fiji-executable-path: 'fiji-bin/Fiji.app/ImageJ-linux64'
 
