@@ -1,7 +1,6 @@
 package org.hkijena.jipipe.webapp.growthassay.model;
 
 import com.google.common.collect.HashMultiset;
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Multiset;
 import jakarta.persistence.*;
 import org.hkijena.jipipe.webapp.growthassay.utils.StringUtils;
@@ -44,6 +43,9 @@ public class Dataset {
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true, mappedBy = "dataset")
     private List<InputData> inputData = new ArrayList<>();
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true, mappedBy = "dataset")
+    private List<OutputData> outputData = new ArrayList<>();
 
     public double getPercentageOfInhibition() {
         return percentageOfInhibition;
@@ -105,6 +107,10 @@ public class Dataset {
         return Collections.unmodifiableList(inputData);
     }
 
+    public List<OutputData> getOutputData() {
+        return Collections.unmodifiableList(outputData);
+    }
+
     public void addInputData(InputData inputData) {
         this.inputData.add(inputData);
         inputData.setDataset(this);
@@ -113,6 +119,30 @@ public class Dataset {
     public void removeInputData(InputData inputData) {
         this.inputData.remove(inputData);
         inputData.setDataset(null);
+    }
+
+    public void clearInputData() {
+        for (InputData data : inputData) {
+            data.setDataset(null);
+        }
+        inputData.clear();
+    }
+
+    public void addOutputData(OutputData outputData) {
+        this.outputData.add(outputData);
+        outputData.setDataset(this);
+    }
+
+    public void removeOutputData(OutputData outputData) {
+        this.outputData.remove(outputData);
+        outputData.setDataset(null);
+    }
+
+    public void clearOutputData() {
+        for (OutputData data : outputData) {
+            data.setDataset(null);
+        }
+        outputData.clear();
     }
 
     public ValidationResult validate() {
@@ -137,10 +167,10 @@ public class Dataset {
             else if(data.getExperiment().contains("_") || !StringUtils.isFilesystemCompatible(data.getExperiment())) {
                 invalidExperiments.add(data.getExperiment());
             }
-            if(StringUtils.isNullOrEmpty(data.getName())) {
+            if(StringUtils.isNullOrEmpty(data.getSample())) {
                 foundEmptyNames = true;
             }
-            else if(data.getName().contains("_") || !StringUtils.isFilesystemCompatible(data.getName())) {
+            else if(data.getSample().contains("_") || !StringUtils.isFilesystemCompatible(data.getSample())) {
                 invalidSamples.add(data.getExperiment());
             }
             if(StringUtils.isNullOrEmpty(data.getTimePoint())) {
@@ -150,8 +180,26 @@ public class Dataset {
                 timePoints.add(data.getTimePoint());
             }
             allNames.add(data.getFinalFileName());
-            allNamesNoTimePoint.add(data.getExperiment() + "_" + data.getName() + "_*");
+            allNamesNoTimePoint.add(data.getExperiment() + "_" + data.getSample() + "_*");
         }
+
+//        Map<String, List<InputData>> groups = inputData.stream().collect(Collectors.groupingBy(data -> data.getExperiment() + "_" + data.getSample()));
+//        Set<String> unequalImageSizeData = new HashSet<>();
+//        for (Map.Entry<String, List<InputData>> entry : groups.entrySet()) {
+//            if(entry.getValue().size() == 2) {
+//                InputData first = entry.getValue().get(0);
+//                InputData second = entry.getValue().get(1);
+//                if(first.getImageWidth() != second.getImageWidth() || first.getImageHeight() != second.getImageHeight()) {
+//                    unequalImageSizeData.add(first.getFinalFileName());
+//                    unequalImageSizeData.add(second.getFinalFileName());
+//                }
+//            }
+//        }
+//
+//        if(!unequalImageSizeData.isEmpty()) {
+//            result.addIssue("Unequal image sizes", "Please ensure that images within the same experiment and sample have the same size. " +
+//                    "The following entries are affected: " + String.join(", ", unequalImageSizeData));
+//        }
 
         if(timePoints.size() < 2) {
             result.addIssue("Too few time points", "Please ensure that you have exactly two time points.");

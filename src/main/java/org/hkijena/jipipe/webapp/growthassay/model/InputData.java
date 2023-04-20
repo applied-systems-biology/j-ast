@@ -4,9 +4,7 @@ import jakarta.persistence.*;
 import org.hkijena.jipipe.webapp.growthassay.utils.PathUtils;
 import org.hkijena.jipipe.webapp.growthassay.utils.StringUtils;
 
-import java.io.IOException;
 import java.io.Serial;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
@@ -30,14 +28,20 @@ public class InputData {
     @Column(name = "experiment", nullable = false, columnDefinition = "TEXT")
     private String experiment;
 
-    @Column(name = "name", nullable = false, columnDefinition = "TEXT")
-    private String name;
+    @Column(name = "sample", nullable = false, columnDefinition = "TEXT")
+    private String sample;
 
     @Column(name = "timepoint", nullable = false, columnDefinition = "TEXT")
     private String timePoint;
 
     @Column(name = "original_file_name", nullable = false, columnDefinition = "TEXT")
     private String originalFileName;
+
+    @Column(name = "image_width", nullable = false)
+    private int imageWidth;
+
+    @Column(name = "image_height", nullable = false)
+    private int imageHeight;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Dataset dataset;
@@ -56,6 +60,22 @@ public class InputData {
 
     public void setThumbnailStoragePath(String thumbnailStoragePath) {
         this.thumbnailStoragePath = thumbnailStoragePath;
+    }
+
+    public int getImageWidth() {
+        return imageWidth;
+    }
+
+    public void setImageWidth(int imageWidth) {
+        this.imageWidth = imageWidth;
+    }
+
+    public int getImageHeight() {
+        return imageHeight;
+    }
+
+    public void setImageHeight(int imageHeight) {
+        this.imageHeight = imageHeight;
     }
 
     public Long getId() {
@@ -82,12 +102,12 @@ public class InputData {
         this.experiment = experiment;
     }
 
-    public String getName() {
-        return name;
+    public String getSample() {
+        return sample;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setSample(String name) {
+        this.sample = name;
     }
 
     public String getTimePoint() {
@@ -107,7 +127,7 @@ public class InputData {
     }
 
     public String getFinalFileName() {
-        return getExperiment() + "_" + getName() + "_" + getTimePoint();
+        return getExperiment() + "_" + getSample() + "_" + getTimePoint();
     }
 
     public void tryAutoFill(String originalFileName) {
@@ -121,17 +141,17 @@ public class InputData {
         String[] components = originalFileName.split("_");
         if(components.length == 3) {
             setExperiment(components[0]);
-            setName(components[1]);
+            setSample(components[1]);
             setTimePoint(components[2]);
         }
         else if(components.length == 2) {
             setExperiment("Experiment");
-            setName(components[0]);
+            setSample(components[0]);
             setTimePoint(components[1]);
         }
         else {
             setExperiment("");
-            setName("");
+            setSample("");
             setTimePoint("");
         }
     }

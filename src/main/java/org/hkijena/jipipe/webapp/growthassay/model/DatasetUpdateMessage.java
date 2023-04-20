@@ -77,7 +77,7 @@ public class DatasetUpdateMessage {
     public static class InputDataUpdateMessage {
         private long id;
         private String experiment;
-        private String name;
+        private String sample;
         private String timePoint;
 
         @JsonGetter("id")
@@ -100,14 +100,14 @@ public class DatasetUpdateMessage {
             this.experiment = experiment;
         }
 
-        @JsonGetter("name")
-        public String getName() {
-            return name;
+        @JsonGetter("sample")
+        public String getSample() {
+            return sample;
         }
 
-        @JsonSetter("name")
-        public void setName(String name) {
-            this.name = name;
+        @JsonSetter("sample")
+        public void setSample(String sample) {
+            this.sample = sample;
         }
 
         @JsonGetter("timePoint")
@@ -121,7 +121,7 @@ public class DatasetUpdateMessage {
         }
 
         public void update(InputData inputData) {
-            inputData.setName(StringUtils.nullToEmpty(name));
+            inputData.setSample(StringUtils.nullToEmpty(sample));
             inputData.setExperiment(StringUtils.nullToEmpty(experiment));
             inputData.setTimePoint(StringUtils.nullToEmpty(timePoint));
         }

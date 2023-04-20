@@ -6,6 +6,7 @@ import org.hkijena.jipipe.webapp.growthassay.model.*;
 import org.hkijena.jipipe.webapp.growthassay.repositories.DatasetRepository;
 import org.hkijena.jipipe.webapp.growthassay.repositories.InputDataRepository;
 import org.hkijena.jipipe.webapp.growthassay.services.AnalysisService;
+import org.hkijena.jipipe.webapp.growthassay.utils.ImageUtils;
 import org.hkijena.jipipe.webapp.growthassay.utils.RequestUtils;
 import org.hkijena.jipipe.webapp.growthassay.utils.StringUtils;
 import org.jobrunr.jobs.context.JobContext;
@@ -14,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -25,7 +25,6 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.imageio.ImageIO;
-import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
@@ -185,17 +184,11 @@ public class DatasetController {
 
                         // Re-save as PNG
                         Path imageStoragePath = Files.createTempFile(targetDir, "img", ".png");
+                        Path thumbnailStoragePath = targetDirThumbnails.resolve(imageStoragePath.getFileName());
                         ImageIO.write(image, "PNG", imageStoragePath.toFile());
 
                         // Create thumbnail
-                        double thumbnailScale = Math.max(64.0 / image.getWidth(), 64.0 / image.getHeight());
-                        Image scaledImage = image.getScaledInstance((int) (image.getWidth() * thumbnailScale), (int) (image.getHeight() * thumbnailScale), Image.SCALE_SMOOTH);
-                        BufferedImage thumbnail = new BufferedImage(64,64, BufferedImage.TYPE_3BYTE_BGR);
-                        Graphics2D graphics2D = thumbnail.createGraphics();
-                        graphics2D.drawImage(scaledImage, 32 - scaledImage.getWidth(null) / 2, 32 - scaledImage.getHeight(null) / 2, null);
-                        graphics2D.dispose();
-                        Path thumbnailStoragePath = targetDirThumbnails.resolve(imageStoragePath.getFileName());
-                        ImageIO.write(thumbnail, "PNG", thumbnailStoragePath.toFile());
+                        ImageUtils.createThumbnail(image, thumbnailStoragePath);
 
                         // Create object
                         InputData inputData = new InputData();
@@ -203,6 +196,8 @@ public class DatasetController {
                         inputData.setStoragePath(imageStoragePath.toString());
                         inputData.setThumbnailStoragePath(thumbnailStoragePath.toString());
                         inputData.tryAutoFill(StringUtils.nullToEmpty(imageFile.getOriginalFilename()));
+                        inputData.setImageWidth(image.getWidth());
+                        inputData.setImageHeight(image.getHeight());
 
                         dataset.addInputData(inputData);
                         ++numSuccess;
@@ -305,6 +300,7 @@ public class DatasetController {
             Dataset dataset = dataset_.get();
             if (dataset.getStatus() != Dataset.Status.Running) {
                 dataset.setStatus(Dataset.Status.Preparing);
+                dataset.clearOutputData();
                 datasetRepository.save(dataset);
                 Notification.pushToRedirect("Dataset reset", "You can now edit all parameters and modify the inputs.", Notification.Style.info, redirectAttributes);
                 return new ModelAndView("redirect:/dataset/view/" + id);
