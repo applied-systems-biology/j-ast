@@ -4,8 +4,12 @@ import com.google.common.collect.HashMultiset;
 import com.google.common.collect.Multiset;
 import jakarta.persistence.*;
 import org.hkijena.jipipe.webapp.growthassay.utils.StringUtils;
+import org.jobrunr.scheduling.BackgroundJob;
 
+import java.io.IOException;
 import java.io.Serial;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -266,6 +270,20 @@ public class Dataset {
         }
 
         return result;
+    }
+
+    public void tryCancelCurrentJob() {
+        // Read job id from a txt file
+        Path jobIdFile = Path.of(storagePath).resolve("job-id.txt");
+        if(Files.isRegularFile(jobIdFile)) {
+            try {
+                String uuid = Files.readString(jobIdFile);
+                BackgroundJob.delete(uuid);
+                Files.delete(jobIdFile);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     public enum Status {

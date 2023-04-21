@@ -21,8 +21,6 @@ public class OutputData {
     private Dataset dataset;
 
     @OneToMany(fetch = FetchType.LAZY)
-    @MapsId
-    @JoinColumn(name = "input_data_id")
     private List<InputData> inputData = new ArrayList<>();
 
     @Column(name = "fog")

@@ -9,8 +9,12 @@ import org.hkijena.jipipe.webapp.growthassay.services.AnalysisService;
 import org.hkijena.jipipe.webapp.growthassay.utils.ImageUtils;
 import org.hkijena.jipipe.webapp.growthassay.utils.RequestUtils;
 import org.hkijena.jipipe.webapp.growthassay.utils.StringUtils;
+import org.jobrunr.configuration.JobRunr;
+import org.jobrunr.jobs.JobId;
 import org.jobrunr.jobs.context.JobContext;
+import org.jobrunr.scheduling.BackgroundJob;
 import org.jobrunr.scheduling.JobScheduler;
+import org.jobrunr.server.BackgroundJobServer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
@@ -18,6 +22,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.FileSystemUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
@@ -298,16 +303,13 @@ public class DatasetController {
         Optional<Dataset> dataset_ = datasetRepository.findById(id);
         if(dataset_.isPresent()) {
             Dataset dataset = dataset_.get();
-            if (dataset.getStatus() != Dataset.Status.Running) {
-                dataset.setStatus(Dataset.Status.Preparing);
-                dataset.clearOutputData();
-                datasetRepository.save(dataset);
-                Notification.pushToRedirect("Dataset reset", "You can now edit all parameters and modify the inputs.", Notification.Style.info, redirectAttributes);
-                return new ModelAndView("redirect:/dataset/view/" + id);
-            }
-            else {
-                throw new ResponseStatusException(HttpStatus.FORBIDDEN);
-            }
+            dataset.tryCancelCurrentJob();
+
+            dataset.setStatus(Dataset.Status.Preparing);
+            dataset.clearOutputData();
+            datasetRepository.save(dataset);
+            Notification.pushToRedirect("Dataset reset", "You can now edit all parameters and modify the inputs.", Notification.Style.info, redirectAttributes);
+            return new ModelAndView("redirect:/dataset/view/" + id);
         }
         else {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
@@ -356,6 +358,24 @@ public class DatasetController {
             Path logFilePath = Paths.get(dataset.getStoragePath()).resolve("log.txt");
             if(Files.isRegularFile(logFilePath)) {
                 RequestUtils.sendAttachment(httpServletResponse, logFilePath, "log.txt");
+            }
+            else {
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+            }
+        }
+        else {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @GetMapping("/dataset/download-results/{id}")
+    public void downloadResults(HttpServletResponse httpServletResponse, @PathVariable long id) throws IOException {
+        Optional<Dataset> dataset_ = datasetRepository.findById(id);
+        if(dataset_.isPresent() && dataset_.get().getStatus() != Dataset.Status.Preparing) {
+            Dataset dataset = dataset_.get();
+            Path resultsFilePath = Paths.get(dataset.getStoragePath()).resolve("results").resolve("results.zip");
+            if(Files.isRegularFile(resultsFilePath)) {
+                RequestUtils.sendAttachment(httpServletResponse, resultsFilePath, StringUtils.makeFilesystemCompatible(dataset.getName()) + "-results.zip");
             }
             else {
                 throw new ResponseStatusException(HttpStatus.NOT_FOUND);

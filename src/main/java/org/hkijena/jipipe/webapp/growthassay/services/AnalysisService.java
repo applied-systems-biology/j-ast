@@ -15,9 +15,7 @@ import org.hkijena.jipipe.webapp.growthassay.model.OutputData;
 import org.hkijena.jipipe.webapp.growthassay.repositories.DatasetRepository;
 import org.hkijena.jipipe.webapp.growthassay.repositories.InputDataRepository;
 import org.hkijena.jipipe.webapp.growthassay.repositories.OutputDataRepository;
-import org.hkijena.jipipe.webapp.growthassay.utils.ImageUtils;
-import org.hkijena.jipipe.webapp.growthassay.utils.ProcessUtils;
-import org.hkijena.jipipe.webapp.growthassay.utils.ProgressInfo;
+import org.hkijena.jipipe.webapp.growthassay.utils.*;
 import org.jobrunr.jobs.context.JobContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
@@ -89,7 +87,7 @@ public class AnalysisService {
         }
     }
 
-    @Transactional
+    @Transactional(Transactional.TxType.REQUIRES_NEW)
     public void runAnalysis(long datasetId, JobContext context) {
         Optional<Dataset> dataset_ = datasetRepository.findById(datasetId);
         if(dataset_.isPresent()) {
@@ -97,6 +95,9 @@ public class AnalysisService {
             Hibernate.initialize(dataset.getInputData());
 
             try {
+                // Save job ID because tx not working
+                Files.writeString(Path.of(dataset.getStoragePath()).resolve("job-id.txt"), context.getJobId().toString(), StandardOpenOption.CREATE);
+
                 // Clean logs
                 Path logFilePath = Paths.get(dataset.getStoragePath()).resolve("log.txt");
                 Files.deleteIfExists(logFilePath);
@@ -175,7 +176,7 @@ public class AnalysisService {
                 dataset.clearOutputData();
 
                 Path resultsAllInOneFile = workDirectory.resolve("results").resolve("results_all_in_one.csv");
-                CSVFormat csvFormat = CSVFormat.DEFAULT.builder().build();
+                CSVFormat csvFormat = CSVFormat.DEFAULT.builder().setHeader().setSkipHeaderRecord(true).build();
                 try(FileReader reader = new FileReader(resultsAllInOneFile.toFile())) {
                     for (CSVRecord record : csvFormat.parse(reader)) {
                         OutputData outputData = new OutputData();
@@ -193,14 +194,17 @@ public class AnalysisService {
                         outputData.setVisualizationStoragePath(visualizationPath.toAbsolutePath().toString());
                         outputData.setVisualizationThumbnailStoragePath(visualizationThumbnailPath.toAbsolutePath().toString());
 
-                        outputDataRepository.save(outputData);
+                        outputData = outputDataRepository.save(outputData);
+                        dataset.addOutputData(outputData);
                     }
                 }
 
 
                 // ZIP analysis results
+                Path zipFile = resultServiceDirectory.resolve("results.zip");
                 ProgressInfo zipProgress = progressInfo.resolveAndLog("Compressing results");
                 progressInfo.incrementProgress();
+                ArchiveUtils.zipDirectory(workDirectory, StringUtils.makeFilesystemCompatible("" + dataset.getName()), zipFile, zipProgress);
 
                 // Finalize the analysis
                 dataset.setStatus(Dataset.Status.RunFinished);
