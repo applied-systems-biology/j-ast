@@ -2,10 +2,10 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 <head>
     <meta charset="UTF-8">
-    <link rel="icon" href="/img/favicon.ico" type="image/x-icon">
-    <link rel="stylesheet" type="text/css" href="/bootstrap/css/bootstrap.css"/>
-    <link href="/fontawesome/css/all.css" rel="stylesheet">
-    <link rel="stylesheet" href="/custom.css" />
+    <link rel="icon" th:href="@{/img/favicon.ico}" type="image/x-icon">
+    <link rel="stylesheet" type="text/css" th:href="@{/bootstrap/css/bootstrap.css}"/>
+    <link th:href="@{/fontawesome/css/all.css}" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/custom.css}" />
     <title>Growth Assay Analyzer</title>
 </head>
 <body>
@@ -20,7 +20,7 @@
 </script>
 <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
     <a class="navbar-brand" th:href="@{/}">
-        <img src="/img/jipipe-webapp-logo.png" class="logo" alt="logo"/>
+        <img th:src="@{/img/jipipe-webapp-logo.png}" class="logo" alt="logo"/>
     </a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar" aria-controls="mainNavbar" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -39,7 +39,7 @@
     <div class="d-flex flex-column flex-lg-row">
         <div class="bg-light border-end pt-1">
             <div class="list-group m-2">
-                <a class="list-group-item list-group-item-action list-group-item-success d-flex justify-content-between align-items-center text-nowrap" href="/dataset/new">
+                <a class="list-group-item list-group-item-action list-group-item-success d-flex justify-content-between align-items-center text-nowrap" th:href="@{/dataset/new}">
                     <span>Upload new dataset</span>
                     <i class="fas fa-plus-circle ms-3"></i>
                 </a>
@@ -70,14 +70,17 @@
     </div>
 </div>
 <footer class="bg-light pt-5 pb-5 border-top">
-    <div class="container text-center">
+    <div class="container-fluid">
         <div class="row" >
-            <div class="text-start text-muted small" th:utext="${footerText}"></div>
-        </div>
-        <div class="row justify-content-md-center">
-            <div th:each="item: ${footerLinks}" class="col-md-auto">
-                <a th:href="${item.url}" th:target="${item.target}" th:text="${item.name}"></a>
+            <div class="col text-muted">
+                <small>
+                    JIPipe was developed by Research Group Applied Systems Biology<br/>
+                    Head: Prof. Dr. Marc Thilo Figge HKI-Center for Systems Biology of Infection<br/>
+                    Leibniz Institute for Natural Product Research and Infection Biology – Hans Knöll Insitute (HKI)<br/>
+                    Adolf-Reichwein-Straße 23, 07745 Jena, Germany
+                </small>
             </div>
+
         </div>
     </div>
 </footer>

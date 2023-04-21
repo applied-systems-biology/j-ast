@@ -10,3 +10,57 @@
 .dataset-run-log {
     min-height: 50vh!important;
 }
+
+.logo-index {
+    width: 30%;
+    opacity: 0;
+    transform: scale(1.5);
+    animation-timing-function: ease-out;
+    animation-delay: 0.5s;
+    animation-duration: 5s;
+    animation-fill-mode: forwards;
+    animation-name: jipipe-logo-land;
+}
+
+.logo-index-heading {
+    opacity: 0;
+    animation-timing-function: ease-out;
+    animation-delay: 2s;
+    animation-duration: 3s;
+    animation-fill-mode: forwards;
+    animation-name: jipipe-logo-heading;
+}
+
+.index {
+    background-size: cover;
+}
+
+@media (max-width: 992px) {
+    .logo-index {
+        width: 80%;
+    }
+}
+
+@keyframes jipipe-logo-land {
+    0% {
+        opacity: 0;
+        transform: scale(1.5);
+    }
+    20% {
+        opacity: 1;
+        transform: scale(1.1);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1.0);
+    }
+}
+
+@keyframes jipipe-logo-heading {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
