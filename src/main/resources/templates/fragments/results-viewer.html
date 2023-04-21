@@ -1,0 +1,63 @@
+<div class="card bg-light" th:fragment="results-viewer">
+    <div class="card-header d-flex align-items-center gap-2">
+        <span>Results</span>
+        <div class="flex-grow-1"></div>
+        <div class="dropdown">
+            <button class="btn btn-outline-success dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="fa fas fa-download"></i> Download table
+            </button>
+            <ul class="dropdown-menu">
+                <li><a class="dropdown-item" th:href="@{'/dataset/download-results/xlsx-per-experiment/' + ${currentDatasetId}}">XLSX one sheet per experiment</a></li>
+                <li><a class="dropdown-item" th:href="@{'/dataset/download-results/xlsx-all-in-one/' + ${currentDatasetId}}">XLSX all experiments in one sheet</a></li>
+                <li><a class="dropdown-item" th:href="@{'/dataset/download-results/csv/' + ${currentDatasetId}}">CSV</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table align-middle">
+                <thead>
+                <tr>
+                    <th scope="col" th:text="${currentDataset.timePointEarly}"></th>
+                    <th scope="col" th:text="${currentDataset.timePointLate}"></th>
+                    <th scope="col">Experiment</th>
+                    <th scope="col">Sample</th>
+                    <th scope="col">Visualization</th>
+                    <th scope="col">FoG</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="outputData: ${currentDataset.outputData}" th:with="inputEarly=${outputData.inputData[0]}, inputLate=${outputData.inputData[1]}">
+                    <td>
+                        <div class="d-flex flex-row align-items-center gap-2">
+                            <a class="ms-1 btn btn-sm btn-outline-primary" th:href="@{'/input-data/download/' + ${inputEarly.id}}"><i class="fa fas fa-download"></i></a>
+                            <a th:href="@{'/input-data/view/' + ${inputEarly.id}}" target="_blank">
+                                <img th:src="@{'/input-data/thumbnail/' + ${inputEarly.id}}" alt="Thumbnail"/>
+                            </a>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="d-flex flex-row align-items-center gap-2">
+                            <a class="ms-1 btn btn-sm btn-outline-primary" th:href="@{'/input-data/download/' + ${inputLate.id}}"><i class="fa fas fa-download"></i></a>
+                            <a th:href="@{'/input-data/view/' + ${inputLate.id}}" target="_blank">
+                                <img th:src="@{'/input-data/thumbnail/' + ${inputLate.id}}" alt="Thumbnail"/>
+                            </a>
+                        </div>
+                    </td>
+                    <td th:text="${outputData.experiment}"></td>
+                    <td th:text="${outputData.sample}"></td>
+                    <td>
+                        <div class="d-flex flex-row align-items-center gap-2">
+                            <a class="ms-1 btn btn-sm btn-outline-primary" th:href="@{'/output-data/visualization/download/' + ${outputData.id}}"><i class="fa fas fa-download"></i></a>
+                            <a th:href="@{'/output-data/visualization/view/' + ${outputData.id}}" target="_blank">
+                                <img th:src="@{'/output-data/visualization/thumbnail/' + ${outputData.id}}" alt="Thumbnail"/>
+                            </a>
+                        </div>
+                    </td>
+                    <td th:text="${outputData.fog}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

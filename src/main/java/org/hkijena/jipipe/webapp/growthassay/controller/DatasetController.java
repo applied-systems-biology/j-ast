@@ -9,12 +9,8 @@ import org.hkijena.jipipe.webapp.growthassay.services.AnalysisService;
 import org.hkijena.jipipe.webapp.growthassay.utils.ImageUtils;
 import org.hkijena.jipipe.webapp.growthassay.utils.RequestUtils;
 import org.hkijena.jipipe.webapp.growthassay.utils.StringUtils;
-import org.jobrunr.configuration.JobRunr;
-import org.jobrunr.jobs.JobId;
 import org.jobrunr.jobs.context.JobContext;
-import org.jobrunr.scheduling.BackgroundJob;
 import org.jobrunr.scheduling.JobScheduler;
-import org.jobrunr.server.BackgroundJobServer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
@@ -22,7 +18,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.FileSystemUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
@@ -193,7 +188,7 @@ public class DatasetController {
                         ImageIO.write(image, "PNG", imageStoragePath.toFile());
 
                         // Create thumbnail
-                        ImageUtils.createThumbnail(image, thumbnailStoragePath);
+                        ImageUtils.createThumbnail(image, 64, 64, thumbnailStoragePath);
 
                         // Create object
                         InputData inputData = new InputData();
@@ -368,14 +363,68 @@ public class DatasetController {
         }
     }
 
-    @GetMapping("/dataset/download-results/{id}")
-    public void downloadResults(HttpServletResponse httpServletResponse, @PathVariable long id) throws IOException {
+    @GetMapping("/dataset/download-results/zip/{id}")
+    public void downloadAllResultsAsZIP(HttpServletResponse httpServletResponse, @PathVariable long id) throws IOException {
         Optional<Dataset> dataset_ = datasetRepository.findById(id);
         if(dataset_.isPresent() && dataset_.get().getStatus() != Dataset.Status.Preparing) {
             Dataset dataset = dataset_.get();
             Path resultsFilePath = Paths.get(dataset.getStoragePath()).resolve("results").resolve("results.zip");
             if(Files.isRegularFile(resultsFilePath)) {
                 RequestUtils.sendAttachment(httpServletResponse, resultsFilePath, StringUtils.makeFilesystemCompatible(dataset.getName()) + "-results.zip");
+            }
+            else {
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+            }
+        }
+        else {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @GetMapping("/dataset/download-results/xlsx-per-experiment/{id}")
+    public void downloadXLSXPerExperimentResults(HttpServletResponse httpServletResponse, @PathVariable long id) throws IOException {
+        Optional<Dataset> dataset_ = datasetRepository.findById(id);
+        if(dataset_.isPresent() && dataset_.get().getStatus() != Dataset.Status.Preparing) {
+            Dataset dataset = dataset_.get();
+            Path resultsFilePath = Paths.get(dataset.getStoragePath()).resolve("project").resolve("results").resolve("results_per_experiment.xlsx");
+            if(Files.isRegularFile(resultsFilePath)) {
+                RequestUtils.sendAttachment(httpServletResponse, resultsFilePath, StringUtils.makeFilesystemCompatible(dataset.getName()) + "-results_per_experiment.xlsx");
+            }
+            else {
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+            }
+        }
+        else {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @GetMapping("/dataset/download-results/xlsx-all-in-one/{id}")
+    public void downloadXLSXAllInOneResults(HttpServletResponse httpServletResponse, @PathVariable long id) throws IOException {
+        Optional<Dataset> dataset_ = datasetRepository.findById(id);
+        if(dataset_.isPresent() && dataset_.get().getStatus() != Dataset.Status.Preparing) {
+            Dataset dataset = dataset_.get();
+            Path resultsFilePath = Paths.get(dataset.getStoragePath()).resolve("project").resolve("results").resolve("results_all_in_one.xlsx");
+            if(Files.isRegularFile(resultsFilePath)) {
+                RequestUtils.sendAttachment(httpServletResponse, resultsFilePath, StringUtils.makeFilesystemCompatible(dataset.getName()) + "-results_all_in_one.xlsx");
+            }
+            else {
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+            }
+        }
+        else {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @GetMapping("/dataset/download-results/csv/{id}")
+    public void downloadCSVAllInOneResults(HttpServletResponse httpServletResponse, @PathVariable long id) throws IOException {
+        Optional<Dataset> dataset_ = datasetRepository.findById(id);
+        if(dataset_.isPresent() && dataset_.get().getStatus() != Dataset.Status.Preparing) {
+            Dataset dataset = dataset_.get();
+            Path resultsFilePath = Paths.get(dataset.getStoragePath()).resolve("project").resolve("results").resolve("results_all_in_one.csv");
+            if(Files.isRegularFile(resultsFilePath)) {
+                RequestUtils.sendAttachment(httpServletResponse, resultsFilePath, StringUtils.makeFilesystemCompatible(dataset.getName()) + "-results_all_in_one.csv");
             }
             else {
                 throw new ResponseStatusException(HttpStatus.NOT_FOUND);

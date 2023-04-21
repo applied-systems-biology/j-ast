@@ -20,9 +20,9 @@ org:
   jobrunr:
     background-job-server:
       enabled: true
-      worker-count: 2
+      worker-count: 1
     dashboard:
-      enabled: true
+      enabled: false
 runtime:
   fiji-path: 'fiji-bin/Fiji.app'
   fiji-executable-path: 'fiji-bin/Fiji.app/ImageJ-linux64'

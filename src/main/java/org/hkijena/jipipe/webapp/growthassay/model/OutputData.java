@@ -23,6 +23,12 @@ public class OutputData {
     @OneToMany(fetch = FetchType.LAZY)
     private List<InputData> inputData = new ArrayList<>();
 
+    @Column(name = "experiment", nullable = false, columnDefinition = "TEXT")
+    private String experiment;
+
+    @Column(name = "sample", nullable = false, columnDefinition = "TEXT")
+    private String sample;
+
     @Column(name = "fog")
     private double fog;
 
@@ -54,6 +60,22 @@ public class OutputData {
 
     public void setInputData(List<InputData> inputData) {
         this.inputData = inputData;
+    }
+
+    public String getExperiment() {
+        return experiment;
+    }
+
+    public void setExperiment(String experiment) {
+        this.experiment = experiment;
+    }
+
+    public String getSample() {
+        return sample;
+    }
+
+    public void setSample(String sample) {
+        this.sample = sample;
     }
 
     public double getFog() {

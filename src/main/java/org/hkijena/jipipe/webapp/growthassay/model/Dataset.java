@@ -273,15 +273,17 @@ public class Dataset {
     }
 
     public void tryCancelCurrentJob() {
-        // Read job id from a txt file
-        Path jobIdFile = Path.of(storagePath).resolve("job-id.txt");
-        if(Files.isRegularFile(jobIdFile)) {
-            try {
-                String uuid = Files.readString(jobIdFile);
-                BackgroundJob.delete(uuid);
-                Files.delete(jobIdFile);
-            } catch (IOException e) {
-                e.printStackTrace();
+        if(status == Status.Running) {
+            // Read job id from a txt file
+            Path jobIdFile = Path.of(storagePath).resolve("job-id.txt");
+            if (Files.isRegularFile(jobIdFile)) {
+                try {
+                    String uuid = Files.readString(jobIdFile);
+                    BackgroundJob.delete(uuid);
+                    Files.delete(jobIdFile);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }

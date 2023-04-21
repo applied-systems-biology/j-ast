@@ -68,7 +68,7 @@ public class StringUtils {
         if (input == null)
             return null;
         for (char c : INVALID_FILESYSTEM_CHARACTERS) {
-            input = input.replace(c, ' ');
+            input = input.replace(c, '-');
         }
         if (input.length() >= 255)
             input = input.substring(0, 255);

@@ -185,12 +185,14 @@ public class AnalysisService {
                         String sample = record.get("Sample");
                         double fog = NumberUtils.createDouble(record.get("FoG"));
 
+                        outputData.setExperiment(experiment);
+                        outputData.setSample(sample);
                         outputData.setFog(fog);
                         outputData.setInputData(inputDataRepository.findByDatasetAndExperimentAndSample(dataset, experiment, sample));
 
                         Path visualizationPath = workDirectory.resolve("results").resolve("visualizations").resolve("ZOI").resolve(experiment + "_" + sample + ".png");
                         Path visualizationThumbnailPath = Files.createTempFile(resultServiceDirectory, "thumbnail", ".png");
-                        ImageUtils.createThumbnail(ImageIO.read(visualizationPath.toFile()), visualizationThumbnailPath);
+                        ImageUtils.createThumbnail(ImageIO.read(visualizationPath.toFile()), 128, 64, visualizationThumbnailPath);
                         outputData.setVisualizationStoragePath(visualizationPath.toAbsolutePath().toString());
                         outputData.setVisualizationThumbnailStoragePath(visualizationThumbnailPath.toAbsolutePath().toString());
 
