@@ -31,9 +31,7 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Controller
 public class DatasetController {
@@ -433,6 +431,15 @@ public class DatasetController {
         else {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
+    }
+
+    @GetMapping("/dataset/query-all-status")
+    public ResponseEntity<Map<Long, Dataset.Status>> queryAllDatasetStatus() {
+        Map<Long, Dataset.Status> result = new HashMap<>();
+        for (Dataset dataset : datasetRepository.findAll()) {
+            result.put(dataset.getId(), dataset.getStatus());
+        }
+        return ResponseEntity.ok(result);
     }
 
     @EventListener(ApplicationReadyEvent.class)
