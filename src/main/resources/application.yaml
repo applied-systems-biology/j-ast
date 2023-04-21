@@ -26,4 +26,5 @@ org:
 runtime:
   fiji-path: 'fiji-bin/Fiji.app'
   fiji-executable-path: 'fiji-bin/Fiji.app/ImageJ-linux64'
+  fiji-wrapper: '/usr/bin/xvfb-run'
 

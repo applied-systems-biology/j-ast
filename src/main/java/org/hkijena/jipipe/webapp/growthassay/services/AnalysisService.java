@@ -143,11 +143,21 @@ public class AnalysisService {
 
                 // Run analysis
                 ProgressInfo jipipeProgress = progressInfo.resolveAndLog("Running JIPipe");
-                Path jipipeExecutablePath = Path.of(runtimeConfig.getFijiExecutablePath());
+                CommandLine commandLine;
+
+                if(StringUtils.isNullOrEmpty(runtimeConfig.getFijiWrapper())) {
+                    Path jipipeExecutablePath = Path.of(runtimeConfig.getFijiExecutablePath());
+                    commandLine = new CommandLine(jipipeExecutablePath.toFile());
+                }
+                else {
+                    Path jipipeExecutablePath = Path.of(runtimeConfig.getFijiExecutablePath());
+                    commandLine = new CommandLine(Path.of(runtimeConfig.getFijiWrapper()).toFile());
+                    commandLine.addArgument(jipipeExecutablePath.toAbsolutePath().toString());
+                }
+
                 Path jipipeRootPath = Path.of(runtimeConfig.getFijiPath());
                 progressInfo.incrementProgress();
 
-                CommandLine commandLine = new CommandLine(jipipeExecutablePath.toFile());
                 commandLine.addArgument("--pass-classpath");
                 commandLine.addArgument("--full-classpath");
                 commandLine.addArgument("--main-class");
