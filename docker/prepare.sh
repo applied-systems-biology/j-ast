@@ -15,11 +15,13 @@ mvn clean
 mvn package
 popd
 
-# Copy server jar
+# Copy server
+cp ../target/jipipe-webapp-growth-assay-analyzer-*-SNAPSHOT.jar target/ipipe-webapp-growth-assay-analyzer.jar
+cp application.yaml target
 
 # Copy fiji
 rm -rv Fiji.app
-cp -v ../fiji-bin/Fiji.app target
+cp -rv ../fiji-bin/Fiji.app target
 
 
 
