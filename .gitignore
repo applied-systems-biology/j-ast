@@ -31,4 +31,7 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### Other ###
 /fiji-bin/Fiji.app
+/database.mv.db
