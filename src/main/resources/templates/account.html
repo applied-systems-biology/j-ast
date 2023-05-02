@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layouts/base.html}">
+<body>
+<section layout:fragment="content" class="container-fluid pt-3">
+    <form action="#" th:action="@{account/edit}" th:object="${currentUser}" method="post" autocomplete="off">
+        <div class="row mt-3 mb-3">
+            <div class="col-lg">
+                <div class="card bg-light">
+                    <div class="card-header d-flex align-items-center justify-content-between">
+                        <span>Account info</span>
+                        <button type="submit" class="btn btn-primary button-add-data opacity-0">
+                            <i class="fa-solid fa-floppy-disk"></i> Save
+                        </button>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label for="account-username" class="form-label">User name</label>
+                            <input type="text" class="form-control" id="account-username" name="email" th:field="*{email}" disabled>
+                        </div>
+                        <div class="mb-3">
+                            <label for="account-role" class="form-label">Role</label>
+                            <input type="text" class="form-control" id="account-role" name="role" th:field="*{role}" disabled>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg">
+                <div class="card bg-light">
+                    <div class="card-header d-flex align-items-center justify-content-between">
+                        <span>Account settings</span>
+                        <button type="submit" class="btn btn-primary button-add-data">
+                            <i class="fa-solid fa-floppy-disk"></i> Save
+                        </button>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label for="account-first-name" class="form-label">First name</label>
+                            <input type="text" class="form-control" id="account-first-name" name="first-name" th:field="*{firstName}">
+                        </div>
+                        <div class="mb-5">
+                            <label for="account-last-name" class="form-label">Last name</label>
+                            <input type="text" class="form-control" id="account-last-name" name="last-name" th:field="*{lastName}">
+                        </div>
+                        <div class="mb-3">
+                            <label for="account-new-password" class="form-label">New password</label>
+                            <input type="password" class="form-control" id="account-new-password" name="new-password" autocomplete="new-password">
+                            <div class="form-text">
+                                Leave this field empty if you do not want to change your password.
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="account-new-password-repeat" class="form-label">New password (repeat)</label>
+                            <input type="password" class="form-control" id="account-new-password-repeat" name="new-password-repeat" autocomplete="new-password">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</section>
+</body>
+</html>

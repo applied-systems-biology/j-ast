@@ -423,10 +423,15 @@ public class DatasetController {
     }
 
     @GetMapping("/dataset/download-results/csv/{id}")
-    public void downloadCSVAllInOneResults(HttpServletResponse httpServletResponse, @PathVariable long id) throws IOException {
+    public void downloadCSVAllInOneResults(HttpServletResponse httpServletResponse, Authentication authentication, @PathVariable long id) throws IOException {
         Optional<Dataset> dataset_ = datasetRepository.findById(id);
         if(dataset_.isPresent() && dataset_.get().getStatus() != Dataset.Status.Preparing) {
             Dataset dataset = dataset_.get();
+
+            if(!dataset.canAccess(authentication)) {
+                throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+            }
+
             Path resultsFilePath = Paths.get(dataset.getStoragePath()).resolve("project").resolve("results").resolve("results_all_in_one.csv");
             if(Files.isRegularFile(resultsFilePath)) {
                 RequestUtils.sendAttachment(httpServletResponse, resultsFilePath, StringUtils.makeFilesystemCompatible(dataset.getName()) + "-results_all_in_one.csv");
@@ -441,9 +446,12 @@ public class DatasetController {
     }
 
     @GetMapping("/dataset/query-all-status")
-    public ResponseEntity<Map<Long, Dataset.Status>> queryAllDatasetStatus() {
+    public ResponseEntity<Map<Long, Dataset.Status>> queryAllDatasetStatus(Authentication authentication) {
+        if(authentication == null || !authentication.isAuthenticated()) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+        }
         Map<Long, Dataset.Status> result = new HashMap<>();
-        for (Dataset dataset : datasetRepository.findAll()) {
+        for (Dataset dataset : datasetRepository.getByAuthentication(authentication)) {
             result.put(dataset.getId(), dataset.getStatus());
         }
         return ResponseEntity.ok(result);

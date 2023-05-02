@@ -5,6 +5,7 @@ import com.google.common.collect.Multiset;
 import jakarta.persistence.*;
 import org.hkijena.jipipe.webapp.growthassay.utils.StringUtils;
 import org.jobrunr.scheduling.BackgroundJob;
+import org.springframework.security.core.Authentication;
 
 import java.io.IOException;
 import java.io.Serial;
@@ -297,6 +298,36 @@ public class Dataset {
                     e.printStackTrace();
                 }
             }
+        }
+    }
+
+    public boolean canEdit(Authentication authentication) {
+        if(authentication == null || !authentication.isAuthenticated()) {
+            return false;
+        }
+        else if(authentication.getPrincipal() instanceof UserPrincipal) {
+            return authentication.getPrincipal() == getOwner();
+        }
+        else if(authentication.getPrincipal() instanceof AdminPrincipal) {
+            return getOwner() == null;
+        }
+        else {
+            return false;
+        }
+    }
+
+    public boolean canAccess(Authentication authentication) {
+        if(authentication == null || !authentication.isAuthenticated()) {
+            return false;
+        }
+        else if(authentication.getPrincipal() instanceof UserPrincipal) {
+            return authentication.getPrincipal() == getOwner();
+        }
+        else if(authentication.getPrincipal() instanceof AdminPrincipal) {
+            return getOwner() == null;
+        }
+        else {
+            return false;
         }
     }
 
