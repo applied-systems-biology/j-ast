@@ -1,5 +1,10 @@
 package org.hkijena.jipipe.webapp.growthassay.services;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.DoubleNode;
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.fasterxml.jackson.databind.node.TextNode;
 import com.google.common.eventbus.Subscribe;
 import jakarta.transaction.Transactional;
 import org.apache.commons.csv.CSVFormat;
@@ -9,6 +14,7 @@ import org.apache.commons.exec.ExecuteWatchdog;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.hibernate.Hibernate;
 import org.hkijena.jipipe.webapp.growthassay.config.RuntimeConfig;
+import org.hkijena.jipipe.webapp.growthassay.config.RuntimeParametersConfig;
 import org.hkijena.jipipe.webapp.growthassay.model.Dataset;
 import org.hkijena.jipipe.webapp.growthassay.model.InputData;
 import org.hkijena.jipipe.webapp.growthassay.model.OutputData;
@@ -29,21 +35,23 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
-import java.util.List;
 import java.util.Optional;
 
 @Service
 public class AnalysisService {
 
     private final RuntimeConfig runtimeConfig;
+
+    private final RuntimeParametersConfig runtimeParametersConfig;
     private final DatasetRepository datasetRepository;
 
     private final InputDataRepository inputDataRepository;
     private final OutputDataRepository outputDataRepository;
 
     @Autowired
-    public AnalysisService(RuntimeConfig runtimeConfig, DatasetRepository datasetRepository, InputDataRepository inputDataRepository, OutputDataRepository outputDataRepository) {
+    public AnalysisService(RuntimeConfig runtimeConfig, RuntimeParametersConfig runtimeParametersConfig, DatasetRepository datasetRepository, InputDataRepository inputDataRepository, OutputDataRepository outputDataRepository) {
         this.runtimeConfig = runtimeConfig;
+        this.runtimeParametersConfig = runtimeParametersConfig;
         this.datasetRepository = datasetRepository;
         this.inputDataRepository = inputDataRepository;
         this.outputDataRepository = outputDataRepository;
@@ -141,6 +149,13 @@ public class AnalysisService {
                 Files.copy(new ClassPathResource("jipipe/project.jip").getInputStream(),
                         projectFile);
 
+                // Save parameter config
+                Path parameterOverridesFile = workDirectory.resolve("parameter-overrides.json");
+                ObjectNode parameterOverrides = JsonUtils.getObjectMapper().createObjectNode();
+                parameterOverrides.set(runtimeParametersConfig.getTimePointEarlyParameterKey(), new TextNode(dataset.getTimePointEarly()));
+                parameterOverrides.set(runtimeParametersConfig.getMinRelDiffThresholdParameterKey(), new DoubleNode(dataset.getPercentageOfInhibition() / 100));
+                JsonUtils.saveToFile(parameterOverrides, parameterOverridesFile);
+
                 // Run analysis
                 ProgressInfo jipipeProgress = progressInfo.resolveAndLog("Running JIPipe");
                 CommandLine commandLine;
@@ -169,6 +184,8 @@ public class AnalysisService {
                 commandLine.addArgument(jipipeOutputDirectory.toAbsolutePath().toString());
                 commandLine.addArgument("--output-results");
                 commandLine.addArgument("only-compartment-outputs");
+                commandLine.addArgument("--overwrite-parameters");
+                commandLine.addArgument(parameterOverridesFile.toAbsolutePath().toString());
 
                 ProcessUtils.ExtendedExecutor executor = new ProcessUtils.ExtendedExecutor(ExecuteWatchdog.INFINITE_TIMEOUT, jipipeProgress);
                 executor.setWorkingDirectory(jipipeRootPath.toFile());

@@ -1,31 +1,34 @@
 package org.hkijena.jipipe.webapp.growthassay.model;
 
+import org.hkijena.jipipe.webapp.growthassay.config.AccountConfig;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Collection;
 
-public class UserPrincipal implements UserDetails {
+public class AdminPrincipal implements UserDetails {
+    private final AccountConfig accountConfig;
+    private final PasswordEncoder passwordEncoder;
 
-    private final User user;
-
-    public UserPrincipal(User user) {
-        this.user = user;
+    public AdminPrincipal(AccountConfig accountConfig, PasswordEncoder passwordEncoder) {
+        this.accountConfig = accountConfig;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Roles.ROLE_USER_PRIVILEGES;
+        return Roles.ROLE_ADMIN_PRIVILEGES;
     }
 
     @Override
     public String getPassword() {
-        return user.getPassword();
+        return passwordEncoder.encode(accountConfig.getAdminPassword());
     }
 
     @Override
     public String getUsername() {
-        return user.getEmail();
+        return accountConfig.getAdminUserName();
     }
 
     @Override
@@ -46,9 +49,5 @@ public class UserPrincipal implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
-    }
-
-    public User getUser() {
-        return user;
     }
 }

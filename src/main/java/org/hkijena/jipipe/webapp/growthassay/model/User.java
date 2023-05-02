@@ -27,6 +27,10 @@ public class User {
     @Column(name = "password", columnDefinition = "TEXT")
     private String password;
 
+    @Column(name = "role", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private Role role = Role.User;
+
     public Long getId() {
         return id;
     }
@@ -65,5 +69,18 @@ public class User {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
+    }
+
+    public enum Role {
+        User,
+        Admin
     }
 }

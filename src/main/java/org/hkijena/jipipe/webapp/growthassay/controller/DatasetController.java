@@ -16,6 +16,7 @@ import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -52,7 +53,10 @@ public class DatasetController {
     }
 
     @GetMapping("/dataset/new")
-    public ModelAndView newDataset(Model model) throws IOException {
+    public ModelAndView newDataset(Model model, Authentication authentication) throws IOException {
+        if(authentication == null || !authentication.isAuthenticated()) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+        }
         Dataset dataset = new Dataset();
         Path storageDir;
         if(StringUtils.isNullOrEmpty(runtimeConfig.getCustomTempDirectory())) {
@@ -62,17 +66,20 @@ public class DatasetController {
             storageDir = Files.createTempDirectory(Paths.get(runtimeConfig.getCustomTempDirectory()), "jip-webapp");
         }
         dataset.setStoragePath(storageDir.toString());
+        if(authentication.getPrincipal() instanceof UserPrincipal) {
+            dataset.setOwner(((UserPrincipal) authentication.getPrincipal()).getUser());
+        }
         dataset = datasetRepository.save(dataset);
         return new ModelAndView("redirect:/dataset/view/" + dataset.getId());
     }
 
     @GetMapping("/dataset/view/{id}")
-    public ModelAndView viewDataset(Model model, @PathVariable long id) {
+    public ModelAndView viewDataset(Model model, Authentication authentication, @PathVariable long id) {
         Optional<Dataset> dataset_ = datasetRepository.findById(id);
         if (dataset_.isPresent()) {
             Dataset dataset = dataset_.get();
 
-            datasetRepository.putSortedToModel(model);
+            datasetRepository.putSortedToModel(model, authentication);
             model.addAttribute("currentDataset", dataset);
             model.addAttribute("currentDatasetId", dataset.getId());
 

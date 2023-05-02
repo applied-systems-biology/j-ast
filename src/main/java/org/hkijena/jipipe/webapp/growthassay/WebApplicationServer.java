@@ -1,5 +1,7 @@
 package org.hkijena.jipipe.webapp.growthassay;
 
+import org.hkijena.jipipe.webapp.growthassay.config.AccountConfig;
+import org.hkijena.jipipe.webapp.growthassay.config.RuntimeParametersConfig;
 import org.hkijena.jipipe.webapp.growthassay.config.RuntimeConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
@@ -7,7 +9,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 
 @SpringBootApplication
-@EnableConfigurationProperties(RuntimeConfig.class)
+@EnableConfigurationProperties({RuntimeConfig.class, AccountConfig.class, RuntimeParametersConfig.class})
 public class WebApplicationServer {
 
     @Autowired

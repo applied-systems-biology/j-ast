@@ -23,8 +23,8 @@ public class IndexController {
     }
 
     @GetMapping("/")
-    public ModelAndView index(Model model) {
-        datasetRepository.putSortedToModel(model);
+    public ModelAndView index(Model model, Authentication authentication) {
+        datasetRepository.putSortedToModel(model, authentication);
         model.addAttribute("currentDatasetId", -1);
         return new ModelAndView("index");
     }
@@ -32,7 +32,7 @@ public class IndexController {
     @GetMapping("/login")
     public ModelAndView showLoginForm(Model model, Authentication authentication) {
         if(authentication == null || !authentication.isAuthenticated()) {
-            datasetRepository.putSortedToModel(model);
+            datasetRepository.putSortedToModel(model, authentication);
             model.addAttribute("currentDatasetId", -1);
             return new ModelAndView("login");
         }
@@ -44,7 +44,7 @@ public class IndexController {
     @GetMapping("/login-error")
     public ModelAndView loginError(Model model, Authentication authentication) {
         if(authentication == null || !authentication.isAuthenticated()) {
-            datasetRepository.putSortedToModel(model);
+            datasetRepository.putSortedToModel(model, authentication);
             model.addAttribute("currentDatasetId", -1);
             List<Notification> notificationList = new ArrayList<>();
             notificationList.add(new Notification("Login error!", "Could not authenticate! Are the username and the password correct?", "danger"));
