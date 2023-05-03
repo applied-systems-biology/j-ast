@@ -287,6 +287,13 @@ public class Dataset {
 
     public void tryCancelCurrentJob() {
         if(status == Status.Running) {
+            // Delete lockfile
+            try {
+                Files.deleteIfExists(Path.of(storagePath).resolve("lockfile"));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
             // Read job id from a txt file
             Path jobIdFile = Path.of(storagePath).resolve("job-id.txt");
             if (Files.isRegularFile(jobIdFile)) {

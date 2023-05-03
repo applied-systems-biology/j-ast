@@ -102,7 +102,16 @@ public class AnalysisService {
             Dataset dataset = dataset_.get();
             Hibernate.initialize(dataset.getInputData());
 
+            // Create a lockfile because interrupting the thread is not reliable
+            Path lockFilePath = Path.of(dataset.getStoragePath()).resolve("lockfile");
+
             try {
+
+                // Ensure that the lockfile exists
+                if(!Files.isRegularFile(lockFilePath)) {
+                    Files.createFile(lockFilePath);
+                }
+
                 // Save job ID because tx not working
                 Files.writeString(Path.of(dataset.getStoragePath()).resolve("job-id.txt"), context.getJobId().toString(), StandardOpenOption.CREATE);
 
@@ -136,6 +145,10 @@ public class AnalysisService {
                 Path inputDirectory = workDirectory.resolve("raw");
                 Path jipipeOutputDirectory = workDirectory.resolve("results-jipipe");
                 Files.createDirectories(inputDirectory);
+
+                if(!Files.isRegularFile(lockFilePath)) {
+                    throw new InterruptedException();
+                }
 
                 // Copy inputs into the raw directory
                 progressInfo.log("Copying inputs");
@@ -197,7 +210,7 @@ public class AnalysisService {
                 commandLine.addArgument("--overwrite-parameters");
                 commandLine.addArgument(parameterOverridesFile.toAbsolutePath().toString());
 
-                ProcessUtils.ExtendedExecutor executor = new ProcessUtils.ExtendedExecutor(ExecuteWatchdog.INFINITE_TIMEOUT, jipipeProgress);
+                ProcessUtils.ExtendedExecutor executor = new ProcessUtils.ExtendedExecutor(ExecuteWatchdog.INFINITE_TIMEOUT, jipipeProgress, lockFilePath);
                 executor.setWorkingDirectory(jipipeRootPath.toFile());
                 ProcessUtils.setupLogger(commandLine, executor, jipipeProgress);
 
@@ -205,6 +218,10 @@ public class AnalysisService {
                     executor.execute(commandLine);
                 } catch (IOException e) {
                     throw new RuntimeException(e);
+                }
+
+                if(!Files.isRegularFile(lockFilePath)) {
+                    throw new InterruptedException();
                 }
 
                 // Postprocessing results
@@ -238,12 +255,19 @@ public class AnalysisService {
                     }
                 }
 
+                if(!Files.isRegularFile(lockFilePath)) {
+                    throw new InterruptedException();
+                }
 
                 // ZIP analysis results
                 Path zipFile = resultServiceDirectory.resolve("results.zip");
                 ProgressInfo zipProgress = progressInfo.resolveAndLog("Compressing results");
                 progressInfo.incrementProgress();
                 ArchiveUtils.zipDirectory(workDirectory, StringUtils.makeFilesystemCompatible("" + dataset.getName()), zipFile, zipProgress);
+
+                if(!Files.isRegularFile(lockFilePath)) {
+                    throw new InterruptedException();
+                }
 
                 // Finalize the analysis
                 dataset.setStatus(Dataset.Status.RunFinished);
@@ -254,6 +278,13 @@ public class AnalysisService {
                 datasetRepository.save(dataset);
                 e.printStackTrace();
                 logError(e.toString(), context, dataset);
+            }
+            finally {
+                try {
+                    Files.deleteIfExists(lockFilePath);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }
