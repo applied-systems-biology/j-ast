@@ -1,6 +1,7 @@
 package org.hkijena.jipipe.webapp.growthassay.controller;
 
 import jakarta.servlet.http.HttpServletResponse;
+import org.hkijena.jipipe.webapp.growthassay.config.AccountConfig;
 import org.hkijena.jipipe.webapp.growthassay.config.RuntimeConfig;
 import org.hkijena.jipipe.webapp.growthassay.model.*;
 import org.hkijena.jipipe.webapp.growthassay.repositories.DatasetRepository;
@@ -38,14 +39,17 @@ import java.util.*;
 public class DatasetController {
 
     private final RuntimeConfig runtimeConfig;
+
+    private final AccountConfig accountConfig;
     private final DatasetRepository datasetRepository;
     private final InputDataRepository inputDataRepository;
     private final JobScheduler jobScheduler;
     private final AnalysisService analysisService;
 
     @Autowired
-    public DatasetController(RuntimeConfig runtimeConfig, DatasetRepository datasetRepository, InputDataRepository inputDataRepository, JobScheduler jobScheduler, AnalysisService analysisService) {
+    public DatasetController(RuntimeConfig runtimeConfig, AccountConfig accountConfig, DatasetRepository datasetRepository, InputDataRepository inputDataRepository, JobScheduler jobScheduler, AnalysisService analysisService) {
         this.runtimeConfig = runtimeConfig;
+        this.accountConfig = accountConfig;
         this.datasetRepository = datasetRepository;
         this.inputDataRepository = inputDataRepository;
         this.jobScheduler = jobScheduler;
@@ -86,6 +90,15 @@ public class DatasetController {
             datasetRepository.putSortedToModel(model, authentication);
             model.addAttribute("currentDataset", dataset);
             model.addAttribute("currentDatasetId", dataset.getId());
+
+            // Add owner information
+            if(dataset.isOwnedBy(authentication)) {
+                model.addAttribute("currentDatasetOwnedByOtherUser", false);
+            }
+            else {
+                model.addAttribute("currentDatasetOwnedByOtherUser", true);
+                model.addAttribute("currentDatasetOwner", dataset.getOwner() != null ? dataset.getOwner().getEmail() : accountConfig.getAdminUserName());
+            }
 
             switch (dataset.getStatus()) {
                 case Preparing -> {

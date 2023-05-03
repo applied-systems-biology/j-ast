@@ -308,8 +308,7 @@ public class Dataset {
         }
     }
 
-    public boolean canEdit(Authentication authentication) {
-
+    public boolean isOwnedBy(Authentication authentication) {
         if(authentication == null || !authentication.isAuthenticated()) {
             return false;
         }
@@ -319,6 +318,20 @@ public class Dataset {
         }
         else if(authentication.getPrincipal() instanceof AdminPrincipal) {
             return getOwner() == null;
+        }
+        else {
+            return false;
+        }
+    }
+
+    public boolean canEdit(Authentication authentication) {
+
+        if(authentication == null || !authentication.isAuthenticated()) {
+            return false;
+        }
+
+        if(authentication.getPrincipal() instanceof UserPrincipal) {
+            return Objects.equals(((UserPrincipal) authentication.getPrincipal()).getUser().getId(), getOwner().getId());
         }
         else {
             return authentication.getAuthorities().contains(Privileges.PRIVILEGE_EDIT_ALL_TASKS);
@@ -333,9 +346,6 @@ public class Dataset {
 
         if(authentication.getPrincipal() instanceof UserPrincipal) {
             return Objects.equals(((UserPrincipal) authentication.getPrincipal()).getUser().getId(), getOwner().getId());
-        }
-        else if(authentication.getPrincipal() instanceof AdminPrincipal) {
-            return getOwner() == null;
         }
         else {
             return authentication.getAuthorities().contains(Privileges.PRIVILEGE_VIEW_ALL_TASKS);
