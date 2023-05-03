@@ -35,7 +35,8 @@ public class WebSecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.authenticationProvider(authProvider());
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.ALWAYS);
-        http.authorizeHttpRequests(authorize -> authorize.requestMatchers("/dataset/**", "/input-data/**", "/output-data/**", "/account/**", "/admin/**").authenticated()
+        http.authorizeHttpRequests(authorize -> authorize.requestMatchers("/dataset/**", "/input-data/**", "/output-data/**", "/account/**").authenticated()
+                .requestMatchers("/admin/**").hasRole("ADMIN")
                 .anyRequest().permitAll());
         http.formLogin().loginPage("/login").failureUrl("/login-error").permitAll().and()
                 .logout().permitAll();

@@ -302,32 +302,36 @@ public class Dataset {
     }
 
     public boolean canEdit(Authentication authentication) {
+
         if(authentication == null || !authentication.isAuthenticated()) {
             return false;
         }
-        else if(authentication.getPrincipal() instanceof UserPrincipal) {
+
+        if(authentication.getPrincipal() instanceof UserPrincipal) {
             return authentication.getPrincipal() == getOwner();
         }
         else if(authentication.getPrincipal() instanceof AdminPrincipal) {
             return getOwner() == null;
         }
         else {
-            return false;
+            return authentication.getAuthorities().contains(Roles.PRIVILEGE_EDIT_ALL_TASKS);
         }
     }
 
     public boolean canAccess(Authentication authentication) {
+
         if(authentication == null || !authentication.isAuthenticated()) {
             return false;
         }
-        else if(authentication.getPrincipal() instanceof UserPrincipal) {
+
+        if(authentication.getPrincipal() instanceof UserPrincipal) {
             return authentication.getPrincipal() == getOwner();
         }
         else if(authentication.getPrincipal() instanceof AdminPrincipal) {
             return getOwner() == null;
         }
         else {
-            return false;
+            return authentication.getAuthorities().contains(Roles.PRIVILEGE_VIEW_ALL_TASKS);
         }
     }
 

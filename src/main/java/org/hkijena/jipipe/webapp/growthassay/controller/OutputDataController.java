@@ -1,6 +1,7 @@
 package org.hkijena.jipipe.webapp.growthassay.controller;
 
 import jakarta.servlet.http.HttpServletResponse;
+import org.apache.tomcat.util.http.parser.HttpParser;
 import org.hkijena.jipipe.webapp.growthassay.config.RuntimeConfig;
 import org.hkijena.jipipe.webapp.growthassay.model.Dataset;
 import org.hkijena.jipipe.webapp.growthassay.model.OutputData;
@@ -9,6 +10,7 @@ import org.hkijena.jipipe.webapp.growthassay.repositories.OutputDataRepository;
 import org.hkijena.jipipe.webapp.growthassay.utils.RequestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -35,10 +37,15 @@ public class OutputDataController {
     }
 
     @GetMapping("/output-data/visualization/thumbnail/{id}")
-    public ModelAndView getThumbnail(HttpServletResponse response, @PathVariable long id) throws IOException {
+    public ModelAndView getThumbnail(HttpServletResponse response, Authentication authentication, @PathVariable long id) throws IOException {
         Optional<OutputData> outputData_ = outputDataRepository.findById(id);
         if(outputData_.isPresent()) {
             OutputData outputData = outputData_.get();
+
+            if(!outputData.getDataset().canAccess(authentication)) {
+                throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+            }
+
             RequestUtils.sendContent(response, Paths.get(outputData.getVisualizationThumbnailStoragePath()));
             return null;
         }
@@ -48,10 +55,15 @@ public class OutputDataController {
     }
 
     @GetMapping("/output-data/visualization/view/{id}")
-    public ModelAndView view(HttpServletResponse response, @PathVariable long id) throws IOException {
+    public ModelAndView view(HttpServletResponse response, Authentication authentication, @PathVariable long id) throws IOException {
         Optional<OutputData> outputData_ = outputDataRepository.findById(id);
         if(outputData_.isPresent()) {
             OutputData outputData = outputData_.get();
+
+            if(!outputData.getDataset().canAccess(authentication)) {
+                throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+            }
+
             RequestUtils.sendContent(response, Paths.get(outputData.getVisualizationStoragePath()));
             return null;
         }
@@ -61,10 +73,15 @@ public class OutputDataController {
     }
 
     @GetMapping("/output-data/visualization/download/{id}")
-    public ModelAndView download(HttpServletResponse response, @PathVariable long id) throws IOException {
+    public ModelAndView download(HttpServletResponse response, Authentication authentication, @PathVariable long id) throws IOException {
         Optional<OutputData> outputData_ = outputDataRepository.findById(id);
         if(outputData_.isPresent()) {
             OutputData outputData = outputData_.get();
+
+            if(!outputData.getDataset().canAccess(authentication)) {
+                throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+            }
+
             RequestUtils.sendAttachment(response, Paths.get(outputData.getVisualizationStoragePath()), Paths.get(outputData.getVisualizationStoragePath()).getFileName().toString());
             return null;
         }

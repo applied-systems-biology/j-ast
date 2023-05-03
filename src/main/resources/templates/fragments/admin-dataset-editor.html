@@ -1,0 +1,71 @@
+<div class="card bg-light" th:fragment="admin-dataset-editor">
+    <div class="card-header d-flex align-items-center justify-content-between">
+        <span>Datasets</span>
+        <a class="btn btn-danger button-admin" th:href="@{/admin/cancel-all-runs}">
+            <i class="fa-solid fa-ban"></i> Cancel all running analyses
+        </a>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table align-middle">
+                <thead>
+                <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">Owner</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Status</th>
+                    <th scope="col"></th>
+                </tr>
+                </thead>
+                <tbody class="admin-dataset-editor-list">
+                </tbody>
+            </table>
+        </div>
+        <div class="admin-dataset-editor-list-status">
+            <i class="fa-solid fa-circle-notch fa-spin"></i> Retrieving information ...
+        </div>
+    </div>
+    <script>
+
+        function updateAdminDatasetList() {
+            // $(".admin-dataset-editor-list-status").show()
+            $.getJSON(getURL("admin/list-datasets"), function (data) {
+                let html = ""
+                for (const message of data) {
+                    html += `<tr>
+<td>${message.id}</td>
+<td>${message.owner}</td>
+<td>${message.name}</td>
+<td>${message.status}</td>
+`
+                    html += `<td><div class="d-flex flex-row justify-content-end"><a class="btn btn-primary" href="${getURL("dataset/view/" + message.id)}" target="_blank"><i class="fa-solid fa-fw fa-folder-open"></i> View</a>`
+                    html += `<button type="button" class="btn btn-danger ms-1 button-admin-cancel-dataset-run" href="${getURL("dataset/view/" + message.id)}" ${message["can-cancel"] ? "" : "disabled"} data-dataset-id="${message.id}" ><i class="fa-solid fa-fw fa-ban"></i> Cancel</button>`
+                    html += "</div></td></tr>"
+                }
+                $(".admin-dataset-editor-list").html(html)
+            })
+            .done(function () {
+                $(".button-admin-cancel-dataset-run").click(function () {
+                    const datasetId = $(this).data("datasetId")
+                    $(this).prop("disabled", true)
+                    const token = $('#_csrf').attr('content');
+                    const header = $('#_csrf_header').attr('content');
+                    $.ajax(getURL("dataset/reset/" + datasetId), {
+                        type: "POST",
+                        beforeSend: function (xhr) {
+                            xhr.setRequestHeader(header, token);
+                        },
+                    })
+                })
+            })
+            .always(function () {
+                $(".admin-dataset-editor-list-status").hide()
+            });
+        }
+
+        $(document).ready(function () {
+            updateAdminDatasetList()
+            setInterval(updateAdminDatasetList, 2500)
+        })
+    </script>
+</div>

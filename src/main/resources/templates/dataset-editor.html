@@ -60,12 +60,17 @@
                 message["parameters"][parameterProperty] = value
             })
 
+            const token = $('#_csrf').attr('content');
+            const header = $('#_csrf_header').attr('content');
             return $.ajax(getURL("dataset/update/" + currentDatasetId), {
                 type: "POST",
                 data: JSON.stringify(message),
                 dataType: "html",
                 contentType: 'application/json',
-                mimeType: 'application/json'
+                mimeType: 'application/json',
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader(header, token);
+                },
             })
         }
 
@@ -75,7 +80,14 @@
                 $("#input-data-editor-" + inputDataId).fadeOut(function () {
                     $(this).remove()
                 })
-                $.post(getURL("input-data/delete/" + inputDataId))
+                const token = $('#_csrf').attr('content');
+                const header = $('#_csrf_header').attr('content');
+                $.ajax(getURL("input-data/delete/" + inputDataId), {
+                    type: "POST",
+                    beforeSend: function (xhr) {
+                        xhr.setRequestHeader(header, token);
+                    },
+                })
                     .always(function () {
                         runValidation()
                     })

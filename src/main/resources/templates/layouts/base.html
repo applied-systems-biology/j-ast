@@ -7,6 +7,8 @@
     <link th:href="@{/fontawesome/css/all.css}" rel="stylesheet">
     <link rel="stylesheet" th:href="@{/custom.css}" />
     <title>Growth Assay Analyzer</title>
+    <meta id="_csrf" name="_csrf" th:content="${_csrf.token}"/>
+    <meta id="_csrf_header" name="_csrf_header" th:content="${_csrf.headerName}"/>
 </head>
 <body>
 <script src="/jquery/jquery-3.6.4.min.js"></script>

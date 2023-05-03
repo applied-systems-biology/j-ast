@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layouts/base.html}">
+<body>
+<section layout:fragment="content" class="container-fluid pt-3">
+        <div class="row mt-3 mb-3">
+                <div class="col-lg">
+                        <div th:replace="~{fragments/admin-user-editor.html :: admin-user-editor}"></div>
+                </div>
+                <div class="col-lg">
+                        <div th:replace="~{fragments/admin-dataset-editor.html :: admin-dataset-editor}"></div>
+                </div>
+        </div>
+</section>
+</body>
+</html>

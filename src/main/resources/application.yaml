@@ -27,7 +27,9 @@ org:
 runtime:
   fiji-path: 'fiji-bin/Fiji.app'
   fiji-executable-path: 'fiji-bin/Fiji.app/ImageJ-linux64'
+  fiji-args: ['--memory', '8G']
   fiji-wrapper: '/usr/bin/xvfb-run'
+  fiji-wrapper-args: [ '-a' ]
 runtime-parameters:
   time-point-early-parameter-key: 'e3d4a323-851b-49f8-960d-80e972ff94ad/custom-variables/timePointEarly'
   min-rel-diff-threshold-parameter-key: '32215cd8-a746-4b10-a1fe-577cc374386c/custom-expression-variables/minreldiff'

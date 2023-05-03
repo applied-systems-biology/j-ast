@@ -54,7 +54,7 @@ public class DatasetController {
 
     @GetMapping("/dataset/new")
     public ModelAndView newDataset(Model model, Authentication authentication) throws IOException {
-        if(authentication == null || !authentication.isAuthenticated()) {
+        if(authentication == null || !authentication.isAuthenticated() || !authentication.getAuthorities().contains(Roles.PRIVILEGE_CREATE_TASKS)) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN);
         }
         Dataset dataset = new Dataset();
@@ -78,6 +78,10 @@ public class DatasetController {
         Optional<Dataset> dataset_ = datasetRepository.findById(id);
         if (dataset_.isPresent()) {
             Dataset dataset = dataset_.get();
+
+            if(!dataset.canAccess(authentication)) {
+                throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+            }
 
             datasetRepository.putSortedToModel(model, authentication);
             model.addAttribute("currentDataset", dataset);
@@ -105,11 +109,15 @@ public class DatasetController {
     }
 
     @PostMapping("/dataset/delete/{id}")
-    public ModelAndView deleteDataset(Model model, RedirectAttributes redirectAttributes, @PathVariable long id) {
+    public ModelAndView deleteDataset(Authentication authentication, RedirectAttributes redirectAttributes, @PathVariable long id) {
         Optional<Dataset> dataset_ = datasetRepository.findById(id);
         if(dataset_.isPresent()) {
 
             Dataset dataset = dataset_.get();
+
+            if(!dataset.canEdit(authentication)) {
+                throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+            }
 
             if(dataset.getStatus() == Dataset.Status.Running) {
                 throw new ResponseStatusException(HttpStatus.FORBIDDEN);
@@ -126,10 +134,14 @@ public class DatasetController {
     }
 
     @PostMapping("/dataset/rename/{id}")
-    public ModelAndView renameDataset(Model model, @PathVariable long id, @RequestParam("datasetName") String datasetName) {
+    public ModelAndView renameDataset(Authentication authentication, @PathVariable long id, @RequestParam("datasetName") String datasetName) {
         Optional<Dataset> dataset_ = datasetRepository.findById(id);
         if(dataset_.isPresent()) {
             Dataset dataset = dataset_.get();
+
+            if(!dataset.canEdit(authentication)) {
+                throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+            }
 
             datasetName = StringUtils.nullToEmpty(datasetName).trim();
             if(StringUtils.isNullOrEmpty(datasetName)) {
@@ -145,10 +157,16 @@ public class DatasetController {
     }
 
     @GetMapping("/dataset/validate/{id}")
-    public ResponseEntity<ValidationResult> validateDataset(@PathVariable long id) {
+    public ResponseEntity<ValidationResult> validateDataset(Authentication authentication, @PathVariable long id) {
         Optional<Dataset> dataset_ = datasetRepository.findById(id);
         if(dataset_.isPresent()) {
-            return ResponseEntity.ok(dataset_.get().validate());
+
+            Dataset dataset = dataset_.get();
+            if(!dataset.canAccess(authentication)) {
+                throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+            }
+
+            return ResponseEntity.ok(dataset.validate());
         }
         else {
             return ResponseEntity.notFound().build();
@@ -156,10 +174,14 @@ public class DatasetController {
     }
 
     @PostMapping("/dataset/upload-input/{id}")
-    public ResponseEntity<?> uploadFileToDataset(Model model, @PathVariable long id, RedirectAttributes redirectAttributes, @RequestParam("imageFile") MultipartFile imageFile) {
+    public ResponseEntity<?> uploadFileToDataset(Authentication authentication, @PathVariable long id, RedirectAttributes redirectAttributes, @RequestParam("imageFile") MultipartFile imageFile) {
         Optional<Dataset> dataset_ = datasetRepository.findById(id);
         if(dataset_.isPresent()) {
             Dataset dataset = dataset_.get();
+
+            if(!dataset.canEdit(authentication)) {
+                throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+            }
 
             if(dataset.getStatus() != Dataset.Status.Preparing) {
                 throw new ResponseStatusException(HttpStatus.FORBIDDEN);
@@ -239,10 +261,15 @@ public class DatasetController {
     }
 
     @PostMapping("/dataset/update/{id}")
-    public void update(HttpServletResponse response, @PathVariable long id, @RequestBody DatasetUpdateMessage message) {
+    public void update(HttpServletResponse response, Authentication authentication, @PathVariable long id, @RequestBody DatasetUpdateMessage message) {
         Optional<Dataset> dataset_ = datasetRepository.findById(id);
         if(dataset_.isPresent()) {
             Dataset dataset = dataset_.get();
+
+            if(!dataset.canEdit(authentication)) {
+                throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+            }
+
             if(dataset.getStatus() == Dataset.Status.Preparing) {
                 message.getParametersUpdateMessage().update(dataset);
                 datasetRepository.save(dataset);
@@ -265,10 +292,15 @@ public class DatasetController {
     }
 
     @PostMapping("/dataset/run/{id}")
-    public ModelAndView run(RedirectAttributes redirectAttributes, @PathVariable long id) {
+    public ModelAndView run(RedirectAttributes redirectAttributes, Authentication authentication, @PathVariable long id) {
         Optional<Dataset> dataset_ = datasetRepository.findById(id);
         if(dataset_.isPresent()) {
             Dataset dataset = dataset_.get();
+
+            if(!dataset.canEdit(authentication)) {
+                throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+            }
+
             if(dataset.getStatus() == Dataset.Status.Preparing) {
                 if (dataset.validate().isValid()) {
 
@@ -299,10 +331,15 @@ public class DatasetController {
     }
 
     @PostMapping("/dataset/reset/{id}")
-    public ModelAndView reset(RedirectAttributes redirectAttributes, @PathVariable long id) {
+    public ModelAndView reset(RedirectAttributes redirectAttributes, Authentication authentication, @PathVariable long id) {
         Optional<Dataset> dataset_ = datasetRepository.findById(id);
         if(dataset_.isPresent()) {
             Dataset dataset = dataset_.get();
+
+            if(!dataset.canEdit(authentication)) {
+                throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+            }
+
             dataset.tryCancelCurrentJob();
 
             dataset.setStatus(Dataset.Status.Preparing);
@@ -317,10 +354,15 @@ public class DatasetController {
     }
 
     @GetMapping("/dataset/query-status/{id}")
-    public ResponseEntity<AnalysisStatusMessage> queryDatasetStatus(@PathVariable long id) {
+    public ResponseEntity<AnalysisStatusMessage> queryDatasetStatus(Authentication authentication, @PathVariable long id) {
         Optional<Dataset> dataset_ = datasetRepository.findById(id);
         if(dataset_.isPresent()) {
             Dataset dataset = dataset_.get();
+
+            if(!dataset.canAccess(authentication)) {
+                throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+            }
+
             AnalysisStatusMessage message = new AnalysisStatusMessage();
             message.setStatus(dataset.getStatus());
 
@@ -351,10 +393,15 @@ public class DatasetController {
     }
 
     @GetMapping("/dataset/download-log/{id}")
-    public void downloadDatasetLog(HttpServletResponse httpServletResponse, @PathVariable long id) throws IOException {
+    public void downloadDatasetLog(HttpServletResponse httpServletResponse, Authentication authentication, @PathVariable long id) throws IOException {
         Optional<Dataset> dataset_ = datasetRepository.findById(id);
         if(dataset_.isPresent() && dataset_.get().getStatus() != Dataset.Status.Preparing) {
             Dataset dataset = dataset_.get();
+
+            if(!dataset.canAccess(authentication)) {
+                throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+            }
+
             Path logFilePath = Paths.get(dataset.getStoragePath()).resolve("log.txt");
             if(Files.isRegularFile(logFilePath)) {
                 RequestUtils.sendAttachment(httpServletResponse, logFilePath, "log.txt");
@@ -369,10 +416,15 @@ public class DatasetController {
     }
 
     @GetMapping("/dataset/download-results/zip/{id}")
-    public void downloadAllResultsAsZIP(HttpServletResponse httpServletResponse, @PathVariable long id) throws IOException {
+    public void downloadAllResultsAsZIP(HttpServletResponse httpServletResponse, Authentication authentication, @PathVariable long id) throws IOException {
         Optional<Dataset> dataset_ = datasetRepository.findById(id);
         if(dataset_.isPresent() && dataset_.get().getStatus() != Dataset.Status.Preparing) {
             Dataset dataset = dataset_.get();
+
+            if(!dataset.canAccess(authentication)) {
+                throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+            }
+
             Path resultsFilePath = Paths.get(dataset.getStoragePath()).resolve("results").resolve("results.zip");
             if(Files.isRegularFile(resultsFilePath)) {
                 RequestUtils.sendAttachment(httpServletResponse, resultsFilePath, StringUtils.makeFilesystemCompatible(dataset.getName()) + "-results.zip");
@@ -387,10 +439,15 @@ public class DatasetController {
     }
 
     @GetMapping("/dataset/download-results/xlsx-per-experiment/{id}")
-    public void downloadXLSXPerExperimentResults(HttpServletResponse httpServletResponse, @PathVariable long id) throws IOException {
+    public void downloadXLSXPerExperimentResults(HttpServletResponse httpServletResponse, Authentication authentication, @PathVariable long id) throws IOException {
         Optional<Dataset> dataset_ = datasetRepository.findById(id);
         if(dataset_.isPresent() && dataset_.get().getStatus() != Dataset.Status.Preparing) {
             Dataset dataset = dataset_.get();
+
+            if(!dataset.canAccess(authentication)) {
+                throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+            }
+
             Path resultsFilePath = Paths.get(dataset.getStoragePath()).resolve("project").resolve("results").resolve("results_per_experiment.xlsx");
             if(Files.isRegularFile(resultsFilePath)) {
                 RequestUtils.sendAttachment(httpServletResponse, resultsFilePath, StringUtils.makeFilesystemCompatible(dataset.getName()) + "-results_per_experiment.xlsx");
@@ -405,10 +462,15 @@ public class DatasetController {
     }
 
     @GetMapping("/dataset/download-results/xlsx-all-in-one/{id}")
-    public void downloadXLSXAllInOneResults(HttpServletResponse httpServletResponse, @PathVariable long id) throws IOException {
+    public void downloadXLSXAllInOneResults(HttpServletResponse httpServletResponse, Authentication authentication, @PathVariable long id) throws IOException {
         Optional<Dataset> dataset_ = datasetRepository.findById(id);
         if(dataset_.isPresent() && dataset_.get().getStatus() != Dataset.Status.Preparing) {
             Dataset dataset = dataset_.get();
+
+            if(!dataset.canAccess(authentication)) {
+                throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+            }
+
             Path resultsFilePath = Paths.get(dataset.getStoragePath()).resolve("project").resolve("results").resolve("results_all_in_one.xlsx");
             if(Files.isRegularFile(resultsFilePath)) {
                 RequestUtils.sendAttachment(httpServletResponse, resultsFilePath, StringUtils.makeFilesystemCompatible(dataset.getName()) + "-results_all_in_one.xlsx");

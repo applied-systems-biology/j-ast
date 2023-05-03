@@ -9,6 +9,7 @@ import org.hkijena.jipipe.webapp.growthassay.repositories.InputDataRepository;
 import org.hkijena.jipipe.webapp.growthassay.utils.RequestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -36,10 +37,15 @@ public class InputDataController {
     }
 
     @GetMapping("/input-data/thumbnail/{id}")
-    public ModelAndView getThumbnail(HttpServletResponse response, @PathVariable long id) throws IOException {
+    public ModelAndView getThumbnail(HttpServletResponse response, Authentication authentication, @PathVariable long id) throws IOException {
         Optional<InputData> inputData_ = inputDataRepository.findById(id);
         if(inputData_.isPresent()) {
             InputData inputData = inputData_.get();
+
+            if(!inputData.getDataset().canAccess(authentication)) {
+                throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+            }
+
             RequestUtils.sendContent(response, Paths.get(inputData.getThumbnailStoragePath()));
             return null;
         }
@@ -49,10 +55,15 @@ public class InputDataController {
     }
 
     @GetMapping("/input-data/view/{id}")
-    public ModelAndView view(HttpServletResponse response, @PathVariable long id) throws IOException {
+    public ModelAndView view(HttpServletResponse response, Authentication authentication, @PathVariable long id) throws IOException {
         Optional<InputData> inputData_ = inputDataRepository.findById(id);
         if(inputData_.isPresent()) {
             InputData inputData = inputData_.get();
+
+            if(!inputData.getDataset().canAccess(authentication)) {
+                throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+            }
+
             RequestUtils.sendContent(response, Paths.get(inputData.getStoragePath()));
             return null;
         }
@@ -62,10 +73,15 @@ public class InputDataController {
     }
 
     @GetMapping("/input-data/download/{id}")
-    public ModelAndView download(HttpServletResponse response, @PathVariable long id) throws IOException {
+    public ModelAndView download(HttpServletResponse response, Authentication authentication, @PathVariable long id) throws IOException {
         Optional<InputData> inputData_ = inputDataRepository.findById(id);
         if(inputData_.isPresent()) {
             InputData inputData = inputData_.get();
+
+            if(!inputData.getDataset().canAccess(authentication)) {
+                throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+            }
+
             RequestUtils.sendAttachment(response, Paths.get(inputData.getStoragePath()), inputData.getOriginalFileName());
             return null;
         }
@@ -75,11 +91,16 @@ public class InputDataController {
     }
 
     @PostMapping("/input-data/delete/{id}")
-    public void deleteInputData(HttpServletResponse response, @PathVariable long id) {
+    public void deleteInputData(HttpServletResponse response, Authentication authentication, @PathVariable long id) {
         Optional<InputData> inputData_ = inputDataRepository.findById(id);
         if(inputData_.isPresent()) {
             InputData inputData = inputData_.get();
             Dataset dataset = inputData.getDataset();
+
+            if(!inputData.getDataset().canEdit(authentication)) {
+                throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+            }
+
             dataset.removeInputData(inputData);
             datasetRepository.save(dataset);
             inputDataRepository.delete(inputData);

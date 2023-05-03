@@ -25,13 +25,17 @@
     function uploadFile(file) {
       let formData = new FormData()
       formData.append("imageFile", file)
-
+      const token = $('#_csrf').attr('content');
+      const header = $('#_csrf_header').attr('content');
       return $.ajax({
         type: "POST",
         url: getURL("dataset/upload-input/" + currentDatasetId),
         data: formData,
         processData: false,
-        contentType: false
+        contentType: false,
+        beforeSend: function (xhr) {
+          xhr.setRequestHeader(header, token);
+        }
       })
     }
 
