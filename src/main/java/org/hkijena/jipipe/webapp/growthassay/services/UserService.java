@@ -9,13 +9,13 @@ import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 public class UserService implements UserDetailsService, ApplicationContextAware {
@@ -36,11 +36,11 @@ public class UserService implements UserDetailsService, ApplicationContextAware 
             return new AdminPrincipal(accountConfig, applicationContext.getBean(PasswordEncoder.class));
         }
 
-        User user = userRepository.findByEmail(username);
-        if(user == null) {
+        Optional<User> user = userRepository.findByEmailIgnoreCase(username);
+        if(user.isEmpty()) {
             throw new UsernameNotFoundException(username);
         }
-        return new UserPrincipal(user);
+        return new UserPrincipal(user.get());
     }
 
     @Override

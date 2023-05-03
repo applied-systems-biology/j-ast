@@ -18,7 +18,7 @@ public class AdminPrincipal implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Roles.ROLE_ADMIN_PRIVILEGES;
+        return Privileges.ROLE_ADMIN_PRIVILEGES;
     }
 
     @Override

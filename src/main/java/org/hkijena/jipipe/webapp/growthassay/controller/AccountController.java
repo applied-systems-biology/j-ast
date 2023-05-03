@@ -14,7 +14,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -65,7 +64,7 @@ public class AccountController {
     }
 
     @PostMapping("/account/edit")
-    public ModelAndView updateAccount(Authentication authentication, RedirectAttributes redirectAttributes, @ModelAttribute UpdateUserMessage updateUserMessage) {
+    public ModelAndView updateAccount(Authentication authentication, RedirectAttributes redirectAttributes, @ModelAttribute CreateUpdateUserMessage createUpdateUserMessage) {
         if(authentication != null && authentication.isAuthenticated()) {
             User user;
             if(authentication.getPrincipal() instanceof UserPrincipal) {
@@ -82,19 +81,19 @@ public class AccountController {
                 throw new IllegalArgumentException("Unsupported principal type!");
             }
 
-            if(!StringUtils.isNullOrEmpty(updateUserMessage.getNewPassword())) {
-                if(!Objects.equals(updateUserMessage.getNewPassword(), updateUserMessage.getNewPasswordRepeat())) {
+            if(!StringUtils.isNullOrEmpty(createUpdateUserMessage.getNewPassword())) {
+                if(!Objects.equals(createUpdateUserMessage.getNewPassword(), createUpdateUserMessage.getNewPasswordConfirm())) {
                     Notification.pushToRedirect("Unable to update password!",
                             "Please ensure that you correctly repeat the password.",
                             Notification.Style.danger,
                             redirectAttributes);
                     return new ModelAndView("redirect:/account");
                 }
-                user.setPassword(passwordEncoder.encode(updateUserMessage.getNewPassword()));
+                user.setPassword(passwordEncoder.encode(createUpdateUserMessage.getNewPassword()));
             }
 
-            user.setFirstName(StringUtils.nullToEmpty(updateUserMessage.getFirstName()));
-            user.setLastName(StringUtils.nullToEmpty(updateUserMessage.getLastName()));
+            user.setFirstName(StringUtils.nullToEmpty(createUpdateUserMessage.getFirstName()));
+            user.setLastName(StringUtils.nullToEmpty(createUpdateUserMessage.getLastName()));
             userRepository.save(user);
 
             return new ModelAndView("redirect:/account");

@@ -31,6 +31,17 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Role role = Role.User;
 
+    @Column(name = "allow_login", nullable = false)
+    private boolean allowLogin = true;
+
+    public boolean isAllowLogin() {
+        return allowLogin;
+    }
+
+    public void setAllowLogin(boolean locked) {
+        this.allowLogin = locked;
+    }
+
     public Long getId() {
         return id;
     }

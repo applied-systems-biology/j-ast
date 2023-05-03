@@ -54,7 +54,7 @@ public class DatasetController {
 
     @GetMapping("/dataset/new")
     public ModelAndView newDataset(Model model, Authentication authentication) throws IOException {
-        if(authentication == null || !authentication.isAuthenticated() || !authentication.getAuthorities().contains(Roles.PRIVILEGE_CREATE_TASKS)) {
+        if(authentication == null || !authentication.isAuthenticated() || !authentication.getAuthorities().contains(Privileges.PRIVILEGE_CREATE_TASKS)) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN);
         }
         Dataset dataset = new Dataset();

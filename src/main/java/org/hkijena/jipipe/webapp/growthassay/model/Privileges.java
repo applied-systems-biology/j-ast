@@ -6,7 +6,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import java.util.Set;
 
-public class Roles {
+public class Privileges {
 
     public static final GrantedAuthority PRIVILEGE_USER = new SimpleGrantedAuthority("ROLE_USER");
 

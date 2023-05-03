@@ -308,13 +308,13 @@ public class Dataset {
         }
 
         if(authentication.getPrincipal() instanceof UserPrincipal) {
-            return authentication.getPrincipal() == getOwner();
+            return Objects.equals(((UserPrincipal) authentication.getPrincipal()).getUser().getId(), getOwner().getId());
         }
         else if(authentication.getPrincipal() instanceof AdminPrincipal) {
             return getOwner() == null;
         }
         else {
-            return authentication.getAuthorities().contains(Roles.PRIVILEGE_EDIT_ALL_TASKS);
+            return authentication.getAuthorities().contains(Privileges.PRIVILEGE_EDIT_ALL_TASKS);
         }
     }
 
@@ -325,13 +325,13 @@ public class Dataset {
         }
 
         if(authentication.getPrincipal() instanceof UserPrincipal) {
-            return authentication.getPrincipal() == getOwner();
+            return Objects.equals(((UserPrincipal) authentication.getPrincipal()).getUser().getId(), getOwner().getId());
         }
         else if(authentication.getPrincipal() instanceof AdminPrincipal) {
             return getOwner() == null;
         }
         else {
-            return authentication.getAuthorities().contains(Roles.PRIVILEGE_VIEW_ALL_TASKS);
+            return authentication.getAuthorities().contains(Privileges.PRIVILEGE_VIEW_ALL_TASKS);
         }
     }
 
