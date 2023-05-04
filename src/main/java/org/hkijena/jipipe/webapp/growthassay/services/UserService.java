@@ -5,6 +5,8 @@ import org.hkijena.jipipe.webapp.growthassay.model.AdminPrincipal;
 import org.hkijena.jipipe.webapp.growthassay.model.User;
 import org.hkijena.jipipe.webapp.growthassay.model.UserPrincipal;
 import org.hkijena.jipipe.webapp.growthassay.repositories.UserRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -32,7 +34,7 @@ public class UserService implements UserDetailsService, ApplicationContextAware 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
-        if(accountConfig.getAdminUserName().equals(username)) {
+        if(accountConfig.getAdminUsername().equalsIgnoreCase(username)) {
             return new AdminPrincipal(accountConfig, applicationContext.getBean(PasswordEncoder.class));
         }
 

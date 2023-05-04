@@ -63,7 +63,7 @@ public class AdminController {
         for (Dataset dataset : datasetRepository.findAll()) {
             DatasetAdminStatusMessage message = new DatasetAdminStatusMessage();
             message.setId(dataset.getId());
-            message.setOwner(dataset.getOwner() != null ? dataset.getOwner().getEmail() :accountConfig.getAdminUserName());
+            message.setOwner(dataset.getOwner() != null ? dataset.getOwner().getEmail() :accountConfig.getAdminUsername());
             message.setStatus(dataset.getStatus().toString());
             message.setName(dataset.getName());
             message.setCanCancel(dataset.getStatus() == Dataset.Status.Running);
@@ -114,7 +114,7 @@ public class AdminController {
             Notification.pushToRedirect("E-Mail is empty!", "The provided E-Mail is empty'!", Notification.Style.danger, redirectAttributes);
             return new ModelAndView("redirect:/admin");
         }
-        if(accountConfig.getAdminUserName().equalsIgnoreCase(userName) || userRepository.existsByEmailIgnoreCase(userName)) {
+        if(accountConfig.getAdminUsername().equalsIgnoreCase(userName) || userRepository.existsByEmailIgnoreCase(userName)) {
             Notification.pushToRedirect("User already exists!", "There is already a user with the E-Mail-Address '" + userName + "'!", Notification.Style.danger, redirectAttributes);
             return new ModelAndView("redirect:/admin");
         }

@@ -6,23 +6,38 @@ import java.util.List;
 
 @ConfigurationProperties(prefix = "runtime")
 public class RuntimeConfig {
-    private final String customTempDirectory;
-    private final String fijiPath;
+    private String customTempDirectory;
+    private String fijiPath;
 
-    private final String fijiExecutablePath;
+    private String fijiExecutablePath;
 
-    private final String fijiWrapper;
+    private String fijiWrapper;
 
-    private final List<String> fijiArgs;
+    private List<String> fijiArgs;
 
-    private final List<String> fijiWrapperArgs;
+    private List<String> fijiWrapperArgs;
 
-    public RuntimeConfig(String customTempDirectory, String fijiPath, String fijiExecutablePath, String fijiWrapper, List<String> fijiArgs, List<String> fijiWrapperArgs) {
+    public void setCustomTempDirectory(String customTempDirectory) {
         this.customTempDirectory = customTempDirectory;
+    }
+
+    public void setFijiPath(String fijiPath) {
         this.fijiPath = fijiPath;
+    }
+
+    public void setFijiExecutablePath(String fijiExecutablePath) {
         this.fijiExecutablePath = fijiExecutablePath;
+    }
+
+    public void setFijiWrapper(String fijiWrapper) {
         this.fijiWrapper = fijiWrapper;
+    }
+
+    public void setFijiArgs(List<String> fijiArgs) {
         this.fijiArgs = fijiArgs;
+    }
+
+    public void setFijiWrapperArgs(List<String> fijiWrapperArgs) {
         this.fijiWrapperArgs = fijiWrapperArgs;
     }
 

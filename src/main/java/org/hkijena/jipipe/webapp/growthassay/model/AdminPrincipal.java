@@ -28,7 +28,7 @@ public class AdminPrincipal implements UserDetails {
 
     @Override
     public String getUsername() {
-        return accountConfig.getAdminUserName();
+        return accountConfig.getAdminUsername();
     }
 
     @Override

@@ -8,18 +8,21 @@ import org.springframework.validation.annotation.Validated;
 @Validated
 public class AccountConfig {
     @NotEmpty
-    private final String adminUserName;
+    private String adminUsername;
 
     @NotEmpty
-    private final String adminPassword;
+    private String adminPassword;
 
-    public AccountConfig(String adminUserName, String adminPassword) {
-        this.adminUserName = adminUserName;
+    public void setAdminUsername(String adminUsername) {
+        this.adminUsername = adminUsername;
+    }
+
+    public void setAdminPassword(String adminPassword) {
         this.adminPassword = adminPassword;
     }
 
-    public String getAdminUserName() {
-        return adminUserName;
+    public String getAdminUsername() {
+        return adminUsername;
     }
 
     public String getAdminPassword() {

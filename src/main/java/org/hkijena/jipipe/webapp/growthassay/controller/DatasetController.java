@@ -97,7 +97,7 @@ public class DatasetController {
             }
             else {
                 model.addAttribute("currentDatasetOwnedByOtherUser", true);
-                model.addAttribute("currentDatasetOwner", dataset.getOwner() != null ? dataset.getOwner().getEmail() : accountConfig.getAdminUserName());
+                model.addAttribute("currentDatasetOwner", dataset.getOwner() != null ? dataset.getOwner().getEmail() : accountConfig.getAdminUsername());
             }
 
             switch (dataset.getStatus()) {

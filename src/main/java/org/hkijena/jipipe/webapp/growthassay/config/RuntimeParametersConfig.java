@@ -4,12 +4,15 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 
 @ConfigurationProperties(prefix = "runtime-parameters")
 public class RuntimeParametersConfig {
-    private final String timePointEarlyParameterKey;
+    private String timePointEarlyParameterKey;
 
-    private final String minRelDiffThresholdParameterKey;
+    private String minRelDiffThresholdParameterKey;
 
-    public RuntimeParametersConfig(String timePointEarlyParameterKey, String minRelDiffThresholdParameterKey) {
+    public void setTimePointEarlyParameterKey(String timePointEarlyParameterKey) {
         this.timePointEarlyParameterKey = timePointEarlyParameterKey;
+    }
+
+    public void setMinRelDiffThresholdParameterKey(String minRelDiffThresholdParameterKey) {
         this.minRelDiffThresholdParameterKey = minRelDiffThresholdParameterKey;
     }
 

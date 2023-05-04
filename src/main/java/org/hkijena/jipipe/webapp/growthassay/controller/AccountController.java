@@ -48,7 +48,7 @@ public class AccountController {
             }
             else if(authentication.getPrincipal() instanceof AdminPrincipal) {
                 user = new User();
-                user.setEmail(accountConfig.getAdminUserName());
+                user.setEmail(accountConfig.getAdminUsername());
                 user.setRole(User.Role.Admin);
             }
             else {
