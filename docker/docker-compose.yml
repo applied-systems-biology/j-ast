@@ -1,0 +1,9 @@
+services:
+  jipipe_growth_assay_webapp_api_service:
+    build: .
+    restart: always
+    ports:
+      - 8080:8080
+    depends_on:
+      -  jipipe_growth_assay_webapp_api_mariadb
+    command: 

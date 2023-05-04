@@ -25,8 +25,8 @@ org:
     dashboard:
       enabled: false
 runtime:
-  fiji-path: 'fiji-bin/Fiji.app'
-  fiji-executable-path: 'fiji-bin/Fiji.app/ImageJ-linux64'
+  fiji-path: 'fiji-bin/linux'
+  fiji-executable-path: 'fiji-bin/linux/ImageJ-linux64'
   fiji-args: ['--memory', '8G']
   fiji-wrapper: '/usr/bin/xvfb-run'
   fiji-wrapper-args: [ '-a' ]
