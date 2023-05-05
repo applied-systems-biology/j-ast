@@ -10,6 +10,8 @@ services:
     depends_on:
       -  mariadb
     environment:
+    # Context path (for deploying the app)
+      SERVER_SERVLET_CONTEXT_PATH: '/'
     # Memory for Fiji (8G = 8GB)
       RUNTIME_FIJI_ARGS_1: 8G
     # Maximum number of background jobs
