@@ -36,5 +36,8 @@ runtime-parameters:
 accounts:
   admin-username: 'admin@localhost'
   admin-password: 'Ckw55ryzy1mXGxb8'
+server:
+  servlet:
+    context-path: '/abc'
 
 
