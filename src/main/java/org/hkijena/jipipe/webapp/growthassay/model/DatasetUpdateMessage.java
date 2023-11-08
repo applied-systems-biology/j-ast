@@ -2,6 +2,7 @@ package org.hkijena.jipipe.webapp.growthassay.model;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonSetter;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.hkijena.jipipe.webapp.growthassay.utils.StringUtils;
 
 import java.util.HashMap;
@@ -79,6 +80,7 @@ public class DatasetUpdateMessage {
         private String experiment;
         private String sample;
         private String timePoint;
+        private double diskDiameter;
 
         @JsonGetter("id")
         public long getId() {
@@ -120,10 +122,21 @@ public class DatasetUpdateMessage {
             this.timePoint = timePoint;
         }
 
+        @JsonGetter("diskDiameter")
+        public double getDiskDiameter() {
+            return diskDiameter;
+        }
+
+        @JsonSetter("diskDiameter")
+        public void setDiskDiameter(double diskDiameter) {
+            this.diskDiameter = diskDiameter;
+        }
+
         public void update(InputData inputData) {
             inputData.setSample(StringUtils.nullToEmpty(sample));
             inputData.setExperiment(StringUtils.nullToEmpty(experiment));
             inputData.setTimePoint(StringUtils.nullToEmpty(timePoint));
+            inputData.setDiskDiameter(diskDiameter);
         }
     }
 

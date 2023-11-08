@@ -1,6 +1,7 @@
 package org.hkijena.jipipe.webapp.growthassay.model;
 
 import jakarta.persistence.*;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.hkijena.jipipe.webapp.growthassay.utils.PathUtils;
 import org.hkijena.jipipe.webapp.growthassay.utils.StringUtils;
 
@@ -42,6 +43,9 @@ public class InputData {
 
     @Column(name = "image_height", nullable = false)
     private int imageHeight;
+
+    @Column(name = "disk_diameter_mm", nullable = false)
+    private double diskDiameter = 6;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Dataset dataset;
@@ -126,8 +130,16 @@ public class InputData {
         this.originalFileName = originalFileName;
     }
 
+    public double getDiskDiameter() {
+        return diskDiameter;
+    }
+
+    public void setDiskDiameter(double diskDiameter) {
+        this.diskDiameter = diskDiameter;
+    }
+
     public String getFinalFileName() {
-        return getExperiment() + "_" + getSample() + "_" + getTimePoint();
+        return getExperiment() + "_" + getSample() + "_" + getTimePoint() + "_" + getDiskDiameter();
     }
 
     public void tryAutoFill(String originalFileName) {
@@ -139,10 +151,15 @@ public class InputData {
             originalFileName = originalFileName.replace("__", "_");
         }
         String[] components = originalFileName.split("_");
-        if(components.length == 3) {
+        if(components.length >= 3) {
             setExperiment(components[0]);
             setSample(components[1]);
             setTimePoint(components[2]);
+            if(components.length > 3) {
+                if(NumberUtils.isCreatable(components[3])) {
+                    setDiskDiameter(NumberUtils.createDouble(components[3]));
+                }
+            }
         }
         else if(components.length == 2) {
             setExperiment("Experiment");

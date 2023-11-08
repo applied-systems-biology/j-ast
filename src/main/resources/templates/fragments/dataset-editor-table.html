@@ -25,7 +25,7 @@
                     <th scope="col">Experiment</th>
                     <th scope="col">Sample</th>
                     <th scope="col">Time point</th>
-
+                    <th scope="col">Disk diameter (mm)</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -50,6 +50,7 @@
                     <th scope="col"><input class="form-control input-data-editor" type="text" data-input-data-property="experiment" th:data-input-data-id="${inputData.id}" th:value="${inputData.experiment}" autocomplete="off"/></th>
                     <th scope="col"><input class="form-control input-data-editor" type="text" data-input-data-property="sample" th:data-input-data-id="${inputData.id}" th:value="${inputData.sample}" autocomplete="off"/></th>
                     <th scope="col"><input class="form-control input-data-editor" type="text" data-input-data-property="timePoint" th:data-input-data-id="${inputData.id}" th:value="${inputData.timePoint}" autocomplete="off"/></th>
+                    <th scope="col"><input class="form-control input-data-editor" type="number" step="any" min="0" data-input-data-property="diskDiameter" th:data-input-data-id="${inputData.id}" th:value="${inputData.diskDiameter}" autocomplete="off"/></th>
                 </tr>
                 </tbody>
             </table>

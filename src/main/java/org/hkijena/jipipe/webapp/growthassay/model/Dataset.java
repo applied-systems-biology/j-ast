@@ -173,8 +173,11 @@ public class Dataset {
         boolean foundEmptyExperiments = false;
         boolean foundEmptyNames = false;
         boolean foundEmptyTimePoints = false;
+        boolean foundInvalidDiskDiameters = false;
         Multiset<String> allNames = HashMultiset.create();
         Multiset<String> allNamesNoTimePoint = HashMultiset.create();
+        Multiset<String> allNamesInvalidDiskDiameters = HashMultiset.create();
+        Multiset<String> allNamesUnequalDiskDiameters = HashMultiset.create();
         Set<String> invalidExperiments = new HashSet<>();
         Set<String> invalidSamples = new HashSet<>();
         for (InputData data : inputData) {
@@ -196,27 +199,29 @@ public class Dataset {
             else {
                 timePoints.add(data.getTimePoint());
             }
+            if(data.getDiskDiameter() <= 0) {
+                foundInvalidDiskDiameters = true;
+                allNamesInvalidDiskDiameters.add(data.getExperiment() + "_" + data.getSample() + "_*");
+            }
             allNames.add(data.getFinalFileName());
             allNamesNoTimePoint.add(data.getExperiment() + "_" + data.getSample() + "_*");
         }
 
-//        Map<String, List<InputData>> groups = inputData.stream().collect(Collectors.groupingBy(data -> data.getExperiment() + "_" + data.getSample()));
-//        Set<String> unequalImageSizeData = new HashSet<>();
-//        for (Map.Entry<String, List<InputData>> entry : groups.entrySet()) {
-//            if(entry.getValue().size() == 2) {
-//                InputData first = entry.getValue().get(0);
-//                InputData second = entry.getValue().get(1);
-//                if(first.getImageWidth() != second.getImageWidth() || first.getImageHeight() != second.getImageHeight()) {
-//                    unequalImageSizeData.add(first.getFinalFileName());
-//                    unequalImageSizeData.add(second.getFinalFileName());
-//                }
-//            }
-//        }
-//
-//        if(!unequalImageSizeData.isEmpty()) {
-//            result.addIssue("Unequal image sizes", "Please ensure that images within the same experiment and sample have the same size. " +
-//                    "The following entries are affected: " + String.join(", ", unequalImageSizeData));
-//        }
+        Map<String, List<InputData>> groups = inputData.stream().collect(Collectors.groupingBy(data -> data.getExperiment() + "_" + data.getSample()));
+        for (Map.Entry<String, List<InputData>> entry : groups.entrySet()) {
+            if(entry.getValue().size() == 2) {
+                InputData first = entry.getValue().get(0);
+                InputData second = entry.getValue().get(1);
+                if(first.getDiskDiameter() != second.getDiskDiameter()) {
+                    allNamesUnequalDiskDiameters.add(first.getExperiment() + "_" + first.getSample() + "_*");
+                }
+            }
+        }
+
+        if(!allNamesUnequalDiskDiameters.isEmpty()) {
+            result.addIssue("Unequal disk diameters", "Please ensure that images within the same experiment and sample have the same disk diameter. " +
+                    "The following entries are affected: " + String.join(", ", allNamesUnequalDiskDiameters));
+        }
 
         if(timePoints.size() < 2) {
             result.addIssue("Too few time points", "Please ensure that you have exactly two time points.");
@@ -233,6 +238,10 @@ public class Dataset {
         }
         if(foundEmptyTimePoints) {
             result.addIssue("Not all time points set", "Please provide a time point annotation (e.g., 24hr and 48hr) to all inputs.");
+        }
+
+        if(foundInvalidDiskDiameters) {
+            result.addIssue("Invalid disk diameters", "Please ensure that all disk diameters are positive. The following entries are affected: " + String.join(", ", allNamesInvalidDiskDiameters));
         }
 
         if(!invalidExperiments.isEmpty()) {
