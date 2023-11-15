@@ -474,6 +474,29 @@ public class DatasetController {
         }
     }
 
+    @GetMapping("/dataset/download-results/xlsx-classic/{id}")
+    public void downloadXLSXClassicResults(HttpServletResponse httpServletResponse, Authentication authentication, @PathVariable long id) throws IOException {
+        Optional<Dataset> dataset_ = datasetRepository.findById(id);
+        if(dataset_.isPresent() && dataset_.get().getStatus() != Dataset.Status.Preparing) {
+            Dataset dataset = dataset_.get();
+
+            if(!dataset.canAccess(authentication)) {
+                throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+            }
+
+            Path resultsFilePath = Paths.get(dataset.getStoragePath()).resolve("project").resolve("results").resolve("results_all_in_one_classic.xlsx");
+            if(Files.isRegularFile(resultsFilePath)) {
+                RequestUtils.sendAttachment(httpServletResponse, resultsFilePath, StringUtils.makeFilesystemCompatible(dataset.getName()) + "-results_all_in_one_classic.xlsx");
+            }
+            else {
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+            }
+        }
+        else {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
+    }
+
     @GetMapping("/dataset/download-results/xlsx-all-in-one/{id}")
     public void downloadXLSXAllInOneResults(HttpServletResponse httpServletResponse, Authentication authentication, @PathVariable long id) throws IOException {
         Optional<Dataset> dataset_ = datasetRepository.findById(id);

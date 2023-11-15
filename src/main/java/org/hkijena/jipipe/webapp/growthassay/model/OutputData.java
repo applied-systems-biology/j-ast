@@ -29,14 +29,28 @@ public class OutputData {
     @Column(name = "sample", nullable = false, columnDefinition = "TEXT")
     private String sample;
 
+    @Column(name = "threshold")
+    private double threshold;
+
     @Column(name = "fog")
     private double fog;
+
+    @Column(name = "rad")
+    private double rad;
 
     @Column(name = "visualization_storage_path", nullable = false, columnDefinition = "TEXT")
     private String visualizationStoragePath;
 
     @Column(name = "visualization_thumbnail_storage_path", nullable = false, columnDefinition = "TEXT")
     private String visualizationThumbnailStoragePath = "";
+
+    public double getThreshold() {
+        return threshold;
+    }
+
+    public void setThreshold(double threshold) {
+        this.threshold = threshold;
+    }
 
     public String getVisualizationStoragePath() {
         return visualizationStoragePath;
@@ -84,6 +98,14 @@ public class OutputData {
 
     public void setFog(double fog) {
         this.fog = fog;
+    }
+
+    public double getRad() {
+        return rad;
+    }
+
+    public void setRad(double rad) {
+        this.rad = rad;
     }
 
     public Long getId() {
