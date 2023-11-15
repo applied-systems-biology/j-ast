@@ -45,7 +45,7 @@ public class InputData {
     private int imageHeight;
 
     @Column(name = "disk_diameter_mm", nullable = false)
-    private double diskDiameter = 6;
+    private double plateDiameter = 6;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Dataset dataset;
@@ -130,16 +130,16 @@ public class InputData {
         this.originalFileName = originalFileName;
     }
 
-    public double getDiskDiameter() {
-        return diskDiameter;
+    public double getplateDiameter() {
+        return plateDiameter;
     }
 
-    public void setDiskDiameter(double diskDiameter) {
-        this.diskDiameter = diskDiameter;
+    public void setplateDiameter(double plateDiameter) {
+        this.plateDiameter = plateDiameter;
     }
 
     public String getFinalFileName() {
-        return getExperiment() + "_" + getSample() + "_" + getTimePoint() + "_" + getDiskDiameter();
+        return getExperiment() + "_" + getSample() + "_" + getTimePoint() + "_" + getplateDiameter();
     }
 
     public void tryAutoFill(String originalFileName) {
@@ -157,7 +157,7 @@ public class InputData {
             setTimePoint(components[2]);
             if(components.length > 3) {
                 if(NumberUtils.isCreatable(components[3])) {
-                    setDiskDiameter(NumberUtils.createDouble(components[3]));
+                    setplateDiameter(NumberUtils.createDouble(components[3]));
                 }
             }
         }

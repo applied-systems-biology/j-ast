@@ -173,11 +173,11 @@ public class Dataset {
         boolean foundEmptyExperiments = false;
         boolean foundEmptyNames = false;
         boolean foundEmptyTimePoints = false;
-        boolean foundInvalidDiskDiameters = false;
+        boolean foundInvalidPlateDiameters = false;
         Multiset<String> allNames = HashMultiset.create();
         Multiset<String> allNamesNoTimePoint = HashMultiset.create();
-        Multiset<String> allNamesInvalidDiskDiameters = HashMultiset.create();
-        Multiset<String> allNamesUnequalDiskDiameters = HashMultiset.create();
+        Multiset<String> allNamesInvalidPlateDiameters = HashMultiset.create();
+        Multiset<String> allNamesunequalPlateDiameters = HashMultiset.create();
         Set<String> invalidExperiments = new HashSet<>();
         Set<String> invalidSamples = new HashSet<>();
         for (InputData data : inputData) {
@@ -199,9 +199,9 @@ public class Dataset {
             else {
                 timePoints.add(data.getTimePoint());
             }
-            if(data.getDiskDiameter() <= 0) {
-                foundInvalidDiskDiameters = true;
-                allNamesInvalidDiskDiameters.add(data.getExperiment() + "_" + data.getSample() + "_*");
+            if(data.getplateDiameter() <= 0) {
+                foundInvalidPlateDiameters = true;
+                allNamesInvalidPlateDiameters.add(data.getExperiment() + "_" + data.getSample() + "_*");
             }
             allNames.add(data.getFinalFileName());
             allNamesNoTimePoint.add(data.getExperiment() + "_" + data.getSample() + "_*");
@@ -212,15 +212,15 @@ public class Dataset {
             if(entry.getValue().size() == 2) {
                 InputData first = entry.getValue().get(0);
                 InputData second = entry.getValue().get(1);
-                if(first.getDiskDiameter() != second.getDiskDiameter()) {
-                    allNamesUnequalDiskDiameters.add(first.getExperiment() + "_" + first.getSample() + "_*");
+                if(first.getplateDiameter() != second.getplateDiameter()) {
+                    allNamesunequalPlateDiameters.add(first.getExperiment() + "_" + first.getSample() + "_*");
                 }
             }
         }
 
-        if(!allNamesUnequalDiskDiameters.isEmpty()) {
-            result.addIssue("Unequal disk diameters", "Please ensure that images within the same experiment and sample have the same disk diameter. " +
-                    "The following entries are affected: " + String.join(", ", allNamesUnequalDiskDiameters));
+        if(!allNamesunequalPlateDiameters.isEmpty()) {
+            result.addIssue("Unequal plate diameters", "Please ensure that images within the same experiment and sample have the same plate diameter. " +
+                    "The following entries are affected: " + String.join(", ", allNamesunequalPlateDiameters));
         }
 
         if(timePoints.size() < 2) {
@@ -240,8 +240,8 @@ public class Dataset {
             result.addIssue("Not all time points set", "Please provide a time point annotation (e.g., 24hr and 48hr) to all inputs.");
         }
 
-        if(foundInvalidDiskDiameters) {
-            result.addIssue("Invalid disk diameters", "Please ensure that all disk diameters are positive. The following entries are affected: " + String.join(", ", allNamesInvalidDiskDiameters));
+        if(foundInvalidPlateDiameters) {
+            result.addIssue("Invalid plate diameters", "Please ensure that all plate diameters are positive. The following entries are affected: " + String.join(", ", allNamesInvalidPlateDiameters));
         }
 
         if(!invalidExperiments.isEmpty()) {

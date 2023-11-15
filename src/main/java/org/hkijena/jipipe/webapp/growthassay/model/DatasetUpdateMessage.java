@@ -80,7 +80,7 @@ public class DatasetUpdateMessage {
         private String experiment;
         private String sample;
         private String timePoint;
-        private double diskDiameter;
+        private double plateDiameter;
 
         @JsonGetter("id")
         public long getId() {
@@ -122,21 +122,21 @@ public class DatasetUpdateMessage {
             this.timePoint = timePoint;
         }
 
-        @JsonGetter("diskDiameter")
-        public double getDiskDiameter() {
-            return diskDiameter;
+        @JsonGetter("plateDiameter")
+        public double getplateDiameter() {
+            return plateDiameter;
         }
 
-        @JsonSetter("diskDiameter")
-        public void setDiskDiameter(double diskDiameter) {
-            this.diskDiameter = diskDiameter;
+        @JsonSetter("plateDiameter")
+        public void setplateDiameter(double plateDiameter) {
+            this.plateDiameter = plateDiameter;
         }
 
         public void update(InputData inputData) {
             inputData.setSample(StringUtils.nullToEmpty(sample));
             inputData.setExperiment(StringUtils.nullToEmpty(experiment));
             inputData.setTimePoint(StringUtils.nullToEmpty(timePoint));
-            inputData.setDiskDiameter(diskDiameter);
+            inputData.setplateDiameter(plateDiameter);
         }
     }
 
