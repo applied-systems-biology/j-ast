@@ -1,8 +1,8 @@
 package org.hkijena.jipipe.webapp.growthassay.services;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.DoubleNode;
-import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.node.TextNode;
 import com.google.common.eventbus.Subscribe;
@@ -166,7 +166,10 @@ public class AnalysisService {
                 Path parameterOverridesFile = workDirectory.resolve("parameter-overrides.json");
                 ObjectNode parameterOverrides = JsonUtils.getObjectMapper().createObjectNode();
                 parameterOverrides.set(runtimeParametersConfig.getTimePointEarlyParameterKey(), new TextNode(dataset.getTimePointEarly()));
-                parameterOverrides.set(runtimeParametersConfig.getMinRelDiffThresholdParameterKey(), new DoubleNode(dataset.getPercentageOfInhibition() / 100));
+                parameterOverrides.set(runtimeParametersConfig.getGrowthReductionThresholdsParameterKey(), JsonUtils.getObjectMapper().convertValue(dataset.tryParseGrowthReductionThresholds(), JsonNode.class));
+                parameterOverrides.set(runtimeParametersConfig.getDdaMinDiameterParameterKey(), new DoubleNode(dataset.getDdaDiskMinDiameter()));
+                parameterOverrides.set(runtimeParametersConfig.getDdaMaxDiameterParameterKey(), new DoubleNode(dataset.getDdaDiskMaxDiameter()));
+                parameterOverrides.set(runtimeParametersConfig.getDdaMinCircularityParameterKey(), new DoubleNode(dataset.getDdaDiskMinCircularity()));
                 JsonUtils.saveToFile(parameterOverrides, parameterOverridesFile);
 
                 // Run analysis

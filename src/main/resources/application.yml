@@ -32,7 +32,10 @@ runtime:
   fiji-wrapper-args: [ '-a' ]
 runtime-parameters:
   time-point-early-parameter-key: 'e3d4a323-851b-49f8-960d-80e972ff94ad/custom-variables/timePointEarly'
-  min-rel-diff-threshold-parameter-key: '32215cd8-a746-4b10-a1fe-577cc374386c/custom-expression-variables/minreldiff'
+  growth-reduction-thresholds-parameter-key: 'f37619df-9f61-4033-b000-1271b68b5f68/variables/thresholds'
+  dda-min-diameter-parameter-key: '5b2fced9-0826-474e-9102-f3c070b737bb/exported/circle filter/minFeret'
+  dda-max-diameter-parameter-key: '5b2fced9-0826-474e-9102-f3c070b737bb/exported/circle filter/maxFeret'
+  dda-min-circularity-parameter-key: '5b2fced9-0826-474e-9102-f3c070b737bb/exported/circle filter/minCirc'
 accounts:
   admin-username: 'admin@localhost'
   admin-password: 'Ckw55ryzy1mXGxb8'

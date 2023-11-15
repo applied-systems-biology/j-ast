@@ -3,6 +3,7 @@ package org.hkijena.jipipe.webapp.growthassay.model;
 import com.google.common.collect.HashMultiset;
 import com.google.common.collect.Multiset;
 import jakarta.persistence.*;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.hkijena.jipipe.webapp.growthassay.utils.StringUtils;
 import org.jobrunr.scheduling.BackgroundJob;
 import org.springframework.security.core.Authentication;
@@ -37,8 +38,8 @@ public class Dataset {
     @Enumerated(EnumType.STRING)
     private Status status = Status.Preparing;
 
-    @Column(name = "percentage_of_inhibition", nullable = false, columnDefinition = "DOUBLE")
-    private double percentageOfInhibition = 50;
+    @Column(name = "growth_reduction_thresholds", nullable = false, columnDefinition = "TEXT")
+    private String growthReductionThresholds = "20, 50, 80";
 
     @Column(name = "time_point_early", nullable = false, columnDefinition = "TEXT")
     private String timePointEarly = "";
@@ -46,13 +47,13 @@ public class Dataset {
     @Column(name = "time_point_late", nullable = false, columnDefinition = "TEXT")
     private String timePointLate = "";
 
-    @Column(name = "dda_disk_min_diameter", nullable = false)
+    @Column(name = "dda_disk_min_diameter", nullable = false, columnDefinition = "DOUBLE")
     private double ddaDiskMinDiameter = 5;
 
-    @Column(name = "dda_disk_max_diameter", nullable = false)
+    @Column(name = "dda_disk_max_diameter", nullable = false, columnDefinition = "DOUBLE")
     private double ddaDiskMaxDiameter = 7;
 
-    @Column(name = "dda_disk_min_circularity", nullable = false)
+    @Column(name = "dda_disk_min_circularity", nullable = false, columnDefinition = "DOUBLE")
     private double ddaDiskMinCircularity = 0.5;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true, mappedBy = "dataset")
@@ -73,12 +74,12 @@ public class Dataset {
         this.owner = owner;
     }
 
-    public double getPercentageOfInhibition() {
-        return percentageOfInhibition;
+    public String getGrowthReductionThresholds() {
+        return growthReductionThresholds;
     }
 
-    public void setPercentageOfInhibition(double percentageOfInhibition) {
-        this.percentageOfInhibition = percentageOfInhibition;
+    public void setGrowthReductionThresholds(String growthReductionThresholds) {
+        this.growthReductionThresholds = StringUtils.nullToEmpty(growthReductionThresholds);
     }
 
     public String getTimePointEarly() {
@@ -159,6 +160,26 @@ public class Dataset {
 
     public List<OutputData> getOutputData() {
         return Collections.unmodifiableList(outputData);
+    }
+
+    public List<Double> tryParseGrowthReductionThresholds() {
+        List<Double> result = new ArrayList<>();
+        String str = StringUtils.nullToEmpty(getGrowthReductionThresholds()).trim();
+        if(!StringUtils.isNullOrEmpty(str)) {
+            for (String s : str.split(",")) {
+                String item = s.trim();
+                if(item.isEmpty()) {
+                    return null;
+                }
+                if(NumberUtils.isCreatable(item)) {
+                    result.add(NumberUtils.createDouble(item));
+                }
+                else {
+                    return null;
+                }
+            }
+        }
+        return result;
     }
 
     public void addInputData(InputData inputData) {
@@ -320,8 +341,16 @@ public class Dataset {
             result.addIssue("Late time point not configured", "Please ensure that 'Late time point' is set to one of the time points in the data table.");
         }
 
-        if(percentageOfInhibition <= 0 || percentageOfInhibition >= 100) {
-            result.addIssue("Invalid percentage of inhibition", "Please ensure that the 'Percentage of inhibition'");
+        List<Double> parsedThresholds = tryParseGrowthReductionThresholds();
+        if(parsedThresholds != null && !parsedThresholds.isEmpty()) {
+            for (Double threshold : parsedThresholds) {
+                if(threshold <= 0 || threshold >= 100) {
+                    result.addIssue("Invalid growth reduction threshold: " + threshold, "Please ensure that the value is between 0 and 100");
+                }
+            }
+        }
+        else {
+            result.addIssue("Invalid growth reduction thresholds", "The set of growth reduction thresholds is empty or invalid. Use commas to provide multiple thresholds.");
         }
 
         if(ddaDiskMinDiameter > ddaDiskMaxDiameter) {

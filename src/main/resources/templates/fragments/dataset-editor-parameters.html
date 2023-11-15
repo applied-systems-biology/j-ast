@@ -4,10 +4,10 @@
   </div>
   <div class="card-body">
     <div class="mb-3">
-      <label for="parameter-percentage-of-inhibition" class="form-label">Percentage of inhibition</label>
-      <div class="input-group">
-        <input type="number" min="0" max="100" class="form-control input-parameter-editor" id="parameter-percentage-of-inhibition" data-parameter-property="percentage-of-inhibition" autocomplete="off" th:value="${currentDataset.percentageOfInhibition}">
-        <span class="input-group-text">%</span>
+      <label for="parameter-growth-reduction-thresholds" class="form-label">Growth reduction thresholds (%)</label>
+      <input type="text" class="form-control input-parameter-editor" id="parameter-growth-reduction-thresholds" data-parameter-property="growth-reduction-thresholds" autocomplete="off" th:value="${currentDataset.growthReductionThresholds}">
+      <div class="form-text">
+        Separate multiple thresholds with a comma
       </div>
     </div>
     <div class="mb-3">

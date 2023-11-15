@@ -2,7 +2,6 @@ package org.hkijena.jipipe.webapp.growthassay.model;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonSetter;
-import org.apache.commons.lang3.math.NumberUtils;
 import org.hkijena.jipipe.webapp.growthassay.utils.StringUtils;
 
 import java.util.HashMap;
@@ -34,7 +33,7 @@ public class DatasetUpdateMessage {
     }
 
     public static class ParametersUpdateMessage {
-        private double percentageOfInhibition;
+        private String growthReductionThresholds;
         private String earlyTimePoint;
         private String lateTimePoint;
 
@@ -72,14 +71,14 @@ public class DatasetUpdateMessage {
             this.ddaDiskMinCircularity = ddaDiskMinCircularity;
         }
 
-        @JsonGetter("percentage-of-inhibition")
-        public double getPercentageOfInhibition() {
-            return percentageOfInhibition;
+        @JsonGetter("growth-reduction-thresholds")
+        public String getGrowthReductionThresholds() {
+            return growthReductionThresholds;
         }
 
-        @JsonSetter("percentage-of-inhibition")
-        public void setPercentageOfInhibition(double percentageOfInhibition) {
-            this.percentageOfInhibition = percentageOfInhibition;
+        @JsonSetter("growth-reduction-thresholds")
+        public void setGrowthReductionThresholds(String growthReductionThresholds) {
+            this.growthReductionThresholds = growthReductionThresholds;
         }
 
         @JsonGetter("time-point-early")
@@ -103,7 +102,7 @@ public class DatasetUpdateMessage {
         }
 
         public void update(Dataset dataset) {
-            dataset.setPercentageOfInhibition(percentageOfInhibition);
+            dataset.setGrowthReductionThresholds(growthReductionThresholds);
             dataset.setTimePointEarly(StringUtils.nullToEmpty(earlyTimePoint));
             dataset.setTimePointLate(StringUtils.nullToEmpty(lateTimePoint));
             dataset.setDdaDiskMinDiameter(ddaDiskMinDiameter);
