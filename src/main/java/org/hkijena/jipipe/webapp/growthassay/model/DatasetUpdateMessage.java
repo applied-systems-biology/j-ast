@@ -38,6 +38,40 @@ public class DatasetUpdateMessage {
         private String earlyTimePoint;
         private String lateTimePoint;
 
+        private double ddaDiskMinDiameter;
+        private double ddaDiskMaxDiameter;
+        private double ddaDiskMinCircularity;
+
+        @JsonGetter("dda-disk-min-diameter")
+        public double getDdaDiskMinDiameter() {
+            return ddaDiskMinDiameter;
+        }
+
+        @JsonSetter("dda-disk-min-diameter")
+        public void setDdaDiskMinDiameter(double ddaDiskMinDiameter) {
+            this.ddaDiskMinDiameter = ddaDiskMinDiameter;
+        }
+
+        @JsonGetter("dda-disk-max-diameter")
+        public double getDdaDiskMaxDiameter() {
+            return ddaDiskMaxDiameter;
+        }
+
+        @JsonSetter("dda-disk-max-diameter")
+        public void setDdaDiskMaxDiameter(double ddaDiskMaxDiameter) {
+            this.ddaDiskMaxDiameter = ddaDiskMaxDiameter;
+        }
+
+        @JsonGetter("dda-disk-min-circularity")
+        public double getDdaDiskMinCircularity() {
+            return ddaDiskMinCircularity;
+        }
+
+        @JsonSetter("dda-disk-min-circularity")
+        public void setDdaDiskMinCircularity(double ddaDiskMinCircularity) {
+            this.ddaDiskMinCircularity = ddaDiskMinCircularity;
+        }
+
         @JsonGetter("percentage-of-inhibition")
         public double getPercentageOfInhibition() {
             return percentageOfInhibition;
@@ -72,6 +106,9 @@ public class DatasetUpdateMessage {
             dataset.setPercentageOfInhibition(percentageOfInhibition);
             dataset.setTimePointEarly(StringUtils.nullToEmpty(earlyTimePoint));
             dataset.setTimePointLate(StringUtils.nullToEmpty(lateTimePoint));
+            dataset.setDdaDiskMinDiameter(ddaDiskMinDiameter);
+            dataset.setDdaDiskMaxDiameter(ddaDiskMaxDiameter);
+            dataset.setDdaDiskMinCircularity(ddaDiskMinCircularity);
         }
     }
 

@@ -46,6 +46,15 @@ public class Dataset {
     @Column(name = "time_point_late", nullable = false, columnDefinition = "TEXT")
     private String timePointLate = "";
 
+    @Column(name = "dda_disk_min_diameter", nullable = false)
+    private double ddaDiskMinDiameter = 5;
+
+    @Column(name = "dda_disk_max_diameter", nullable = false)
+    private double ddaDiskMaxDiameter = 7;
+
+    @Column(name = "dda_disk_min_circularity", nullable = false)
+    private double ddaDiskMinCircularity = 0.5;
+
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true, mappedBy = "dataset")
     private List<InputData> inputData = new ArrayList<>();
 
@@ -118,6 +127,30 @@ public class Dataset {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public double getDdaDiskMinDiameter() {
+        return ddaDiskMinDiameter;
+    }
+
+    public void setDdaDiskMinDiameter(double ddaDiskMinDiameter) {
+        this.ddaDiskMinDiameter = ddaDiskMinDiameter;
+    }
+
+    public double getDdaDiskMaxDiameter() {
+        return ddaDiskMaxDiameter;
+    }
+
+    public void setDdaDiskMaxDiameter(double ddaDiskMaxDiameter) {
+        this.ddaDiskMaxDiameter = ddaDiskMaxDiameter;
+    }
+
+    public double getDdaDiskMinCircularity() {
+        return ddaDiskMinCircularity;
+    }
+
+    public void setDdaDiskMinCircularity(double ddaDiskMinCircularity) {
+        this.ddaDiskMinCircularity = ddaDiskMinCircularity;
     }
 
     public List<InputData> getInputData() {
@@ -289,6 +322,10 @@ public class Dataset {
 
         if(percentageOfInhibition <= 0 || percentageOfInhibition >= 100) {
             result.addIssue("Invalid percentage of inhibition", "Please ensure that the 'Percentage of inhibition'");
+        }
+
+        if(ddaDiskMinDiameter > ddaDiskMaxDiameter) {
+            result.addIssue("Invalid DDA disk diameter constraints", "The minimum value must be smaller than the maximum value");
         }
 
         return result;
