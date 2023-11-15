@@ -1,7 +1,6 @@
 package org.hkijena.jipipe.webapp.growthassay.services;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.DoubleNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.node.TextNode;
@@ -35,7 +34,10 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class AnalysisService {
@@ -165,8 +167,11 @@ public class AnalysisService {
                 // Save parameter config
                 Path parameterOverridesFile = workDirectory.resolve("parameter-overrides.json");
                 ObjectNode parameterOverrides = JsonUtils.getObjectMapper().createObjectNode();
-                parameterOverrides.set(runtimeParametersConfig.getTimePointEarlyParameterKey(), new TextNode(dataset.getTimePointEarly()));
-                parameterOverrides.set(runtimeParametersConfig.getGrowthReductionThresholdsParameterKey(), JsonUtils.getObjectMapper().convertValue(dataset.tryParseGrowthReductionThresholds(), JsonNode.class));
+                Map<String, String> timePointFilterConfig = new HashMap<>();
+                timePointFilterConfig.put("expression", "#Timepoint == \"" + dataset.getTimePointEarly() + "\"");
+                parameterOverrides.set(runtimeParametersConfig.getTimePointEarlyFilterParameterKey(), JsonUtils.getObjectMapper().convertValue(timePointFilterConfig, JsonNode.class));
+                parameterOverrides.set(runtimeParametersConfig.getGrowthReductionThresholdsParameterKey(), JsonUtils.getObjectMapper()
+                        .convertValue(dataset.tryParseGrowthReductionThresholds().stream().map(d -> d / 100.0).collect(Collectors.toList()), JsonNode.class));
                 parameterOverrides.set(runtimeParametersConfig.getDdaMinDiameterParameterKey(), new DoubleNode(dataset.getDdaDiskMinDiameter()));
                 parameterOverrides.set(runtimeParametersConfig.getDdaMaxDiameterParameterKey(), new DoubleNode(dataset.getDdaDiskMaxDiameter()));
                 parameterOverrides.set(runtimeParametersConfig.getDdaMinCircularityParameterKey(), new DoubleNode(dataset.getDdaDiskMinCircularity()));
@@ -238,8 +243,8 @@ public class AnalysisService {
                     for (CSVRecord record : csvFormat.parse(reader)) {
                         OutputData outputData = new OutputData();
 
-                        String experiment = record.get("Experiment");
-                        String sample = record.get("Sample");
+                        String experiment = record.get("#Experiment");
+                        String sample = record.get("#Sample");
                         double fog = NumberUtils.createDouble(record.get("FoG"));
                         double rad = NumberUtils.createDouble(record.get("RAD_mm"));
                         double threshold = NumberUtils.createDouble(record.get("#Threshold"));

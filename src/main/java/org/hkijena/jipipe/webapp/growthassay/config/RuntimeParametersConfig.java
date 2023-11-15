@@ -4,14 +4,14 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 
 @ConfigurationProperties(prefix = "runtime-parameters")
 public class RuntimeParametersConfig {
-    private String timePointEarlyParameterKey;
+    private String timePointEarlyFilterParameterKey;
     private String growthReductionThresholdsParameterKey;
     private String ddaMinDiameterParameterKey;
     private String ddaMaxDiameterParameterKey;
     private String ddaMinCircularityParameterKey;
 
-    public void setTimePointEarlyParameterKey(String timePointEarlyParameterKey) {
-        this.timePointEarlyParameterKey = timePointEarlyParameterKey;
+    public void setTimePointEarlyFilterParameterKey(String timePointEarlyFilterParameterKey) {
+        this.timePointEarlyFilterParameterKey = timePointEarlyFilterParameterKey;
     }
 
     public void setGrowthReductionThresholdsParameterKey(String growthReductionThresholdsParameterKey) {
@@ -42,8 +42,8 @@ public class RuntimeParametersConfig {
         this.ddaMinCircularityParameterKey = ddaMinCircularityParameterKey;
     }
 
-    public String getTimePointEarlyParameterKey() {
-        return timePointEarlyParameterKey;
+    public String getTimePointEarlyFilterParameterKey() {
+        return timePointEarlyFilterParameterKey;
     }
 
     public String getGrowthReductionThresholdsParameterKey() {

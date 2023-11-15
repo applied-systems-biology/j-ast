@@ -172,7 +172,7 @@ public class DatasetUpdateMessage {
             inputData.setSample(StringUtils.nullToEmpty(sample));
             inputData.setExperiment(StringUtils.nullToEmpty(experiment));
             inputData.setTimePoint(StringUtils.nullToEmpty(timePoint));
-            inputData.setplateDiameter(plateDiameter);
+            inputData.setPlateDiameter(plateDiameter);
         }
     }
 

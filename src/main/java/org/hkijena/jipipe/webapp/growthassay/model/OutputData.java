@@ -20,7 +20,7 @@ public class OutputData {
     @ManyToOne(fetch = FetchType.LAZY)
     private Dataset dataset;
 
-    @OneToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY)
     private List<InputData> inputData = new ArrayList<>();
 
     @Column(name = "experiment", nullable = false, columnDefinition = "TEXT")

@@ -253,7 +253,7 @@ public class Dataset {
             else {
                 timePoints.add(data.getTimePoint());
             }
-            if(data.getplateDiameter() <= 0) {
+            if(data.getPlateDiameter() <= 0) {
                 foundInvalidPlateDiameters = true;
                 allNamesInvalidPlateDiameters.add(data.getExperiment() + "_" + data.getSample() + "_*");
             }
@@ -266,7 +266,7 @@ public class Dataset {
             if(entry.getValue().size() == 2) {
                 InputData first = entry.getValue().get(0);
                 InputData second = entry.getValue().get(1);
-                if(first.getplateDiameter() != second.getplateDiameter()) {
+                if(first.getPlateDiameter() != second.getPlateDiameter()) {
                     allNamesunequalPlateDiameters.add(first.getExperiment() + "_" + first.getSample() + "_*");
                 }
             }

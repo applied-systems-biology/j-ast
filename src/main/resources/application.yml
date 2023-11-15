@@ -31,7 +31,7 @@ runtime:
   fiji-wrapper: '/usr/bin/xvfb-run'
   fiji-wrapper-args: [ '-a' ]
 runtime-parameters:
-  time-point-early-parameter-key: 'e3d4a323-851b-49f8-960d-80e972ff94ad/custom-variables/timePointEarly'
+  time-point-early-filter-parameter-key: 'e3d4a323-851b-49f8-960d-80e972ff94ad/filter'
   growth-reduction-thresholds-parameter-key: 'f37619df-9f61-4033-b000-1271b68b5f68/variables/thresholds'
   dda-min-diameter-parameter-key: '5b2fced9-0826-474e-9102-f3c070b737bb/exported/circle filter/minFeret'
   dda-max-diameter-parameter-key: '5b2fced9-0826-474e-9102-f3c070b737bb/exported/circle filter/maxFeret'
