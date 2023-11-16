@@ -2,6 +2,7 @@ package org.hkijena.jipipe.webapp.growthassay.model;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonSetter;
+import jakarta.persistence.Column;
 import org.hkijena.jipipe.webapp.growthassay.utils.StringUtils;
 
 import java.util.HashMap;
@@ -40,6 +41,8 @@ public class DatasetUpdateMessage {
         private double ddaDiskMinDiameter;
         private double ddaDiskMaxDiameter;
         private double ddaDiskMinCircularity;
+        private double contrastMinValue;
+        private double contrastMaxValue;
 
         @JsonGetter("dda-disk-min-diameter")
         public double getDdaDiskMinDiameter() {
@@ -101,6 +104,26 @@ public class DatasetUpdateMessage {
             this.lateTimePoint = lateTimePoint;
         }
 
+        @JsonGetter("contrast-min-value")
+        public double getContrastMinValue() {
+            return contrastMinValue;
+        }
+
+        @JsonSetter("contrast-min-value")
+        public void setContrastMinValue(double contrastMinValue) {
+            this.contrastMinValue = contrastMinValue;
+        }
+
+        @JsonGetter("contrast-max-value")
+        public double getContrastMaxValue() {
+            return contrastMaxValue;
+        }
+
+        @JsonSetter("contrast-max-value")
+        public void setContrastMaxValue(double contrastMaxValue) {
+            this.contrastMaxValue = contrastMaxValue;
+        }
+
         public void update(Dataset dataset) {
             dataset.setGrowthReductionThresholds(growthReductionThresholds);
             dataset.setTimePointEarly(StringUtils.nullToEmpty(earlyTimePoint));
@@ -108,6 +131,8 @@ public class DatasetUpdateMessage {
             dataset.setDdaDiskMinDiameter(ddaDiskMinDiameter);
             dataset.setDdaDiskMaxDiameter(ddaDiskMaxDiameter);
             dataset.setDdaDiskMinCircularity(ddaDiskMinCircularity);
+            dataset.setContrastMinValue(contrastMinValue);
+            dataset.setContrastMaxValue(contrastMaxValue);
         }
     }
 

@@ -175,6 +175,8 @@ public class AnalysisService {
                 parameterOverrides.set(runtimeParametersConfig.getDdaMinDiameterParameterKey(), new DoubleNode(dataset.getDdaDiskMinDiameter()));
                 parameterOverrides.set(runtimeParametersConfig.getDdaMaxDiameterParameterKey(), new DoubleNode(dataset.getDdaDiskMaxDiameter()));
                 parameterOverrides.set(runtimeParametersConfig.getDdaMinCircularityParameterKey(), new DoubleNode(dataset.getDdaDiskMinCircularity()));
+                parameterOverrides.set(runtimeParametersConfig.getContrastMinValueParameterKey(), new DoubleNode(dataset.getContrastMinValue()));
+                parameterOverrides.set(runtimeParametersConfig.getContrastMaxValueParameterKey(), new DoubleNode(dataset.getContrastMaxValue()));
                 JsonUtils.saveToFile(parameterOverrides, parameterOverridesFile);
 
                 // Run analysis

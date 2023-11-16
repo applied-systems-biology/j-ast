@@ -56,6 +56,11 @@ public class Dataset {
     @Column(name = "dda_disk_min_circularity", nullable = false, columnDefinition = "DOUBLE")
     private double ddaDiskMinCircularity = 0.5;
 
+    @Column(name = "contrast_min_value", nullable = false, columnDefinition = "DOUBLE")
+    private double contrastMinValue = 50;
+    @Column(name = "contrast_max_value", nullable = false, columnDefinition = "DOUBLE")
+    private double contrastMaxValue = 250;
+
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true, mappedBy = "dataset")
     private List<InputData> inputData = new ArrayList<>();
 
@@ -152,6 +157,22 @@ public class Dataset {
 
     public void setDdaDiskMinCircularity(double ddaDiskMinCircularity) {
         this.ddaDiskMinCircularity = ddaDiskMinCircularity;
+    }
+
+    public double getContrastMinValue() {
+        return contrastMinValue;
+    }
+
+    public void setContrastMinValue(double contrastMinValue) {
+        this.contrastMinValue = contrastMinValue;
+    }
+
+    public double getContrastMaxValue() {
+        return contrastMaxValue;
+    }
+
+    public void setContrastMaxValue(double contrastMaxValue) {
+        this.contrastMaxValue = contrastMaxValue;
     }
 
     public List<InputData> getInputData() {
@@ -355,6 +376,10 @@ public class Dataset {
 
         if(ddaDiskMinDiameter > ddaDiskMaxDiameter) {
             result.addIssue("Invalid DDA disk diameter constraints", "The minimum value must be smaller than the maximum value");
+        }
+
+        if(contrastMinValue > contrastMaxValue) {
+            result.addIssue("Invalid pixel value range", "Please ensure that the given pixel values are within [0, 255] and the minimum is not larger than the maximum.");
         }
 
         return result;

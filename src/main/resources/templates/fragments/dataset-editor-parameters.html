@@ -43,5 +43,17 @@
         The value range is from 0.0 to 1.0
       </div>
     </div>
+    <hr/>
+    <div class="mb-3">
+      <label class="form-label">Measurements pixel value constraints</label>
+      <div class="d-flex">
+        <div class="flex-grow-1"><input type="number" step="any" class="form-control input-parameter-editor" id="parameter-contrast-min-value" data-parameter-property="contrast-min-value" th:value="${currentDataset.contrastMinValue}"></div>
+        <div class="p-2">-</div>
+        <div class="flex-grow-1"><input type="number" step="any" class="form-control input-parameter-editor" id="parameter-contrast-max-value" data-parameter-property="contrast-max-value" th:value="${currentDataset.contrastMaxValue}"></div>
+      </div>
+      <div class="form-text">
+        Determines the pixel value range for contrast enhancement. The raw pixel range of values is stretched to contain only pixel values in this interval.
+      </div>
+    </div>
   </div>
 </div>

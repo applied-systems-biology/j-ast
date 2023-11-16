@@ -36,6 +36,8 @@ runtime-parameters:
   dda-min-diameter-parameter-key: '5b2fced9-0826-474e-9102-f3c070b737bb/exported/circle filter/minFeret'
   dda-max-diameter-parameter-key: '5b2fced9-0826-474e-9102-f3c070b737bb/exported/circle filter/maxFeret'
   dda-min-circularity-parameter-key: '5b2fced9-0826-474e-9102-f3c070b737bb/exported/circle filter/minCirc'
+  contrast-min-value-parameter-key: '5bfee4f0-7076-4959-b097-ac557442fa98/custom-min'
+  contrast-max-value-parameter-key: '5bfee4f0-7076-4959-b097-ac557442fa98/custom-max'
 accounts:
   admin-username: 'admin@localhost'
   admin-password: 'Ckw55ryzy1mXGxb8'

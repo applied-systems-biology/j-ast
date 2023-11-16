@@ -9,6 +9,8 @@ public class RuntimeParametersConfig {
     private String ddaMinDiameterParameterKey;
     private String ddaMaxDiameterParameterKey;
     private String ddaMinCircularityParameterKey;
+    private String contrastMinValueParameterKey;
+    private String contrastMaxValueParameterKey;
 
     public void setTimePointEarlyFilterParameterKey(String timePointEarlyFilterParameterKey) {
         this.timePointEarlyFilterParameterKey = timePointEarlyFilterParameterKey;
@@ -48,5 +50,21 @@ public class RuntimeParametersConfig {
 
     public String getGrowthReductionThresholdsParameterKey() {
         return growthReductionThresholdsParameterKey;
+    }
+
+    public String getContrastMinValueParameterKey() {
+        return contrastMinValueParameterKey;
+    }
+
+    public void setContrastMinValueParameterKey(String contrastMinValueParameterKey) {
+        this.contrastMinValueParameterKey = contrastMinValueParameterKey;
+    }
+
+    public String getContrastMaxValueParameterKey() {
+        return contrastMaxValueParameterKey;
+    }
+
+    public void setContrastMaxValueParameterKey(String contrastMaxValueParameterKey) {
+        this.contrastMaxValueParameterKey = contrastMaxValueParameterKey;
     }
 }
