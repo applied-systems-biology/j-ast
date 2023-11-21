@@ -252,7 +252,8 @@ public class Dataset {
         Multiset<String> allNames = HashMultiset.create();
         Multiset<String> allNamesNoTimePoint = HashMultiset.create();
         Multiset<String> allNamesInvalidPlateDiameters = HashMultiset.create();
-        Multiset<String> allNamesunequalPlateDiameters = HashMultiset.create();
+        Multiset<String> allNamesUnequalPlateDiameters = HashMultiset.create();
+        Multiset<String> allNamesUnequalAssayTypes = HashMultiset.create();
         Set<String> invalidExperiments = new HashSet<>();
         Set<String> invalidSamples = new HashSet<>();
         for (InputData data : inputData) {
@@ -288,14 +289,22 @@ public class Dataset {
                 InputData first = entry.getValue().get(0);
                 InputData second = entry.getValue().get(1);
                 if(first.getPlateDiameter() != second.getPlateDiameter()) {
-                    allNamesunequalPlateDiameters.add(first.getExperiment() + "_" + first.getSample() + "_*");
+                    allNamesUnequalPlateDiameters.add(first.getExperiment() + "_" + first.getSample() + "_*");
+                }
+                if(first.getAssayType() != second.getAssayType()) {
+                    allNamesUnequalAssayTypes.add(first.getExperiment() + "_" + first.getSample() + "_*");
                 }
             }
         }
 
-        if(!allNamesunequalPlateDiameters.isEmpty()) {
+        if(!allNamesUnequalPlateDiameters.isEmpty()) {
             result.addIssue("Unequal plate diameters", "Please ensure that images within the same experiment and sample have the same plate diameter. " +
-                    "The following entries are affected: " + String.join(", ", allNamesunequalPlateDiameters));
+                    "The following entries are affected: " + String.join(", ", allNamesUnequalPlateDiameters));
+        }
+
+        if(!allNamesUnequalAssayTypes.isEmpty()) {
+            result.addIssue("Unequal assay types", "Please ensure that images within the same experiment and sample have the same assay type. " +
+                    "The following entries are affected: " + String.join(", ", allNamesUnequalAssayTypes));
         }
 
         if(timePoints.size() < 2) {

@@ -20,6 +20,7 @@
                 <tr>
                     <th scope="col"></th>
                     <th scope="col"></th>
+                    <th scope="col">Type</th>
                     <th scope="col">Size</th>
                     <th scope="col">Original file name</th>
                     <th scope="col">Experiment</th>
@@ -44,6 +45,12 @@
                     <th scope="col"><a th:href="@{'/input-data/view/' + ${inputData.id}}"
                                        target="_blank"><img
                             th:src="@{'/input-data/thumbnail/' + ${inputData.id}}" alt="Thumbnail"/></a>
+                    </th>
+                    <th scope="col">
+                        <select class="form-select" th:data-input-data-id="${inputData.id}" data-input-data-property="assayType">
+                            <option th:selected="${inputData.assayType.toString().equals('DDA')}" value="DDA">DDA</option>
+                            <option th:selected="${inputData.assayType.toString().equals('ETest')}" value="ETest">E-Test</option>
+                        </select>
                     </th>
                     <th scope="col" class="text-muted" th:text="${inputData.imageWidth + ' ⨉ ' + inputData.imageHeight + ' px'}"></th>
                     <th scope="col" th:text="${inputData.originalFileName}"></th>

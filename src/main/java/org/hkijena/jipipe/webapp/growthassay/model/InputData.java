@@ -47,8 +47,20 @@ public class InputData {
     @Column(name = "plate_diameter_mm", nullable = false)
     private double plateDiameter = 90;
 
+    @Column(name = "assay_type", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private AssayType assayType = AssayType.DDA;
+
     @ManyToOne(fetch = FetchType.LAZY)
     private Dataset dataset;
+
+    public AssayType getAssayType() {
+        return assayType;
+    }
+
+    public void setAssayType(AssayType assayType) {
+        this.assayType = assayType;
+    }
 
     public Dataset getDataset() {
         return dataset;
@@ -151,7 +163,24 @@ public class InputData {
             originalFileName = originalFileName.replace("__", "_");
         }
         String[] components = originalFileName.split("_");
-        if(components.length >= 3) {
+
+        if(components.length >= 4) {
+            if(components[0].toLowerCase().startsWith("d")) {
+                setAssayType(AssayType.DDA);
+            }
+            else {
+                setAssayType(AssayType.ETest);
+            }
+            setExperiment(components[1]);
+            setSample(components[2]);
+            setTimePoint(components[3]);
+            if(components.length > 4) {
+                if(NumberUtils.isCreatable(components[4])) {
+                    setPlateDiameter(NumberUtils.createDouble(components[4]));
+                }
+            }
+        }
+        else if(components.length >= 3) {
             setExperiment(components[0]);
             setSample(components[1]);
             setTimePoint(components[2]);

@@ -142,6 +142,7 @@ public class DatasetUpdateMessage {
         private String sample;
         private String timePoint;
         private double plateDiameter;
+        private String assayType;
 
         @JsonGetter("id")
         public long getId() {
@@ -184,13 +185,23 @@ public class DatasetUpdateMessage {
         }
 
         @JsonGetter("plateDiameter")
-        public double getplateDiameter() {
+        public double getPlateDiameter() {
             return plateDiameter;
         }
 
         @JsonSetter("plateDiameter")
-        public void setplateDiameter(double plateDiameter) {
+        public void setPlateDiameter(double plateDiameter) {
             this.plateDiameter = plateDiameter;
+        }
+
+        @JsonGetter("assayType")
+        public String getAssayType() {
+            return assayType;
+        }
+
+        @JsonSetter("assayType")
+        public void setAssayType(String assayType) {
+            this.assayType = assayType;
         }
 
         public void update(InputData inputData) {
@@ -198,6 +209,7 @@ public class DatasetUpdateMessage {
             inputData.setExperiment(StringUtils.nullToEmpty(experiment));
             inputData.setTimePoint(StringUtils.nullToEmpty(timePoint));
             inputData.setPlateDiameter(plateDiameter);
+            inputData.setAssayType(AssayType.valueOf(StringUtils.orElse(assayType,AssayType.DDA.name())));
         }
     }
 
