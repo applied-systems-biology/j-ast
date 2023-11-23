@@ -4,6 +4,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 
 @ConfigurationProperties(prefix = "runtime-parameters")
 public class RuntimeParametersConfig {
+    private String inputFolderListParameterKey;
     private String timePointEarlyFilterParameterKey;
     private String growthReductionThresholdsParameterKey;
     private String ddaMinDiameterParameterKey;
@@ -18,6 +19,14 @@ public class RuntimeParametersConfig {
 
     public void setGrowthReductionThresholdsParameterKey(String growthReductionThresholdsParameterKey) {
         this.growthReductionThresholdsParameterKey = growthReductionThresholdsParameterKey;
+    }
+
+    public String getInputFolderListParameterKey() {
+        return inputFolderListParameterKey;
+    }
+
+    public void setInputFolderListParameterKey(String inputFolderListParameterKey) {
+        this.inputFolderListParameterKey = inputFolderListParameterKey;
     }
 
     public String getDdaMinDiameterParameterKey() {

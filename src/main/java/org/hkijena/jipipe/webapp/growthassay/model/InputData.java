@@ -151,7 +151,7 @@ public class InputData {
     }
 
     public String getFinalFileName() {
-        return getExperiment() + "_" + getSample() + "_" + getTimePoint() + "_" + getPlateDiameter();
+        return getAssayType() + "_" + getExperiment() + "_" + getSample() + "_" + getTimePoint() + "_" + getPlateDiameter();
     }
 
     public void tryAutoFill(String originalFileName) {

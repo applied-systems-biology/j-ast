@@ -60,6 +60,8 @@
                 message["parameters"][parameterProperty] = value
             })
 
+            // console.log(JSON.stringify(message))
+
             const token = $('#_csrf').attr('content');
             const header = $('#_csrf_header').attr('content');
             return $.ajax(getURL("dataset/update/" + currentDatasetId), {

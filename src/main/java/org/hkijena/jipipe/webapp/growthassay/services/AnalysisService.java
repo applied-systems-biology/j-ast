@@ -167,6 +167,7 @@ public class AnalysisService {
                 // Save parameter config
                 Path parameterOverridesFile = workDirectory.resolve("parameter-overrides.json");
                 ObjectNode parameterOverrides = JsonUtils.getObjectMapper().createObjectNode();
+                parameterOverrides.set(runtimeParametersConfig.getInputFolderListParameterKey(), JsonUtils.readFromString("[\"raw\"]", JsonNode.class));
                 Map<String, String> timePointFilterConfig = new HashMap<>();
                 timePointFilterConfig.put("expression", "#Timepoint == \"" + dataset.getTimePointEarly() + "\"");
                 parameterOverrides.set(runtimeParametersConfig.getTimePointEarlyFilterParameterKey(), JsonUtils.getObjectMapper().convertValue(timePointFilterConfig, JsonNode.class));

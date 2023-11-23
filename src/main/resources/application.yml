@@ -38,6 +38,7 @@ runtime-parameters:
   dda-min-circularity-parameter-key: '5b2fced9-0826-474e-9102-f3c070b737bb/exported/circle filter/minCirc'
   contrast-min-value-parameter-key: '5bfee4f0-7076-4959-b097-ac557442fa98/custom-min'
   contrast-max-value-parameter-key: '5bfee4f0-7076-4959-b097-ac557442fa98/custom-max'
+  input-folder-list-parameter-key: '9663ce59-8770-456a-a5a0-9b3254c8f021/folder-paths'
 accounts:
   admin-username: 'admin@localhost'
   admin-password: 'Ckw55ryzy1mXGxb8'

@@ -48,10 +48,10 @@ public class Dataset {
     private String timePointLate = "";
 
     @Column(name = "dda_disk_min_diameter", nullable = false, columnDefinition = "DOUBLE")
-    private double ddaDiskMinDiameter = 5;
+    private double ddaDiskMinDiameter = 3;
 
     @Column(name = "dda_disk_max_diameter", nullable = false, columnDefinition = "DOUBLE")
-    private double ddaDiskMaxDiameter = 7;
+    private double ddaDiskMaxDiameter = 13;
 
     @Column(name = "dda_disk_min_circularity", nullable = false, columnDefinition = "DOUBLE")
     private double ddaDiskMinCircularity = 0.5;

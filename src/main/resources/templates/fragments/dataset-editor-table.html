@@ -47,7 +47,7 @@
                             th:src="@{'/input-data/thumbnail/' + ${inputData.id}}" alt="Thumbnail"/></a>
                     </th>
                     <th scope="col">
-                        <select class="form-select" th:data-input-data-id="${inputData.id}" data-input-data-property="assayType">
+                        <select class="form-select input-data-editor" th:data-input-data-id="${inputData.id}" data-input-data-property="assayType">
                             <option th:selected="${inputData.assayType.toString().equals('DDA')}" value="DDA">DDA</option>
                             <option th:selected="${inputData.assayType.toString().equals('ETest')}" value="ETest">E-Test</option>
                         </select>
