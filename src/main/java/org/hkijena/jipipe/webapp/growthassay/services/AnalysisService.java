@@ -35,6 +35,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -251,13 +252,15 @@ public class AnalysisService {
                         double fog = NumberUtils.createDouble(record.get("FoG"));
                         double rad = NumberUtils.createDouble(record.get("RAD_mm"));
                         double threshold = NumberUtils.createDouble(record.get("#Threshold"));
+                        List<InputData> inputData = inputDataRepository.findByDatasetAndExperimentAndSample(dataset, experiment, sample);
 
                         outputData.setExperiment(experiment);
                         outputData.setSample(sample);
                         outputData.setFog(fog);
                         outputData.setRad(rad);
                         outputData.setThreshold(threshold * 100);
-                        outputData.setInputData(inputDataRepository.findByDatasetAndExperimentAndSample(dataset, experiment, sample));
+                        outputData.setInputData(inputData);
+                        outputData.setAssayType(inputData.get(0).getAssayType());
 
                         Path visualizationPath = workDirectory.resolve("results").resolve("visualizations").resolve("ZOI").resolve(experiment + "_" + sample + "_t" + threshold + ".png");
                         Path visualizationThumbnailPath = Files.createTempFile(resultServiceDirectory, "thumbnail", ".png");

@@ -26,6 +26,10 @@ public class OutputData {
     @Column(name = "experiment", nullable = false, columnDefinition = "TEXT")
     private String experiment;
 
+    @Column(name = "assay_type", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private AssayType assayType = AssayType.DDA;
+
     @Column(name = "sample", nullable = false, columnDefinition = "TEXT")
     private String sample;
 
@@ -122,5 +126,13 @@ public class OutputData {
 
     public void setDataset(Dataset dataset) {
         this.dataset = dataset;
+    }
+
+    public AssayType getAssayType() {
+        return assayType;
+    }
+
+    public void setAssayType(AssayType assayType) {
+        this.assayType = assayType;
     }
 }

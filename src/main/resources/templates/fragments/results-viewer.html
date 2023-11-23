@@ -21,6 +21,7 @@
                 <tr>
                     <th scope="col" th:text="${currentDataset.timePointEarly}"></th>
                     <th scope="col" th:text="${currentDataset.timePointLate}"></th>
+                    <th scope="col">Type</th>
                     <th scope="col">Experiment</th>
                     <th scope="col">Sample</th>
                     <th scope="col">Threshold (%)</th>
@@ -47,6 +48,7 @@
                             </a>
                         </div>
                     </td>
+                    <td th:text="${outputData.assayType}"></td>
                     <td th:text="${outputData.experiment}"></td>
                     <td th:text="${outputData.sample}"></td>
                     <td th:text="${outputData.threshold}"></td>
