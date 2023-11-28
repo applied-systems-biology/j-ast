@@ -1,18 +1,18 @@
 spring:
   datasource:
-#    url: jdbc:h2:file:./database
-#    username: sa
-#    password: password
-#    driverClassName: org.h2.Driver
-    url: 'jdbc:mariadb://localhost:3306/jipipe_growth_assay'
-    username: jipipe_web
-    password: jipipe_web
-    driver-class-name: org.mariadb.jdbc.Driver
+    url: jdbc:h2:file:./storage/database
+    username: sa
+    password: password
+    driverClassName: org.h2.Driver
+#    url: 'jdbc:mariadb://localhost:3306/jipipe_growth_assay'
+#    username: jipipe_web
+#    password: jipipe_web
+#    driver-class-name: org.mariadb.jdbc.Driver
   jpa:
     hibernate:
       ddl-auto: update
     show-sql: false
-#    database-platform: org.hibernate.dialect.H2Dialect
+    database-platform: org.hibernate.dialect.H2Dialect
   servlet:
     multipart:
       enabled: true
@@ -31,10 +31,19 @@ runtime:
   fiji-wrapper: '/usr/bin/xvfb-run'
   fiji-wrapper-args: [ '-a' ]
 runtime-parameters:
-  time-point-early-parameter-key: 'e3d4a323-851b-49f8-960d-80e972ff94ad/custom-variables/timePointEarly'
-  min-rel-diff-threshold-parameter-key: '32215cd8-a746-4b10-a1fe-577cc374386c/custom-expression-variables/minreldiff'
+  time-point-early-filter-parameter-key: 'e3d4a323-851b-49f8-960d-80e972ff94ad/filter'
+  growth-reduction-thresholds-parameter-key: 'f37619df-9f61-4033-b000-1271b68b5f68/variables/thresholds'
+  dda-min-diameter-parameter-key: '5b2fced9-0826-474e-9102-f3c070b737bb/exported/circle filter/minFeret'
+  dda-max-diameter-parameter-key: '5b2fced9-0826-474e-9102-f3c070b737bb/exported/circle filter/maxFeret'
+  dda-min-circularity-parameter-key: '5b2fced9-0826-474e-9102-f3c070b737bb/exported/circle filter/minCirc'
+  contrast-min-value-parameter-key: '5bfee4f0-7076-4959-b097-ac557442fa98/custom-min'
+  contrast-max-value-parameter-key: '5bfee4f0-7076-4959-b097-ac557442fa98/custom-max'
+  input-folder-list-parameter-key: '9663ce59-8770-456a-a5a0-9b3254c8f021/folder-paths'
 accounts:
   admin-username: 'admin@localhost'
   admin-password: 'Ckw55ryzy1mXGxb8'
+#server:
+#  servlet:
+#    context-path: '/abc'
 
 

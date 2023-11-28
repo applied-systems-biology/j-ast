@@ -3,6 +3,7 @@ package org.hkijena.jipipe.webapp.growthassay.model;
 import com.google.common.collect.HashMultiset;
 import com.google.common.collect.Multiset;
 import jakarta.persistence.*;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.hkijena.jipipe.webapp.growthassay.utils.StringUtils;
 import org.jobrunr.scheduling.BackgroundJob;
 import org.springframework.security.core.Authentication;
@@ -37,14 +38,28 @@ public class Dataset {
     @Enumerated(EnumType.STRING)
     private Status status = Status.Preparing;
 
-    @Column(name = "percentage_of_inhibition", nullable = false, columnDefinition = "DOUBLE")
-    private double percentageOfInhibition = 50;
+    @Column(name = "growth_reduction_thresholds", nullable = false, columnDefinition = "TEXT")
+    private String growthReductionThresholds = "20, 50, 80";
 
     @Column(name = "time_point_early", nullable = false, columnDefinition = "TEXT")
     private String timePointEarly = "";
 
     @Column(name = "time_point_late", nullable = false, columnDefinition = "TEXT")
     private String timePointLate = "";
+
+    @Column(name = "dda_disk_min_diameter", nullable = false, columnDefinition = "DOUBLE")
+    private double ddaDiskMinDiameter = 3;
+
+    @Column(name = "dda_disk_max_diameter", nullable = false, columnDefinition = "DOUBLE")
+    private double ddaDiskMaxDiameter = 13;
+
+    @Column(name = "dda_disk_min_circularity", nullable = false, columnDefinition = "DOUBLE")
+    private double ddaDiskMinCircularity = 0.5;
+
+    @Column(name = "contrast_min_value", nullable = false, columnDefinition = "DOUBLE")
+    private double contrastMinValue = 50;
+    @Column(name = "contrast_max_value", nullable = false, columnDefinition = "DOUBLE")
+    private double contrastMaxValue = 250;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true, mappedBy = "dataset")
     private List<InputData> inputData = new ArrayList<>();
@@ -64,12 +79,12 @@ public class Dataset {
         this.owner = owner;
     }
 
-    public double getPercentageOfInhibition() {
-        return percentageOfInhibition;
+    public String getGrowthReductionThresholds() {
+        return growthReductionThresholds;
     }
 
-    public void setPercentageOfInhibition(double percentageOfInhibition) {
-        this.percentageOfInhibition = percentageOfInhibition;
+    public void setGrowthReductionThresholds(String growthReductionThresholds) {
+        this.growthReductionThresholds = StringUtils.nullToEmpty(growthReductionThresholds);
     }
 
     public String getTimePointEarly() {
@@ -120,12 +135,72 @@ public class Dataset {
         this.name = name;
     }
 
+    public double getDdaDiskMinDiameter() {
+        return ddaDiskMinDiameter;
+    }
+
+    public void setDdaDiskMinDiameter(double ddaDiskMinDiameter) {
+        this.ddaDiskMinDiameter = ddaDiskMinDiameter;
+    }
+
+    public double getDdaDiskMaxDiameter() {
+        return ddaDiskMaxDiameter;
+    }
+
+    public void setDdaDiskMaxDiameter(double ddaDiskMaxDiameter) {
+        this.ddaDiskMaxDiameter = ddaDiskMaxDiameter;
+    }
+
+    public double getDdaDiskMinCircularity() {
+        return ddaDiskMinCircularity;
+    }
+
+    public void setDdaDiskMinCircularity(double ddaDiskMinCircularity) {
+        this.ddaDiskMinCircularity = ddaDiskMinCircularity;
+    }
+
+    public double getContrastMinValue() {
+        return contrastMinValue;
+    }
+
+    public void setContrastMinValue(double contrastMinValue) {
+        this.contrastMinValue = contrastMinValue;
+    }
+
+    public double getContrastMaxValue() {
+        return contrastMaxValue;
+    }
+
+    public void setContrastMaxValue(double contrastMaxValue) {
+        this.contrastMaxValue = contrastMaxValue;
+    }
+
     public List<InputData> getInputData() {
         return Collections.unmodifiableList(inputData);
     }
 
     public List<OutputData> getOutputData() {
         return Collections.unmodifiableList(outputData);
+    }
+
+    public List<Double> tryParseGrowthReductionThresholds() {
+        List<Double> result = new ArrayList<>();
+        String str = StringUtils.nullToEmpty(getGrowthReductionThresholds()).trim();
+        if(!StringUtils.isNullOrEmpty(str)) {
+            for (String s : str.split(",")) {
+                String item = s.trim();
+                if(item.isEmpty()) {
+                    return null;
+                }
+                if(NumberUtils.isCreatable(item)) {
+                    result.add(NumberUtils.createDouble(item));
+                }
+                else {
+                    return null;
+                }
+            }
+        }
+        return result;
     }
 
     public void addInputData(InputData inputData) {
@@ -173,8 +248,12 @@ public class Dataset {
         boolean foundEmptyExperiments = false;
         boolean foundEmptyNames = false;
         boolean foundEmptyTimePoints = false;
+        boolean foundInvalidPlateDiameters = false;
         Multiset<String> allNames = HashMultiset.create();
         Multiset<String> allNamesNoTimePoint = HashMultiset.create();
+        Multiset<String> allNamesInvalidPlateDiameters = HashMultiset.create();
+        Multiset<String> allNamesUnequalPlateDiameters = HashMultiset.create();
+        Multiset<String> allNamesUnequalAssayTypes = HashMultiset.create();
         Set<String> invalidExperiments = new HashSet<>();
         Set<String> invalidSamples = new HashSet<>();
         for (InputData data : inputData) {
@@ -196,27 +275,37 @@ public class Dataset {
             else {
                 timePoints.add(data.getTimePoint());
             }
+            if(data.getPlateDiameter() <= 0) {
+                foundInvalidPlateDiameters = true;
+                allNamesInvalidPlateDiameters.add(data.getExperiment() + "_" + data.getSample() + "_*");
+            }
             allNames.add(data.getFinalFileName());
             allNamesNoTimePoint.add(data.getExperiment() + "_" + data.getSample() + "_*");
         }
 
-//        Map<String, List<InputData>> groups = inputData.stream().collect(Collectors.groupingBy(data -> data.getExperiment() + "_" + data.getSample()));
-//        Set<String> unequalImageSizeData = new HashSet<>();
-//        for (Map.Entry<String, List<InputData>> entry : groups.entrySet()) {
-//            if(entry.getValue().size() == 2) {
-//                InputData first = entry.getValue().get(0);
-//                InputData second = entry.getValue().get(1);
-//                if(first.getImageWidth() != second.getImageWidth() || first.getImageHeight() != second.getImageHeight()) {
-//                    unequalImageSizeData.add(first.getFinalFileName());
-//                    unequalImageSizeData.add(second.getFinalFileName());
-//                }
-//            }
-//        }
-//
-//        if(!unequalImageSizeData.isEmpty()) {
-//            result.addIssue("Unequal image sizes", "Please ensure that images within the same experiment and sample have the same size. " +
-//                    "The following entries are affected: " + String.join(", ", unequalImageSizeData));
-//        }
+        Map<String, List<InputData>> groups = inputData.stream().collect(Collectors.groupingBy(data -> data.getExperiment() + "_" + data.getSample()));
+        for (Map.Entry<String, List<InputData>> entry : groups.entrySet()) {
+            if(entry.getValue().size() == 2) {
+                InputData first = entry.getValue().get(0);
+                InputData second = entry.getValue().get(1);
+                if(first.getPlateDiameter() != second.getPlateDiameter()) {
+                    allNamesUnequalPlateDiameters.add(first.getExperiment() + "_" + first.getSample() + "_*");
+                }
+                if(first.getAssayType() != second.getAssayType()) {
+                    allNamesUnequalAssayTypes.add(first.getExperiment() + "_" + first.getSample() + "_*");
+                }
+            }
+        }
+
+        if(!allNamesUnequalPlateDiameters.isEmpty()) {
+            result.addIssue("Unequal plate diameters", "Please ensure that images within the same experiment and sample have the same plate diameter. " +
+                    "The following entries are affected: " + String.join(", ", allNamesUnequalPlateDiameters));
+        }
+
+        if(!allNamesUnequalAssayTypes.isEmpty()) {
+            result.addIssue("Unequal assay types", "Please ensure that images within the same experiment and sample have the same assay type. " +
+                    "The following entries are affected: " + String.join(", ", allNamesUnequalAssayTypes));
+        }
 
         if(timePoints.size() < 2) {
             result.addIssue("Too few time points", "Please ensure that you have exactly two time points.");
@@ -233,6 +322,10 @@ public class Dataset {
         }
         if(foundEmptyTimePoints) {
             result.addIssue("Not all time points set", "Please provide a time point annotation (e.g., 24hr and 48hr) to all inputs.");
+        }
+
+        if(foundInvalidPlateDiameters) {
+            result.addIssue("Invalid plate diameters", "Please ensure that all plate diameters are positive. The following entries are affected: " + String.join(", ", allNamesInvalidPlateDiameters));
         }
 
         if(!invalidExperiments.isEmpty()) {
@@ -278,8 +371,24 @@ public class Dataset {
             result.addIssue("Late time point not configured", "Please ensure that 'Late time point' is set to one of the time points in the data table.");
         }
 
-        if(percentageOfInhibition <= 0 || percentageOfInhibition >= 100) {
-            result.addIssue("Invalid percentage of inhibition", "Please ensure that the 'Percentage of inhibition'");
+        List<Double> parsedThresholds = tryParseGrowthReductionThresholds();
+        if(parsedThresholds != null && !parsedThresholds.isEmpty()) {
+            for (Double threshold : parsedThresholds) {
+                if(threshold <= 0 || threshold >= 100) {
+                    result.addIssue("Invalid growth reduction threshold: " + threshold, "Please ensure that the value is between 0 and 100");
+                }
+            }
+        }
+        else {
+            result.addIssue("Invalid growth reduction thresholds", "The set of growth reduction thresholds is empty or invalid. Use commas to provide multiple thresholds.");
+        }
+
+        if(ddaDiskMinDiameter > ddaDiskMaxDiameter) {
+            result.addIssue("Invalid DDA disk diameter constraints", "The minimum value must be smaller than the maximum value");
+        }
+
+        if(contrastMinValue > contrastMaxValue) {
+            result.addIssue("Invalid pixel value range", "Please ensure that the given pixel values are within [0, 255] and the minimum is not larger than the maximum.");
         }
 
         return result;

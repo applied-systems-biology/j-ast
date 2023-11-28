@@ -11,8 +11,8 @@
     <meta id="_csrf_header" name="_csrf_header" th:content="${_csrf.headerName}"/>
 </head>
 <body>
-<script src="/jquery/jquery-3.6.4.min.js"></script>
-<script src="/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script th:src="@{/jquery/jquery-3.6.4.min.js}"></script>
+<script th:src="@{/bootstrap/js/bootstrap.bundle.min.js}"></script>
 <script th:inline="javascript">
     const currentDatasetId = [[${currentDatasetId}]]
 
@@ -33,13 +33,13 @@
                 <a class="nav-link" href="https://www.jipipe.org/" target="_blank"><i class="fas fa-question-circle"></i> Learn more about JIPipe</a>
             </li>
             <li sec:authorize="!isAuthenticated()" class="nav-item">
-                <a class="nav-link" href="/login"><i class="fa-solid fa-right-to-bracket"></i> Login</a>
+                <a class="nav-link" th:href="@{/login}"><i class="fa-solid fa-right-to-bracket"></i> Login</a>
             </li>
             <li class="nav-item" sec:authorize="hasAuthority('EDIT_OWN_ACCOUNT')">
-                <a class="nav-link" href="/account"><i class="fa-solid fa-user-gear"></i> <span sec:authentication="name">Account</span></a>
+                <a class="nav-link" th:href="@{/account}"><i class="fa-solid fa-user-gear"></i> <span sec:authentication="name">Account</span></a>
             </li>
             <li class="nav-item" sec:authorize="hasRole('ADMIN')">
-                <a class="nav-link" href="/admin"><i class="fa-solid fa-gear"></i> Admin</a>
+                <a class="nav-link" th:href="@{/admin}"><i class="fa-solid fa-gear"></i> Admin</a>
             </li>
             <li sec:authorize="isAuthenticated()" class="nav-item">
                 <a class="nav-link" href="#" onclick="document.logoutForm.submit();"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>

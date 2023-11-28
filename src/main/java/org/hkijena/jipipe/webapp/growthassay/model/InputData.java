@@ -1,6 +1,7 @@
 package org.hkijena.jipipe.webapp.growthassay.model;
 
 import jakarta.persistence.*;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.hkijena.jipipe.webapp.growthassay.utils.PathUtils;
 import org.hkijena.jipipe.webapp.growthassay.utils.StringUtils;
 
@@ -43,8 +44,23 @@ public class InputData {
     @Column(name = "image_height", nullable = false)
     private int imageHeight;
 
+    @Column(name = "plate_diameter_mm", nullable = false)
+    private double plateDiameter = 90;
+
+    @Column(name = "assay_type", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private AssayType assayType = AssayType.DDA;
+
     @ManyToOne(fetch = FetchType.LAZY)
     private Dataset dataset;
+
+    public AssayType getAssayType() {
+        return assayType;
+    }
+
+    public void setAssayType(AssayType assayType) {
+        this.assayType = assayType;
+    }
 
     public Dataset getDataset() {
         return dataset;
@@ -126,8 +142,16 @@ public class InputData {
         this.originalFileName = originalFileName;
     }
 
+    public double getPlateDiameter() {
+        return plateDiameter;
+    }
+
+    public void setPlateDiameter(double plateDiameter) {
+        this.plateDiameter = plateDiameter;
+    }
+
     public String getFinalFileName() {
-        return getExperiment() + "_" + getSample() + "_" + getTimePoint();
+        return getAssayType() + "_" + getExperiment() + "_" + getSample() + "_" + getTimePoint() + "_" + getPlateDiameter();
     }
 
     public void tryAutoFill(String originalFileName) {
@@ -139,10 +163,32 @@ public class InputData {
             originalFileName = originalFileName.replace("__", "_");
         }
         String[] components = originalFileName.split("_");
-        if(components.length == 3) {
+
+        if(components.length >= 4) {
+            if(components[0].toLowerCase().startsWith("d")) {
+                setAssayType(AssayType.DDA);
+            }
+            else {
+                setAssayType(AssayType.ETest);
+            }
+            setExperiment(components[1]);
+            setSample(components[2]);
+            setTimePoint(components[3]);
+            if(components.length > 4) {
+                if(NumberUtils.isCreatable(components[4])) {
+                    setPlateDiameter(NumberUtils.createDouble(components[4]));
+                }
+            }
+        }
+        else if(components.length >= 3) {
             setExperiment(components[0]);
             setSample(components[1]);
             setTimePoint(components[2]);
+            if(components.length > 3) {
+                if(NumberUtils.isCreatable(components[3])) {
+                    setPlateDiameter(NumberUtils.createDouble(components[3]));
+                }
+            }
         }
         else if(components.length == 2) {
             setExperiment("Experiment");
