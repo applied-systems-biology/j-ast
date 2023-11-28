@@ -6,10 +6,12 @@ services:
     build: .
     restart: always
     ports:
-      - "8080:8080"
+      - "8193:8080"
     depends_on:
       -  mariadb
     environment:
+    # Context path (deploying the app)
+      SERVER_SERVLET_CONTEXT_PATH: '/jipipe-growth-analysis-webapp'
     # Memory for Fiji (8G = 8GB)
       RUNTIME_FIJI_ARGS_1: 8G
     # Maximum number of background jobs
@@ -23,6 +25,8 @@ services:
       SPRING_DATASOURCE_URL: "jdbc:mariadb://mariadb:3306/jipipe_web"
       SPRING_DATASOURCE_USERNAME: jipipe_web
       SPRING_DATASOURCE_PASSWORD: lBpuJweTQWGhvr0o
+      SPRING_JPA_DATABASE_PLATFORM: "org.hibernate.dialect.MariaDBDialect"
+      SPRING_DATASOURCE_DRIVERCLASSNAME: "org.mariadb.jdbc.Driver"
     # Data config
       RUNTIME_CUSTOM_TEMP_DIRECTORY: /webapp_data
     volumes:
