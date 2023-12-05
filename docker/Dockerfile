@@ -1,7 +1,7 @@
 FROM eclipse-temurin:17-jdk-jammy
 
 # Install xvfb
-RUN apt update && DEBIAN_FRONTEND=noninteractive apt-get install -yq xvfb xorg
+RUN apt update && DEBIAN_FRONTEND=noninteractive apt-get install -yq xvfb xorg r-base r-cran-jsonlite r-cran-rjson
 
 # Copy web app & Fiji
 RUN mkdir /opt/app

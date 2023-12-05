@@ -1,6 +1,6 @@
 name: jipipe_growth_assay_webapp
 volumes:
-  webapp_data:
+  jipipe_growth_assay_webapp_data:
 services:
   webapp:
     build: .
@@ -30,7 +30,7 @@ services:
     # Data config
       RUNTIME_CUSTOM_TEMP_DIRECTORY: /webapp_data
     volumes:
-      - webapp_data:/webapp_data
+      - jipipe_growth_assay_webapp_data:/webapp_data
   mariadb:
     image: "mariadb:latest"
     restart: always
@@ -41,4 +41,6 @@ services:
       MYSQL_USER: jipipe_web
       MYSQL_PASSWORD: lBpuJweTQWGhvr0o
       MYSQL_ROOT_PASSWORD: ngek9RlN1BS3K82i
+    volumes:
+      - jipipe_growth_assay_webapp_data:/var/lib/mysql
     
