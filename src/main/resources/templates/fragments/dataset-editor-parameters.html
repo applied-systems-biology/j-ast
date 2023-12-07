@@ -55,5 +55,13 @@
         Determines the pixel value range for contrast enhancement. The raw pixel range of values is stretched to contain only pixel values in this interval.
       </div>
     </div>
+    <hr/>
+    <div class="mb-3">
+      <label for="parameter-ensure-circular-plate" class="form-label">Ensure circular plate</label>
+      <input type="checkbox" class="form-control input-parameter-editor" id="parameter-ensure-circular-plate" data-parameter-property="ensure-circular-plate" th:value="${currentDataset.ensureCircularPlate}">
+      <div class="form-text">
+        Uncheck if you have non-circular plates
+      </div>
+    </div>
   </div>
 </div>

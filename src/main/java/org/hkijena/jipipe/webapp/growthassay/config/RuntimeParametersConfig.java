@@ -12,6 +12,15 @@ public class RuntimeParametersConfig {
     private String ddaMinCircularityParameterKey;
     private String contrastMinValueParameterKey;
     private String contrastMaxValueParameterKey;
+    private String ensureCircularPlateParameterKey;
+
+    public String getEnsureCircularPlateParameterKey() {
+        return ensureCircularPlateParameterKey;
+    }
+
+    public void setEnsureCircularPlateParameterKey(String ensureCircularPlateParameterKey) {
+        this.ensureCircularPlateParameterKey = ensureCircularPlateParameterKey;
+    }
 
     public void setTimePointEarlyFilterParameterKey(String timePointEarlyFilterParameterKey) {
         this.timePointEarlyFilterParameterKey = timePointEarlyFilterParameterKey;

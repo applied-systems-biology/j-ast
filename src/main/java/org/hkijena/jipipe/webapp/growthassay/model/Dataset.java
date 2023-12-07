@@ -61,6 +61,9 @@ public class Dataset {
     @Column(name = "contrast_max_value", nullable = false, columnDefinition = "DOUBLE")
     private double contrastMaxValue = 250;
 
+    @Column(name = "ensure_circular_plate", nullable = false)
+    private boolean ensureCircularPlate = true;
+
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true, mappedBy = "dataset")
     private List<InputData> inputData = new ArrayList<>();
 
@@ -175,6 +178,14 @@ public class Dataset {
         this.contrastMaxValue = contrastMaxValue;
     }
 
+    public boolean isEnsureCircularPlate() {
+        return ensureCircularPlate;
+    }
+
+    public void setEnsureCircularPlate(boolean ensureCircularPlate) {
+        this.ensureCircularPlate = ensureCircularPlate;
+    }
+
     public List<InputData> getInputData() {
         return Collections.unmodifiableList(inputData);
     }
@@ -186,16 +197,15 @@ public class Dataset {
     public List<Double> tryParseGrowthReductionThresholds() {
         List<Double> result = new ArrayList<>();
         String str = StringUtils.nullToEmpty(getGrowthReductionThresholds()).trim();
-        if(!StringUtils.isNullOrEmpty(str)) {
+        if (!StringUtils.isNullOrEmpty(str)) {
             for (String s : str.split(",")) {
                 String item = s.trim();
-                if(item.isEmpty()) {
+                if (item.isEmpty()) {
                     return null;
                 }
-                if(NumberUtils.isCreatable(item)) {
+                if (NumberUtils.isCreatable(item)) {
                     result.add(NumberUtils.createDouble(item));
-                }
-                else {
+                } else {
                     return null;
                 }
             }
@@ -241,7 +251,7 @@ public class Dataset {
         ValidationResult result = new ValidationResult();
         result.setValid(true);
 
-        if(inputData.isEmpty()) {
+        if (inputData.isEmpty()) {
             result.addIssue("No data", "Please upload data.");
         }
         Set<String> timePoints = new HashSet<>();
@@ -257,25 +267,22 @@ public class Dataset {
         Set<String> invalidExperiments = new HashSet<>();
         Set<String> invalidSamples = new HashSet<>();
         for (InputData data : inputData) {
-            if(StringUtils.isNullOrEmpty(data.getExperiment())) {
+            if (StringUtils.isNullOrEmpty(data.getExperiment())) {
                 foundEmptyExperiments = true;
-            }
-            else if(data.getExperiment().contains("_") || !StringUtils.isFilesystemCompatible(data.getExperiment())) {
+            } else if (data.getExperiment().contains("_") || !StringUtils.isFilesystemCompatible(data.getExperiment())) {
                 invalidExperiments.add(data.getExperiment());
             }
-            if(StringUtils.isNullOrEmpty(data.getSample())) {
+            if (StringUtils.isNullOrEmpty(data.getSample())) {
                 foundEmptyNames = true;
-            }
-            else if(data.getSample().contains("_") || !StringUtils.isFilesystemCompatible(data.getSample())) {
+            } else if (data.getSample().contains("_") || !StringUtils.isFilesystemCompatible(data.getSample())) {
                 invalidSamples.add(data.getExperiment());
             }
-            if(StringUtils.isNullOrEmpty(data.getTimePoint())) {
+            if (StringUtils.isNullOrEmpty(data.getTimePoint())) {
                 foundEmptyTimePoints = true;
-            }
-            else {
+            } else {
                 timePoints.add(data.getTimePoint());
             }
-            if(data.getPlateDiameter() <= 0) {
+            if (data.getPlateDiameter() <= 0) {
                 foundInvalidPlateDiameters = true;
                 allNamesInvalidPlateDiameters.add(data.getExperiment() + "_" + data.getSample() + "_*");
             }
@@ -285,109 +292,105 @@ public class Dataset {
 
         Map<String, List<InputData>> groups = inputData.stream().collect(Collectors.groupingBy(data -> data.getExperiment() + "_" + data.getSample()));
         for (Map.Entry<String, List<InputData>> entry : groups.entrySet()) {
-            if(entry.getValue().size() == 2) {
+            if (entry.getValue().size() == 2) {
                 InputData first = entry.getValue().get(0);
                 InputData second = entry.getValue().get(1);
-                if(first.getPlateDiameter() != second.getPlateDiameter()) {
+                if (first.getPlateDiameter() != second.getPlateDiameter()) {
                     allNamesUnequalPlateDiameters.add(first.getExperiment() + "_" + first.getSample() + "_*");
                 }
-                if(first.getAssayType() != second.getAssayType()) {
+                if (first.getAssayType() != second.getAssayType()) {
                     allNamesUnequalAssayTypes.add(first.getExperiment() + "_" + first.getSample() + "_*");
                 }
             }
         }
 
-        if(!allNamesUnequalPlateDiameters.isEmpty()) {
+        if (!allNamesUnequalPlateDiameters.isEmpty()) {
             result.addIssue("Unequal plate diameters", "Please ensure that images within the same experiment and sample have the same plate diameter. " +
                     "The following entries are affected: " + String.join(", ", allNamesUnequalPlateDiameters));
         }
 
-        if(!allNamesUnequalAssayTypes.isEmpty()) {
+        if (!allNamesUnequalAssayTypes.isEmpty()) {
             result.addIssue("Unequal assay types", "Please ensure that images within the same experiment and sample have the same assay type. " +
                     "The following entries are affected: " + String.join(", ", allNamesUnequalAssayTypes));
         }
 
-        if(timePoints.size() < 2) {
+        if (timePoints.size() < 2) {
             result.addIssue("Too few time points", "Please ensure that you have exactly two time points.");
-        }
-        else if(timePoints.size() > 2) {
+        } else if (timePoints.size() > 2) {
             result.addIssue("Too many time points", "Please ensure that you have exactly two time points.");
         }
 
-        if(foundEmptyExperiments) {
+        if (foundEmptyExperiments) {
             result.addIssue("Not all experiments set", "Please provide an experiment annotation to all inputs.");
         }
-        if(foundEmptyNames) {
+        if (foundEmptyNames) {
             result.addIssue("Not all samples set", "Please provide a sample to all inputs.");
         }
-        if(foundEmptyTimePoints) {
+        if (foundEmptyTimePoints) {
             result.addIssue("Not all time points set", "Please provide a time point annotation (e.g., 24hr and 48hr) to all inputs.");
         }
 
-        if(foundInvalidPlateDiameters) {
+        if (foundInvalidPlateDiameters) {
             result.addIssue("Invalid plate diameters", "Please ensure that all plate diameters are positive. The following entries are affected: " + String.join(", ", allNamesInvalidPlateDiameters));
         }
 
-        if(!invalidExperiments.isEmpty()) {
+        if (!invalidExperiments.isEmpty()) {
             result.addIssue("Invalid experiments", "Please ensure that experiments do not have invalid characters (_, non-alphanumeric characters). " +
                     "The following entries are affected: " + String.join(", ", invalidExperiments));
         }
-        if(!invalidSamples.isEmpty()) {
+        if (!invalidSamples.isEmpty()) {
             result.addIssue("Invalid samples", "Please ensure that samples do not have invalid characters (_, non-alphanumeric characters). " +
                     "The following entries are affected: " + String.join(", ", invalidSamples));
         }
 
         List<String> duplicateElements = allNames.elementSet().stream().filter(element -> allNames.count(element) > 1).collect(Collectors.toList());
-        if(!duplicateElements.isEmpty()) {
+        if (!duplicateElements.isEmpty()) {
             result.addIssue("Duplicate elements", "Duplicates were found for the following entries: " + String.join(", ", duplicateElements));
         }
 
         List<String> wrongPairElements = allNamesNoTimePoint.elementSet().stream().filter(element -> allNamesNoTimePoint.count(element) != 2).collect(Collectors.toList());
-        if(!wrongPairElements.isEmpty()) {
+        if (!wrongPairElements.isEmpty()) {
             result.addIssue("Wrong pairings", "Please ensure that exactly two time points are assigned to each (Experiment, Name) pair. The following entries are affected: " + String.join(", ", wrongPairElements));
         }
 
-        if(!StringUtils.isNullOrEmpty(timePointEarly)) {
-            if(!timePoints.contains(timePointEarly)) {
+        if (!StringUtils.isNullOrEmpty(timePointEarly)) {
+            if (!timePoints.contains(timePointEarly)) {
                 result.addIssue("Time point not present in data", "Please ensure that 'Early time point' is set to one of the time points in the data table.");
             }
-            if(timePointEarly.contains("_") || !StringUtils.isFilesystemCompatible(timePointEarly)) {
+            if (timePointEarly.contains("_") || !StringUtils.isFilesystemCompatible(timePointEarly)) {
                 result.addIssue("Invalid time point name", "The 'Early time point' name contains unsupported characters (_, non-alphanumeric characters)");
             }
-        }
-        else {
+        } else {
             result.addIssue("Early time point not configured", "Please ensure that 'Early time point' is set to one of the time points in the data table.");
         }
 
-        if(!StringUtils.isNullOrEmpty(timePointLate)) {
-            if(!timePoints.contains(timePointLate)) {
+        if (!StringUtils.isNullOrEmpty(timePointLate)) {
+            if (!timePoints.contains(timePointLate)) {
                 result.addIssue("Time point not present in data", "Please ensure that 'Late time point' is set to one of the time points in the data table.");
             }
-            if(timePointLate.contains("_") || !StringUtils.isFilesystemCompatible(timePointLate)) {
+            if (timePointLate.contains("_") || !StringUtils.isFilesystemCompatible(timePointLate)) {
                 result.addIssue("Invalid time point name", "The 'Late time point' name contains unsupported characters (_, non-alphanumeric characters)");
             }
-        }
-        else {
+        } else {
             result.addIssue("Late time point not configured", "Please ensure that 'Late time point' is set to one of the time points in the data table.");
         }
 
         List<Double> parsedThresholds = tryParseGrowthReductionThresholds();
-        if(parsedThresholds != null && !parsedThresholds.isEmpty()) {
+        if (parsedThresholds != null && !parsedThresholds.isEmpty()) {
             for (Double threshold : parsedThresholds) {
-                if(threshold <= 0 || threshold >= 100) {
+                if (threshold <= 0 || threshold >= 100) {
                     result.addIssue("Invalid growth reduction threshold: " + threshold, "Please ensure that the value is between 0 and 100");
                 }
             }
-        }
-        else {
+        } else {
             result.addIssue("Invalid growth reduction thresholds", "The set of growth reduction thresholds is empty or invalid. Use commas to provide multiple thresholds.");
         }
 
-        if(ddaDiskMinDiameter > ddaDiskMaxDiameter) {
+        if (ddaDiskMinDiameter > ddaDiskMaxDiameter) {
             result.addIssue("Invalid DDA disk diameter constraints", "The minimum value must be smaller than the maximum value");
         }
 
-        if(contrastMinValue > contrastMaxValue) {
+        if (contrastMinValue > contrastMaxValue) {
             result.addIssue("Invalid pixel value range", "Please ensure that the given pixel values are within [0, 255] and the minimum is not larger than the maximum.");
         }
 
@@ -395,7 +398,7 @@ public class Dataset {
     }
 
     public void tryCancelCurrentJob() {
-        if(status == Status.Running) {
+        if (status == Status.Running) {
             // Delete lockfile
             try {
                 Files.deleteIfExists(Path.of(storagePath).resolve("lockfile"));
@@ -418,45 +421,41 @@ public class Dataset {
     }
 
     public boolean isOwnedBy(Authentication authentication) {
-        if(authentication == null || !authentication.isAuthenticated()) {
+        if (authentication == null || !authentication.isAuthenticated()) {
             return false;
         }
 
-        if(authentication.getPrincipal() instanceof UserPrincipal) {
+        if (authentication.getPrincipal() instanceof UserPrincipal) {
             return Objects.equals(((UserPrincipal) authentication.getPrincipal()).getUser().getId(), getOwner().getId());
-        }
-        else if(authentication.getPrincipal() instanceof AdminPrincipal) {
+        } else if (authentication.getPrincipal() instanceof AdminPrincipal) {
             return getOwner() == null;
-        }
-        else {
+        } else {
             return false;
         }
     }
 
     public boolean canEdit(Authentication authentication) {
 
-        if(authentication == null || !authentication.isAuthenticated()) {
+        if (authentication == null || !authentication.isAuthenticated()) {
             return false;
         }
 
-        if(authentication.getPrincipal() instanceof UserPrincipal) {
+        if (authentication.getPrincipal() instanceof UserPrincipal) {
             return Objects.equals(((UserPrincipal) authentication.getPrincipal()).getUser().getId(), getOwner().getId());
-        }
-        else {
+        } else {
             return authentication.getAuthorities().contains(Privileges.PRIVILEGE_EDIT_ALL_TASKS);
         }
     }
 
     public boolean canAccess(Authentication authentication) {
 
-        if(authentication == null || !authentication.isAuthenticated()) {
+        if (authentication == null || !authentication.isAuthenticated()) {
             return false;
         }
 
-        if(authentication.getPrincipal() instanceof UserPrincipal) {
+        if (authentication.getPrincipal() instanceof UserPrincipal) {
             return Objects.equals(((UserPrincipal) authentication.getPrincipal()).getUser().getId(), getOwner().getId());
-        }
-        else {
+        } else {
             return authentication.getAuthorities().contains(Privileges.PRIVILEGE_VIEW_ALL_TASKS);
         }
     }

@@ -43,6 +43,7 @@ public class DatasetUpdateMessage {
         private double ddaDiskMinCircularity;
         private double contrastMinValue;
         private double contrastMaxValue;
+        private boolean ensureCircularPlate;
 
         @JsonGetter("dda-disk-min-diameter")
         public double getDdaDiskMinDiameter() {
@@ -124,6 +125,15 @@ public class DatasetUpdateMessage {
             this.contrastMaxValue = contrastMaxValue;
         }
 
+        @JsonGetter("ensure-circular-plate")
+        public boolean isEnsureCircularPlate() {
+            return ensureCircularPlate;
+        }
+        @JsonSetter("ensure-circular-plate")
+        public void setEnsureCircularPlate(boolean ensureCircularPlate) {
+            this.ensureCircularPlate = ensureCircularPlate;
+        }
+
         public void update(Dataset dataset) {
             dataset.setGrowthReductionThresholds(growthReductionThresholds);
             dataset.setTimePointEarly(StringUtils.nullToEmpty(earlyTimePoint));
@@ -133,6 +143,7 @@ public class DatasetUpdateMessage {
             dataset.setDdaDiskMinCircularity(ddaDiskMinCircularity);
             dataset.setContrastMinValue(contrastMinValue);
             dataset.setContrastMaxValue(contrastMaxValue);
+            dataset.setEnsureCircularPlate(ensureCircularPlate);
         }
     }
 

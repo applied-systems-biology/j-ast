@@ -1,6 +1,7 @@
 package org.hkijena.jipipe.webapp.growthassay.services;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.BooleanNode;
 import com.fasterxml.jackson.databind.node.DoubleNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.node.TextNode;
@@ -179,6 +180,7 @@ public class AnalysisService {
                 parameterOverrides.set(runtimeParametersConfig.getDdaMinCircularityParameterKey(), new DoubleNode(dataset.getDdaDiskMinCircularity()));
                 parameterOverrides.set(runtimeParametersConfig.getContrastMinValueParameterKey(), new DoubleNode(dataset.getContrastMinValue()));
                 parameterOverrides.set(runtimeParametersConfig.getContrastMaxValueParameterKey(), new DoubleNode(dataset.getContrastMaxValue()));
+                parameterOverrides.set(runtimeParametersConfig.getEnsureCircularPlateParameterKey(), dataset.isEnsureCircularPlate() ? BooleanNode.TRUE : BooleanNode.FALSE);
                 JsonUtils.saveToFile(parameterOverrides, parameterOverridesFile);
 
                 // Run analysis

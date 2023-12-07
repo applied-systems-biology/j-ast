@@ -39,6 +39,7 @@ runtime-parameters:
   contrast-min-value-parameter-key: '5bfee4f0-7076-4959-b097-ac557442fa98/custom-min'
   contrast-max-value-parameter-key: '5bfee4f0-7076-4959-b097-ac557442fa98/custom-max'
   input-folder-list-parameter-key: '9663ce59-8770-456a-a5a0-9b3254c8f021/folder-paths'
+  ensure-circular-plate-parameter-key: '2fbccdbb-e361-4645-b954-593692b75e2e/custom-variables/circular-plate'
 accounts:
   admin-username: 'admin@localhost'
   admin-password: 'Ckw55ryzy1mXGxb8'
