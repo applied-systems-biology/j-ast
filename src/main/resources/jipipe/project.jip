@@ -129,9 +129,9 @@
     "ij:update-site-providers" : [ ]
   }, {
     "metadata" : {
-      "name" : "Multi parameters data types",
-      "description" : "<html><head></head><body>Extension that provides the necessary data types for handling multiple parameters</body></html>",
-      "summary" : "<html><head></head><body>Extension that provides the necessary data types for handling multiple parameters</body></html>",
+      "name" : "Graph annotations",
+      "description" : "<html><head></head><body>Provides the default graph annotations</body></html>",
+      "summary" : "<html><head></head><body>Provides the default graph annotations</body></html>",
       "authors" : [ {
         "title" : null,
         "first-name" : "Zoltán",
@@ -173,7 +173,316 @@
       },
       "categories" : [ "Core" ]
     },
-    "id" : "org.hkijena.jipipe:multi-parameters",
+    "id" : "jipipe:graph-annotations",
+    "version" : "2.0.1-SNAPSHOT",
+    "ij:update-site-dependencies" : [ ],
+    "dependencies" : [ ],
+    "ij:update-site-providers" : [ ]
+  }, {
+    "metadata" : {
+      "name" : "Node grouping",
+      "description" : "<html><head></head><body>Provides algorithms that wrap around algorithm graphs</body></html>",
+      "summary" : "<html><head></head><body>Provides algorithms that wrap around algorithm graphs</body></html>",
+      "authors" : [ {
+        "title" : null,
+        "first-name" : "Zoltán",
+        "last-name" : "Cseresnyés",
+        "affiliations-list" : [ "Applied Systems Biology, Leibniz Institute for Natural Product Research and Infection Biology – Hans-Knöll-Institute, Jena, Germany" ],
+        "website" : "https://www.leibniz-hki.de/en/staff-details.html?member=144",
+        "contact" : "zoltan.cseresnyes@leibniz-hki.de",
+        "first-author" : true,
+        "corresponding-author" : false,
+        "custom-text" : "<html><head></head><body></body></html>"
+      }, {
+        "title" : null,
+        "first-name" : "Ruman",
+        "last-name" : "Gerst",
+        "affiliations-list" : [ "Applied Systems Biology, Leibniz Institute for Natural Product Research and Infection Biology – Hans-Knöll-Institute, Jena, Germany", "Faculty of Biological Sciences, Friedrich Schiller University Jena, Germany" ],
+        "website" : "https://www.leibniz-hki.de/en/staff-details.html?member=1027",
+        "contact" : "ruman.gerst@leibniz-hki.de",
+        "first-author" : true,
+        "corresponding-author" : false,
+        "custom-text" : "<html><head></head><body></body></html>"
+      }, {
+        "title" : null,
+        "first-name" : "Marc Thilo",
+        "last-name" : "Figge",
+        "affiliations-list" : [ "Applied Systems Biology, Leibniz Institute for Natural Product Research and Infection Biology – Hans-Knöll-Institute, Jena, Germany", "Institute of Microbiology, Faculty of Biological Sciences, Friedrich Schiller University Jena, Germany" ],
+        "website" : "https://www.leibniz-hki.de/en/staff-details.html?member=81",
+        "contact" : "thilo.figge@leibniz-hki.de",
+        "first-author" : false,
+        "corresponding-author" : true,
+        "custom-text" : "<html><head></head><body></body></html>"
+      } ],
+      "acknowledgements" : [ ],
+      "website" : "https://www.jipipe.org/",
+      "license" : "BSD 2-Clause",
+      "citation" : "Gerst, R., Cseresnyés, Z. & Figge, M.T. JIPipe: visual batch processing for ImageJ. Nat Methods (2023). https://doi.org/10.1038/s41592-022-01744-4",
+      "dependency-citations" : [ ],
+      "thumbnail" : {
+        "data" : null
+      },
+      "categories" : [ "Core" ]
+    },
+    "id" : "org.hkijena.jipipe:grouping",
+    "version" : "2.0.1-SNAPSHOT",
+    "ij:update-site-dependencies" : [ ],
+    "dependencies" : [ ],
+    "ij:update-site-providers" : [ ]
+  }, {
+    "metadata" : {
+      "name" : "Standard table operations",
+      "description" : "<html><head></head><body>A JIPipe project</body></html>",
+      "summary" : "<html><head></head><body></body></html>",
+      "authors" : [ ],
+      "acknowledgements" : [ ],
+      "website" : "",
+      "license" : "",
+      "citation" : "",
+      "dependency-citations" : [ ],
+      "thumbnail" : {
+        "data" : null
+      },
+      "categories" : [ ]
+    },
+    "id" : "org.hkijena.jipipe:table-operations",
+    "version" : "2.0.1-SNAPSHOT",
+    "ij:update-site-dependencies" : [ ],
+    "dependencies" : [ ],
+    "ij:update-site-providers" : [ ]
+  }, {
+    "metadata" : {
+      "name" : "Forms",
+      "description" : "<html><head></head><body>A JIPipe project</body></html>",
+      "summary" : "<html><head></head><body></body></html>",
+      "authors" : [ ],
+      "acknowledgements" : [ ],
+      "website" : "",
+      "license" : "",
+      "citation" : "",
+      "dependency-citations" : [ ],
+      "thumbnail" : {
+        "data" : null
+      },
+      "categories" : [ ]
+    },
+    "id" : "org.hkijena.jipipe:forms",
+    "version" : "2.0.1-SNAPSHOT",
+    "ij:update-site-dependencies" : [ ],
+    "dependencies" : [ ],
+    "ij:update-site-providers" : [ ]
+  }, {
+    "metadata" : {
+      "name" : "Multi parameter algorithms",
+      "description" : "<html><head></head><body>A JIPipe project</body></html>",
+      "summary" : "<html><head></head><body></body></html>",
+      "authors" : [ ],
+      "acknowledgements" : [ ],
+      "website" : "",
+      "license" : "",
+      "citation" : "",
+      "dependency-citations" : [ ],
+      "thumbnail" : {
+        "data" : null
+      },
+      "categories" : [ ]
+    },
+    "id" : "org.hkijena.jipipe:multi-parameters-algorithms",
+    "version" : "2.0.1-SNAPSHOT",
+    "ij:update-site-dependencies" : [ ],
+    "dependencies" : [ ],
+    "ij:update-site-providers" : [ ]
+  }, {
+    "metadata" : {
+      "name" : "ImageJ integration",
+      "description" : "<html><head></head><body>A JIPipe project</body></html>",
+      "summary" : "<html><head></head><body></body></html>",
+      "authors" : [ ],
+      "acknowledgements" : [ ],
+      "website" : "",
+      "license" : "",
+      "citation" : "",
+      "dependency-citations" : [ ],
+      "thumbnail" : {
+        "data" : null
+      },
+      "categories" : [ ]
+    },
+    "id" : "org.hkijena.jipipe:imagej-integration",
+    "version" : "2.0.1-SNAPSHOT",
+    "ij:update-site-dependencies" : [ ],
+    "dependencies" : [ ],
+    "ij:update-site-providers" : [ ]
+  }, {
+    "metadata" : {
+      "name" : "Strings",
+      "description" : "<html><head></head><body>A JIPipe project</body></html>",
+      "summary" : "<html><head></head><body></body></html>",
+      "authors" : [ ],
+      "acknowledgements" : [ ],
+      "website" : "",
+      "license" : "",
+      "citation" : "",
+      "dependency-citations" : [ ],
+      "thumbnail" : {
+        "data" : null
+      },
+      "categories" : [ ]
+    },
+    "id" : "org.hkijena.jipipe:strings",
+    "version" : "2.0.1-SNAPSHOT",
+    "ij:update-site-dependencies" : [ ],
+    "dependencies" : [ ],
+    "ij:update-site-providers" : [ ]
+  }, {
+    "metadata" : {
+      "name" : "Utilities",
+      "description" : "<html><head></head><body>Utility algorithms</body></html>",
+      "summary" : "<html><head></head><body>Utility algorithms</body></html>",
+      "authors" : [ {
+        "title" : null,
+        "first-name" : "Zoltán",
+        "last-name" : "Cseresnyés",
+        "affiliations-list" : [ "Applied Systems Biology, Leibniz Institute for Natural Product Research and Infection Biology – Hans-Knöll-Institute, Jena, Germany" ],
+        "website" : "https://www.leibniz-hki.de/en/staff-details.html?member=144",
+        "contact" : "zoltan.cseresnyes@leibniz-hki.de",
+        "first-author" : true,
+        "corresponding-author" : false,
+        "custom-text" : "<html><head></head><body></body></html>"
+      }, {
+        "title" : null,
+        "first-name" : "Ruman",
+        "last-name" : "Gerst",
+        "affiliations-list" : [ "Applied Systems Biology, Leibniz Institute for Natural Product Research and Infection Biology – Hans-Knöll-Institute, Jena, Germany", "Faculty of Biological Sciences, Friedrich Schiller University Jena, Germany" ],
+        "website" : "https://www.leibniz-hki.de/en/staff-details.html?member=1027",
+        "contact" : "ruman.gerst@leibniz-hki.de",
+        "first-author" : true,
+        "corresponding-author" : false,
+        "custom-text" : "<html><head></head><body></body></html>"
+      }, {
+        "title" : null,
+        "first-name" : "Marc Thilo",
+        "last-name" : "Figge",
+        "affiliations-list" : [ "Applied Systems Biology, Leibniz Institute for Natural Product Research and Infection Biology – Hans-Knöll-Institute, Jena, Germany", "Institute of Microbiology, Faculty of Biological Sciences, Friedrich Schiller University Jena, Germany" ],
+        "website" : "https://www.leibniz-hki.de/en/staff-details.html?member=81",
+        "contact" : "thilo.figge@leibniz-hki.de",
+        "first-author" : false,
+        "corresponding-author" : true,
+        "custom-text" : "<html><head></head><body></body></html>"
+      } ],
+      "acknowledgements" : [ ],
+      "website" : "https://www.jipipe.org/",
+      "license" : "BSD 2-Clause",
+      "citation" : "Gerst, R., Cseresnyés, Z. & Figge, M.T. JIPipe: visual batch processing for ImageJ. Nat Methods (2023). https://doi.org/10.1038/s41592-022-01744-4",
+      "dependency-citations" : [ ],
+      "thumbnail" : {
+        "data" : null
+      },
+      "categories" : [ "Data processing", "Scripting" ]
+    },
+    "id" : "org.hkijena.jipipe:utils",
+    "version" : "2.0.1-SNAPSHOT",
+    "ij:update-site-dependencies" : [ ],
+    "dependencies" : [ ],
+    "ij:update-site-providers" : [ ]
+  }, {
+    "metadata" : {
+      "name" : "Python integration",
+      "description" : "<html><head></head><body>Provides algorithms and data types that allow Python scripting</body></html>",
+      "summary" : "<html><head></head><body>Provides algorithms and data types that allow Python scripting</body></html>",
+      "authors" : [ {
+        "title" : null,
+        "first-name" : "Zoltán",
+        "last-name" : "Cseresnyés",
+        "affiliations-list" : [ "Applied Systems Biology, Leibniz Institute for Natural Product Research and Infection Biology – Hans-Knöll-Institute, Jena, Germany" ],
+        "website" : "https://www.leibniz-hki.de/en/staff-details.html?member=144",
+        "contact" : "zoltan.cseresnyes@leibniz-hki.de",
+        "first-author" : true,
+        "corresponding-author" : false,
+        "custom-text" : "<html><head></head><body></body></html>"
+      }, {
+        "title" : null,
+        "first-name" : "Ruman",
+        "last-name" : "Gerst",
+        "affiliations-list" : [ "Applied Systems Biology, Leibniz Institute for Natural Product Research and Infection Biology – Hans-Knöll-Institute, Jena, Germany", "Faculty of Biological Sciences, Friedrich Schiller University Jena, Germany" ],
+        "website" : "https://www.leibniz-hki.de/en/staff-details.html?member=1027",
+        "contact" : "ruman.gerst@leibniz-hki.de",
+        "first-author" : true,
+        "corresponding-author" : false,
+        "custom-text" : "<html><head></head><body></body></html>"
+      }, {
+        "title" : null,
+        "first-name" : "Marc Thilo",
+        "last-name" : "Figge",
+        "affiliations-list" : [ "Applied Systems Biology, Leibniz Institute for Natural Product Research and Infection Biology – Hans-Knöll-Institute, Jena, Germany", "Institute of Microbiology, Faculty of Biological Sciences, Friedrich Schiller University Jena, Germany" ],
+        "website" : "https://www.leibniz-hki.de/en/staff-details.html?member=81",
+        "contact" : "thilo.figge@leibniz-hki.de",
+        "first-author" : false,
+        "corresponding-author" : true,
+        "custom-text" : "<html><head></head><body></body></html>"
+      } ],
+      "acknowledgements" : [ ],
+      "website" : "https://www.jipipe.org/",
+      "license" : "BSD 2-Clause",
+      "citation" : "Gerst, R., Cseresnyés, Z. & Figge, M.T. JIPipe: visual batch processing for ImageJ. Nat Methods (2023). https://doi.org/10.1038/s41592-022-01744-4",
+      "dependency-citations" : [ ],
+      "thumbnail" : {
+        "data" : null
+      },
+      "categories" : [ "Scripting" ]
+    },
+    "id" : "org.hkijena.jipipe:python",
+    "version" : "2.0.1-SNAPSHOT",
+    "ij:update-site-dependencies" : [ ],
+    "dependencies" : [ ],
+    "ij:update-site-providers" : [ ]
+  }, {
+    "metadata" : {
+      "name" : "R integration",
+      "description" : "<html><head></head><body>Integrates R scripts into JIPipe</body></html>",
+      "summary" : "<html><head></head><body>Integrates R scripts into JIPipe</body></html>",
+      "authors" : [ {
+        "title" : null,
+        "first-name" : "Zoltán",
+        "last-name" : "Cseresnyés",
+        "affiliations-list" : [ "Applied Systems Biology, Leibniz Institute for Natural Product Research and Infection Biology – Hans-Knöll-Institute, Jena, Germany" ],
+        "website" : "https://www.leibniz-hki.de/en/staff-details.html?member=144",
+        "contact" : "zoltan.cseresnyes@leibniz-hki.de",
+        "first-author" : true,
+        "corresponding-author" : false,
+        "custom-text" : "<html><head></head><body></body></html>"
+      }, {
+        "title" : null,
+        "first-name" : "Ruman",
+        "last-name" : "Gerst",
+        "affiliations-list" : [ "Applied Systems Biology, Leibniz Institute for Natural Product Research and Infection Biology – Hans-Knöll-Institute, Jena, Germany", "Faculty of Biological Sciences, Friedrich Schiller University Jena, Germany" ],
+        "website" : "https://www.leibniz-hki.de/en/staff-details.html?member=1027",
+        "contact" : "ruman.gerst@leibniz-hki.de",
+        "first-author" : true,
+        "corresponding-author" : false,
+        "custom-text" : "<html><head></head><body></body></html>"
+      }, {
+        "title" : null,
+        "first-name" : "Marc Thilo",
+        "last-name" : "Figge",
+        "affiliations-list" : [ "Applied Systems Biology, Leibniz Institute for Natural Product Research and Infection Biology – Hans-Knöll-Institute, Jena, Germany", "Institute of Microbiology, Faculty of Biological Sciences, Friedrich Schiller University Jena, Germany" ],
+        "website" : "https://www.leibniz-hki.de/en/staff-details.html?member=81",
+        "contact" : "thilo.figge@leibniz-hki.de",
+        "first-author" : false,
+        "corresponding-author" : true,
+        "custom-text" : "<html><head></head><body></body></html>"
+      } ],
+      "acknowledgements" : [ ],
+      "website" : "https://www.jipipe.org/",
+      "license" : "BSD 2-Clause",
+      "citation" : "Gerst, R., Cseresnyés, Z. & Figge, M.T. JIPipe: visual batch processing for ImageJ. Nat Methods (2023). https://doi.org/10.1038/s41592-022-01744-4",
+      "dependency-citations" : [ "R Core Team (2017). R: A language and environment for statistical computing. R Foundation for Statistical Computing, Vienna, Austria. URL https://www.R-project.org/." ],
+      "thumbnail" : {
+        "data" : null
+      },
+      "categories" : [ "Scripting" ]
+    },
+    "id" : "org.hkijena.jipipe:r",
     "version" : "2.0.1-SNAPSHOT",
     "ij:update-site-dependencies" : [ ],
     "dependencies" : [ ],
@@ -195,6 +504,57 @@
       "categories" : [ ]
     },
     "id" : "org.hkijena.jipipe:core",
+    "version" : "2.0.1-SNAPSHOT",
+    "ij:update-site-dependencies" : [ ],
+    "dependencies" : [ ],
+    "ij:update-site-providers" : [ ]
+  }, {
+    "metadata" : {
+      "name" : "Compartment management",
+      "description" : "<html><head></head><body>Data types required for graph compartment management</body></html>",
+      "summary" : "<html><head></head><body>Data types required for graph compartment management</body></html>",
+      "authors" : [ {
+        "title" : null,
+        "first-name" : "Zoltán",
+        "last-name" : "Cseresnyés",
+        "affiliations-list" : [ "Applied Systems Biology, Leibniz Institute for Natural Product Research and Infection Biology – Hans-Knöll-Institute, Jena, Germany" ],
+        "website" : "https://www.leibniz-hki.de/en/staff-details.html?member=144",
+        "contact" : "zoltan.cseresnyes@leibniz-hki.de",
+        "first-author" : true,
+        "corresponding-author" : false,
+        "custom-text" : "<html><head></head><body></body></html>"
+      }, {
+        "title" : null,
+        "first-name" : "Ruman",
+        "last-name" : "Gerst",
+        "affiliations-list" : [ "Applied Systems Biology, Leibniz Institute for Natural Product Research and Infection Biology – Hans-Knöll-Institute, Jena, Germany", "Faculty of Biological Sciences, Friedrich Schiller University Jena, Germany" ],
+        "website" : "https://www.leibniz-hki.de/en/staff-details.html?member=1027",
+        "contact" : "ruman.gerst@leibniz-hki.de",
+        "first-author" : true,
+        "corresponding-author" : false,
+        "custom-text" : "<html><head></head><body></body></html>"
+      }, {
+        "title" : null,
+        "first-name" : "Marc Thilo",
+        "last-name" : "Figge",
+        "affiliations-list" : [ "Applied Systems Biology, Leibniz Institute for Natural Product Research and Infection Biology – Hans-Knöll-Institute, Jena, Germany", "Institute of Microbiology, Faculty of Biological Sciences, Friedrich Schiller University Jena, Germany" ],
+        "website" : "https://www.leibniz-hki.de/en/staff-details.html?member=81",
+        "contact" : "thilo.figge@leibniz-hki.de",
+        "first-author" : false,
+        "corresponding-author" : true,
+        "custom-text" : "<html><head></head><body></body></html>"
+      } ],
+      "acknowledgements" : [ ],
+      "website" : "https://www.jipipe.org/",
+      "license" : "BSD 2-Clause",
+      "citation" : "Gerst, R., Cseresnyés, Z. & Figge, M.T. JIPipe: visual batch processing for ImageJ. Nat Methods (2023). https://doi.org/10.1038/s41592-022-01744-4",
+      "dependency-citations" : [ ],
+      "thumbnail" : {
+        "data" : null
+      },
+      "categories" : [ "Core" ]
+    },
+    "id" : "org.hkijena.jipipe:compartments",
     "version" : "2.0.1-SNAPSHOT",
     "ij:update-site-dependencies" : [ ],
     "dependencies" : [ ],
@@ -642,9 +1002,9 @@
     "ij:update-site-providers" : [ ]
   }, {
     "metadata" : {
-      "name" : "Node grouping",
-      "description" : "<html><head></head><body>Provides algorithms that wrap around algorithm graphs</body></html>",
-      "summary" : "<html><head></head><body>Provides algorithms that wrap around algorithm graphs</body></html>",
+      "name" : "Multi parameters data types",
+      "description" : "<html><head></head><body>Extension that provides the necessary data types for handling multiple parameters</body></html>",
+      "summary" : "<html><head></head><body>Extension that provides the necessary data types for handling multiple parameters</body></html>",
       "authors" : [ {
         "title" : null,
         "first-name" : "Zoltán",
@@ -686,367 +1046,7 @@
       },
       "categories" : [ "Core" ]
     },
-    "id" : "org.hkijena.jipipe:grouping",
-    "version" : "2.0.1-SNAPSHOT",
-    "ij:update-site-dependencies" : [ ],
-    "dependencies" : [ ],
-    "ij:update-site-providers" : [ ]
-  }, {
-    "metadata" : {
-      "name" : "Standard table operations",
-      "description" : "<html><head></head><body>A JIPipe project</body></html>",
-      "summary" : "<html><head></head><body></body></html>",
-      "authors" : [ ],
-      "acknowledgements" : [ ],
-      "website" : "",
-      "license" : "",
-      "citation" : "",
-      "dependency-citations" : [ ],
-      "thumbnail" : {
-        "data" : null
-      },
-      "categories" : [ ]
-    },
-    "id" : "org.hkijena.jipipe:table-operations",
-    "version" : "2.0.1-SNAPSHOT",
-    "ij:update-site-dependencies" : [ ],
-    "dependencies" : [ ],
-    "ij:update-site-providers" : [ ]
-  }, {
-    "metadata" : {
-      "name" : "ImageJ integration",
-      "description" : "<html><head></head><body>A JIPipe project</body></html>",
-      "summary" : "<html><head></head><body></body></html>",
-      "authors" : [ ],
-      "acknowledgements" : [ ],
-      "website" : "",
-      "license" : "",
-      "citation" : "",
-      "dependency-citations" : [ ],
-      "thumbnail" : {
-        "data" : null
-      },
-      "categories" : [ ]
-    },
-    "id" : "org.hkijena.jipipe:imagej-integration",
-    "version" : "2.0.1-SNAPSHOT",
-    "ij:update-site-dependencies" : [ ],
-    "dependencies" : [ ],
-    "ij:update-site-providers" : [ ]
-  }, {
-    "metadata" : {
-      "name" : "R integration",
-      "description" : "<html><head></head><body>Integrates R scripts into JIPipe</body></html>",
-      "summary" : "<html><head></head><body>Integrates R scripts into JIPipe</body></html>",
-      "authors" : [ {
-        "title" : null,
-        "first-name" : "Zoltán",
-        "last-name" : "Cseresnyés",
-        "affiliations-list" : [ "Applied Systems Biology, Leibniz Institute for Natural Product Research and Infection Biology – Hans-Knöll-Institute, Jena, Germany" ],
-        "website" : "https://www.leibniz-hki.de/en/staff-details.html?member=144",
-        "contact" : "zoltan.cseresnyes@leibniz-hki.de",
-        "first-author" : true,
-        "corresponding-author" : false,
-        "custom-text" : "<html><head></head><body></body></html>"
-      }, {
-        "title" : null,
-        "first-name" : "Ruman",
-        "last-name" : "Gerst",
-        "affiliations-list" : [ "Applied Systems Biology, Leibniz Institute for Natural Product Research and Infection Biology – Hans-Knöll-Institute, Jena, Germany", "Faculty of Biological Sciences, Friedrich Schiller University Jena, Germany" ],
-        "website" : "https://www.leibniz-hki.de/en/staff-details.html?member=1027",
-        "contact" : "ruman.gerst@leibniz-hki.de",
-        "first-author" : true,
-        "corresponding-author" : false,
-        "custom-text" : "<html><head></head><body></body></html>"
-      }, {
-        "title" : null,
-        "first-name" : "Marc Thilo",
-        "last-name" : "Figge",
-        "affiliations-list" : [ "Applied Systems Biology, Leibniz Institute for Natural Product Research and Infection Biology – Hans-Knöll-Institute, Jena, Germany", "Institute of Microbiology, Faculty of Biological Sciences, Friedrich Schiller University Jena, Germany" ],
-        "website" : "https://www.leibniz-hki.de/en/staff-details.html?member=81",
-        "contact" : "thilo.figge@leibniz-hki.de",
-        "first-author" : false,
-        "corresponding-author" : true,
-        "custom-text" : "<html><head></head><body></body></html>"
-      } ],
-      "acknowledgements" : [ ],
-      "website" : "https://www.jipipe.org/",
-      "license" : "BSD 2-Clause",
-      "citation" : "Gerst, R., Cseresnyés, Z. & Figge, M.T. JIPipe: visual batch processing for ImageJ. Nat Methods (2023). https://doi.org/10.1038/s41592-022-01744-4",
-      "dependency-citations" : [ "R Core Team (2017). R: A language and environment for statistical computing. R Foundation for Statistical Computing, Vienna, Austria. URL https://www.R-project.org/." ],
-      "thumbnail" : {
-        "data" : null
-      },
-      "categories" : [ "Scripting" ]
-    },
-    "id" : "org.hkijena.jipipe:r",
-    "version" : "2.0.1-SNAPSHOT",
-    "ij:update-site-dependencies" : [ ],
-    "dependencies" : [ ],
-    "ij:update-site-providers" : [ ]
-  }, {
-    "metadata" : {
-      "name" : "Multi parameter algorithms",
-      "description" : "<html><head></head><body>A JIPipe project</body></html>",
-      "summary" : "<html><head></head><body></body></html>",
-      "authors" : [ ],
-      "acknowledgements" : [ ],
-      "website" : "",
-      "license" : "",
-      "citation" : "",
-      "dependency-citations" : [ ],
-      "thumbnail" : {
-        "data" : null
-      },
-      "categories" : [ ]
-    },
-    "id" : "org.hkijena.jipipe:multi-parameters-algorithms",
-    "version" : "2.0.1-SNAPSHOT",
-    "ij:update-site-dependencies" : [ ],
-    "dependencies" : [ ],
-    "ij:update-site-providers" : [ ]
-  }, {
-    "metadata" : {
-      "name" : "Graph annotations",
-      "description" : "<html><head></head><body>Provides the default graph annotations</body></html>",
-      "summary" : "<html><head></head><body>Provides the default graph annotations</body></html>",
-      "authors" : [ {
-        "title" : null,
-        "first-name" : "Zoltán",
-        "last-name" : "Cseresnyés",
-        "affiliations-list" : [ "Applied Systems Biology, Leibniz Institute for Natural Product Research and Infection Biology – Hans-Knöll-Institute, Jena, Germany" ],
-        "website" : "https://www.leibniz-hki.de/en/staff-details.html?member=144",
-        "contact" : "zoltan.cseresnyes@leibniz-hki.de",
-        "first-author" : true,
-        "corresponding-author" : false,
-        "custom-text" : "<html><head></head><body></body></html>"
-      }, {
-        "title" : null,
-        "first-name" : "Ruman",
-        "last-name" : "Gerst",
-        "affiliations-list" : [ "Applied Systems Biology, Leibniz Institute for Natural Product Research and Infection Biology – Hans-Knöll-Institute, Jena, Germany", "Faculty of Biological Sciences, Friedrich Schiller University Jena, Germany" ],
-        "website" : "https://www.leibniz-hki.de/en/staff-details.html?member=1027",
-        "contact" : "ruman.gerst@leibniz-hki.de",
-        "first-author" : true,
-        "corresponding-author" : false,
-        "custom-text" : "<html><head></head><body></body></html>"
-      }, {
-        "title" : null,
-        "first-name" : "Marc Thilo",
-        "last-name" : "Figge",
-        "affiliations-list" : [ "Applied Systems Biology, Leibniz Institute for Natural Product Research and Infection Biology – Hans-Knöll-Institute, Jena, Germany", "Institute of Microbiology, Faculty of Biological Sciences, Friedrich Schiller University Jena, Germany" ],
-        "website" : "https://www.leibniz-hki.de/en/staff-details.html?member=81",
-        "contact" : "thilo.figge@leibniz-hki.de",
-        "first-author" : false,
-        "corresponding-author" : true,
-        "custom-text" : "<html><head></head><body></body></html>"
-      } ],
-      "acknowledgements" : [ ],
-      "website" : "https://www.jipipe.org/",
-      "license" : "BSD 2-Clause",
-      "citation" : "Gerst, R., Cseresnyés, Z. & Figge, M.T. JIPipe: visual batch processing for ImageJ. Nat Methods (2023). https://doi.org/10.1038/s41592-022-01744-4",
-      "dependency-citations" : [ ],
-      "thumbnail" : {
-        "data" : null
-      },
-      "categories" : [ "Core" ]
-    },
-    "id" : "jipipe:graph-annotations",
-    "version" : "2.0.1-SNAPSHOT",
-    "ij:update-site-dependencies" : [ ],
-    "dependencies" : [ ],
-    "ij:update-site-providers" : [ ]
-  }, {
-    "metadata" : {
-      "name" : "Compartment management",
-      "description" : "<html><head></head><body>Data types required for graph compartment management</body></html>",
-      "summary" : "<html><head></head><body>Data types required for graph compartment management</body></html>",
-      "authors" : [ {
-        "title" : null,
-        "first-name" : "Zoltán",
-        "last-name" : "Cseresnyés",
-        "affiliations-list" : [ "Applied Systems Biology, Leibniz Institute for Natural Product Research and Infection Biology – Hans-Knöll-Institute, Jena, Germany" ],
-        "website" : "https://www.leibniz-hki.de/en/staff-details.html?member=144",
-        "contact" : "zoltan.cseresnyes@leibniz-hki.de",
-        "first-author" : true,
-        "corresponding-author" : false,
-        "custom-text" : "<html><head></head><body></body></html>"
-      }, {
-        "title" : null,
-        "first-name" : "Ruman",
-        "last-name" : "Gerst",
-        "affiliations-list" : [ "Applied Systems Biology, Leibniz Institute for Natural Product Research and Infection Biology – Hans-Knöll-Institute, Jena, Germany", "Faculty of Biological Sciences, Friedrich Schiller University Jena, Germany" ],
-        "website" : "https://www.leibniz-hki.de/en/staff-details.html?member=1027",
-        "contact" : "ruman.gerst@leibniz-hki.de",
-        "first-author" : true,
-        "corresponding-author" : false,
-        "custom-text" : "<html><head></head><body></body></html>"
-      }, {
-        "title" : null,
-        "first-name" : "Marc Thilo",
-        "last-name" : "Figge",
-        "affiliations-list" : [ "Applied Systems Biology, Leibniz Institute for Natural Product Research and Infection Biology – Hans-Knöll-Institute, Jena, Germany", "Institute of Microbiology, Faculty of Biological Sciences, Friedrich Schiller University Jena, Germany" ],
-        "website" : "https://www.leibniz-hki.de/en/staff-details.html?member=81",
-        "contact" : "thilo.figge@leibniz-hki.de",
-        "first-author" : false,
-        "corresponding-author" : true,
-        "custom-text" : "<html><head></head><body></body></html>"
-      } ],
-      "acknowledgements" : [ ],
-      "website" : "https://www.jipipe.org/",
-      "license" : "BSD 2-Clause",
-      "citation" : "Gerst, R., Cseresnyés, Z. & Figge, M.T. JIPipe: visual batch processing for ImageJ. Nat Methods (2023). https://doi.org/10.1038/s41592-022-01744-4",
-      "dependency-citations" : [ ],
-      "thumbnail" : {
-        "data" : null
-      },
-      "categories" : [ "Core" ]
-    },
-    "id" : "org.hkijena.jipipe:compartments",
-    "version" : "2.0.1-SNAPSHOT",
-    "ij:update-site-dependencies" : [ ],
-    "dependencies" : [ ],
-    "ij:update-site-providers" : [ ]
-  }, {
-    "metadata" : {
-      "name" : "Python integration",
-      "description" : "<html><head></head><body>Provides algorithms and data types that allow Python scripting</body></html>",
-      "summary" : "<html><head></head><body>Provides algorithms and data types that allow Python scripting</body></html>",
-      "authors" : [ {
-        "title" : null,
-        "first-name" : "Zoltán",
-        "last-name" : "Cseresnyés",
-        "affiliations-list" : [ "Applied Systems Biology, Leibniz Institute for Natural Product Research and Infection Biology – Hans-Knöll-Institute, Jena, Germany" ],
-        "website" : "https://www.leibniz-hki.de/en/staff-details.html?member=144",
-        "contact" : "zoltan.cseresnyes@leibniz-hki.de",
-        "first-author" : true,
-        "corresponding-author" : false,
-        "custom-text" : "<html><head></head><body></body></html>"
-      }, {
-        "title" : null,
-        "first-name" : "Ruman",
-        "last-name" : "Gerst",
-        "affiliations-list" : [ "Applied Systems Biology, Leibniz Institute for Natural Product Research and Infection Biology – Hans-Knöll-Institute, Jena, Germany", "Faculty of Biological Sciences, Friedrich Schiller University Jena, Germany" ],
-        "website" : "https://www.leibniz-hki.de/en/staff-details.html?member=1027",
-        "contact" : "ruman.gerst@leibniz-hki.de",
-        "first-author" : true,
-        "corresponding-author" : false,
-        "custom-text" : "<html><head></head><body></body></html>"
-      }, {
-        "title" : null,
-        "first-name" : "Marc Thilo",
-        "last-name" : "Figge",
-        "affiliations-list" : [ "Applied Systems Biology, Leibniz Institute for Natural Product Research and Infection Biology – Hans-Knöll-Institute, Jena, Germany", "Institute of Microbiology, Faculty of Biological Sciences, Friedrich Schiller University Jena, Germany" ],
-        "website" : "https://www.leibniz-hki.de/en/staff-details.html?member=81",
-        "contact" : "thilo.figge@leibniz-hki.de",
-        "first-author" : false,
-        "corresponding-author" : true,
-        "custom-text" : "<html><head></head><body></body></html>"
-      } ],
-      "acknowledgements" : [ ],
-      "website" : "https://www.jipipe.org/",
-      "license" : "BSD 2-Clause",
-      "citation" : "Gerst, R., Cseresnyés, Z. & Figge, M.T. JIPipe: visual batch processing for ImageJ. Nat Methods (2023). https://doi.org/10.1038/s41592-022-01744-4",
-      "dependency-citations" : [ ],
-      "thumbnail" : {
-        "data" : null
-      },
-      "categories" : [ "Scripting" ]
-    },
-    "id" : "org.hkijena.jipipe:python",
-    "version" : "2.0.1-SNAPSHOT",
-    "ij:update-site-dependencies" : [ ],
-    "dependencies" : [ ],
-    "ij:update-site-providers" : [ ]
-  }, {
-    "metadata" : {
-      "name" : "Forms",
-      "description" : "<html><head></head><body>A JIPipe project</body></html>",
-      "summary" : "<html><head></head><body></body></html>",
-      "authors" : [ ],
-      "acknowledgements" : [ ],
-      "website" : "",
-      "license" : "",
-      "citation" : "",
-      "dependency-citations" : [ ],
-      "thumbnail" : {
-        "data" : null
-      },
-      "categories" : [ ]
-    },
-    "id" : "org.hkijena.jipipe:forms",
-    "version" : "2.0.1-SNAPSHOT",
-    "ij:update-site-dependencies" : [ ],
-    "dependencies" : [ ],
-    "ij:update-site-providers" : [ ]
-  }, {
-    "metadata" : {
-      "name" : "Utilities",
-      "description" : "<html><head></head><body>Utility algorithms</body></html>",
-      "summary" : "<html><head></head><body>Utility algorithms</body></html>",
-      "authors" : [ {
-        "title" : null,
-        "first-name" : "Zoltán",
-        "last-name" : "Cseresnyés",
-        "affiliations-list" : [ "Applied Systems Biology, Leibniz Institute for Natural Product Research and Infection Biology – Hans-Knöll-Institute, Jena, Germany" ],
-        "website" : "https://www.leibniz-hki.de/en/staff-details.html?member=144",
-        "contact" : "zoltan.cseresnyes@leibniz-hki.de",
-        "first-author" : true,
-        "corresponding-author" : false,
-        "custom-text" : "<html><head></head><body></body></html>"
-      }, {
-        "title" : null,
-        "first-name" : "Ruman",
-        "last-name" : "Gerst",
-        "affiliations-list" : [ "Applied Systems Biology, Leibniz Institute for Natural Product Research and Infection Biology – Hans-Knöll-Institute, Jena, Germany", "Faculty of Biological Sciences, Friedrich Schiller University Jena, Germany" ],
-        "website" : "https://www.leibniz-hki.de/en/staff-details.html?member=1027",
-        "contact" : "ruman.gerst@leibniz-hki.de",
-        "first-author" : true,
-        "corresponding-author" : false,
-        "custom-text" : "<html><head></head><body></body></html>"
-      }, {
-        "title" : null,
-        "first-name" : "Marc Thilo",
-        "last-name" : "Figge",
-        "affiliations-list" : [ "Applied Systems Biology, Leibniz Institute for Natural Product Research and Infection Biology – Hans-Knöll-Institute, Jena, Germany", "Institute of Microbiology, Faculty of Biological Sciences, Friedrich Schiller University Jena, Germany" ],
-        "website" : "https://www.leibniz-hki.de/en/staff-details.html?member=81",
-        "contact" : "thilo.figge@leibniz-hki.de",
-        "first-author" : false,
-        "corresponding-author" : true,
-        "custom-text" : "<html><head></head><body></body></html>"
-      } ],
-      "acknowledgements" : [ ],
-      "website" : "https://www.jipipe.org/",
-      "license" : "BSD 2-Clause",
-      "citation" : "Gerst, R., Cseresnyés, Z. & Figge, M.T. JIPipe: visual batch processing for ImageJ. Nat Methods (2023). https://doi.org/10.1038/s41592-022-01744-4",
-      "dependency-citations" : [ ],
-      "thumbnail" : {
-        "data" : null
-      },
-      "categories" : [ "Data processing", "Scripting" ]
-    },
-    "id" : "org.hkijena.jipipe:utils",
-    "version" : "2.0.1-SNAPSHOT",
-    "ij:update-site-dependencies" : [ ],
-    "dependencies" : [ ],
-    "ij:update-site-providers" : [ ]
-  }, {
-    "metadata" : {
-      "name" : "Strings",
-      "description" : "<html><head></head><body>A JIPipe project</body></html>",
-      "summary" : "<html><head></head><body></body></html>",
-      "authors" : [ ],
-      "acknowledgements" : [ ],
-      "website" : "",
-      "license" : "",
-      "citation" : "",
-      "dependency-citations" : [ ],
-      "thumbnail" : {
-        "data" : null
-      },
-      "categories" : [ ]
-    },
-    "id" : "org.hkijena.jipipe:strings",
+    "id" : "org.hkijena.jipipe:multi-parameters",
     "version" : "2.0.1-SNAPSHOT",
     "ij:update-site-dependencies" : [ ],
     "dependencies" : [ ],
@@ -1098,8 +1098,8 @@
     "org.hkijena.jipipe.ui:project-tabs" : {
       "jipipe:type" : "org.hkijena.jipipe.ui.project.JIPipeProjectTabMetadata",
       "data" : {
-        "open-tabs" : [ "singleton:PROJECT_OVERVIEW", "singleton:COMPARTMENT_EDITOR", "graph-compartment:53e3b21c-b0d8-4714-8074-b08880c8f32d", "graph-compartment:76ca4d57-1af1-4dfd-a502-e6bc1c908cc8", "graph-compartment:9733f2ee-8c9e-4723-a2e5-c984839ed5b9", "graph-compartment:fb3bfe3a-c9c1-4ec4-908b-3f1b7380a851" ],
-        "selected-tab" : "graph-compartment:9733f2ee-8c9e-4723-a2e5-c984839ed5b9"
+        "open-tabs" : [ "singleton:PROJECT_OVERVIEW", "singleton:COMPARTMENT_EDITOR", "graph-compartment:53e3b21c-b0d8-4714-8074-b08880c8f32d", "graph-compartment:76ca4d57-1af1-4dfd-a502-e6bc1c908cc8", "graph-compartment:9733f2ee-8c9e-4723-a2e5-c984839ed5b9", "graph-compartment:fb3bfe3a-c9c1-4ec4-908b-3f1b7380a851", "graph-compartment:495694f6-1173-40d4-be52-49e214548b67" ],
+        "selected-tab" : "singleton:COMPARTMENT_EDITOR"
       }
     }
   },
@@ -11801,7 +11801,7 @@
         "jipipe:data-batch-generation/custom-matched-columns-expression" : {
           "expression" : ""
         },
-        "jipipe:data-batch-generation/skip-incomplete" : false,
+        "jipipe:data-batch-generation/skip-incomplete" : true,
         "jipipe:data-batch-generation/custom-annotation-matching" : {
           "expression" : "exact_match_results"
         },
@@ -13038,7 +13038,7 @@
         },
         "jipipe:node-info-id" : "annotate-filter-by-annotation-if-else",
         "filter" : {
-          "expression" : "#Timepoint == \"24hr\""
+          "expression" : "#Timepoint == \"24\""
         },
         "jipipe:algorithm:enabled" : true,
         "jipipe:node:ui-locked" : false,
@@ -24480,7 +24480,7 @@
               "description" : "",
               "hidden" : false,
               "field-class" : "java.lang.Boolean",
-              "value" : true,
+              "value" : false,
               "short-key" : "circular-plate",
               "ui-order" : 0,
               "field-class-id" : "boolean"
