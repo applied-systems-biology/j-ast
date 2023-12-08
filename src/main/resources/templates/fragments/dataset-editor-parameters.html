@@ -57,10 +57,11 @@
     </div>
     <hr/>
     <div class="mb-3">
-      <label for="parameter-ensure-circular-plate" class="form-label">Ensure circular plate</label>
-      <input type="checkbox" class="form-control input-parameter-editor" id="parameter-ensure-circular-plate" data-parameter-property="ensure-circular-plate" th:value="${currentDataset.ensureCircularPlate}">
-      <div class="form-text">
-        Uncheck if you have non-circular plates
+      <div class="form-check">
+        <input class="form-check-input input-parameter-editor" type="checkbox" data-parameter-property="ensure-circular-plate" th:checked="${currentDataset.ensureCircularPlate}" id="parameter-ensure-circular-plate">
+        <label class="form-check-label" for="parameter-ensure-circular-plate">
+          Ensure circular plate
+        </label>
       </div>
     </div>
   </div>

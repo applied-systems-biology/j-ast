@@ -62,6 +62,9 @@
 
             // console.log(JSON.stringify(message))
 
+            // Fix checkbox
+            message["parameters"]["ensure-circular-plate"] = $('#parameter-ensure-circular-plate').prop('checked')
+
             const token = $('#_csrf').attr('content');
             const header = $('#_csrf_header').attr('content');
             return $.ajax(getURL("dataset/update/" + currentDatasetId), {
