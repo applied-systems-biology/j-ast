@@ -33,9 +33,9 @@ runtime:
 runtime-parameters:
   time-point-early-filter-parameter-key: 'e3d4a323-851b-49f8-960d-80e972ff94ad/filter'
   growth-reduction-thresholds-parameter-key: 'f37619df-9f61-4033-b000-1271b68b5f68/variables/thresholds'
-  dda-min-diameter-parameter-key: '5b2fced9-0826-474e-9102-f3c070b737bb/exported/circle filter/minFeret'
-  dda-max-diameter-parameter-key: '5b2fced9-0826-474e-9102-f3c070b737bb/exported/circle filter/maxFeret'
-  dda-min-circularity-parameter-key: '5b2fced9-0826-474e-9102-f3c070b737bb/exported/circle filter/minCirc'
+  dda-min-diameter-parameter-key: '0f0ac686-e04e-4591-819e-31b5bf755759/custom-filter-variables/minFeret'
+  dda-max-diameter-parameter-key: '0f0ac686-e04e-4591-819e-31b5bf755759/custom-filter-variables/maxFeret'
+  dda-min-circularity-parameter-key: '0f0ac686-e04e-4591-819e-31b5bf755759/custom-filter-variables/minCirc'
   contrast-min-value-parameter-key: '5bfee4f0-7076-4959-b097-ac557442fa98/custom-min'
   contrast-max-value-parameter-key: '5bfee4f0-7076-4959-b097-ac557442fa98/custom-max'
   input-folder-list-parameter-key: '9663ce59-8770-456a-a5a0-9b3254c8f021/folder-paths'
