@@ -1,7 +1,7 @@
-<div class="card bg-light uploader" th:fragment="dataset-editor-uploader" style="display: none;">
+<div class="card bg-light uploader" th:fragment="dataset-editor-uploader" style="display: block;">
   <div class="card-header d-flex align-items-center justify-content-between">
     <span>Upload</span>
-    <button type="button" class="btn-close button-uploader-close" aria-label="Close"></button>
+<!--    <button type="button" class="btn-close button-uploader-close" aria-label="Close"></button>-->
   </div>
   <ul class="list-group list-group-flush">
     <li class="list-group-item bg-light">
@@ -92,22 +92,22 @@
     }
 
     function openUploader() {
-      $(".button-add-data").prop("disabled", true)
-      $(".uploader").slideDown()
+      // $(".button-add-data").prop("disabled", true)
+      // $(".uploader").slideDown()
     }
 
     function closeUploader() {
-      $(".uploader").slideUp()
-      $(".button-add-data").prop("disabled", false)
+      // $(".uploader").slideUp()
+      // $(".button-add-data").prop("disabled", false)
     }
 
     $(document).ready(() => {
-      $(".button-add-data").on("click", function () {
-        openUploader()
-      })
-      $(".button-uploader-close").on("click", function () {
-        closeUploader()
-      })
+      // $(".button-add-data").on("click", function () {
+      //   openUploader()
+      // })
+      // $(".button-uploader-close").on("click", function () {
+      //   closeUploader()
+      // })
       $(".button-uploader-upload").on("click", function () {
         startUpload()
       })

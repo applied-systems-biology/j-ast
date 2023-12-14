@@ -4,15 +4,20 @@
 <section layout:fragment="content" class="container-fluid pt-3">
    <div th:replace="~{fragments/dataset-editor-toolbar.html :: dataset-editor-toolbar}"></div>
     <div class="row mt-3 mb-3">
-        <div class="col-lg-4 d-flex flex-column gap-2">
+        <div class="col-lg-7 d-flex flex-column gap-2">
             <div th:replace="~{fragments/dataset-editor-parameters.html :: dataset-editor-parameters}"></div>
-            <div th:replace="~{fragments/dataset-editor-validation.html :: dataset-editor-validation}"></div>
         </div>
         <div class="col-lg d-flex flex-column gap-2">
+            <div th:replace="~{fragments/dataset-editor-validation.html :: dataset-editor-validation}"></div>
             <div th:replace="~{fragments/dataset-editor-uploader.html :: dataset-editor-uploader}"></div>
+        </div>
+    </div>
+    <div class="row mt-3 mb-3">
+        <div class="col">
             <div th:replace="~{fragments/dataset-editor-table.html :: dataset-editor-table}"></div>
         </div>
     </div>
+
     <div th:replace="~{fragments/modal-rename.html :: modal-rename}"></div>
     <div th:replace="~{fragments/modal-delete.html :: modal-delete}"></div>
     <div th:replace="~{fragments/modal-run.html :: modal-run}"></div>
