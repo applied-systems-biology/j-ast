@@ -1,16 +1,15 @@
-<div class="card bg-light" th:fragment="dataset-editor-validation">
-    <div class="card-header">
-        <span>Validation</span>
-    </div>
-    <div class="card-body validation-status-running">
+<div th:fragment="dataset-editor-validation">
+    <div class="validation-status-running">
         <i class="fa-solid fa-circle-notch fa-spin"></i>
         <span>Validating ...</span>
     </div>
-    <div class="card-body border-top bg-success bg-opacity-75 text-bg-success validation-status-success" style="display: none">
-        <h5 class="card-title"><i class="fa-solid fa-check-circle"></i> Validation successful</h5>
-        <p class="card-text">You can now run the analysis.</p>
+    <div class="card bg-success bg-opacity-75 text-bg-success validation-status-success" style="display: none">
+        <div class="card-body">
+            <h5 class="card-title"><i class="fa-solid fa-check-circle"></i> Validation successful</h5>
+            <p class="card-text">You can now run the analysis.</p>
+        </div>
     </div>
-    <div class="validation-issues">
+    <div class="validation-issues d-flex flex-column gap-1">
 
     </div>
 </div>

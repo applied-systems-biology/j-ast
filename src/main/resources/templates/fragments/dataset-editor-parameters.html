@@ -1,68 +1,72 @@
-<div class="card bg-light" th:fragment="dataset-editor-parameters">
-  <div class="card-header">
-    <span>Parameters</span>
-  </div>
-  <div class="card-body">
+<div th:fragment="dataset-editor-parameters">
     <div class="mb-3">
-      <label for="parameter-growth-reduction-thresholds" class="form-label">Growth reduction thresholds (%)</label>
-      <input type="text" class="form-control input-parameter-editor" id="parameter-growth-reduction-thresholds" data-parameter-property="growth-reduction-thresholds" autocomplete="off" th:value="${currentDataset.growthReductionThresholds}">
-      <div class="form-text">
-        Separate multiple thresholds with a comma
-      </div>
+        <label for="parameter-growth-reduction-thresholds" class="form-label">Growth reduction thresholds (%)</label>
+        <input type="text" class="form-control input-parameter-editor" id="parameter-growth-reduction-thresholds" data-parameter-property="growth-reduction-thresholds"
+               autocomplete="off" th:value="${currentDataset.growthReductionThresholds}">
+        <div class="form-text">
+            Separate multiple thresholds with a comma
+        </div>
     </div>
     <div class="mb-3">
-      <label for="parameter-time-point-early" class="form-label">Early time point</label>
-      <input type="text" class="form-control input-parameter-editor" id="parameter-time-point-early" data-parameter-property="time-point-early" autocomplete="off" th:value="${currentDataset.timePointEarly}">
-      <div class="form-text">
-        The <code>Time point</code> that contains the early snapshot of the assays (e.g., 24hr).
-      </div>
+        <label for="parameter-time-point-early" class="form-label">Early time point</label>
+        <input type="text" class="form-control input-parameter-editor" id="parameter-time-point-early" data-parameter-property="time-point-early" autocomplete="off"
+               th:value="${currentDataset.timePointEarly}">
+        <div class="form-text">
+            The <code>Time point</code> that contains the early snapshot of the assays (e.g., 24hr).
+        </div>
     </div>
     <div class="mb-3">
-      <label for="parameter-time-point-late" class="form-label">Late time point</label>
-      <input type="text" class="form-control input-parameter-editor" id="parameter-time-point-late" data-parameter-property="time-point-late" th:value="${currentDataset.timePointLate}">
-      <div class="form-text">
-        The <code>Time point</code> that contains the late snapshot of the assays (e.g., 48hr).
-      </div>
-    </div>
-    <hr/>
-    <div class="mb-3">
-      <label class="form-label">DDA: Diameter constraint (mm)</label>
-      <div class="d-flex">
-        <div class="flex-grow-1"><input type="number" step="any" class="form-control input-parameter-editor" id="parameter-dda-disk-min-diameter" data-parameter-property="dda-disk-min-diameter" th:value="${currentDataset.ddaDiskMinDiameter}"></div>
-        <div class="p-2">-</div>
-        <div class="flex-grow-1"><input type="number" step="any" class="form-control input-parameter-editor" id="parameter-dda-disk-max-diameter" data-parameter-property="dda-disk-max-diameter" th:value="${currentDataset.ddaDiskMaxDiameter}"></div>
-      </div>
-      <div class="form-text">
-        The minimum and maximum diameter of the DDA disk
-      </div>
-    </div>
-    <div class="mb-3">
-      <label for="parameter-dda-disk-min-circularity" class="form-label">DDA: Minimum circularity</label>
-      <input type="number" step="any" class="form-control input-parameter-editor" id="parameter-dda-disk-min-circularity" data-parameter-property="dda-disk-min-circularity" th:value="${currentDataset.ddaDiskMinCircularity}">
-      <div class="form-text">
-        The value range is from 0.0 to 1.0
-      </div>
+        <label for="parameter-time-point-late" class="form-label">Late time point</label>
+        <input type="text" class="form-control input-parameter-editor" id="parameter-time-point-late" data-parameter-property="time-point-late"
+               th:value="${currentDataset.timePointLate}">
+        <div class="form-text">
+            The <code>Time point</code> that contains the late snapshot of the assays (e.g., 48hr).
+        </div>
     </div>
     <hr/>
     <div class="mb-3">
-      <label class="form-label">Measurements pixel value constraints</label>
-      <div class="d-flex">
-        <div class="flex-grow-1"><input type="number" step="any" class="form-control input-parameter-editor" id="parameter-contrast-min-value" data-parameter-property="contrast-min-value" th:value="${currentDataset.contrastMinValue}"></div>
-        <div class="p-2">-</div>
-        <div class="flex-grow-1"><input type="number" step="any" class="form-control input-parameter-editor" id="parameter-contrast-max-value" data-parameter-property="contrast-max-value" th:value="${currentDataset.contrastMaxValue}"></div>
-      </div>
-      <div class="form-text">
-        Determines the pixel value range for contrast enhancement. The raw pixel range of values is stretched to contain only pixel values in this interval.
-      </div>
+        <label class="form-label">DDA: Diameter constraint (mm)</label>
+        <div class="d-flex">
+            <div class="flex-grow-1"><input type="number" step="any" class="form-control input-parameter-editor" id="parameter-dda-disk-min-diameter"
+                                            data-parameter-property="dda-disk-min-diameter" th:value="${currentDataset.ddaDiskMinDiameter}"></div>
+            <div class="p-2">-</div>
+            <div class="flex-grow-1"><input type="number" step="any" class="form-control input-parameter-editor" id="parameter-dda-disk-max-diameter"
+                                            data-parameter-property="dda-disk-max-diameter" th:value="${currentDataset.ddaDiskMaxDiameter}"></div>
+        </div>
+        <div class="form-text">
+            The minimum and maximum diameter of the DDA disk
+        </div>
+    </div>
+    <div class="mb-3">
+        <label for="parameter-dda-disk-min-circularity" class="form-label">DDA: Minimum circularity</label>
+        <input type="number" step="any" class="form-control input-parameter-editor" id="parameter-dda-disk-min-circularity"
+               data-parameter-property="dda-disk-min-circularity" th:value="${currentDataset.ddaDiskMinCircularity}">
+        <div class="form-text">
+            The value range is from 0.0 to 1.0
+        </div>
     </div>
     <hr/>
     <div class="mb-3">
-      <div class="form-check">
-        <input class="form-check-input input-parameter-editor" type="checkbox" data-parameter-property="ensure-circular-plate" th:checked="${currentDataset.ensureCircularPlate}" id="parameter-ensure-circular-plate">
-        <label class="form-check-label" for="parameter-ensure-circular-plate">
-          Ensure circular plate
-        </label>
-      </div>
+        <label class="form-label">Measurements pixel value constraints</label>
+        <div class="d-flex">
+            <div class="flex-grow-1"><input type="number" step="any" class="form-control input-parameter-editor" id="parameter-contrast-min-value"
+                                            data-parameter-property="contrast-min-value" th:value="${currentDataset.contrastMinValue}"></div>
+            <div class="p-2">-</div>
+            <div class="flex-grow-1"><input type="number" step="any" class="form-control input-parameter-editor" id="parameter-contrast-max-value"
+                                            data-parameter-property="contrast-max-value" th:value="${currentDataset.contrastMaxValue}"></div>
+        </div>
+        <div class="form-text">
+            Determines the pixel value range for contrast enhancement. The raw pixel range of values is stretched to contain only pixel values in this interval.
+        </div>
     </div>
-  </div>
+    <hr/>
+    <div class="mb-3">
+        <div class="form-check">
+            <input class="form-check-input input-parameter-editor" type="checkbox" data-parameter-property="ensure-circular-plate"
+                   th:checked="${currentDataset.ensureCircularPlate}" id="parameter-ensure-circular-plate">
+            <label class="form-check-label" for="parameter-ensure-circular-plate">
+                Ensure circular plate
+            </label>
+        </div>
+    </div>
 </div>

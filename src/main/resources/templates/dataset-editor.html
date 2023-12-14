@@ -2,14 +2,54 @@
 <html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layouts/base.html}">
 <body>
 <section layout:fragment="content" class="container-fluid pt-3">
-   <div th:replace="~{fragments/dataset-editor-toolbar.html :: dataset-editor-toolbar}"></div>
+    <div th:replace="~{fragments/dataset-editor-toolbar.html :: dataset-editor-toolbar}"></div>
     <div class="row mt-3 mb-3">
         <div class="col-lg-7 d-flex flex-column gap-2">
-            <div th:replace="~{fragments/dataset-editor-parameters.html :: dataset-editor-parameters}"></div>
+            <div class="accordion" th:fragment="dataset-editor-parameters" id="accordion-left">
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button bg-light" type="button" data-bs-toggle="collapse" data-bs-target="#accordion-left-parameter-editor"
+                                aria-expanded="true" aria-controls="accordion-left-parameter-editor">
+                            Parameters
+                        </button>
+                    </h2>
+                    <div id="accordion-left-parameter-editor" class="accordion-collapse collapse show" data-bs-parent="#accordion-left">
+                        <div class="accordion-body">
+                            <div th:replace="~{fragments/dataset-editor-parameters.html :: dataset-editor-parameters}"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
         <div class="col-lg d-flex flex-column gap-2">
-            <div th:replace="~{fragments/dataset-editor-validation.html :: dataset-editor-validation}"></div>
-            <div th:replace="~{fragments/dataset-editor-uploader.html :: dataset-editor-uploader}"></div>
+            <div class="accordion" th:fragment="dataset-editor-parameters" id="accordion-right">
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button bg-light" type="button" data-bs-toggle="collapse" data-bs-target="#accordion-right-validation"
+                                aria-expanded="true" aria-controls="accordion-right-validation">
+                            Validation
+                        </button>
+                    </h2>
+                    <div id="accordion-right-validation" class="accordion-collapse collapse show">
+                        <div class="accordion-body">
+                            <div th:replace="~{fragments/dataset-editor-validation.html :: dataset-editor-validation}"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button bg-light" type="button" data-bs-toggle="collapse" data-bs-target="#accordion-right-upload"
+                                aria-expanded="true" aria-controls="accordion-right-upload">
+                            Upload
+                        </button>
+                    </h2>
+                    <div id="accordion-right-upload" class="accordion-collapse collapse show">
+                        <div class="accordion-body">
+                            <div th:replace="~{fragments/dataset-editor-uploader.html :: dataset-editor-uploader}"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
     <div class="row mt-3 mb-3">
@@ -34,18 +74,18 @@
                 parameters: {},
                 inputData: {}
             }
-            $(".input-data-editor").each(function() {
+            $(".input-data-editor").each(function () {
                 const inputDataId = $(this).data("inputDataId")
                 const inputDataIdKey = "" + inputDataId
                 const inputDataProperty = $(this).data("inputDataProperty")
                 const value = $(this).val()
 
-                if(inputDataId === undefined) {
+                if (inputDataId === undefined) {
                     return
                 }
 
                 // Add to map if not exists
-                if(!(inputDataIdKey in message.inputData)) {
+                if (!(inputDataIdKey in message.inputData)) {
                     message["inputData"][inputDataIdKey] = {
                         id: inputDataId
                     }
@@ -58,7 +98,7 @@
                 const parameterProperty = $(this).data("parameterProperty")
                 const value = $(this).val()
 
-                if(parameterProperty === undefined) {
+                if (parameterProperty === undefined) {
                     return
                 }
 
@@ -112,17 +152,18 @@
             $(".data-validation-invalid").hide()
 
             $.getJSON(getURL("dataset/validate/" + currentDatasetId), function (data) {
-                if(data["is-valid"]) {
+                if (data["is-valid"]) {
                     $(".button-run").prop("disabled", false)
                     $(".validation-status-success").show()
-                }
-                else {
+                } else {
                     $(".data-validation-invalid").show()
                     for (const issue of data["issues"]) {
                         $(".validation-issues").append(`
-                         <div class="card-body border-top bg-danger bg-opacity-75 text-bg-danger validation-status-success">
-                            <h5 class="card-title"><i class="fa-solid fa-warning"></i> ${issue["title"]}</h5>
-                            <p class="card-text">${issue["message"]}</p>
+                         <div class="card bg-danger bg-opacity-75 text-bg-danger validation-status-success">
+                            <div class="card-body">
+                                <h5 class="card-title"><i class="fa-solid fa-warning"></i> ${issue["title"]}</h5>
+                                <p class="card-text">${issue["message"]}</p>
+                            </div>
                         </div>
                         `)
                     }
@@ -137,7 +178,7 @@
         }
 
         function scheduleUpdateTimer() {
-            if(updateTimerHandle !== 0) {
+            if (updateTimerHandle !== 0) {
                 clearTimeout(updateTimerHandle);
             }
             $(".button-run").prop("disabled", true)
@@ -171,7 +212,7 @@
     <script th:inline="javascript">
         function reloadOnStatusChange() {
             $.getJSON(getURL("dataset/query-status/" + currentDatasetId), function (data) {
-                if(data["status"] !== "Preparing") {
+                if (data["status"] !== "Preparing") {
                     location.reload()
                 }
             });
@@ -179,7 +220,7 @@
 
         $(document).ready(() => {
             setInterval(function () {
-               reloadOnStatusChange()
+                reloadOnStatusChange()
             }, 1000)
         })
     </script>

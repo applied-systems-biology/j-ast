@@ -21,7 +21,7 @@
                     <th scope="col"></th>
                     <th scope="col"></th>
                     <th scope="col">Type</th>
-                    <th scope="col">Size</th>
+<!--                    <th scope="col">Size</th>-->
                     <th scope="col">Original file name</th>
                     <th scope="col">Experiment</th>
                     <th scope="col">Sample</th>
@@ -52,8 +52,8 @@
                             <option th:selected="${inputData.assayType.toString().equals('ETest')}" value="ETest">E-Test</option>
                         </select>
                     </th>
-                    <th scope="col" class="text-muted" th:text="${inputData.imageWidth + ' ⨉ ' + inputData.imageHeight + ' px'}"></th>
-                    <th scope="col" th:text="${inputData.originalFileName}"></th>
+<!--                    <th scope="col" class="text-muted" th:text="${inputData.imageWidth + ' ⨉ ' + inputData.imageHeight + ' px'}"></th>-->
+                    <th scope="col" class="fs-6 font-monospace" th:text="${inputData.originalFileName}"></th>
                     <th scope="col"><input class="form-control input-data-editor" type="text" data-input-data-property="experiment" th:data-input-data-id="${inputData.id}" th:value="${inputData.experiment}" autocomplete="off"/></th>
                     <th scope="col"><input class="form-control input-data-editor" type="text" data-input-data-property="sample" th:data-input-data-id="${inputData.id}" th:value="${inputData.sample}" autocomplete="off"/></th>
                     <th scope="col"><input class="form-control input-data-editor" type="text" data-input-data-property="timePoint" th:data-input-data-id="${inputData.id}" th:value="${inputData.timePoint}" autocomplete="off"/></th>
