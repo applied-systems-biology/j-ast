@@ -4,6 +4,7 @@ import com.google.common.collect.HashMultiset;
 import com.google.common.collect.Multiset;
 import jakarta.persistence.*;
 import org.apache.commons.lang3.math.NumberUtils;
+import org.hkijena.jipipe.webapp.growthassay.utils.NaturalOrderComparator;
 import org.hkijena.jipipe.webapp.growthassay.utils.StringUtils;
 import org.jobrunr.scheduling.BackgroundJob;
 import org.springframework.security.core.Authentication;
@@ -187,7 +188,7 @@ public class Dataset {
     }
 
     public List<InputData> getInputData() {
-        return Collections.unmodifiableList(inputData);
+        return inputData.stream().sorted(Comparator.comparing(InputData::getFinalFileName, NaturalOrderComparator.INSTANCE)).toList();
     }
 
     public List<OutputData> getOutputData() {
