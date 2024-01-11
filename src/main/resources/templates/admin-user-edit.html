@@ -7,7 +7,7 @@
             <div class="col">
                 <div class="card bg-light">
                     <div class="card-header d-flex align-items-center justify-content-between">
-                        <span>Create new account</span>
+                        <span>Edit account</span>
                         <button type="submit" class="btn btn-success button-add-data">
                             <i class="fa-solid fa-save"></i> Update
                         </button>
@@ -24,6 +24,7 @@
                             <label for="account-role" class="form-label">Role</label>
                             <select type="text" class="form-select" id="account-role" name="role" th:field="*{role}" required>
                                 <option value="User">User</option>
+                                <option value="Guest">Guest</option>
                                 <option value="Admin">Admin</option>
                             </select>
                             <div class="invalid-feedback">

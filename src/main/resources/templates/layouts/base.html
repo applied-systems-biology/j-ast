@@ -38,11 +38,17 @@
             <li class="nav-item" sec:authorize="hasAuthority('EDIT_OWN_ACCOUNT')">
                 <a class="nav-link" th:href="@{/account}"><i class="fa-solid fa-user-gear"></i> <span sec:authentication="name">Account</span></a>
             </li>
+            <li class="nav-item" sec:authorize="hasAuthority('ROLE_GUEST')">
+                <div class="nav-link text-danger"><i class="fa-solid fa-warning"></i> <span th:text="${user.renderGuestExpireTopBar()}">Account</span></div>
+            </li>
             <li class="nav-item" sec:authorize="hasRole('ADMIN')">
                 <a class="nav-link" th:href="@{/admin}"><i class="fa-solid fa-gear"></i> Admin</a>
             </li>
             <li sec:authorize="isAuthenticated()" class="nav-item">
                 <a class="nav-link" href="#" onclick="document.logoutForm.submit();"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
+            </li>
+            <li sec:authorize="!isAuthenticated()" class="nav-item">
+                <a class="nav-link" th:href="@{/register}"><i class="fa-solid fa-user-plus"></i> Register</a>
             </li>
         </ul>
     </div>

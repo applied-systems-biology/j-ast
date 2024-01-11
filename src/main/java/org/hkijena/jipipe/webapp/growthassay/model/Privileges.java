@@ -4,12 +4,13 @@ import com.google.common.collect.Sets;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
+import java.util.HashSet;
 import java.util.Set;
 
 public class Privileges {
 
     public static final GrantedAuthority PRIVILEGE_USER = new SimpleGrantedAuthority("ROLE_USER");
-
+    public static final GrantedAuthority PRIVILEGE_GUEST = new SimpleGrantedAuthority("ROLE_GUEST");
     public static final GrantedAuthority PRIVILEGE_ADMIN = new SimpleGrantedAuthority("ROLE_ADMIN");
     public static final GrantedAuthority PRIVILEGE_CREATE_TASKS = new SimpleGrantedAuthority("CREATE_TASKS");
     public static final GrantedAuthority PRIVILEGE_VIEW_OWN_TASKS = new SimpleGrantedAuthority("VIEW_OWN_TASKS");
@@ -26,6 +27,8 @@ public class Privileges {
 
     public static final Set<GrantedAuthority> ROLE_ADMIN_PRIVILEGES;
 
+    public static final HashSet<GrantedAuthority> ROLE_GUEST_PRIVILEGES;
+
     static {
         ROLE_USER_PRIVILEGES = Sets.newHashSet(PRIVILEGE_USER,
                 PRIVILEGE_CREATE_TASKS,
@@ -33,6 +36,11 @@ public class Privileges {
                 PRIVILEGE_EDIT_OWN_TASKS,
                 PRIVILEGE_DELETE_OWN_ACCOUNT,
                 PRIVILEGE_EDIT_OWN_ACCOUNT);
+        ROLE_GUEST_PRIVILEGES = Sets.newHashSet(PRIVILEGE_GUEST,
+                PRIVILEGE_CREATE_TASKS,
+                PRIVILEGE_VIEW_OWN_TASKS,
+                PRIVILEGE_EDIT_OWN_TASKS,
+                PRIVILEGE_DELETE_OWN_ACCOUNT);
         ROLE_ADMIN_PRIVILEGES = Sets.union(ROLE_USER_PRIVILEGES, Sets.newHashSet(
                 PRIVILEGE_ADMIN,
                 PRIVILEGE_VIEW_ALL_TASKS,

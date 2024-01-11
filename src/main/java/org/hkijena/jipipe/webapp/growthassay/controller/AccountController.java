@@ -24,10 +24,8 @@ import java.util.Objects;
 public class AccountController {
 
     private final DatasetRepository datasetRepository;
-
     private final UserRepository userRepository;
     private final AccountConfig accountConfig;
-
     private final PasswordEncoder passwordEncoder;
 
     @Autowired

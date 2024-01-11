@@ -7,6 +7,7 @@ import org.hkijena.jipipe.webapp.growthassay.model.*;
 import org.hkijena.jipipe.webapp.growthassay.repositories.DatasetRepository;
 import org.hkijena.jipipe.webapp.growthassay.repositories.InputDataRepository;
 import org.hkijena.jipipe.webapp.growthassay.services.AnalysisService;
+import org.hkijena.jipipe.webapp.growthassay.services.DatasetService;
 import org.hkijena.jipipe.webapp.growthassay.utils.ImageUtils;
 import org.hkijena.jipipe.webapp.growthassay.utils.RequestUtils;
 import org.hkijena.jipipe.webapp.growthassay.utils.StringUtils;
@@ -45,15 +46,17 @@ public class DatasetController {
     private final InputDataRepository inputDataRepository;
     private final JobScheduler jobScheduler;
     private final AnalysisService analysisService;
+    private final DatasetService datasetService;
 
     @Autowired
-    public DatasetController(RuntimeConfig runtimeConfig, AccountConfig accountConfig, DatasetRepository datasetRepository, InputDataRepository inputDataRepository, JobScheduler jobScheduler, AnalysisService analysisService) {
+    public DatasetController(RuntimeConfig runtimeConfig, AccountConfig accountConfig, DatasetRepository datasetRepository, InputDataRepository inputDataRepository, JobScheduler jobScheduler, AnalysisService analysisService, DatasetService datasetService) {
         this.runtimeConfig = runtimeConfig;
         this.accountConfig = accountConfig;
         this.datasetRepository = datasetRepository;
         this.inputDataRepository = inputDataRepository;
         this.jobScheduler = jobScheduler;
         this.analysisService = analysisService;
+        this.datasetService = datasetService;
     }
 
     @GetMapping("/dataset/new")
@@ -136,7 +139,7 @@ public class DatasetController {
                 throw new ResponseStatusException(HttpStatus.FORBIDDEN);
             }
 
-            datasetRepository.delete(dataset);
+            datasetService.delete(dataset);
 
             Notification.pushToRedirect("Dataset deleted", "The dataset '" + dataset.getName() + "' was deleted.", Notification.Style.success, redirectAttributes);
             return new ModelAndView("redirect:/");

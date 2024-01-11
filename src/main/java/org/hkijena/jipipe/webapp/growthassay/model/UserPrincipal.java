@@ -15,7 +15,12 @@ public class UserPrincipal implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Privileges.ROLE_USER_PRIVILEGES;
+        if(user.getRole() == User.Role.Guest) {
+            return Privileges.ROLE_GUEST_PRIVILEGES;
+        }
+        else {
+            return Privileges.ROLE_USER_PRIVILEGES;
+        }
     }
 
     @Override

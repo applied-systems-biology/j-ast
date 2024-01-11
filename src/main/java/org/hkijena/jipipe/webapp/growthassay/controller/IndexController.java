@@ -1,5 +1,6 @@
 package org.hkijena.jipipe.webapp.growthassay.controller;
 
+import org.hkijena.jipipe.webapp.growthassay.config.AccountConfig;
 import org.hkijena.jipipe.webapp.growthassay.model.Notification;
 import org.hkijena.jipipe.webapp.growthassay.repositories.DatasetRepository;
 import org.springframework.beans.factory.annotation.Autowired;

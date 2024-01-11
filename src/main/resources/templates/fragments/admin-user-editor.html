@@ -12,9 +12,11 @@
                 <tr>
                     <th scope="col">E-Mail</th>
                     <th scope="col">Role</th>
-                    <th scope="col">Can login</th>
                     <th scope="col">First name</th>
                     <th scope="col">Last name</th>
+                    <th scope="col">Expires</th>
+                    <th scope="col"></th>
+                    <th scope="col"></th>
                     <th scope="col"></th>
                 </tr>
                 </thead>
@@ -22,27 +24,44 @@
                 <tr>
                     <td th:text="${accountConfig.adminUsername}"></td>
                     <td>Admin</td>
-                    <td><span class="text-success">Yes</span></td>
                     <td></td>
                     <td></td>
+                    <td>-</td>
                     <td>
-                        <div class="d-flex flex-row justify-content-end">
-                            <button class="btn btn-primary" disabled><i class="fa-solid fa-pen"></i> Edit</button>
-                        </div>
+                    </td>
+                    <td>
+                    </td>
+                    <td>
                     </td>
                 </tr>
                 <tr th:each="user: ${allUsers}">
                     <td th:text="${user.email}"></td>
                     <td th:text="${user.role}"></td>
-                    <td>
-                        <span th:if="${user.allowLogin}" class="text-success">Yes</span>
-                        <span th:if="${!user.allowLogin}" class="text-danger">No</span>
-                    </td>
                     <td th:text="${user.firstName}"></td>
                     <td th:text="${user.lastName}"></td>
+                    <td th:text="${user.renderGuestExpireAdmin()}"></td>
                     <td>
                         <div class="d-flex flex-row justify-content-end">
-                            <a class="btn btn-primary" th:href="@{'/admin/edit-user/' + ${user.id}}"><i class="fa-solid fa-pen"></i> Edit</a>
+                            <form th:action="@{'/admin/delete-user/' + ${user.id}}" method="post">
+                                <button class="btn btn-danger" type="submit">Delete</button>
+                            </form>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="d-flex flex-row justify-content-end">
+                            <a class="btn btn-outline-primary" th:href="@{'/admin/edit-user/' + ${user.id}}"> Edit</a>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="d-flex flex-row justify-content-end" th:if="${user.role.name() != 'Guest' && user.allowLogin}">
+                            <form th:action="@{'/admin/deactivate-user/' + ${user.id}}" method="post">
+                                <button class="btn btn-outline-danger" type="submit">Deactivate</button>
+                            </form>
+                        </div>
+                        <div class="d-flex flex-row justify-content-end" th:if="${user.role.name() != 'Guest' && !user.allowLogin}">
+                            <form th:action="@{'/admin/activate-user/' + ${user.id}}" method="post">
+                                <button class="btn btn-outline-success" type="submit">Activate</button>
+                            </form>
                         </div>
                     </td>
                 </tr>

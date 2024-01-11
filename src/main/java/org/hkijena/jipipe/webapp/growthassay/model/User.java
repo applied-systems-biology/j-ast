@@ -3,6 +3,8 @@ package org.hkijena.jipipe.webapp.growthassay.model;
 import jakarta.persistence.*;
 
 import java.io.Serial;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 
 @Entity
 @Table(name = "users")
@@ -33,6 +35,17 @@ public class User {
 
     @Column(name = "allow_login", nullable = false)
     private boolean allowLogin = true;
+
+    @Column(name = "guest_expire")
+    private LocalDateTime guestExpire = LocalDateTime.now();
+
+    public LocalDateTime getGuestExpire() {
+        return guestExpire;
+    }
+
+    public void setGuestExpire(LocalDateTime guestExpire) {
+        this.guestExpire = guestExpire;
+    }
 
     public boolean isAllowLogin() {
         return allowLogin;
@@ -90,8 +103,33 @@ public class User {
         this.role = role;
     }
 
+    public String renderGuestExpireAdmin() {
+        if(role == Role.Guest) {
+            if(guestExpire == null) {
+                return "Now";
+            }
+            else {
+                return ChronoUnit.MINUTES.between(LocalDateTime.now(), guestExpire) + " min";
+            }
+        }
+        return "-";
+    }
+
+    public String renderGuestExpireTopBar() {
+        if(role == Role.Guest) {
+            if(guestExpire == null) {
+                return "Guest session expired";
+            }
+            else {
+                return "Guest session (" +  ChronoUnit.MINUTES.between(LocalDateTime.now(), guestExpire) + " min left before deletion)";
+            }
+        }
+        return "-";
+    }
+
     public enum Role {
         User,
+        Guest,
         Admin
     }
 }

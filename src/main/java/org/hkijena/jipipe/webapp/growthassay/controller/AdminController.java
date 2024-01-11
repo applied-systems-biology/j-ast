@@ -4,6 +4,7 @@ import org.hkijena.jipipe.webapp.growthassay.config.AccountConfig;
 import org.hkijena.jipipe.webapp.growthassay.model.*;
 import org.hkijena.jipipe.webapp.growthassay.repositories.DatasetRepository;
 import org.hkijena.jipipe.webapp.growthassay.repositories.UserRepository;
+import org.hkijena.jipipe.webapp.growthassay.services.UserService;
 import org.hkijena.jipipe.webapp.growthassay.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -27,22 +28,22 @@ public class AdminController {
 
     private final AccountConfig accountConfig;
     private final UserRepository userRepository;
-
     private final DatasetRepository datasetRepository;
-
     private final PasswordEncoder passwordEncoder;
+    private final UserService userService;
 
     @Autowired
-    public AdminController(AccountConfig accountConfig, UserRepository userRepository, DatasetRepository datasetRepository, PasswordEncoder passwordEncoder) {
+    public AdminController(AccountConfig accountConfig, UserRepository userRepository, DatasetRepository datasetRepository, PasswordEncoder passwordEncoder, UserService userService) {
         this.accountConfig = accountConfig;
         this.userRepository = userRepository;
         this.datasetRepository = datasetRepository;
         this.passwordEncoder = passwordEncoder;
+        this.userService = userService;
     }
 
     @GetMapping("/admin")
     public ModelAndView getAdminPage(Model model, Authentication authentication) {
-        if(authentication == null || !authentication.isAuthenticated() || !authentication.getAuthorities().contains(Privileges.PRIVILEGE_ADMIN)) {
+        if (authentication == null || !authentication.isAuthenticated() || !authentication.getAuthorities().contains(Privileges.PRIVILEGE_ADMIN)) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN);
         }
 
@@ -55,7 +56,7 @@ public class AdminController {
 
     @GetMapping("/admin/list-datasets")
     public ResponseEntity<List<DatasetAdminStatusMessage>> getDatasetList(Authentication authentication) {
-        if(authentication == null || !authentication.isAuthenticated() || !authentication.getAuthorities().contains(Privileges.PRIVILEGE_ADMIN)) {
+        if (authentication == null || !authentication.isAuthenticated() || !authentication.getAuthorities().contains(Privileges.PRIVILEGE_ADMIN)) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN);
         }
 
@@ -63,7 +64,7 @@ public class AdminController {
         for (Dataset dataset : datasetRepository.findAll()) {
             DatasetAdminStatusMessage message = new DatasetAdminStatusMessage();
             message.setId(dataset.getId());
-            message.setOwner(dataset.getOwner() != null ? dataset.getOwner().getEmail() :accountConfig.getAdminUsername());
+            message.setOwner(dataset.getOwner() != null ? dataset.getOwner().getEmail() : accountConfig.getAdminUsername());
             message.setStatus(dataset.getStatus().toString());
             message.setName(dataset.getName());
             message.setCanCancel(dataset.getStatus() == Dataset.Status.Running);
@@ -77,8 +78,13 @@ public class AdminController {
 
     @GetMapping("/admin/cancel-all-runs")
     public ModelAndView cancelAllRuns(RedirectAttributes redirectAttributes, Authentication authentication) {
+
+        if (authentication == null || !authentication.isAuthenticated() || !authentication.getAuthorities().contains(Privileges.PRIVILEGE_ADMIN)) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+        }
+
         for (Dataset dataset : datasetRepository.findAll()) {
-            if(!dataset.canEdit(authentication)) {
+            if (!dataset.canEdit(authentication)) {
                 throw new ResponseStatusException(HttpStatus.FORBIDDEN);
             }
 
@@ -95,7 +101,7 @@ public class AdminController {
 
     @GetMapping("/admin/add-user")
     public ModelAndView showCreateUserForm(Model model, Authentication authentication) {
-        if(authentication == null || !authentication.isAuthenticated() || !authentication.getAuthorities().contains(Privileges.PRIVILEGE_CREATE_ACCOUNT)) {
+        if (authentication == null || !authentication.isAuthenticated() || !authentication.getAuthorities().contains(Privileges.PRIVILEGE_CREATE_ACCOUNT)) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN);
         }
 
@@ -105,24 +111,24 @@ public class AdminController {
 
     @PostMapping("/admin/add-user")
     public ModelAndView createUser(Authentication authentication, RedirectAttributes redirectAttributes, @ModelAttribute CreateUpdateUserMessage createUpdateUserMessage) {
-        if(authentication == null || !authentication.isAuthenticated() || !authentication.getAuthorities().contains(Privileges.PRIVILEGE_CREATE_ACCOUNT)) {
+        if (authentication == null || !authentication.isAuthenticated() || !authentication.getAuthorities().contains(Privileges.PRIVILEGE_CREATE_ACCOUNT)) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN);
         }
 
         String userName = createUpdateUserMessage.getEmail().trim().toLowerCase();
-        if(StringUtils.isNullOrEmpty(userName)) {
+        if (StringUtils.isNullOrEmpty(userName)) {
             Notification.pushToRedirect("E-Mail is empty!", "The provided E-Mail is empty'!", Notification.Style.danger, redirectAttributes);
             return new ModelAndView("redirect:/admin");
         }
-        if(accountConfig.getAdminUsername().equalsIgnoreCase(userName) || userRepository.existsByEmailIgnoreCase(userName)) {
+        if (accountConfig.getAdminUsername().equalsIgnoreCase(userName) || userRepository.existsByEmailIgnoreCase(userName)) {
             Notification.pushToRedirect("User already exists!", "There is already a user with the E-Mail-Address '" + userName + "'!", Notification.Style.danger, redirectAttributes);
             return new ModelAndView("redirect:/admin");
         }
-        if(StringUtils.isNullOrEmpty(createUpdateUserMessage.getNewPassword())) {
+        if (StringUtils.isNullOrEmpty(createUpdateUserMessage.getNewPassword())) {
             Notification.pushToRedirect("Empty password!", "The provided password was empty!", Notification.Style.danger, redirectAttributes);
             return new ModelAndView("redirect:/admin");
         }
-        if(!Objects.equals(createUpdateUserMessage.getNewPassword(), createUpdateUserMessage.getNewPasswordConfirm())) {
+        if (!Objects.equals(createUpdateUserMessage.getNewPassword(), createUpdateUserMessage.getNewPasswordConfirm())) {
             Notification.pushToRedirect("Passwords are not equal!", "Please confirm the password via the dedicated field.", Notification.Style.danger, redirectAttributes);
             return new ModelAndView("redirect:/admin");
         }
@@ -142,20 +148,19 @@ public class AdminController {
 
     @GetMapping("/admin/edit-user/{id}")
     public ModelAndView showEditUserForm(Model model, Authentication authentication, @PathVariable long id) {
-        if(authentication == null || !authentication.isAuthenticated() || !authentication.getAuthorities().contains(Privileges.PRIVILEGE_EDIT_OTHER_ACCOUNT)) {
+        if (authentication == null || !authentication.isAuthenticated() || !authentication.getAuthorities().contains(Privileges.PRIVILEGE_EDIT_OTHER_ACCOUNT)) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN);
         }
 
         Optional<User> user_ = userRepository.findById(id);
-        if(user_.isPresent()) {
+        if (user_.isPresent()) {
             User user = user_.get();
             CreateUpdateUserMessage message = new CreateUpdateUserMessage(user);
             model.addAttribute("user", message);
             datasetRepository.putSortedToModel(model, authentication);
 
             return new ModelAndView("admin-user-edit");
-        }
-        else {
+        } else {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
     }
@@ -167,7 +172,7 @@ public class AdminController {
         }
 
         Optional<User> user_ = userRepository.findById(id);
-        if(user_.isPresent()) {
+        if (user_.isPresent()) {
             User user = user_.get();
 
             String userName = createUpdateUserMessage.getEmail().trim().toLowerCase();
@@ -175,15 +180,15 @@ public class AdminController {
                 Notification.pushToRedirect("E-Mail is empty!", "The provided E-Mail is empty'!", Notification.Style.danger, redirectAttributes);
                 return new ModelAndView("redirect:/admin");
             }
-            if(!user.getEmail().equalsIgnoreCase(userName)) {
+            if (!user.getEmail().equalsIgnoreCase(userName)) {
                 Optional<User> existing = userRepository.findByEmailIgnoreCase(userName);
-                if(existing.isPresent()) {
+                if (existing.isPresent()) {
                     Notification.pushToRedirect("E-Mail is already registered!", "The provided E-Mail is already assigned to another user'!", Notification.Style.danger, redirectAttributes);
                     return new ModelAndView("redirect:/admin");
                 }
             }
-            if(!StringUtils.isNullOrEmpty(createUpdateUserMessage.getNewPassword())) {
-                if(!Objects.equals(createUpdateUserMessage.getNewPassword(), createUpdateUserMessage.getNewPasswordConfirm())) {
+            if (!StringUtils.isNullOrEmpty(createUpdateUserMessage.getNewPassword())) {
+                if (!Objects.equals(createUpdateUserMessage.getNewPassword(), createUpdateUserMessage.getNewPasswordConfirm())) {
                     Notification.pushToRedirect("Passwords are not equal!", "Please confirm the password via the dedicated field.", Notification.Style.danger, redirectAttributes);
                     return new ModelAndView("redirect:/admin");
                 }
@@ -194,7 +199,7 @@ public class AdminController {
             user.setAllowLogin(createUpdateUserMessage.isAllowLogin());
             user.setFirstName(createUpdateUserMessage.getFirstName());
             user.setLastName(createUpdateUserMessage.getLastName());
-            if(!StringUtils.isNullOrEmpty(createUpdateUserMessage.getNewPassword())) {
+            if (!StringUtils.isNullOrEmpty(createUpdateUserMessage.getNewPassword())) {
                 user.setPassword(passwordEncoder.encode(createUpdateUserMessage.getNewPassword()));
             }
 
@@ -202,11 +207,64 @@ public class AdminController {
             Notification.pushToRedirect("Updated user", "Successfully updated the settings of the user '" + user.getEmail() + "' (role " + user.getRole() + ")", Notification.Style.success, redirectAttributes);
 
             return new ModelAndView("redirect:/admin");
-        }
-        else {
+        } else {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
+    }
 
+    @PostMapping("/admin/deactivate-user/{id}")
+    public ModelAndView deactivateUser(Authentication authentication, RedirectAttributes redirectAttributes, @ModelAttribute CreateUpdateUserMessage createUpdateUserMessage, @PathVariable long id) {
+        if (authentication == null || !authentication.isAuthenticated() || !authentication.getAuthorities().contains(Privileges.PRIVILEGE_CREATE_ACCOUNT)) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+        }
 
+        Optional<User> user_ = userRepository.findById(id);
+        if (user_.isPresent()) {
+            User user = user_.get();
+            user.setAllowLogin(false);
+            userRepository.save(user);
+            Notification.pushToRedirect("Updated user", "Successfully deactivated the user '" + user.getEmail() + "' (role " + user.getRole() + ")", Notification.Style.success, redirectAttributes);
+
+            return new ModelAndView("redirect:/admin");
+        } else {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @PostMapping("/admin/activate-user/{id}")
+    public ModelAndView activateUser(Authentication authentication, RedirectAttributes redirectAttributes, @ModelAttribute CreateUpdateUserMessage createUpdateUserMessage, @PathVariable long id) {
+        if (authentication == null || !authentication.isAuthenticated() || !authentication.getAuthorities().contains(Privileges.PRIVILEGE_CREATE_ACCOUNT)) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+        }
+
+        Optional<User> user_ = userRepository.findById(id);
+        if (user_.isPresent()) {
+            User user = user_.get();
+            user.setAllowLogin(true);
+            userRepository.save(user);
+            Notification.pushToRedirect("Updated user", "Successfully activated the user '" + user.getEmail() + "' (role " + user.getRole() + ")", Notification.Style.success, redirectAttributes);
+
+            return new ModelAndView("redirect:/admin");
+        } else {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @PostMapping("/admin/delete-user/{id}")
+    public ModelAndView deleteUser(Authentication authentication, RedirectAttributes redirectAttributes, @ModelAttribute CreateUpdateUserMessage createUpdateUserMessage, @PathVariable long id) {
+        if (authentication == null || !authentication.isAuthenticated() || !authentication.getAuthorities().contains(Privileges.PRIVILEGE_DELETE_OTHER_ACCOUNT)) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+        }
+
+        Optional<User> user_ = userRepository.findById(id);
+        if (user_.isPresent()) {
+            User user = user_.get();
+            userService.deleteUser(user);
+            Notification.pushToRedirect("Deleted user", "Successfully deleted the user '" + user.getEmail() + "' (role " + user.getRole() + ")", Notification.Style.success, redirectAttributes);
+
+            return new ModelAndView("redirect:/admin");
+        } else {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
     }
 }
