@@ -117,10 +117,10 @@ public class UserService implements UserDetailsService, ApplicationContextAware 
 
     @Scheduled(fixedRate = 60 * 1000)
     public void autoDeleteGuests() {
-        log.info("Cleaning up expired guest accounts ...");
         for (User user : ImmutableList.copyOf(userRepository.findAll())) {
             if(user.getRole() == User.Role.Guest) {
                 if(user.getGuestExpire() == null || LocalDateTime.now().isAfter(user.getGuestExpire())) {
+                    log.info("Deleting expired guest account " + user.getId() + " / " + user.getEmail());
                     deleteUser(user);
                 }
             }
