@@ -2,8 +2,11 @@ package org.hkijena.jipipe.webapp.growthassay.controller;
 
 import org.hkijena.jipipe.webapp.growthassay.config.AccountConfig;
 import org.hkijena.jipipe.webapp.growthassay.model.AdminPrincipal;
+import org.hkijena.jipipe.webapp.growthassay.model.Privileges;
 import org.hkijena.jipipe.webapp.growthassay.model.User;
 import org.hkijena.jipipe.webapp.growthassay.model.UserPrincipal;
+import org.hkijena.jipipe.webapp.growthassay.repositories.DatasetRepository;
+import org.hkijena.jipipe.webapp.growthassay.services.DatasetService;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -12,9 +15,11 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 public class UserControllerAdvice {
 
     private final AccountConfig accountConfig;
+    private final DatasetService datasetService;
 
-    public UserControllerAdvice(AccountConfig accountConfig) {
+    public UserControllerAdvice(AccountConfig accountConfig, DatasetService datasetService) {
         this.accountConfig = accountConfig;
+        this.datasetService = datasetService;
     }
 
     @ModelAttribute("user")
@@ -30,5 +35,10 @@ public class UserControllerAdvice {
             }
         }
         return null;
+    }
+
+    @ModelAttribute("canCreateProject")
+    public boolean canCreateProject(Authentication authentication) {
+        return datasetService.canCreateProject(authentication);
     }
 }

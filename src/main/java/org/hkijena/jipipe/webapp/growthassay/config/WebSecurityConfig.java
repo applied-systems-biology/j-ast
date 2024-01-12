@@ -7,6 +7,8 @@ import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.session.SessionRegistry;
+import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -34,7 +36,10 @@ public class WebSecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.authenticationProvider(authProvider());
-        http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.ALWAYS);
+        http.sessionManagement()
+                .sessionCreationPolicy(SessionCreationPolicy.ALWAYS)
+                .maximumSessions(1)
+                .sessionRegistry(sessionRegistry());
         http.authorizeHttpRequests(authorize -> authorize.requestMatchers("/dataset/**", "/input-data/**", "/output-data/**", "/account/**").authenticated()
                 .requestMatchers("/admin/**").hasRole("ADMIN")
                 .anyRequest().permitAll());
@@ -43,4 +48,8 @@ public class WebSecurityConfig {
         return http.build();
     }
 
+    @Bean
+    public SessionRegistry sessionRegistry() {
+        return new SessionRegistryImpl();
+    }
 }

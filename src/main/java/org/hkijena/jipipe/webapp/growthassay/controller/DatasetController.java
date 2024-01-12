@@ -64,6 +64,9 @@ public class DatasetController {
         if(authentication == null || !authentication.isAuthenticated() || !authentication.getAuthorities().contains(Privileges.PRIVILEGE_CREATE_TASKS)) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN);
         }
+        if(!datasetService.canCreateProject(authentication)) {
+            return new ModelAndView("redirect:/");
+        }
         Dataset dataset = new Dataset();
         Path storageDir;
         if(StringUtils.isNullOrEmpty(runtimeConfig.getCustomTempDirectory())) {

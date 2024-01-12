@@ -12,12 +12,17 @@ import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.core.session.SessionInformation;
+import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -28,13 +33,15 @@ public class UserService implements UserDetailsService, ApplicationContextAware 
     private final DatasetRepository datasetRepository;
     private final DatasetService datasetService;
     private ApplicationContext applicationContext;
+    private final SessionRegistry sessionRegistry;
 
     @Autowired
-    public UserService(AccountConfig accountConfig, UserRepository userRepository, DatasetRepository datasetRepository, DatasetService datasetService) {
+    public UserService(AccountConfig accountConfig, UserRepository userRepository, DatasetRepository datasetRepository, DatasetService datasetService, @Lazy SessionRegistry sessionRegistry) {
         this.accountConfig = accountConfig;
         this.userRepository = userRepository;
         this.datasetRepository = datasetRepository;
         this.datasetService = datasetService;
+        this.sessionRegistry = sessionRegistry;
     }
 
     @Override
@@ -72,5 +79,19 @@ public class UserService implements UserDetailsService, ApplicationContextAware 
 
         // Delete the user from the database
         userRepository.delete(user);
+
+        // Logout user
+        for (Object principal : sessionRegistry.getAllPrincipals()) {
+            if(principal instanceof UserPrincipal) {
+                if(Objects.equals(((UserPrincipal) principal).getUser().getId(), user.getId())) {
+                    List<SessionInformation> allSessions = sessionRegistry.getAllSessions(principal, false);
+                    for (SessionInformation session : allSessions) {
+                        session.expireNow();
+                    }
+                    return;
+                }
+            }
+        }
+
     }
 }

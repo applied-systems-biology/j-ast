@@ -1,9 +1,10 @@
 package org.hkijena.jipipe.webapp.growthassay.services;
 
-import org.hkijena.jipipe.webapp.growthassay.model.Dataset;
-import org.hkijena.jipipe.webapp.growthassay.model.InputData;
+import org.hkijena.jipipe.webapp.growthassay.config.AccountConfig;
+import org.hkijena.jipipe.webapp.growthassay.model.*;
 import org.hkijena.jipipe.webapp.growthassay.repositories.DatasetRepository;
 import org.hkijena.jipipe.webapp.growthassay.utils.StringUtils;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -14,11 +15,32 @@ import java.nio.file.Paths;
 @Service
 public class DatasetService {
     private final DatasetRepository datasetRepository;
+    private final AccountConfig accountConfig;
 
-    public DatasetService(DatasetRepository datasetRepository) {
+    public DatasetService(DatasetRepository datasetRepository, AccountConfig accountConfig) {
         this.datasetRepository = datasetRepository;
+        this.accountConfig = accountConfig;
     }
 
+    public boolean canCreateProject(Authentication authentication) {
+        if(authentication != null) {
+            if(authentication.getAuthorities().contains(Privileges.PRIVILEGE_CREATE_TASKS)) {
+                if(authentication.getPrincipal() instanceof UserPrincipal) {
+                    User user = ((UserPrincipal) authentication.getPrincipal()).getUser();
+                    if(user.getRole() == User.Role.Guest) {
+                        return datasetRepository.findByOwner(user).size() < accountConfig.getGuestDatasetLimit();
+                    }
+                    else {
+                        return true;
+                    }
+                }
+                else {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
     public void delete(Dataset dataset) {
         // Delete all input files
         for (InputData data : dataset.getInputData()) {

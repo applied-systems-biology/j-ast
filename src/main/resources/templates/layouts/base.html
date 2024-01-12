@@ -59,8 +59,12 @@
     <div class="d-flex flex-column flex-lg-row">
         <div sec:authorize="isAuthenticated()" class="bg-light border-end pt-1">
             <div class="list-group m-2">
-                <a class="list-group-item list-group-item-action list-group-item-success d-flex justify-content-between align-items-center text-nowrap" th:href="@{/dataset/new}">
+                <a class="list-group-item list-group-item-action list-group-item-success d-flex justify-content-between align-items-center text-nowrap" th:href="@{/dataset/new}" th:if="${canCreateProject}">
                     <span>Upload new dataset</span>
+                    <i class="fas fa-plus-circle ms-3"></i>
+                </a>
+                <a class="list-group-item list-group-item-action list-group-item-warning d-flex justify-content-between align-items-center text-nowrap" href="#" th:if="${!canCreateProject}">
+                    <span>Dataset limit reached</span>
                     <i class="fas fa-plus-circle ms-3"></i>
                 </a>
                 <th:block th:each="dataset: ${datasets}">
