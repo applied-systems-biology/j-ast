@@ -1,5 +1,10 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 <div class="uploader" th:fragment="dataset-editor-uploader" style="display: block;">
     <ul class="list-group list-group-flush">
+        <li class="list-group-item bg-light text-danger" sec:authorize="hasAuthority('ROLE_GUEST')">
+            <i class="fa fas fa-warning"></i> Guests can only add up to <span th:text="${guestInputDataLimit}"></span> images per dataset. If you want to try the software on
+            other data, please delete entries or create a new dataset.
+        </li>
         <li class="list-group-item bg-light">
             <i class="fa fas fa-info-circle"></i> We recommend to name your files according one of the following patterns: <code>[type]_[experiment]_[sample]_[time point]_[disk
             diameter].png</code>,

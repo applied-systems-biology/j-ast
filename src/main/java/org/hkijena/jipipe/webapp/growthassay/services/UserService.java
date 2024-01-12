@@ -8,12 +8,14 @@ import org.hkijena.jipipe.webapp.growthassay.model.User;
 import org.hkijena.jipipe.webapp.growthassay.model.UserPrincipal;
 import org.hkijena.jipipe.webapp.growthassay.repositories.DatasetRepository;
 import org.hkijena.jipipe.webapp.growthassay.repositories.UserRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.annotation.Lazy;
-import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.core.session.SessionInformation;
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -22,12 +24,15 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
 @Service
 public class UserService implements UserDetailsService, ApplicationContextAware {
+
+    private static final Logger log = LoggerFactory.getLogger(UserService.class);
     private final AccountConfig accountConfig;
     private final UserRepository userRepository;
     private final DatasetRepository datasetRepository;
@@ -108,5 +113,17 @@ public class UserService implements UserDetailsService, ApplicationContextAware 
         // Logout user
         logoutUser(user);
 
+    }
+
+    @Scheduled(fixedRate = 60 * 1000)
+    public void autoDeleteGuests() {
+        log.info("Cleaning up expired guest accounts ...");
+        for (User user : ImmutableList.copyOf(userRepository.findAll())) {
+            if(user.getRole() == User.Role.Guest) {
+                if(user.getGuestExpire() == null || LocalDateTime.now().isAfter(user.getGuestExpire())) {
+                    deleteUser(user);
+                }
+            }
+        }
     }
 }

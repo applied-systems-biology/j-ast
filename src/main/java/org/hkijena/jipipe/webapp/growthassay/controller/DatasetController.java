@@ -8,6 +8,7 @@ import org.hkijena.jipipe.webapp.growthassay.repositories.DatasetRepository;
 import org.hkijena.jipipe.webapp.growthassay.repositories.InputDataRepository;
 import org.hkijena.jipipe.webapp.growthassay.services.AnalysisService;
 import org.hkijena.jipipe.webapp.growthassay.services.DatasetService;
+import org.hkijena.jipipe.webapp.growthassay.services.UserService;
 import org.hkijena.jipipe.webapp.growthassay.utils.ImageUtils;
 import org.hkijena.jipipe.webapp.growthassay.utils.RequestUtils;
 import org.hkijena.jipipe.webapp.growthassay.utils.StringUtils;
@@ -105,6 +106,9 @@ public class DatasetController {
                 model.addAttribute("currentDatasetOwnedByOtherUser", true);
                 model.addAttribute("currentDatasetOwner", dataset.getOwner() != null ? dataset.getOwner().getEmail() : accountConfig.getAdminUsername());
             }
+
+            // Add limits info
+            model.addAttribute("guestInputDataLimit", accountConfig.getGuestInputDataLimit());
 
             switch (dataset.getStatus()) {
                 case Preparing -> {
@@ -219,42 +223,47 @@ public class DatasetController {
             // Iterate through images and organize them
             int numSuccess = 0;
             int numFailures = 0;
+            int numLimitReached = 0;
             List<String> failureNames = new ArrayList<>();
             if(imageFile != null && !imageFile.isEmpty()) {
-                try {
-                    try (InputStream stream = imageFile.getInputStream()) {
-                        BufferedImage image = ImageIO.read(stream);
-                        if (image == null) {
-                            throw new NullPointerException("Unable to load image!");
+                if(datasetService.canUploadInput(dataset, authentication)) {
+                    try {
+                        try (InputStream stream = imageFile.getInputStream()) {
+                            BufferedImage image = ImageIO.read(stream);
+                            if (image == null) {
+                                throw new NullPointerException("Unable to load image!");
+                            }
+
+                            // Re-save as PNG
+                            Path imageStoragePath = Files.createTempFile(targetDir, "img", ".png");
+                            Path thumbnailStoragePath = targetDirThumbnails.resolve(imageStoragePath.getFileName());
+                            ImageIO.write(image, "PNG", imageStoragePath.toFile());
+
+                            // Create thumbnail
+                            ImageUtils.createThumbnail(image, 64, 64, thumbnailStoragePath);
+
+                            // Create object
+                            InputData inputData = new InputData();
+                            inputData.setOriginalFileName(StringUtils.nullToEmpty(imageFile.getOriginalFilename()));
+                            inputData.setStoragePath(imageStoragePath.toString());
+                            inputData.setThumbnailStoragePath(thumbnailStoragePath.toString());
+                            inputData.tryAutoFill(StringUtils.nullToEmpty(imageFile.getOriginalFilename()));
+                            inputData.setImageWidth(image.getWidth());
+                            inputData.setImageHeight(image.getHeight());
+
+                            dataset.addInputData(inputData);
+                            ++numSuccess;
                         }
+                    } catch (Throwable e) {
+                        ++numFailures;
 
-                        // Re-save as PNG
-                        Path imageStoragePath = Files.createTempFile(targetDir, "img", ".png");
-                        Path thumbnailStoragePath = targetDirThumbnails.resolve(imageStoragePath.getFileName());
-                        ImageIO.write(image, "PNG", imageStoragePath.toFile());
-
-                        // Create thumbnail
-                        ImageUtils.createThumbnail(image, 64, 64, thumbnailStoragePath);
-
-                        // Create object
-                        InputData inputData = new InputData();
-                        inputData.setOriginalFileName(StringUtils.nullToEmpty(imageFile.getOriginalFilename()));
-                        inputData.setStoragePath(imageStoragePath.toString());
-                        inputData.setThumbnailStoragePath(thumbnailStoragePath.toString());
-                        inputData.tryAutoFill(StringUtils.nullToEmpty(imageFile.getOriginalFilename()));
-                        inputData.setImageWidth(image.getWidth());
-                        inputData.setImageHeight(image.getHeight());
-
-                        dataset.addInputData(inputData);
-                        ++numSuccess;
+                        if (!StringUtils.isNullOrEmpty(imageFile.getOriginalFilename())) {
+                            failureNames.add(imageFile.getOriginalFilename());
+                        }
                     }
                 }
-                catch (Throwable e) {
-                    ++numFailures;
-
-                    if(!StringUtils.isNullOrEmpty(imageFile.getOriginalFilename())) {
-                        failureNames.add(imageFile.getOriginalFilename());
-                    }
+                else {
+                    ++numLimitReached;
                 }
             }
             datasetRepository.save(dataset);
@@ -268,6 +277,12 @@ public class DatasetController {
             if(numFailures > 0) {
                 Notification.pushToRedirect("Unable to import images",
                         numFailures + " images could not be imported! Please ensure to only provide PNG files. Affected files: " + String.join(", ", failureNames),
+                        Notification.Style.danger,
+                        redirectAttributes);
+            }
+            if(numLimitReached > 0) {
+                Notification.pushToRedirect("Input image limit reached",
+                        "Guests can only upload up to " + accountConfig.getGuestInputDataLimit() + " images per data set",
                         Notification.Style.danger,
                         redirectAttributes);
             }

@@ -10,6 +10,7 @@ public class CreateUpdateUserMessage {
     private String email = "";
     private String firstName = "";
     private String lastName = "";
+    private String affiliation = "";
     private String newPassword;
     private String newPasswordConfirm;
 
@@ -25,7 +26,18 @@ public class CreateUpdateUserMessage {
         this.email = user.getEmail();
         this.firstName = user.getFirstName();
         this.lastName = user.getLastName();
+        this.affiliation = user.getAffiliation();
         this.allowLogin = user.isAllowLogin();
+    }
+
+    @JsonGetter("affiliation")
+    public String getAffiliation() {
+        return affiliation;
+    }
+
+    @JsonSetter("affiliation")
+    public void setAffiliation(String affiliation) {
+        this.affiliation = affiliation;
     }
 
     @JsonGetter("allowLogin")

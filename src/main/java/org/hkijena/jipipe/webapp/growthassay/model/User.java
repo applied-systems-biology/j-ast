@@ -26,6 +26,9 @@ public class User {
     @Column(name = "last_name", columnDefinition = "TEXT")
     private String lastName = "";
 
+    @Column(name = "affiliation", columnDefinition = "TEXT")
+    private String affiliation = "";
+
     @Column(name = "password", columnDefinition = "TEXT")
     private String password = "";
 
@@ -38,6 +41,14 @@ public class User {
 
     @Column(name = "guest_expire")
     private LocalDateTime guestExpire = LocalDateTime.now();
+
+    public String getAffiliation() {
+        return affiliation;
+    }
+
+    public void setAffiliation(String affiliation) {
+        this.affiliation = affiliation;
+    }
 
     public LocalDateTime getGuestExpire() {
         return guestExpire;

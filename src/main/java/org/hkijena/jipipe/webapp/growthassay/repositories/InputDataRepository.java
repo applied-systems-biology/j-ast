@@ -10,4 +10,5 @@ import java.util.List;
 @Repository
 public interface InputDataRepository extends CrudRepository<InputData, Long> {
     List<InputData> findByDatasetAndExperimentAndSample(Dataset dataset, String experiment, String sample);
+    List<InputData> findByDataset(Dataset dataset);
 }
