@@ -204,6 +204,7 @@ public class AdminController {
             }
 
             userRepository.save(user);
+            userService.logoutUser(user);
             Notification.pushToRedirect("Updated user", "Successfully updated the settings of the user '" + user.getEmail() + "' (role " + user.getRole() + ")", Notification.Style.success, redirectAttributes);
 
             return new ModelAndView("redirect:/admin");
@@ -221,8 +222,7 @@ public class AdminController {
         Optional<User> user_ = userRepository.findById(id);
         if (user_.isPresent()) {
             User user = user_.get();
-            user.setAllowLogin(false);
-            userRepository.save(user);
+            userService.deactivateUser(user);
             Notification.pushToRedirect("Updated user", "Successfully deactivated the user '" + user.getEmail() + "' (role " + user.getRole() + ")", Notification.Style.success, redirectAttributes);
 
             return new ModelAndView("redirect:/admin");
@@ -240,8 +240,7 @@ public class AdminController {
         Optional<User> user_ = userRepository.findById(id);
         if (user_.isPresent()) {
             User user = user_.get();
-            user.setAllowLogin(true);
-            userRepository.save(user);
+            userService.activateUser(user);
             Notification.pushToRedirect("Updated user", "Successfully activated the user '" + user.getEmail() + "' (role " + user.getRole() + ")", Notification.Style.success, redirectAttributes);
 
             return new ModelAndView("redirect:/admin");

@@ -63,6 +63,31 @@ public class UserService implements UserDetailsService, ApplicationContextAware 
         this.applicationContext = applicationContext;
     }
 
+    public void logoutUser(User user) {
+        for (Object principal : sessionRegistry.getAllPrincipals()) {
+            if(principal instanceof UserPrincipal) {
+                if(Objects.equals(((UserPrincipal) principal).getUser().getId(), user.getId())) {
+                    List<SessionInformation> allSessions = sessionRegistry.getAllSessions(principal, false);
+                    for (SessionInformation session : allSessions) {
+                        session.expireNow();
+                    }
+                    return;
+                }
+            }
+        }
+    }
+
+    public void deactivateUser(User user) {
+        user.setAllowLogin(false);
+        userRepository.save(user);
+        logoutUser(user);
+    }
+
+    public void activateUser(User user) {
+        user.setAllowLogin(true);
+        userRepository.save(user);
+    }
+
     public void deleteUser(User user) {
         // Lock the user
         user.setAllowLogin(false);
@@ -81,17 +106,7 @@ public class UserService implements UserDetailsService, ApplicationContextAware 
         userRepository.delete(user);
 
         // Logout user
-        for (Object principal : sessionRegistry.getAllPrincipals()) {
-            if(principal instanceof UserPrincipal) {
-                if(Objects.equals(((UserPrincipal) principal).getUser().getId(), user.getId())) {
-                    List<SessionInformation> allSessions = sessionRegistry.getAllSessions(principal, false);
-                    for (SessionInformation session : allSessions) {
-                        session.expireNow();
-                    }
-                    return;
-                }
-            }
-        }
+        logoutUser(user);
 
     }
 }
