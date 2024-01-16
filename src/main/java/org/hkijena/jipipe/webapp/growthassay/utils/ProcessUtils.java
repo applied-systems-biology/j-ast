@@ -2,18 +2,14 @@ package org.hkijena.jipipe.webapp.growthassay.utils;
 
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
-import com.sun.jna.Pointer;
-import com.sun.jna.platform.win32.Kernel32;
-import com.sun.jna.platform.win32.WinNT;
 import org.apache.commons.exec.*;
 import org.apache.commons.lang3.SystemUtils;
-import org.apache.commons.lang3.text.WordUtils;
+import org.apache.commons.text.WordUtils;
 import org.jgrapht.graph.DefaultDirectedGraph;
 import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.traverse.BreadthFirstIterator;
 
 import java.io.*;
-import java.lang.reflect.Field;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -46,7 +42,7 @@ public class ProcessUtils {
             int exitValue = executor.execute(commandLine);
 
             if (!executor.isFailure(exitValue)) {
-                return new String(standardOutputStream.toByteArray());
+                return standardOutputStream.toString();
             } else {
                 return null;
             }
@@ -311,7 +307,7 @@ public class ProcessUtils {
                 }
             }
 
-            // notify the listeners outside of the synchronized block (see EXEC-60)
+            // notify the listeners outside the synchronized block (see EXEC-60)
             if (!isWaiting) {
                 eventBus.post(new CancelledEvent(this));
             }
