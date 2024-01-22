@@ -1,6 +1,7 @@
 package org.hkijena.jipipe.webapp.growthassay.services;
 
 import com.google.common.collect.ImmutableList;
+import jakarta.transaction.Transactional;
 import org.hkijena.jipipe.webapp.growthassay.config.AccountConfig;
 import org.hkijena.jipipe.webapp.growthassay.model.AdminPrincipal;
 import org.hkijena.jipipe.webapp.growthassay.model.Dataset;
@@ -116,6 +117,7 @@ public class UserService implements UserDetailsService, ApplicationContextAware 
     }
 
     @Scheduled(fixedRate = 60 * 1000)
+    @Transactional
     public void autoDeleteGuests() {
         for (User user : ImmutableList.copyOf(userRepository.findAll())) {
             if(user.getRole() == User.Role.Guest) {

@@ -13,6 +13,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
 @EnableWebSecurity
@@ -40,8 +41,11 @@ public class WebSecurityConfig {
                 .sessionCreationPolicy(SessionCreationPolicy.ALWAYS)
                 .maximumSessions(1)
                 .sessionRegistry(sessionRegistry());
-        http.authorizeHttpRequests(authorize -> authorize.requestMatchers("/dataset/**", "/input-data/**", "/output-data/**", "/account/**").authenticated()
-                .requestMatchers("/admin/**").hasRole("ADMIN")
+        http.authorizeHttpRequests(authorize -> authorize.requestMatchers(AntPathRequestMatcher.antMatcher("/dataset/**"),
+                AntPathRequestMatcher.antMatcher("/input-data/**"),
+                AntPathRequestMatcher.antMatcher("/output-data/**"),
+                AntPathRequestMatcher.antMatcher("/account/**")).authenticated()
+                .requestMatchers(AntPathRequestMatcher.antMatcher("/admin/**")).hasRole("ADMIN")
                 .anyRequest().permitAll());
         http.formLogin().loginPage("/login").failureUrl("/login-error").permitAll().and()
                 .logout().permitAll();
