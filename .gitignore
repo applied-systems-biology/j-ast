@@ -36,3 +36,7 @@ build/
 /fiji-bin/
 /database.mv.db
 /storage/database.mv.db
+/windows/app/
+/windows/jre/
+/docker/*.zip
+/windows/*.zip
