@@ -9,6 +9,7 @@ set RUNTIME_FIJI_EXECUTABLE_PATH=%CURRENT_FOLDER%\app\fiji-bin-windows\ImageJ-wi
 rem Fiji memory configuration
 set RUNTIME_FIJI_ARGS_0=--memory
 set RUNTIME_FIJI_ARGS_1=8G
+set RUNTIME_FIJI_WRAPPER_ENABLED=false
 
 rem Runtime number of workers
 set ORG_JOBRUNR_BACKGROUND_JOB_SERVER_WORKER_COUNT=1
@@ -26,7 +27,7 @@ echo [i] The login details for the admin account are
 echo User: %ACCOUNTS_ADMIN_USERNAME%
 echo Password: %ACCOUNTS_ADMIN_PASSWORD%
 echo ----------------------------------------------------------------
-echo 
+echo
 
 echo
 echo Continuing in 5s ...
@@ -36,4 +37,4 @@ start "Spring Boot Server" cmd /c %CURRENT_FOLDER%\app\jre\bin\java.exe -jar %CU
 
 echo Waiting 10s until the server is started ...
 timeout /t 10 /nobreak >nul
-start "" "http://localhost:%SERVER_PORT%"
+start "" "http://localhost:8080"

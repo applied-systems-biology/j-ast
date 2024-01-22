@@ -187,7 +187,7 @@ public class AnalysisService {
                 ProgressInfo jipipeProgress = progressInfo.resolveAndLog("Running JIPipe");
                 CommandLine commandLine;
 
-                if(StringUtils.isNullOrEmpty(runtimeConfig.getFijiWrapper())) {
+                if(StringUtils.isNullOrEmpty(runtimeConfig.getFijiWrapper()) || !runtimeConfig.isFijiWrapperEnabled()) {
                     Path jipipeExecutablePath = Path.of(runtimeConfig.getFijiExecutablePath());
                     commandLine = new CommandLine(jipipeExecutablePath.toFile());
                 }

@@ -13,9 +13,18 @@ public class RuntimeConfig {
 
     private String fijiWrapper;
 
+    private boolean fijiWrapperEnabled;
     private List<String> fijiArgs;
 
     private List<String> fijiWrapperArgs;
+
+    public boolean isFijiWrapperEnabled() {
+        return fijiWrapperEnabled;
+    }
+
+    public void setFijiWrapperEnabled(boolean fijiWrapperEnabled) {
+        this.fijiWrapperEnabled = fijiWrapperEnabled;
+    }
 
     public void setCustomTempDirectory(String customTempDirectory) {
         this.customTempDirectory = customTempDirectory;
