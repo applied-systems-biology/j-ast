@@ -1,4 +1,4 @@
-package org.hkijena.jipipe.webapp.growthassay.model;
+package org.hkijena.jipipe.webapp.growthassay.model.messages;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonSetter;

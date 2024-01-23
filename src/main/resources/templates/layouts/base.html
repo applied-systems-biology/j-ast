@@ -32,6 +32,9 @@
             <li class="nav-item">
                 <a class="nav-link" href="https://www.jipipe.org/" target="_blank"><i class="fas fa-question-circle"></i> Learn more about JIPipe</a>
             </li>
+            <li sec:authorize="isAuthenticated()" class="nav-item">
+                <a class="nav-link" th:href="@{/zoi-shapes}"><i class="fa-solid fa-gear"></i> ZOI shapes</a>
+            </li>
             <li sec:authorize="!isAuthenticated()" class="nav-item">
                 <a class="nav-link" th:href="@{/login}"><i class="fa-solid fa-right-to-bracket"></i> Login</a>
             </li>

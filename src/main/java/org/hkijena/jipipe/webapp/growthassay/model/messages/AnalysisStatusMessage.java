@@ -1,7 +1,8 @@
-package org.hkijena.jipipe.webapp.growthassay.model;
+package org.hkijena.jipipe.webapp.growthassay.model.messages;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonSetter;
+import org.hkijena.jipipe.webapp.growthassay.model.Dataset;
 
 public class AnalysisStatusMessage {
     private Dataset.Status status = Dataset.Status.Preparing;

@@ -44,7 +44,8 @@ public class WebSecurityConfig {
         http.authorizeHttpRequests(authorize -> authorize.requestMatchers(AntPathRequestMatcher.antMatcher("/dataset/**"),
                 AntPathRequestMatcher.antMatcher("/input-data/**"),
                 AntPathRequestMatcher.antMatcher("/output-data/**"),
-                AntPathRequestMatcher.antMatcher("/account/**")).authenticated()
+                AntPathRequestMatcher.antMatcher("/account/**"),
+                AntPathRequestMatcher.antMatcher("/zoi-shapes/**")).authenticated()
                 .requestMatchers(AntPathRequestMatcher.antMatcher("/admin/**")).hasRole("ADMIN")
                 .anyRequest().permitAll());
         http.formLogin().loginPage("/login").failureUrl("/login-error").permitAll().and()

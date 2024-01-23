@@ -1,9 +1,8 @@
 package org.hkijena.jipipe.webapp.growthassay.controller;
 
 import org.hkijena.jipipe.webapp.growthassay.config.AccountConfig;
-import org.hkijena.jipipe.webapp.growthassay.model.CreateUpdateUserMessage;
+import org.hkijena.jipipe.webapp.growthassay.model.messages.CreateUpdateUserMessage;
 import org.hkijena.jipipe.webapp.growthassay.model.Notification;
-import org.hkijena.jipipe.webapp.growthassay.model.Privileges;
 import org.hkijena.jipipe.webapp.growthassay.model.User;
 import org.hkijena.jipipe.webapp.growthassay.repositories.DatasetRepository;
 import org.hkijena.jipipe.webapp.growthassay.repositories.UserRepository;
@@ -21,8 +20,6 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 @Controller

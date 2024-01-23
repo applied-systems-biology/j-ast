@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layouts/base.html}">
+<body>
+<section layout:fragment="content" class="container-fluid pt-3">
+    <div class="row">
+        <div class="col">
+            <nav class="navbar bg-light rounded border p-3 d-flex flex-row gap-2">
+                <a class="btn btn-success" th:href="@{/zoi-shapes/add}">
+                    <i class="fa-solid fa-circle-plus"></i> Add
+                </a>
+                <div class="ms-2"></div>
+                <button type="button" class="btn btn-outline-primary" id="select-all" >
+                    <i class="fa-solid fa-object-ungroup"></i> Select all
+                </button>
+                <button type="button" id="select-invert" class="btn btn-outline-primary" >
+                    <i class="fa-solid fa-circle-half-stroke"></i> Invert selection
+                </button>
+                <div class="ms-2"></div>
+                <button type="button" class="btn btn-outline-primary " id="selection-export">
+                    <i class="fa-solid fa-download"></i> Export selection
+                </button>
+                <button class="btn btn-outline-primary" type="button" id="import" >
+                    <i class="fa-solid fa-upload"></i> Import
+                </button>
+                <div class="ms-2"></div>
+                <button class="btn btn-outline-danger" type="button" id="selection-delete">
+                    <i class="fa-solid fa-trash"></i> Delete selection
+                </button>
+                <div class="flex-grow-1"></div>
+                <div class="text-muted me-2 data-save-info-default" style="display: none">
+                    <i class="fa fas fa-save"></i>
+                    <span>All settings are automatically saved</span>
+                </div>
+                <div class="text-muted me-2 data-save-info-saving" style="display: none">
+                    <i class="fa-solid fa-circle-notch fa-spin"></i>
+                    <span>Uploading changes ...</span>
+                </div>
+            </nav>
+        </div>
+    </div>
+    <div class="row mt-3 mb-3">
+        <div class="col">
+            <div th:replace="~{fragments/zoi-shape-editor-table.html :: zoi-shape-editor-table}"></div>
+        </div>
+    </div>
+    <script th:inline="javascript">
+        let updateTimerHandle = 0;
+
+        function updateSaveProgress(inProgress) {
+            $(".data-save-info-default").toggle(!inProgress)
+            $(".data-save-info-saving").toggle(inProgress)
+        }
+
+        function updateInputDataAndParameters() {
+            // let message = {
+            //     parameters: {},
+            //     inputData: {}
+            // }
+            // $(".input-data-editor").each(function () {
+            //     const inputDataId = $(this).data("inputDataId")
+            //     const inputDataIdKey = "" + inputDataId
+            //     const inputDataProperty = $(this).data("inputDataProperty")
+            //     const value = $(this).val()
+            //
+            //     if (inputDataId === undefined) {
+            //         return
+            //     }
+            //
+            //     // Add to map if not exists
+            //     if (!(inputDataIdKey in message.inputData)) {
+            //         message["inputData"][inputDataIdKey] = {
+            //             id: inputDataId
+            //         }
+            //     }
+            //
+            //     // set the property
+            //     message.inputData[inputDataIdKey][inputDataProperty] = $(this).val()
+            // })
+            // $(".input-parameter-editor").each(function () {
+            //     const parameterProperty = $(this).data("parameterProperty")
+            //     const value = $(this).val()
+            //
+            //     if (parameterProperty === undefined) {
+            //         return
+            //     }
+            //
+            //     message["parameters"][parameterProperty] = value
+            // })
+            //
+            // // console.log(JSON.stringify(message))
+            //
+            // // Fix checkbox
+            // message["parameters"]["ensure-circular-plate"] = $('#parameter-ensure-circular-plate').prop('checked')
+            //
+            // const token = $('#_csrf').attr('content');
+            // const header = $('#_csrf_header').attr('content');
+            // return $.ajax(getURL("dataset/update/" + currentDatasetId), {
+            //     type: "POST",
+            //     data: JSON.stringify(message),
+            //     dataType: "html",
+            //     contentType: 'application/json',
+            //     mimeType: 'application/json',
+            //     beforeSend: function (xhr) {
+            //         xhr.setRequestHeader(header, token);
+            //     },
+            // })
+        }
+
+        // function registerDeleteInputData() {
+        //     $(".input-data-editor .button-delete-input-data").click(function () {
+        //         const inputDataId = $(this).data("inputDataId")
+        //         $("#input-data-editor-" + inputDataId).fadeOut(function () {
+        //             $(this).remove()
+        //         })
+        //         const token = $('#_csrf').attr('content');
+        //         const header = $('#_csrf_header').attr('content');
+        //         $.ajax(getURL("input-data/delete/" + inputDataId), {
+        //             type: "POST",
+        //             beforeSend: function (xhr) {
+        //                 xhr.setRequestHeader(header, token);
+        //             },
+        //         })
+        //             .always(function () {
+        //                 runValidation()
+        //             })
+        //     })
+        // }
+
+        function scheduleUpdateTimer() {
+            if (updateTimerHandle !== 0) {
+                clearTimeout(updateTimerHandle);
+            }
+            $(".data-save-info-default").hide()
+            $(".data-save-info-saving").show()
+            updateTimerHandle = setTimeout(function () {
+                updateInputDataAndParameters().always(function () {
+                    $(".data-save-info-saving").hide()
+                    $(".data-save-info-default").show()
+                })
+            }, 1000)
+        }
+
+        function registerUpdateSchedulerListeners() {
+            // $(".input-data-editor").on("input", function () {
+            //     scheduleUpdateTimer()
+            // })
+            // $(".input-parameter-editor").on("input", function () {
+            //     scheduleUpdateTimer()
+            // })
+        }
+
+        function registerButtons() {
+            $("#select-all").click(function () {
+               $(".preset-editor-selected").attr("checked", "checked")
+            });
+        }
+
+        $(document).ready(() => {
+            updateSaveProgress(false)
+            // registerDeleteInputData()
+            registerButtons()
+            registerUpdateSchedulerListeners()
+            runValidation()
+        })
+    </script>
+</section>
+</body>
+</html>

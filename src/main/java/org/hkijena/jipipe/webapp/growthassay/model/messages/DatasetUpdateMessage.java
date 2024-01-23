@@ -1,8 +1,11 @@
-package org.hkijena.jipipe.webapp.growthassay.model;
+package org.hkijena.jipipe.webapp.growthassay.model.messages;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonSetter;
 import jakarta.persistence.Column;
+import org.hkijena.jipipe.webapp.growthassay.model.AssayType;
+import org.hkijena.jipipe.webapp.growthassay.model.Dataset;
+import org.hkijena.jipipe.webapp.growthassay.model.InputData;
 import org.hkijena.jipipe.webapp.growthassay.utils.StringUtils;
 
 import java.util.HashMap;

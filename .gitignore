@@ -40,3 +40,4 @@ build/
 /windows/jre/
 /docker/*.zip
 /windows/*.zip
+/*.zip
