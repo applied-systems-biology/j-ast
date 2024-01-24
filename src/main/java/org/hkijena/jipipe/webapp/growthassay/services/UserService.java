@@ -3,12 +3,10 @@ package org.hkijena.jipipe.webapp.growthassay.services;
 import com.google.common.collect.ImmutableList;
 import jakarta.transaction.Transactional;
 import org.hkijena.jipipe.webapp.growthassay.config.AccountConfig;
-import org.hkijena.jipipe.webapp.growthassay.model.AdminPrincipal;
-import org.hkijena.jipipe.webapp.growthassay.model.Dataset;
-import org.hkijena.jipipe.webapp.growthassay.model.User;
-import org.hkijena.jipipe.webapp.growthassay.model.UserPrincipal;
+import org.hkijena.jipipe.webapp.growthassay.model.*;
 import org.hkijena.jipipe.webapp.growthassay.repositories.DatasetRepository;
 import org.hkijena.jipipe.webapp.growthassay.repositories.UserRepository;
+import org.hkijena.jipipe.webapp.growthassay.repositories.ZOIShapePresetRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
@@ -37,15 +35,17 @@ public class UserService implements UserDetailsService, ApplicationContextAware 
     private final AccountConfig accountConfig;
     private final UserRepository userRepository;
     private final DatasetRepository datasetRepository;
+    private final ZOIShapePresetRepository zoiShapePresetRepository;
     private final DatasetService datasetService;
     private ApplicationContext applicationContext;
     private final SessionRegistry sessionRegistry;
 
     @Autowired
-    public UserService(AccountConfig accountConfig, UserRepository userRepository, DatasetRepository datasetRepository, DatasetService datasetService, @Lazy SessionRegistry sessionRegistry) {
+    public UserService(AccountConfig accountConfig, UserRepository userRepository, DatasetRepository datasetRepository, ZOIShapePresetRepository zoiShapePresetRepository, DatasetService datasetService, @Lazy SessionRegistry sessionRegistry) {
         this.accountConfig = accountConfig;
         this.userRepository = userRepository;
         this.datasetRepository = datasetRepository;
+        this.zoiShapePresetRepository = zoiShapePresetRepository;
         this.datasetService = datasetService;
         this.sessionRegistry = sessionRegistry;
     }
@@ -107,6 +107,9 @@ public class UserService implements UserDetailsService, ApplicationContextAware 
             datasetRepository.save(dataset);
             datasetService.delete(dataset);
         }
+
+        // Delete all ZOI shapes
+        zoiShapePresetRepository.deleteAll(ImmutableList.copyOf(zoiShapePresetRepository.findByOwner(user)));
 
         // Delete the user from the database
         userRepository.delete(user);

@@ -112,4 +112,13 @@ public class ZOIShapePreset {
     public void setStripRate(double stripRate) {
         this.stripRate = stripRate;
     }
+
+    public String getOwnerName() {
+        if(getOwner() == null) {
+            return "Admin";
+        }
+        else {
+            return getOwner().getEmail();
+        }
+    }
 }

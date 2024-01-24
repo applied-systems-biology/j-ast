@@ -248,6 +248,10 @@ public class Dataset {
         outputData.clear();
     }
 
+    public boolean isEmpty() {
+        return inputData.isEmpty();
+    }
+
     public ValidationResult validate() {
         ValidationResult result = new ValidationResult();
         result.setValid(true);

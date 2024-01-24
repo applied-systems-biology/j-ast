@@ -1,23 +1,23 @@
 package org.hkijena.jipipe.webapp.growthassay.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
 import org.hkijena.jipipe.webapp.growthassay.config.AccountConfig;
 import org.hkijena.jipipe.webapp.growthassay.model.AdminPrincipal;
-import org.hkijena.jipipe.webapp.growthassay.model.Privileges;
 import org.hkijena.jipipe.webapp.growthassay.model.User;
 import org.hkijena.jipipe.webapp.growthassay.model.UserPrincipal;
-import org.hkijena.jipipe.webapp.growthassay.repositories.DatasetRepository;
 import org.hkijena.jipipe.webapp.growthassay.services.DatasetService;
 import org.springframework.security.core.Authentication;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
 @ControllerAdvice
-public class UserControllerAdvice {
+public class GlobalVariablesControllerAdvice {
 
     private final AccountConfig accountConfig;
     private final DatasetService datasetService;
 
-    public UserControllerAdvice(AccountConfig accountConfig, DatasetService datasetService) {
+    public GlobalVariablesControllerAdvice(AccountConfig accountConfig, DatasetService datasetService) {
         this.accountConfig = accountConfig;
         this.datasetService = datasetService;
     }
@@ -35,6 +35,11 @@ public class UserControllerAdvice {
             }
         }
         return null;
+    }
+
+    @ModelAttribute("servletPath")
+    public String getServletPath(HttpServletRequest request) {
+        return request.getServletPath();
     }
 
     @ModelAttribute("canCreateProject")

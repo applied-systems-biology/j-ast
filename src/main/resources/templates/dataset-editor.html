@@ -1,60 +1,91 @@
 <!DOCTYPE html>
 <html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layouts/base.html}">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 <body>
 <section layout:fragment="content" class="container-fluid pt-3">
     <div th:replace="~{fragments/dataset-editor-toolbar.html :: dataset-editor-toolbar}"></div>
     <div class="row mt-3 mb-3">
-        <div class="col-lg-7 d-flex flex-column gap-2">
-            <div class="accordion" th:fragment="dataset-editor-parameters" id="accordion-left">
-                <div class="accordion-item">
-                    <h2 class="accordion-header">
-                        <button class="accordion-button bg-light" type="button" data-bs-toggle="collapse" data-bs-target="#accordion-left-parameter-editor"
-                                aria-expanded="true" aria-controls="accordion-left-parameter-editor">
-                            Parameters
-                        </button>
-                    </h2>
-                    <div id="accordion-left-parameter-editor" class="accordion-collapse collapse show" data-bs-parent="#accordion-left">
-                        <div class="accordion-body">
-                            <div th:replace="~{fragments/dataset-editor-parameters.html :: dataset-editor-parameters}"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg d-flex flex-column gap-2">
-            <div class="accordion" th:fragment="dataset-editor-parameters" id="accordion-right">
-                <div class="accordion-item">
-                    <h2 class="accordion-header">
-                        <button class="accordion-button bg-light" type="button" data-bs-toggle="collapse" data-bs-target="#accordion-right-validation"
-                                aria-expanded="true" aria-controls="accordion-right-validation">
-                            Validation
-                        </button>
-                    </h2>
-                    <div id="accordion-right-validation" class="accordion-collapse collapse show">
-                        <div class="accordion-body">
-                            <div th:replace="~{fragments/dataset-editor-validation.html :: dataset-editor-validation}"></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="accordion-item">
-                    <h2 class="accordion-header">
-                        <button class="accordion-button bg-light" type="button" data-bs-toggle="collapse" data-bs-target="#accordion-right-upload"
-                                aria-expanded="true" aria-controls="accordion-right-upload">
-                            Upload
-                        </button>
-                    </h2>
-                    <div id="accordion-right-upload" class="accordion-collapse collapse show">
-                        <div class="accordion-body">
-                            <div th:replace="~{fragments/dataset-editor-uploader.html :: dataset-editor-uploader}"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="row mt-3 mb-3">
         <div class="col">
-            <div th:replace="~{fragments/dataset-editor-table.html :: dataset-editor-table}"></div>
+            <div class="card">
+                <div class="card-body">
+                    <ul class="nav nav-tabs" id="tab-bar" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" th:classappend="${currentDataset.isEmpty() ? 'active' : ''}" id="upload-tab" data-bs-toggle="tab" data-bs-target="#upload-tab-pane" type="button" role="tab"
+                                    aria-controls="upload-tab-pane" aria-selected="true">❶ Upload
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" th:classappend="${!currentDataset.isEmpty() ? 'active' : ''}" id="data-tab" data-bs-toggle="tab" data-bs-target="#data-tab-pane" type="button" role="tab" aria-controls="data-tab-pane"
+                                    aria-selected="false">❷ Data
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="parameters-tab" data-bs-toggle="tab" data-bs-target="#parameters-tab-pane" type="button" role="tab"
+                                    aria-controls="parameters-tab-pane" aria-selected="false">❸ Parameters
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="validation-tab" data-bs-toggle="tab" data-bs-target="#validation-tab-pane" type="button" role="tab"
+                                    aria-controls="validation-tab-pane" aria-selected="false">❹ Validation
+                            </button>
+                        </li>
+                    </ul>
+                    <div class="tab-content" id="myTabContent">
+                        <div class="tab-pane fade border-start border-bottom border-end rounded-bottom" id="upload-tab-pane" role="tabpanel"
+                             aria-labelledby="upload-tab" tabindex="0" th:classappend="${currentDataset.isEmpty() ? 'active show' : ''}">
+                            <div class="d-flex flex-column gap-1 p-2">
+                                <div class="card">
+                                    <ul class="list-group list-group-flush">
+                                        <li class="list-group-item bg-light text-danger" sec:authorize="hasAuthority('ROLE_GUEST')">
+                                            <i class="fa fas fa-warning"></i> Guests can only add up to <span th:text="${guestInputDataLimit}"></span> images per dataset. If you
+                                            want to try the software on
+                                            other data, please delete entries or create a new dataset.
+                                        </li>
+                                        <li class="list-group-item bg-light">
+                                            <i class="fa fas fa-info-circle"></i> We recommend to name your files according one of the following patterns: <code>[type]_[experiment]_[sample]_[time
+                                            point]_[disk
+                                            diameter].png</code>,
+                                            <code>[experiment]_[sample]_[time point]_[disk diameter].png</code>,
+                                            or <code>[sample]_[time point]_[disk diameter].png</code>.<br/>
+                                            If the type starts with a <code>d</code>, it will be interpreted as DDA. The disk diameter is provided in mm.
+                                        </li>
+                                    </ul>
+                                </div>
+
+                                <div th:replace="~{fragments/dataset-editor-uploader.html :: dataset-editor-uploader}"></div>
+                            </div>
+
+                        </div>
+                        <div class="tab-pane fade border-start border-bottom border-end rounded-bottom" id="data-tab-pane" role="tabpanel" aria-labelledby="data-tab" tabindex="0" th:classappend="${!currentDataset.isEmpty() ? 'active show' : ''}">
+                            <div class="d-flex flex-column gap-1 p-2">
+                                <div class="card">
+                                    <ul class="list-group list-group-flush">
+                                        <li class="list-group-item"><i class="fa fas fa-hand-point-right"></i> Please note that the
+                                            images are organized by <code>experiment</code>, <code>sample</code>, and <code>time point</code>.
+                                        </li>
+                                        <li class="list-group-item"><i class="fa fas fa-clock"></i> Each (<code>experiment</code>, <code>sample</code>) combination
+                                            must have exactly two time points.
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div th:replace="~{fragments/dataset-editor-table.html :: dataset-editor-table}"></div>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade border-start border-bottom border-end rounded-bottom" id="parameters-tab-pane" role="tabpanel" aria-labelledby="parameters-tab"
+                             tabindex="0">
+                            <div class="d-flex flex-column gap-1 p-2">
+                                <div th:replace="~{fragments/dataset-editor-parameters.html :: dataset-editor-parameters}"></div>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade border-start border-bottom border-end rounded-bottom" id="validation-tab-pane" role="tabpanel" aria-labelledby="validation-tab"
+                             tabindex="0">
+                            <div class="d-flex flex-column gap-1 p-2">
+                                <div th:replace="~{fragments/dataset-editor-validation.html :: dataset-editor-validation}"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 

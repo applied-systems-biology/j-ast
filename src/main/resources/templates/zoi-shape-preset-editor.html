@@ -10,7 +10,10 @@
                 </a>
                 <div class="ms-2"></div>
                 <button type="button" class="btn btn-outline-primary" id="select-all" >
-                    <i class="fa-solid fa-object-ungroup"></i> Select all
+                    <i class="fa-regular fa-square-check"></i> Select all
+                </button>
+                <button type="button" class="btn btn-outline-primary" id="select-none" >
+                    <i class="fa-regular fa-square"></i> Select none
                 </button>
                 <button type="button" id="select-invert" class="btn btn-outline-primary" >
                     <i class="fa-solid fa-circle-half-stroke"></i> Invert selection
@@ -23,7 +26,7 @@
                     <i class="fa-solid fa-upload"></i> Import
                 </button>
                 <div class="ms-2"></div>
-                <button class="btn btn-outline-danger" type="button" id="selection-delete">
+                <button class="btn btn-outline-danger" type="button" data-bs-toggle="modal" data-bs-target="#modal-delete">
                     <i class="fa-solid fa-trash"></i> Delete selection
                 </button>
                 <div class="flex-grow-1"></div>
@@ -43,6 +46,7 @@
             <div th:replace="~{fragments/zoi-shape-editor-table.html :: zoi-shape-editor-table}"></div>
         </div>
     </div>
+    <div th:replace="~{fragments/modal-delete-zoi-shape-presets.html :: modal-delete}"></div>
     <script th:inline="javascript">
         let updateTimerHandle = 0;
 
@@ -51,80 +55,50 @@
             $(".data-save-info-saving").toggle(inProgress)
         }
 
-        function updateInputDataAndParameters() {
-            // let message = {
-            //     parameters: {},
-            //     inputData: {}
-            // }
-            // $(".input-data-editor").each(function () {
-            //     const inputDataId = $(this).data("inputDataId")
-            //     const inputDataIdKey = "" + inputDataId
-            //     const inputDataProperty = $(this).data("inputDataProperty")
-            //     const value = $(this).val()
-            //
-            //     if (inputDataId === undefined) {
-            //         return
-            //     }
-            //
-            //     // Add to map if not exists
-            //     if (!(inputDataIdKey in message.inputData)) {
-            //         message["inputData"][inputDataIdKey] = {
-            //             id: inputDataId
-            //         }
-            //     }
-            //
-            //     // set the property
-            //     message.inputData[inputDataIdKey][inputDataProperty] = $(this).val()
-            // })
-            // $(".input-parameter-editor").each(function () {
-            //     const parameterProperty = $(this).data("parameterProperty")
-            //     const value = $(this).val()
-            //
-            //     if (parameterProperty === undefined) {
-            //         return
-            //     }
-            //
-            //     message["parameters"][parameterProperty] = value
-            // })
-            //
-            // // console.log(JSON.stringify(message))
-            //
-            // // Fix checkbox
-            // message["parameters"]["ensure-circular-plate"] = $('#parameter-ensure-circular-plate').prop('checked')
-            //
-            // const token = $('#_csrf').attr('content');
-            // const header = $('#_csrf_header').attr('content');
-            // return $.ajax(getURL("dataset/update/" + currentDatasetId), {
-            //     type: "POST",
-            //     data: JSON.stringify(message),
-            //     dataType: "html",
-            //     contentType: 'application/json',
-            //     mimeType: 'application/json',
-            //     beforeSend: function (xhr) {
-            //         xhr.setRequestHeader(header, token);
-            //     },
-            // })
-        }
+        function updatePresets() {
+            let message = {
+                presets: {}
+            }
+            $(".preset-editor").each(function () {
+                const presetId = $(this).data("presetId")
+                const presetIdKey = "" + presetId
+                const presetProperty = $(this).data("presetProperty")
+                let value = undefined
 
-        // function registerDeleteInputData() {
-        //     $(".input-data-editor .button-delete-input-data").click(function () {
-        //         const inputDataId = $(this).data("inputDataId")
-        //         $("#input-data-editor-" + inputDataId).fadeOut(function () {
-        //             $(this).remove()
-        //         })
-        //         const token = $('#_csrf').attr('content');
-        //         const header = $('#_csrf_header').attr('content');
-        //         $.ajax(getURL("input-data/delete/" + inputDataId), {
-        //             type: "POST",
-        //             beforeSend: function (xhr) {
-        //                 xhr.setRequestHeader(header, token);
-        //             },
-        //         })
-        //             .always(function () {
-        //                 runValidation()
-        //             })
-        //     })
-        // }
+                if (presetId === undefined) {
+                    return
+                }
+                if($(this).prop("type") === "checkbox") {
+                    value = $(this).prop("checked")
+                }
+                else {
+                    value = $(this).val()
+                }
+
+                // Add to map if not exists
+                if (!(presetIdKey in message.presets)) {
+                    message["presets"][presetIdKey] = {
+                        id: presetId
+                    }
+                }
+
+                // set the property
+                message.presets[presetIdKey][presetProperty] = value
+            })
+
+            const token = $('#_csrf').attr('content');
+            const header = $('#_csrf_header').attr('content');
+            return $.ajax(getURL("zoi-shapes/update"), {
+                type: "POST",
+                data: JSON.stringify(message),
+                dataType: "html",
+                contentType: 'application/json',
+                mimeType: 'application/json',
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader(header, token);
+                },
+            })
+        }
 
         function scheduleUpdateTimer() {
             if (updateTimerHandle !== 0) {
@@ -133,7 +107,7 @@
             $(".data-save-info-default").hide()
             $(".data-save-info-saving").show()
             updateTimerHandle = setTimeout(function () {
-                updateInputDataAndParameters().always(function () {
+                updatePresets().always(function () {
                     $(".data-save-info-saving").hide()
                     $(".data-save-info-default").show()
                 })
@@ -141,26 +115,49 @@
         }
 
         function registerUpdateSchedulerListeners() {
-            // $(".input-data-editor").on("input", function () {
-            //     scheduleUpdateTimer()
-            // })
-            // $(".input-parameter-editor").on("input", function () {
-            //     scheduleUpdateTimer()
-            // })
+            $(".preset-editor").on("input", function () {
+                scheduleUpdateTimer()
+            })
+        }
+
+        function deleteSelection() {
+            let items = $(".preset-editor-selected:checked").map(function () {
+                return $(this).data("preset-id");
+            }).get().join(",")
+            if(items === "") {
+                return;
+            }
+            window.location.assign(getURL("zoi-shapes/delete/" + items))
+        }
+
+        function exportSelection() {
+
         }
 
         function registerButtons() {
             $("#select-all").click(function () {
                $(".preset-editor-selected").attr("checked", "checked")
             });
+            $("#select-none").click(function () {
+                $(".preset-editor-selected").attr("checked", false)
+            });
+            $("#select-invert").click(function () {
+                $('.preset-editor-selected').each(function() {
+                    $(this).prop('checked', !$(this).prop('checked'));
+                });
+            });
+            $("#delete-selection-confirm").click(function () {
+                deleteSelection()
+            })
+            $("#selection-export").click(function () {
+                exportSelection()
+            })
         }
 
         $(document).ready(() => {
             updateSaveProgress(false)
-            // registerDeleteInputData()
             registerButtons()
             registerUpdateSchedulerListeners()
-            runValidation()
         })
     </script>
 </section>

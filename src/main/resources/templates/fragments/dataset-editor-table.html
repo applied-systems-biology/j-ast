@@ -1,18 +1,4 @@
-<div class="card bg-light" th:fragment="dataset-editor-table">
-    <div class="card-header d-flex align-items-center justify-content-between">
-        <span>Data</span>
-<!--        <button type="button" class="btn btn-primary button-add-data">-->
-<!--            <i class="fa fas fa-plus-circle"></i> Add data-->
-<!--        </button>-->
-    </div>
-    <ul class="list-group list-group-flush">
-        <li class="list-group-item bg-light"><i class="fa fas fa-hand-point-right"></i> Please note that the
-            images are organized by <code>experiment</code>, <code>sample</code>, and <code>time point</code>.
-        </li>
-        <li class="list-group-item bg-light"><i class="fa fas fa-clock"></i> Each (<code>experiment</code>, <code>sample</code>) combination
-            must have exactly two time points.
-        </li>
-    </ul>
+<div th:fragment="dataset-editor-table">
     <div class="card-body">
         <div class="table-responsive">
             <table class="table align-middle">
@@ -27,6 +13,7 @@
                     <th scope="col">Sample</th>
                     <th scope="col">Time point</th>
                     <th scope="col">Plate diameter (mm)</th>
+                    <th scope="col">ZOI shape</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -58,6 +45,12 @@
                     <th scope="col"><input class="form-control input-data-editor" type="text" data-input-data-property="sample" th:data-input-data-id="${inputData.id}" th:value="${inputData.sample}" autocomplete="off"/></th>
                     <th scope="col"><input class="form-control input-data-editor" type="text" data-input-data-property="timePoint" th:data-input-data-id="${inputData.id}" th:value="${inputData.timePoint}" autocomplete="off"/></th>
                     <th scope="col"><input class="form-control input-data-editor" type="number" step="any" min="0" data-input-data-property="plateDiameter" th:data-input-data-id="${inputData.id}" th:value="${inputData.plateDiameter}" autocomplete="off"/></th>
+                    <th scope="col" th:if="${inputData.assayType.toString().equals('DDA')}">
+                        Auto (DDA)
+                    </th>
+                    <th scope="col" th:if="${inputData.assayType.toString().equals('ETest')}">
+                        Auto (E-Test)
+                    </th>
                 </tr>
                 </tbody>
             </table>

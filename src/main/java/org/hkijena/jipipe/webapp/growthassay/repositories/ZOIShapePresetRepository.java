@@ -13,8 +13,21 @@ public interface ZOIShapePresetRepository extends JpaRepository<ZOIShapePreset, 
 
     List<ZOIShapePreset> findByOwner(User owner);
     List<ZOIShapePreset> findByOwnerIsNull();
+    List<ZOIShapePreset> findByGlobal(boolean global);
 
-    default Iterable<ZOIShapePreset> getByAuthentication(Authentication authentication) {
+    default Iterable<ZOIShapePreset> getReadonlyByAuthentication(Authentication authentication) {
+        if(authentication == null || !authentication.isAuthenticated()) {
+            return Collections.emptyList();
+        }
+        if(authentication.getPrincipal() instanceof UserPrincipal) {
+            return findByGlobal(true);
+        }
+        else {
+            return Collections.emptyList();
+        }
+    }
+
+    default Iterable<ZOIShapePreset> getEditableByAuthentication(Authentication authentication) {
         if(authentication == null || !authentication.isAuthenticated()) {
             return Collections.emptyList();
         }

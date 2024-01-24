@@ -32,9 +32,6 @@
             <li class="nav-item">
                 <a class="nav-link" href="https://www.jipipe.org/" target="_blank"><i class="fas fa-question-circle"></i> Learn more about JIPipe</a>
             </li>
-            <li sec:authorize="isAuthenticated()" class="nav-item">
-                <a class="nav-link" th:href="@{/zoi-shapes}"><i class="fa-solid fa-gear"></i> ZOI shapes</a>
-            </li>
             <li sec:authorize="!isAuthenticated()" class="nav-item">
                 <a class="nav-link" th:href="@{/login}"><i class="fa-solid fa-right-to-bracket"></i> Login</a>
             </li>
@@ -62,13 +59,18 @@
     <div class="d-flex flex-column flex-lg-row">
         <div sec:authorize="isAuthenticated()" class="bg-light border-end pt-1">
             <div class="list-group m-2">
+                <a class="list-group-item list-group-item-action d-flex justify-content-between align-items-center text-nowrap" th:href="@{/zoi-shapes}"
+                   th:classappend="${#strings.equals(servletPath, '/zoi-shapes') ? 'active' : ''}">
+                    <span>Configure ZOI shapes</span>
+                    <i class="fas fa-fw fa-ruler-combined ms-3"></i>
+                </a>
                 <a class="list-group-item list-group-item-action list-group-item-success d-flex justify-content-between align-items-center text-nowrap" th:href="@{/dataset/new}" th:if="${canCreateProject}">
                     <span>Upload new dataset</span>
-                    <i class="fas fa-plus-circle ms-3"></i>
+                    <i class="fas fa-fw fa-plus-circle ms-3"></i>
                 </a>
                 <a class="list-group-item list-group-item-action list-group-item-warning d-flex justify-content-between align-items-center text-nowrap" href="#" th:if="${!canCreateProject}">
                     <span>Dataset limit reached</span>
-                    <i class="fas fa-plus-circle ms-3"></i>
+                    <i class="fas fa-fw fa-plus-circle ms-3"></i>
                 </a>
                 <th:block th:each="dataset: ${datasets}">
                     <a class="list-group-item list-group-item-action d-flex justify-content-between align-items-center text-nowrap" th:classappend="${dataset.id == currentDatasetId ? 'active' : ''}" th:href="@{'/dataset/view/' + ${dataset.id}}">
