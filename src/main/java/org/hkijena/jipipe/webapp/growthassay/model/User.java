@@ -1,6 +1,7 @@
 package org.hkijena.jipipe.webapp.growthassay.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 
 import java.io.Serial;
 import java.time.LocalDateTime;
@@ -14,10 +15,11 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id", nullable = false)
+    @Column(name = "id")
     private Long id;
 
-    @Column(name = "email", nullable = false, unique = true, columnDefinition = "VARCHAR(320)")
+    @Column(name = "email", unique = true, columnDefinition = "VARCHAR(320)")
+    @NotNull
     private String email = "";
 
     @Column(name = "first_name", columnDefinition = "TEXT")
@@ -32,11 +34,13 @@ public class User {
     @Column(name = "password", columnDefinition = "TEXT")
     private String password = "";
 
-    @Column(name = "role", nullable = false)
+    @Column(name = "role")
+    @NotNull
     @Enumerated(EnumType.STRING)
     private Role role = Role.User;
 
-    @Column(name = "allow_login", nullable = false)
+    @Column(name = "allow_login")
+    @NotNull
     private boolean allowLogin = true;
 
     @Column(name = "guest_expire")

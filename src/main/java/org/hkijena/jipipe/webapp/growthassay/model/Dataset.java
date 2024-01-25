@@ -3,6 +3,7 @@ package org.hkijena.jipipe.webapp.growthassay.model;
 import com.google.common.collect.HashMultiset;
 import com.google.common.collect.Multiset;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.hkijena.jipipe.webapp.growthassay.utils.NaturalOrderComparator;
 import org.hkijena.jipipe.webapp.growthassay.utils.StringUtils;
@@ -26,43 +27,55 @@ public class Dataset {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id", nullable = false)
+    @Column(name = "id")
     private Long id;
 
-    @Column(name = "name", nullable = false, columnDefinition = "TEXT")
+    @Column(name = "name", columnDefinition = "TEXT")
+    @NotNull
     private String name = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
 
-    @Column(name = "storage_path", nullable = false, columnDefinition = "TEXT")
+    @Column(name = "storage_path", columnDefinition = "TEXT")
+    @NotNull
     private String storagePath;
 
-    @Column(name = "status", nullable = false)
+    @Column(name = "status")
     @Enumerated(EnumType.STRING)
+    @NotNull
     private Status status = Status.Preparing;
 
-    @Column(name = "growth_reduction_thresholds", nullable = false, columnDefinition = "TEXT")
+    @Column(name = "growth_reduction_thresholds", columnDefinition = "TEXT")
+    @NotNull
     private String growthReductionThresholds = "20, 50, 80";
 
-    @Column(name = "time_point_early", nullable = false, columnDefinition = "TEXT")
+    @Column(name = "time_point_early", columnDefinition = "TEXT")
+    @NotNull
     private String timePointEarly = "";
 
-    @Column(name = "time_point_late", nullable = false, columnDefinition = "TEXT")
+    @Column(name = "time_point_late", columnDefinition = "TEXT")
+    @NotNull
     private String timePointLate = "";
 
-    @Column(name = "dda_disk_min_diameter", nullable = false, columnDefinition = "DOUBLE")
+    @Column(name = "dda_disk_min_diameter", columnDefinition = "DOUBLE")
+    @NotNull
     private double ddaDiskMinDiameter = 3;
 
-    @Column(name = "dda_disk_max_diameter", nullable = false, columnDefinition = "DOUBLE")
+    @Column(name = "dda_disk_max_diameter", columnDefinition = "DOUBLE")
+    @NotNull
     private double ddaDiskMaxDiameter = 13;
 
-    @Column(name = "dda_disk_min_circularity", nullable = false, columnDefinition = "DOUBLE")
+    @Column(name = "dda_disk_min_circularity", columnDefinition = "DOUBLE")
+    @NotNull
     private double ddaDiskMinCircularity = 0.5;
 
-    @Column(name = "contrast_min_value", nullable = false, columnDefinition = "DOUBLE")
+    @Column(name = "contrast_min_value", columnDefinition = "DOUBLE")
+    @NotNull
     private double contrastMinValue = 50;
-    @Column(name = "contrast_max_value", nullable = false, columnDefinition = "DOUBLE")
+    @Column(name = "contrast_max_value", columnDefinition = "DOUBLE")
+    @NotNull
     private double contrastMaxValue = 250;
 
-    @Column(name = "ensure_circular_plate", nullable = false)
+    @Column(name = "ensure_circular_plate")
+    @NotNull
     private boolean ensureCircularPlate = true;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true, mappedBy = "dataset")

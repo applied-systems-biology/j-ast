@@ -1,7 +1,9 @@
 package org.hkijena.jipipe.webapp.growthassay.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import org.apache.commons.lang3.math.NumberUtils;
+import org.hibernate.annotations.ColumnDefault;
 import org.hkijena.jipipe.webapp.growthassay.utils.PathUtils;
 import org.hkijena.jipipe.webapp.growthassay.utils.StringUtils;
 
@@ -13,46 +15,120 @@ import java.nio.file.Paths;
 @Table(name = "input_data")
 public class InputData {
     @Serial
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 2L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id", nullable = false)
+    @Column(name = "id")
     private Long id;
 
-    @Column(name = "storage_path", nullable = false, columnDefinition = "TEXT")
+    @Column(name = "storage_path", columnDefinition = "TEXT")
+    @NotNull
     private String storagePath;
 
-    @Column(name = "thumbnail_storage_path", nullable = false, columnDefinition = "TEXT")
+    @Column(name = "thumbnail_storage_path", columnDefinition = "TEXT")
+    @NotNull
     private String thumbnailStoragePath = "";
 
-    @Column(name = "experiment", nullable = false, columnDefinition = "TEXT")
+    @Column(name = "experiment", columnDefinition = "TEXT")
+    @NotNull
     private String experiment;
 
-    @Column(name = "sample", nullable = false, columnDefinition = "TEXT")
+    @Column(name = "sample", columnDefinition = "TEXT")
+    @NotNull
     private String sample;
 
-    @Column(name = "timepoint", nullable = false, columnDefinition = "TEXT")
+    @Column(name = "timepoint", columnDefinition = "TEXT")
+    @NotNull
     private String timePoint;
 
-    @Column(name = "original_file_name", nullable = false, columnDefinition = "TEXT")
+    @Column(name = "original_file_name", columnDefinition = "TEXT")
+    @NotNull
     private String originalFileName;
 
-    @Column(name = "image_width", nullable = false)
+    @Column(name = "image_width")
+    @NotNull
     private int imageWidth;
 
-    @Column(name = "image_height", nullable = false)
+    @Column(name = "image_height")
+    @NotNull
     private int imageHeight;
 
-    @Column(name = "plate_diameter_mm", nullable = false)
+    @Column(name = "plate_diameter_mm")
+    @NotNull
     private double plateDiameter = 90;
 
-    @Column(name = "assay_type", nullable = false)
+    @Column(name = "assay_type")
+    @NotNull
     @Enumerated(EnumType.STRING)
     private AssayType assayType = AssayType.DDA;
 
+    @Column(name = "etest_zoi_shape_preset_name", columnDefinition = "TEXT")
+    @ColumnDefault("Default")
+    private String eTestZOIShapePresetName = "Default";
+
+    @Column(name = "etest_zoi_shape_mca_intercept", columnDefinition = "DOUBLE")
+    @NotNull
+    @ColumnDefault("6.120974538")
+    private double eTestZOIShapePresetMcaIntercept = 6.120974538;
+
+    @Column(name = "etest_zoi_shape_mca_rate", columnDefinition = "DOUBLE")
+    @NotNull
+    @ColumnDefault("-0.008732194")
+    private double eTestZOIShapePresetMcaRate = -0.008732194;
+
+    @Column(name = "etest_zoi_shape_strip_intercept", columnDefinition = "DOUBLE")
+    @NotNull
+    @ColumnDefault("0")
+    private double eTestZOIShapePresetStripIntercept = 0;
+
+    @Column(name = "etest_zoi_shape_strip_rate", columnDefinition = "DOUBLE")
+    @NotNull
+    @ColumnDefault("-0.008732194")
+    private double eTestZOIShapePresetStripRate = -0.008732194;
+
     @ManyToOne(fetch = FetchType.LAZY)
     private Dataset dataset;
+
+    public String geteTestZOIShapePresetName() {
+        return eTestZOIShapePresetName;
+    }
+
+    public void seteTestZOIShapePresetName(String eTestZOIShapePresetName) {
+        this.eTestZOIShapePresetName = eTestZOIShapePresetName;
+    }
+
+    public double geteTestZOIShapePresetMcaIntercept() {
+        return eTestZOIShapePresetMcaIntercept;
+    }
+
+    public void seteTestZOIShapePresetMcaIntercept(double eTestZOIShapePresetMcaIntercept) {
+        this.eTestZOIShapePresetMcaIntercept = eTestZOIShapePresetMcaIntercept;
+    }
+
+    public double geteTestZOIShapePresetMcaRate() {
+        return eTestZOIShapePresetMcaRate;
+    }
+
+    public void seteTestZOIShapePresetMcaRate(double eTestZOIShapePresetMcaRate) {
+        this.eTestZOIShapePresetMcaRate = eTestZOIShapePresetMcaRate;
+    }
+
+    public double geteTestZOIShapePresetStripIntercept() {
+        return eTestZOIShapePresetStripIntercept;
+    }
+
+    public void seteTestZOIShapePresetStripIntercept(double eTestZOIShapePresetStripIntercept) {
+        this.eTestZOIShapePresetStripIntercept = eTestZOIShapePresetStripIntercept;
+    }
+
+    public double geteTestZOIShapePresetStripRate() {
+        return eTestZOIShapePresetStripRate;
+    }
+
+    public void seteTestZOIShapePresetStripRate(double eTestZOIShapePresetStripRate) {
+        this.eTestZOIShapePresetStripRate = eTestZOIShapePresetStripRate;
+    }
 
     public AssayType getAssayType() {
         return assayType;

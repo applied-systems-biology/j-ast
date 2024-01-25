@@ -1,6 +1,7 @@
 package org.hkijena.jipipe.webapp.growthassay.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 
 import java.io.Serial;
 import java.util.ArrayList;
@@ -14,7 +15,7 @@ public class OutputData {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id", nullable = false)
+    @Column(name = "id")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -23,14 +24,17 @@ public class OutputData {
     @ManyToMany(fetch = FetchType.LAZY)
     private List<InputData> inputData = new ArrayList<>();
 
-    @Column(name = "experiment", nullable = false, columnDefinition = "TEXT")
+    @Column(name = "experiment", columnDefinition = "TEXT")
+    @NotNull
     private String experiment;
 
-    @Column(name = "assay_type", nullable = false)
+    @Column(name = "assay_type")
+    @NotNull
     @Enumerated(EnumType.STRING)
     private AssayType assayType = AssayType.DDA;
 
-    @Column(name = "sample", nullable = false, columnDefinition = "TEXT")
+    @Column(name = "sample", columnDefinition = "TEXT")
+    @NotNull
     private String sample;
 
     @Column(name = "threshold")
@@ -42,10 +46,12 @@ public class OutputData {
     @Column(name = "rad")
     private double rad;
 
-    @Column(name = "visualization_storage_path", nullable = false, columnDefinition = "TEXT")
+    @Column(name = "visualization_storage_path", columnDefinition = "TEXT")
+    @NotNull
     private String visualizationStoragePath;
 
-    @Column(name = "visualization_thumbnail_storage_path", nullable = false, columnDefinition = "TEXT")
+    @Column(name = "visualization_thumbnail_storage_path", columnDefinition = "TEXT")
+    @NotNull
     private String visualizationThumbnailStoragePath = "";
 
     public double getThreshold() {

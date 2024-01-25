@@ -143,7 +143,7 @@
             });
             $("#select-invert").click(function () {
                 $('.preset-editor-selected').each(function() {
-                    $(this).prop('checked', !$(this).prop('checked'));
+                    $(this).attr('checked', !$(this).attr('checked'));
                 });
             });
             $("#delete-selection-confirm").click(function () {
