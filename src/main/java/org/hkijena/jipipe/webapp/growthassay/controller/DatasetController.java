@@ -8,6 +8,7 @@ import org.hkijena.jipipe.webapp.growthassay.model.messages.AnalysisStatusMessag
 import org.hkijena.jipipe.webapp.growthassay.model.messages.DatasetUpdateMessage;
 import org.hkijena.jipipe.webapp.growthassay.repositories.DatasetRepository;
 import org.hkijena.jipipe.webapp.growthassay.repositories.InputDataRepository;
+import org.hkijena.jipipe.webapp.growthassay.repositories.ZOIShapePresetRepository;
 import org.hkijena.jipipe.webapp.growthassay.services.AnalysisService;
 import org.hkijena.jipipe.webapp.growthassay.services.DatasetService;
 import org.hkijena.jipipe.webapp.growthassay.utils.ImageUtils;
@@ -46,16 +47,18 @@ public class DatasetController {
     private final AccountConfig accountConfig;
     private final DatasetRepository datasetRepository;
     private final InputDataRepository inputDataRepository;
+    private final ZOIShapePresetRepository zoiShapePresetRepository;
     private final JobScheduler jobScheduler;
     private final AnalysisService analysisService;
     private final DatasetService datasetService;
 
     @Autowired
-    public DatasetController(RuntimeConfig runtimeConfig, AccountConfig accountConfig, DatasetRepository datasetRepository, InputDataRepository inputDataRepository, JobScheduler jobScheduler, AnalysisService analysisService, DatasetService datasetService) {
+    public DatasetController(RuntimeConfig runtimeConfig, AccountConfig accountConfig, DatasetRepository datasetRepository, InputDataRepository inputDataRepository, ZOIShapePresetRepository zoiShapePresetRepository, JobScheduler jobScheduler, AnalysisService analysisService, DatasetService datasetService) {
         this.runtimeConfig = runtimeConfig;
         this.accountConfig = accountConfig;
         this.datasetRepository = datasetRepository;
         this.inputDataRepository = inputDataRepository;
+        this.zoiShapePresetRepository = zoiShapePresetRepository;
         this.jobScheduler = jobScheduler;
         this.analysisService = analysisService;
         this.datasetService = datasetService;
@@ -113,6 +116,10 @@ public class DatasetController {
 
             switch (dataset.getStatus()) {
                 case Preparing -> {
+
+                    // Add available ZOI shapes
+                    model.addAttribute("zoiShapes", zoiShapePresetRepository.getAvailableByAuthentication(authentication));
+
                     return new ModelAndView("dataset-editor");
                 }
                 case Running -> {

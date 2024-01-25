@@ -1,6 +1,6 @@
 <div th:fragment="dataset-editor-table">
     <div class="card-body">
-        <div class="table-responsive">
+        <div>
             <table class="table align-middle">
                 <thead>
                 <tr>
@@ -40,16 +40,29 @@
                         </select>
                     </th>
 <!--                    <th scope="col" class="text-muted" th:text="${inputData.imageWidth + ' ⨉ ' + inputData.imageHeight + ' px'}"></th>-->
-                    <th scope="col" class="fs-6 font-monospace" th:text="${inputData.originalFileName}"></th>
+                    <th scope="col" class="fs-6 font-monospace fw-light" th:text="${inputData.originalFileName}"></th>
                     <th scope="col"><input class="form-control input-data-editor" type="text" data-input-data-property="experiment" th:data-input-data-id="${inputData.id}" th:value="${inputData.experiment}" autocomplete="off"/></th>
                     <th scope="col"><input class="form-control input-data-editor" type="text" data-input-data-property="sample" th:data-input-data-id="${inputData.id}" th:value="${inputData.sample}" autocomplete="off"/></th>
                     <th scope="col"><input class="form-control input-data-editor" type="text" data-input-data-property="timePoint" th:data-input-data-id="${inputData.id}" th:value="${inputData.timePoint}" autocomplete="off"/></th>
                     <th scope="col"><input class="form-control input-data-editor" type="number" step="any" min="0" data-input-data-property="plateDiameter" th:data-input-data-id="${inputData.id}" th:value="${inputData.plateDiameter}" autocomplete="off"/></th>
                     <th scope="col" th:if="${inputData.assayType.toString().equals('DDA')}">
-                        Auto (DDA)
+                        <div class="btn btn-sm btn-outline-secondary">Auto (DDA)</div>
                     </th>
                     <th scope="col" th:if="${inputData.assayType.toString().equals('ETest')}">
-                        Auto (E-Test)
+                        <div class="dropdown">
+                            <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false"
+                                    th:text="${ !#strings.isEmpty(inputData.eTestZOIShapePresetName) ? inputData.eTestZOIShapePresetName : 'Unnamed'}"
+                            th:style="${'border-color: ' + inputData.getZOIShapeHexColor() + ';'}">
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item disabled" href="#"><strong>MCA Rate</strong> <span th:text="${inputData.eTestZOIShapePresetMcaRate}"></span></a></li>
+                                <li><a class="dropdown-item disabled" href="#"><strong>MCA Intercept</strong> <span th:text="${inputData.eTestZOIShapePresetMcaIntercept}"></span></a></li>
+                                <li><a class="dropdown-item disabled" href="#"><strong>Strip Rate</strong> <span th:text="${inputData.eTestZOIShapePresetStripRate}"></span></a></li>
+                                <li><a class="dropdown-item disabled" href="#"><strong>Strip Intercept</strong> <span th:text="${inputData.eTestZOIShapePresetStripIntercept}"></span></a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li th:each="preset: ${zoiShapes}"><a class="dropdown-item" href="#" th:text="${!#strings.isEmpty(preset.name) ? preset.name : 'Unnamed'}"></a></li>
+                            </ul>
+                        </div>
                     </th>
                 </tr>
                 </tbody>

@@ -4,12 +4,15 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.hibernate.annotations.ColumnDefault;
+import org.hkijena.jipipe.webapp.growthassay.utils.ColorUtils;
 import org.hkijena.jipipe.webapp.growthassay.utils.PathUtils;
 import org.hkijena.jipipe.webapp.growthassay.utils.StringUtils;
 
+import java.awt.*;
 import java.io.Serial;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Objects;
 
 @Entity
 @Table(name = "input_data")
@@ -228,6 +231,13 @@ public class InputData {
 
     public String getFinalFileName() {
         return getAssayType() + "_" + getExperiment() + "_" + getSample() + "_" + getTimePoint() + "_" + getPlateDiameter();
+    }
+
+    public String getZOIShapeHexColor() {
+        int hash = Objects.hash(eTestZOIShapePresetMcaIntercept, eTestZOIShapePresetMcaRate, eTestZOIShapePresetStripIntercept, eTestZOIShapePresetStripRate);
+        float hue = (float) ((hash & 0xFFFF) % 360) / 360.0f;
+        Color hsbColor = Color.getHSBColor(hue, 75.91f / 100f, 86.27f / 100f);
+        return ColorUtils.colorToHexString(hsbColor);
     }
 
     public void tryAutoFill(String originalFileName) {
