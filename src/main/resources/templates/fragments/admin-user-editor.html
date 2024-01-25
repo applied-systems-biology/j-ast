@@ -42,9 +42,7 @@
                     <td th:text="${user.renderGuestExpireAdmin()}"></td>
                     <td>
                         <div class="d-flex flex-row justify-content-end">
-                            <form th:action="@{'/admin/delete-user/' + ${user.id}}" method="post">
-                                <button class="btn btn-danger" type="submit">Delete</button>
-                            </form>
+                            <button class="btn btn-danger delete-user-ask" type="button" th:data-user-id="${user.id}">Delete</button>
                         </div>
                     </td>
                     <td>
@@ -69,4 +67,28 @@
             </table>
         </div>
     </div>
+    <div th:replace="~{fragments/modal-delete-user.html :: modal-delete}"></div>
+    <script>
+        let currentUserId = null
+
+        $(document).ready(function () {
+            $(".delete-user-ask").click(function () {
+                currentUserId = $(this).data("userId")
+                $("#modal-delete-user").modal('show')
+            })
+            $("#delete-user-confirm").click(function () {
+                const token = $('#_csrf').attr('content');
+                const header = $('#_csrf_header').attr('content');
+                $.ajax(getURL("admin/delete-user/" + currentUserId), {
+                    type: "POST",
+                    beforeSend: function (xhr) {
+                        xhr.setRequestHeader(header, token);
+                    },
+                })
+                .always(function () {
+                    location.reload()
+                })
+            })
+        })
+    </script>
 </div>
