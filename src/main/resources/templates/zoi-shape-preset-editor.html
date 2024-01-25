@@ -22,7 +22,7 @@
                 <button type="button" class="btn btn-outline-primary " id="selection-export">
                     <i class="fa-solid fa-download"></i> Export selection
                 </button>
-                <button class="btn btn-outline-primary" type="button" id="import" >
+                <button class="btn btn-outline-primary" type="button" id="import" data-bs-toggle="modal" data-bs-target="#modal-import">
                     <i class="fa-solid fa-upload"></i> Import
                 </button>
                 <div class="ms-2"></div>
@@ -47,6 +47,7 @@
         </div>
     </div>
     <div th:replace="~{fragments/modal-delete-zoi-shape-presets.html :: modal-delete}"></div>
+    <div th:replace="~{fragments/modal-import-zoi-shape-presets.html :: modal-import}"></div>
     <script th:inline="javascript">
         let updateTimerHandle = 0;
 
@@ -131,7 +132,13 @@
         }
 
         function exportSelection() {
-
+            let items = $(".preset-editor-selected:checked").map(function () {
+                return $(this).data("preset-id");
+            }).get().join(",")
+            if(items === "") {
+                return;
+            }
+            window.location.assign(getURL("zoi-shapes/download/" + items))
         }
 
         function registerButtons() {

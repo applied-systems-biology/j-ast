@@ -1,0 +1,20 @@
+<div th:fragment="modal-import" class="modal" tabindex="-1" id="modal-import">
+  <form method="POST" enctype="multipart/form-data" th:action="@{zoi-shapes/upload}">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Import presets</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <label for="uploader-input-file" class="form-label">Exported ZOI Shape Presets (*.json)</label>
+          <input type="file" class="form-control" id="uploader-input-file" name="file" accept="text/json" autocomplete="off"/>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
+          <button type="submit" class="btn btn-success" >Import</button>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>

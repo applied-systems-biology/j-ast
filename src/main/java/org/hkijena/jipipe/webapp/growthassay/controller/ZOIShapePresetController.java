@@ -1,23 +1,29 @@
 package org.hkijena.jipipe.webapp.growthassay.controller;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import jakarta.servlet.http.HttpServletResponse;
 import org.hkijena.jipipe.webapp.growthassay.model.*;
 import org.hkijena.jipipe.webapp.growthassay.model.messages.UpdateZOIShapePresetMessage;
 import org.hkijena.jipipe.webapp.growthassay.repositories.DatasetRepository;
 import org.hkijena.jipipe.webapp.growthassay.repositories.ZOIShapePresetRepository;
+import org.hkijena.jipipe.webapp.growthassay.utils.JsonUtils;
+import org.hkijena.jipipe.webapp.growthassay.utils.RequestUtils;
 import org.hkijena.jipipe.webapp.growthassay.utils.StringUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -60,6 +66,48 @@ public class ZOIShapePresetController {
         return new ModelAndView("redirect:/zoi-shapes");
     }
 
+    @PostMapping("zoi-shapes/upload")
+    public ModelAndView upload(Authentication authentication, @RequestParam("file") MultipartFile file,
+                               RedirectAttributes redirectAttributes) {
+        if(authentication == null || !authentication.isAuthenticated()) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+        }
+
+        boolean isAdmin = authentication.getPrincipal() instanceof AdminPrincipal;
+        if(authentication.getPrincipal() instanceof  UserPrincipal) {
+            User user = ((UserPrincipal) authentication.getPrincipal()).getUser();
+            isAdmin = user.getRole() == User.Role.Admin;
+        }
+        User owner = authentication.getPrincipal() instanceof UserPrincipal ? ((UserPrincipal) authentication.getPrincipal()).getUser() : null;
+
+        try (InputStream stream = file.getInputStream()) {
+            TypeReference<List<UpdateZOIShapePresetMessage.ZOIShapePresetMessage>> typeReference = new TypeReference<>() { };
+            List<UpdateZOIShapePresetMessage.ZOIShapePresetMessage> items = JsonUtils.getObjectMapper().readerFor(typeReference).readValue(stream);
+            for (UpdateZOIShapePresetMessage.ZOIShapePresetMessage presetMessage : items) {
+                ZOIShapePreset preset = new ZOIShapePreset();
+                preset.setOwner(owner);
+                preset.setName(presetMessage.getName());
+                preset.setDescription(presetMessage.getDescription());
+                preset.setMcaRate(presetMessage.getMcaRate());
+                preset.setMcaIntercept(presetMessage.getMcaIntercept());
+                preset.setStripRate(presetMessage.getStripRate());
+                preset.setStripIntercept(presetMessage.getStripIntercept());
+                preset.setGlobal(presetMessage.isGlobal());
+                if(!isAdmin) {
+                  preset.setGlobal(false);
+                }
+                zoiShapePresetRepository.save(preset);
+            }
+
+            Notification.pushToRedirect("Upload successful", "The ZOI shapes were successfully imported", Notification.Style.success, redirectAttributes);
+            return new ModelAndView("redirect:/zoi-shapes");
+        }
+        catch (Throwable e) {
+            Notification.pushToRedirect("Error during upload", "The import failed with the message '" + e.getMessage() + "'", Notification.Style.danger, redirectAttributes);
+            return new ModelAndView("redirect:/zoi-shapes");
+        }
+    }
+
     @GetMapping("zoi-shapes/delete/{items}")
     public ModelAndView delete(Authentication authentication, RedirectAttributes redirectAttributes, @PathVariable String items) {
         if(authentication == null || !authentication.isAuthenticated()) {
@@ -89,6 +137,45 @@ public class ZOIShapePresetController {
 
         Notification.pushToRedirect("ZOI shapes deleted", toRemove.size() + " ZOI shapes were deleted", Notification.Style.success, redirectAttributes);
         return new ModelAndView("redirect:/zoi-shapes");
+    }
+
+    @GetMapping("zoi-shapes/download/{items}")
+    public ModelAndView download(HttpServletResponse response, Authentication authentication, @PathVariable String items) {
+        if(authentication == null || !authentication.isAuthenticated()) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+        }
+        List<UpdateZOIShapePresetMessage.ZOIShapePresetMessage> instances = new ArrayList<>();
+        for (String s : items.split(",")) {
+            long id = Long.parseLong(s);
+            Optional<ZOIShapePreset> byId = zoiShapePresetRepository.findById(id);
+            if(byId.isPresent()) {
+                ZOIShapePreset preset = byId.get();
+                if(preset.isGlobal()
+                        || authentication.getPrincipal() instanceof AdminPrincipal
+                        || (authentication.getPrincipal() instanceof UserPrincipal && preset.getOwner() != null && Objects.equals(((UserPrincipal) authentication.getPrincipal()).getUser().getId(), preset.getOwner().getId()))) {
+                    UpdateZOIShapePresetMessage.ZOIShapePresetMessage message = new UpdateZOIShapePresetMessage.ZOIShapePresetMessage();
+                    message.setId(preset.getId());
+                    message.setName(preset.getName());
+                    message.setDescription(preset.getDescription());
+                    message.setGlobal(preset.isGlobal());
+                    message.setMcaRate(preset.getMcaRate());
+                    message.setMcaIntercept(preset.getMcaIntercept());
+                    message.setStripIntercept(preset.getStripIntercept());
+                    message.setStripRate(preset.getStripRate());
+                    instances.add(message);
+                }
+            }
+        }
+
+        try {
+            Path tmpFile = Files.createTempFile("zoi-shapes", ".json");
+            JsonUtils.saveToFile(instances, tmpFile);
+            RequestUtils.sendAttachment(response, tmpFile, "zoi-shapes.json");
+            return null;
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 
     @PostMapping("/zoi-shapes/update")
