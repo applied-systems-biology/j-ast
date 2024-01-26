@@ -3,6 +3,8 @@ package org.hkijena.jipipe.webapp.growthassay.model.messages;
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonSetter;
 import jakarta.persistence.Column;
+import jakarta.validation.constraints.NotNull;
+import org.hibernate.annotations.ColumnDefault;
 import org.hkijena.jipipe.webapp.growthassay.model.AssayType;
 import org.hkijena.jipipe.webapp.growthassay.model.Dataset;
 import org.hkijena.jipipe.webapp.growthassay.model.InputData;
@@ -40,7 +42,6 @@ public class DatasetUpdateMessage {
         private String growthReductionThresholds;
         private String earlyTimePoint;
         private String lateTimePoint;
-
         private double ddaDiskMinDiameter;
         private double ddaDiskMaxDiameter;
         private double ddaDiskMinCircularity;
@@ -158,6 +159,66 @@ public class DatasetUpdateMessage {
         private double plateDiameter;
         private String assayType;
 
+        private String eTestZOIShapePresetName = "Auto";
+
+        private double eTestZOIShapePresetMcaIntercept = 0;
+
+        private double eTestZOIShapePresetMcaRate = 0;
+
+        private double eTestZOIShapePresetStripIntercept = 0;
+
+        private double eTestZOIShapePresetStripRate = 0;
+
+        @JsonGetter("etest-zoi-shape-preset-name")
+        public String geteTestZOIShapePresetName() {
+            return eTestZOIShapePresetName;
+        }
+
+        @JsonSetter("etest-zoi-shape-preset-name")
+        public void seteTestZOIShapePresetName(String eTestZOIShapePresetName) {
+            this.eTestZOIShapePresetName = eTestZOIShapePresetName;
+        }
+
+        @JsonGetter("etest-zoi-shape-preset-mca-intercept")
+        public double geteTestZOIShapePresetMcaIntercept() {
+            return eTestZOIShapePresetMcaIntercept;
+        }
+
+        @JsonSetter("etest-zoi-shape-preset-mca-intercept")
+        public void seteTestZOIShapePresetMcaIntercept(double eTestZOIShapePresetMcaIntercept) {
+            this.eTestZOIShapePresetMcaIntercept = eTestZOIShapePresetMcaIntercept;
+        }
+
+        @JsonGetter("etest-zoi-shape-preset-mca-rate")
+        public double geteTestZOIShapePresetMcaRate() {
+            return eTestZOIShapePresetMcaRate;
+        }
+
+        @JsonSetter("etest-zoi-shape-preset-mca-rate")
+        public void seteTestZOIShapePresetMcaRate(double eTestZOIShapePresetMcaRate) {
+            this.eTestZOIShapePresetMcaRate = eTestZOIShapePresetMcaRate;
+        }
+
+        @JsonGetter("etest-zoi-shape-preset-strip-intercept")
+        public double geteTestZOIShapePresetStripIntercept() {
+            return eTestZOIShapePresetStripIntercept;
+        }
+
+        @JsonSetter("etest-zoi-shape-preset-strip-intercept")
+        public void seteTestZOIShapePresetStripIntercept(double eTestZOIShapePresetStripIntercept) {
+            this.eTestZOIShapePresetStripIntercept = eTestZOIShapePresetStripIntercept;
+        }
+
+        @JsonGetter("etest-zoi-shape-preset-strip-rate")
+        public double geteTestZOIShapePresetStripRate() {
+            return eTestZOIShapePresetStripRate;
+        }
+
+        @JsonSetter("etest-zoi-shape-preset-strip-rate")
+        public void seteTestZOIShapePresetStripRate(double eTestZOIShapePresetStripRate) {
+            this.eTestZOIShapePresetStripRate = eTestZOIShapePresetStripRate;
+        }
+
         @JsonGetter("id")
         public long getId() {
             return id;
@@ -224,6 +285,11 @@ public class DatasetUpdateMessage {
             inputData.setTimePoint(StringUtils.nullToEmpty(timePoint));
             inputData.setPlateDiameter(plateDiameter);
             inputData.setAssayType(AssayType.valueOf(StringUtils.orElse(assayType,AssayType.DDA.name())));
+            inputData.seteTestZOIShapePresetName(eTestZOIShapePresetName);
+            inputData.seteTestZOIShapePresetMcaRate(eTestZOIShapePresetMcaRate);
+            inputData.seteTestZOIShapePresetMcaIntercept(eTestZOIShapePresetMcaIntercept);
+            inputData.seteTestZOIShapePresetStripRate(eTestZOIShapePresetStripRate);
+            inputData.seteTestZOIShapePresetStripIntercept(eTestZOIShapePresetStripIntercept);
         }
     }
 

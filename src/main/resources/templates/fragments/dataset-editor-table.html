@@ -46,21 +46,50 @@
                     <th scope="col"><input class="form-control input-data-editor" type="text" data-input-data-property="timePoint" th:data-input-data-id="${inputData.id}" th:value="${inputData.timePoint}" autocomplete="off"/></th>
                     <th scope="col"><input class="form-control input-data-editor" type="number" step="any" min="0" data-input-data-property="plateDiameter" th:data-input-data-id="${inputData.id}" th:value="${inputData.plateDiameter}" autocomplete="off"/></th>
                     <th scope="col" th:if="${inputData.assayType.toString().equals('DDA')}">
-                        <div class="btn btn-sm btn-outline-secondary">Auto (DDA)</div>
+                        <div class="btn btn-sm btn-outline-secondary w-100"><i class="fa-solid fa-circle me-1" style="color: #DDE4E9"></i> Auto</div>
                     </th>
                     <th scope="col" th:if="${inputData.assayType.toString().equals('ETest')}">
-                        <div class="dropdown">
-                            <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false"
-                                    th:text="${ !#strings.isEmpty(inputData.eTestZOIShapePresetName) ? inputData.eTestZOIShapePresetName : 'Unnamed'}"
-                            th:style="${'border-color: ' + inputData.getZOIShapeHexColor() + ';'}">
+                        <div class="dropdown w-100">
+                            <button th:id="${'input-data-dropdown-zoi-shape-' + inputData.id}" th:data-input-data-id="${inputData.id}"
+                                    th:data-zoi-shape-name="${inputData.eTestZOIShapePresetName}"
+                                    th:data-zoi-shape-mca-rate="${inputData.eTestZOIShapePresetMcaRate}"
+                                    th:data-zoi-shape-mca-intercept="${inputData.eTestZOIShapePresetMcaIntercept}"
+                                    th:data-zoi-shape-strip-rate="${inputData.eTestZOIShapePresetStripRate}"
+                                    th:data-zoi-shape-strip-intercept="${inputData.eTestZOIShapePresetStripIntercept}"
+                                    class="btn btn-sm btn-outline-secondary dropdown-toggle w-100 input-data-editor-dropdown-zoi-shape"
+                                    type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i th:id="${'input-data-dropdown-zoi-shape-icon-' + inputData.id}" class="fa-solid fa-circle me-1"></i>
+                                <span th:id="${'input-data-dropdown-zoi-shape-text-' + inputData.id}"></span>
                             </button>
                             <ul class="dropdown-menu">
-                                <li><a class="dropdown-item disabled" href="#"><strong>MCA Rate</strong> <span th:text="${inputData.eTestZOIShapePresetMcaRate}"></span></a></li>
-                                <li><a class="dropdown-item disabled" href="#"><strong>MCA Intercept</strong> <span th:text="${inputData.eTestZOIShapePresetMcaIntercept}"></span></a></li>
-                                <li><a class="dropdown-item disabled" href="#"><strong>Strip Rate</strong> <span th:text="${inputData.eTestZOIShapePresetStripRate}"></span></a></li>
-                                <li><a class="dropdown-item disabled" href="#"><strong>Strip Intercept</strong> <span th:text="${inputData.eTestZOIShapePresetStripIntercept}"></span></a></li>
+                                <li><a class="dropdown-item disabled" href="#"><strong>MCA Rate</strong> <span th:id="${'input-data-dropdown-zoi-shape-current-mca-rate-' + inputData.id}"></span></a></li>
+                                <li><a class="dropdown-item disabled" href="#"><strong>MCA Intercept</strong> <span th:id="${'input-data-dropdown-zoi-shape-current-mca-intercept-' + inputData.id}"></span></a></li>
+                                <li><a class="dropdown-item disabled" href="#"><strong>Strip Rate</strong> <span th:id="${'input-data-dropdown-zoi-shape-current-strip-rate-' + inputData.id}"></span></a></li>
+                                <li><a class="dropdown-item disabled" href="#"><strong>Strip Intercept</strong> <span th:id="${'input-data-dropdown-zoi-shape-current-strip-intercept-' + inputData.id}"></span></a></li>
                                 <li><hr class="dropdown-divider"></li>
-                                <li th:each="preset: ${zoiShapes}"><a class="dropdown-item" href="#" th:text="${!#strings.isEmpty(preset.name) ? preset.name : 'Unnamed'}"></a></li>
+                                <button class="dropdown-item input-data-select-zoi-shape-dropdown-item"
+                                        data-zoi-shape-name="Auto"
+                                        data-zoi-shape-mca-rate="0"
+                                        data-zoi-shape-mca-intercept="0"
+                                        data-zoi-shape-strip-rate="0"
+                                        data-zoi-shape-strip-intercept="0"
+                                        th:data-input-data-id="${inputData.id}" type="button" >
+                                    <i class="fa-solid fa-circle me-1"></i>
+                                    <span>Auto</span>
+                                </button>
+                                <li th:each="preset: ${zoiShapes}">
+                                    <button class="dropdown-item input-data-select-zoi-shape-dropdown-item"
+                                            th:data-zoi-shape-name="${preset.name}"
+                                            th:data-zoi-shape-mca-rate="${preset.mcaRate}"
+                                            th:data-zoi-shape-mca-intercept="${preset.mcaIntercept}"
+                                            th:data-zoi-shape-strip-rate="${preset.stripRate}"
+                                            th:data-zoi-shape-strip-intercept="${preset.stripIntercept}"
+                                            th:data-input-data-id="${inputData.id}"
+                                            type="button" >
+                                        <i class="fa-solid fa-circle me-1"></i>
+                                        <span></span>
+                                    </button>
+                                </li>
                             </ul>
                         </div>
                     </th>

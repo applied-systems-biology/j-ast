@@ -67,18 +67,18 @@ public class InputData {
     private AssayType assayType = AssayType.DDA;
 
     @Column(name = "etest_zoi_shape_preset_name", columnDefinition = "TEXT")
-    @ColumnDefault("Default")
-    private String eTestZOIShapePresetName = "Default";
+    @ColumnDefault("Auto")
+    private String eTestZOIShapePresetName = "Auto";
 
     @Column(name = "etest_zoi_shape_mca_intercept", columnDefinition = "DOUBLE")
     @NotNull
-    @ColumnDefault("6.120974538")
-    private double eTestZOIShapePresetMcaIntercept = 6.120974538;
+    @ColumnDefault("0")
+    private double eTestZOIShapePresetMcaIntercept = 0;
 
     @Column(name = "etest_zoi_shape_mca_rate", columnDefinition = "DOUBLE")
     @NotNull
-    @ColumnDefault("-0.008732194")
-    private double eTestZOIShapePresetMcaRate = -0.008732194;
+    @ColumnDefault("0")
+    private double eTestZOIShapePresetMcaRate = 0;
 
     @Column(name = "etest_zoi_shape_strip_intercept", columnDefinition = "DOUBLE")
     @NotNull
@@ -87,8 +87,8 @@ public class InputData {
 
     @Column(name = "etest_zoi_shape_strip_rate", columnDefinition = "DOUBLE")
     @NotNull
-    @ColumnDefault("-0.008732194")
-    private double eTestZOIShapePresetStripRate = -0.008732194;
+    @ColumnDefault("0")
+    private double eTestZOIShapePresetStripRate = 0;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Dataset dataset;
@@ -234,6 +234,9 @@ public class InputData {
     }
 
     public String getZOIShapeHexColor() {
+        if(eTestZOIShapePresetMcaIntercept == 0 && eTestZOIShapePresetMcaRate == 0 && eTestZOIShapePresetStripIntercept == 0 && eTestZOIShapePresetStripRate == 0) {
+            return ColorUtils.colorToHexString(new Color(0xF8F9FA));
+        }
         int hash = Objects.hash(eTestZOIShapePresetMcaIntercept, eTestZOIShapePresetMcaRate, eTestZOIShapePresetStripIntercept, eTestZOIShapePresetStripRate);
         float hue = (float) ((hash & 0xFFFF) % 360) / 360.0f;
         Color hsbColor = Color.getHSBColor(hue, 75.91f / 100f, 86.27f / 100f);

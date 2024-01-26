@@ -92,6 +92,7 @@
     <div th:replace="~{fragments/modal-rename-dataset.html :: modal-rename}"></div>
     <div th:replace="~{fragments/modal-delete-dataset.html :: modal-delete}"></div>
     <div th:replace="~{fragments/modal-run-analysis.html :: modal-run}"></div>
+
     <script th:inline="javascript">
         let updateTimerHandle = 0;
 
@@ -105,6 +106,8 @@
                 parameters: {},
                 inputData: {}
             }
+
+            // Input data
             $(".input-data-editor").each(function () {
                 const inputDataId = $(this).data("inputDataId")
                 const inputDataIdKey = "" + inputDataId
@@ -123,8 +126,25 @@
                 }
 
                 // set the property
-                message.inputData[inputDataIdKey][inputDataProperty] = $(this).val()
+                message.inputData[inputDataIdKey][inputDataProperty] = value
             })
+
+            // console.log(JSON.stringify(message))
+
+            // Input data ZOI shape parameter
+            $(".input-data-editor-dropdown-zoi-shape").each(function () {
+                const inputDataId = $(this).data("inputDataId")
+                const inputDataIdKey = "" + inputDataId
+
+                // set the properties
+                message.inputData[inputDataIdKey]["etest-zoi-shape-preset-name"] = $(this).data("zoiShapeName") || "Unnamed"
+                message.inputData[inputDataIdKey]["etest-zoi-shape-preset-mca-intercept"] = Number($(this).data("zoiShapeMcaIntercept"))
+                message.inputData[inputDataIdKey]["etest-zoi-shape-preset-mca-rate"] = Number($(this).data("zoiShapeMcaRate"))
+                message.inputData[inputDataIdKey]["etest-zoi-shape-preset-strip-intercept"] = Number($(this).data("zoiShapeStripIntercept"))
+                message.inputData[inputDataIdKey]["etest-zoi-shape-preset-strip-rate"] = Number($(this).data("zoiShapeStripRate"))
+            })
+
+            // Parameters
             $(".input-parameter-editor").each(function () {
                 const parameterProperty = $(this).data("parameterProperty")
                 const value = $(this).val()
@@ -224,12 +244,65 @@
             }, 1000)
         }
 
+        function getZOIShapeColor(mcaRate, mcaIntercept, stripRate, stripIntercept) {
+            if (mcaRate === 0 && mcaIntercept === 0 && stripRate === 0 && stripIntercept === 0) {
+                return colorToHexString([221, 228, 233, 255])
+            }
+
+            const hash = Math.abs(mcaIntercept ^ mcaRate ^ stripIntercept ^ stripRate);
+            const hue = (hash & 0xFFFF) % 360 / 360.0;
+            const hsbColor = HSBtoRGB(hue, 75.91 / 100, 86.27 / 100);
+            return colorToHexString(hsbColor);
+        }
+
+        function updateZoiShapeDropdownButtons() {
+            $(".input-data-editor-dropdown-zoi-shape").each(function () {
+                const dataId = $(this).data("inputDataId")
+                const zoiShapeName = $(this).data("zoiShapeName")
+                const zoiShapeMcaRate = Number($(this).data("zoiShapeMcaRate"))
+                const zoiShapeMcaIntercept = Number($(this).data("zoiShapeMcaIntercept"))
+                const zoiShapeStripRate = Number($(this).data("zoiShapeStripRate"))
+                const zoiShapeStripIntercept = Number($(this).data("zoiShapeStripIntercept"))
+                $("#input-data-dropdown-zoi-shape-text-" + dataId).text(zoiShapeName || "Unnamed")
+                $("#input-data-dropdown-zoi-shape-icon-" + dataId).css("color", getZOIShapeColor(zoiShapeMcaRate, zoiShapeMcaIntercept, zoiShapeStripRate, zoiShapeStripIntercept))
+                $("#input-data-dropdown-zoi-shape-current-mca-rate-" + dataId).text(zoiShapeMcaRate)
+                $("#input-data-dropdown-zoi-shape-current-mca-intercept-" + dataId).text(zoiShapeMcaIntercept)
+                $("#input-data-dropdown-zoi-shape-current-strip-rate-" + dataId).text(zoiShapeStripRate)
+                $("#input-data-dropdown-zoi-shape-current-strip-intercept-" + dataId).text(zoiShapeStripIntercept)
+            })
+        }
+
         function registerUpdateSchedulerListeners() {
             $(".input-data-editor").on("input", function () {
                 scheduleUpdateTimer()
             })
             $(".input-parameter-editor").on("input", function () {
                 scheduleUpdateTimer()
+            })
+            $(".input-data-select-zoi-shape-dropdown-item").click(function () {
+                // User clicks the dropdown item
+                // Updates the associated button
+                const dataId = $(this).data("inputDataId")
+                $("#input-data-dropdown-zoi-shape-" + dataId)
+                    .data("zoiShapeName", $(this).data("zoiShapeName") || "Unnamed")
+                    .data("zoiShapeMcaRate", $(this).data("zoiShapeMcaRate"))
+                    .data("zoiShapeMcaIntercept", $(this).data("zoiShapeMcaIntercept"))
+                    .data("zoiShapeStripRate", $(this).data("zoiShapeStripRate"))
+                    .data("zoiShapeStripIntercept", $(this).data("zoiShapeStripIntercept"))
+                scheduleUpdateTimer()
+                updateZoiShapeDropdownButtons()
+            })
+        }
+
+        function updateZoiShapeDropdownItems() {
+            $(".input-data-select-zoi-shape-dropdown-item").each(function () {
+                const zoiShapeName = $(this).data("zoiShapeName")
+                const zoiShapeMcaRate = Number($(this).data("zoiShapeMcaRate"))
+                const zoiShapeMcaIntercept = Number($(this).data("zoiShapeMcaIntercept"))
+                const zoiShapeStripRate = Number($(this).data("zoiShapeStripRate"))
+                const zoiShapeStripIntercept = Number($(this).data("zoiShapeStripIntercept"))
+                $(this).find("span").text(zoiShapeName || "Unnamed")
+                $(this).find("i").css("color", getZOIShapeColor(zoiShapeMcaRate, zoiShapeMcaIntercept, zoiShapeStripRate, zoiShapeStripIntercept))
             })
         }
 
@@ -238,6 +311,8 @@
             registerDeleteInputData()
             registerUpdateSchedulerListeners()
             runValidation()
+            updateZoiShapeDropdownItems()
+            updateZoiShapeDropdownButtons()
         })
     </script>
     <script th:inline="javascript">

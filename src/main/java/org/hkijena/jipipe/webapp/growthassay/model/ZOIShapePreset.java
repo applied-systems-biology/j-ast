@@ -3,8 +3,11 @@ package org.hkijena.jipipe.webapp.growthassay.model;
 import com.fasterxml.jackson.annotation.JsonGetter;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import org.hkijena.jipipe.webapp.growthassay.utils.ColorUtils;
 
+import java.awt.*;
 import java.io.Serial;
+import java.util.Objects;
 
 @Entity
 @Table(name = "shape_presets")
@@ -46,6 +49,16 @@ public class ZOIShapePreset {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "owner_id")
     private User owner;
+
+    public String getHexColor() {
+        if(mcaRate == 0 && mcaIntercept == 0 && stripRate == 0 && stripIntercept == 0) {
+            return ColorUtils.colorToHexString(new Color(0xF8F9FA));
+        }
+        int hash = Objects.hash(mcaIntercept, mcaRate, stripIntercept, stripRate);
+        float hue = (float) ((hash & 0xFFFF) % 360) / 360.0f;
+        Color hsbColor = Color.getHSBColor(hue, 75.91f / 100f, 86.27f / 100f);
+        return ColorUtils.colorToHexString(hsbColor);
+    }
 
     public boolean isGlobal() {
         return global;
