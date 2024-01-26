@@ -282,6 +282,7 @@ public class Dataset {
         Multiset<String> allNamesInvalidPlateDiameters = HashMultiset.create();
         Multiset<String> allNamesUnequalPlateDiameters = HashMultiset.create();
         Multiset<String> allNamesUnequalAssayTypes = HashMultiset.create();
+        Multiset<String> allNamesUnequalZOIShape = HashMultiset.create();
         Set<String> invalidExperiments = new HashSet<>();
         Set<String> invalidSamples = new HashSet<>();
         for (InputData data : inputData) {
@@ -319,6 +320,19 @@ public class Dataset {
                 if (first.getAssayType() != second.getAssayType()) {
                     allNamesUnequalAssayTypes.add(first.getExperiment() + "_" + first.getSample() + "_*");
                 }
+                if(first.isUsingAutoZOIShape() == second.isUsingAutoZOIShape()) {
+                    if(first.isUsingAutoZOIShape()) {
+                        if(first.geteTestZOIShapePresetMcaIntercept() != second.geteTestZOIShapePresetMcaIntercept() ||
+                        first.geteTestZOIShapePresetMcaRate() != second.geteTestZOIShapePresetMcaRate() ||
+                        first.geteTestZOIShapePresetStripIntercept() != second.geteTestZOIShapePresetStripIntercept() ||
+                        first.geteTestZOIShapePresetStripRate() != second.geteTestZOIShapePresetStripRate()) {
+                            allNamesUnequalZOIShape.add(first.getExperiment() + "_" + first.getSample() + "_*");
+                        }
+                    }
+                }
+                else {
+                    allNamesUnequalZOIShape.add(first.getExperiment() + "_" + first.getSample() + "_*");
+                }
             }
         }
 
@@ -330,6 +344,14 @@ public class Dataset {
         if (!allNamesUnequalAssayTypes.isEmpty()) {
             result.addIssue("Unequal assay types", "Please ensure that images within the same experiment and sample have the same assay type. " +
                     "The following entries are affected: " + String.join(", ", allNamesUnequalAssayTypes));
+        }
+
+        if (!allNamesUnequalZOIShape.isEmpty()) {
+            result.addIssue("Unequal ZOI shape parameters", "Please ensure that images within the same experiment and sample have the ZOI shape parameters. " +
+                    "Click the ZOI shape selection button in the data view to review the parameters. " +
+                    "Assign the same preset for the two time points. " +
+                    "If a preset is missing, create one using the ZOI Shape Presets view. " +
+                    "The following entries are affected: " + String.join(", ", allNamesUnequalZOIShape));
         }
 
         if (timePoints.size() < 2) {

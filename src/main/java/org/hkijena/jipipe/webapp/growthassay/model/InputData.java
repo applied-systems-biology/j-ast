@@ -230,17 +230,27 @@ public class InputData {
     }
 
     public String getFinalFileName() {
-        return getAssayType() + "_" + getExperiment() + "_" + getSample() + "_" + getTimePoint() + "_" + getPlateDiameter();
+        if(isUsingAutoZOIShape()) {
+            return getAssayType() + "_" + getExperiment() + "_" + getSample() + "_" + getTimePoint() + "_" + getPlateDiameter();
+        }
+        else {
+            return getAssayType() + "_" + getExperiment() + "_" + getSample() + "_" + getTimePoint() + "_" + getPlateDiameter() + "_"
+                    + eTestZOIShapePresetMcaIntercept + "," + eTestZOIShapePresetMcaRate + "," + eTestZOIShapePresetStripIntercept + "," + eTestZOIShapePresetStripRate;
+        }
     }
 
     public String getZOIShapeHexColor() {
-        if(eTestZOIShapePresetMcaIntercept == 0 && eTestZOIShapePresetMcaRate == 0 && eTestZOIShapePresetStripIntercept == 0 && eTestZOIShapePresetStripRate == 0) {
+        if(isUsingAutoZOIShape()) {
             return ColorUtils.colorToHexString(new Color(0xF8F9FA));
         }
         int hash = Objects.hash(eTestZOIShapePresetMcaIntercept, eTestZOIShapePresetMcaRate, eTestZOIShapePresetStripIntercept, eTestZOIShapePresetStripRate);
         float hue = (float) ((hash & 0xFFFF) % 360) / 360.0f;
         Color hsbColor = Color.getHSBColor(hue, 75.91f / 100f, 86.27f / 100f);
         return ColorUtils.colorToHexString(hsbColor);
+    }
+
+    public boolean isUsingAutoZOIShape() {
+        return assayType == AssayType.DDA || (eTestZOIShapePresetMcaIntercept == 0 && eTestZOIShapePresetMcaRate == 0 && eTestZOIShapePresetStripIntercept == 0 && eTestZOIShapePresetStripRate == 0);
     }
 
     public void tryAutoFill(String originalFileName) {
@@ -263,7 +273,9 @@ public class InputData {
             setExperiment(components[1]);
             setSample(components[2]);
             setTimePoint(components[3]);
-            if(components.length > 4) {
+
+            // Try to extract plate diameter
+            if(components.length >= 5) {
                 if(NumberUtils.isCreatable(components[4])) {
                     setPlateDiameter(NumberUtils.createDouble(components[4]));
                 }
