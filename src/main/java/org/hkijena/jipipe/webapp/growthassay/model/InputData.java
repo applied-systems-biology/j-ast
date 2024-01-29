@@ -235,7 +235,7 @@ public class InputData {
         }
         else {
             return getAssayType() + "_" + getExperiment() + "_" + getSample() + "_" + getTimePoint() + "_" + getPlateDiameter() + "_"
-                    + eTestZOIShapePresetMcaIntercept + "," + eTestZOIShapePresetMcaRate + "," + eTestZOIShapePresetStripIntercept + "," + eTestZOIShapePresetStripRate;
+                    + eTestZOIShapePresetMcaRate + "," + eTestZOIShapePresetMcaIntercept + "," + eTestZOIShapePresetStripRate + "," + eTestZOIShapePresetStripIntercept;
         }
     }
 
@@ -278,6 +278,24 @@ public class InputData {
             if(components.length >= 5) {
                 if(NumberUtils.isCreatable(components[4])) {
                     setPlateDiameter(NumberUtils.createDouble(components[4]));
+                }
+            }
+            if(components.length >= 6) {
+                try {
+                    String[] items = components[5].split(",");
+                    if(items.length == 4) {
+                        double mcaRate = Double.parseDouble(items[0]);
+                        double mcaIntercept = Double.parseDouble(items[1]);
+                        double stripRate = Double.parseDouble(items[2]);
+                        double stripIntercept = Double.parseDouble(items[3]);
+                        seteTestZOIShapePresetName("Imported");
+                        seteTestZOIShapePresetMcaRate(mcaRate);
+                        seteTestZOIShapePresetMcaIntercept(mcaIntercept);
+                        seteTestZOIShapePresetStripRate(stripRate);
+                        seteTestZOIShapePresetStripIntercept(stripIntercept);
+                    }
+                }
+                catch (NumberFormatException ignored) {
                 }
             }
         }
