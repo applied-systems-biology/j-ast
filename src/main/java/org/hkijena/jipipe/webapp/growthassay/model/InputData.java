@@ -67,7 +67,7 @@ public class InputData {
     private AssayType assayType = AssayType.DDA;
 
     @Column(name = "etest_zoi_shape_preset_name", columnDefinition = "TEXT")
-    @ColumnDefault("Auto")
+    @ColumnDefault("'Auto'")
     private String eTestZOIShapePresetName = "Auto";
 
     @Column(name = "etest_zoi_shape_mca_intercept", columnDefinition = "DOUBLE")
