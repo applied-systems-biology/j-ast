@@ -3,8 +3,8 @@ package org.hkijena.jast.model.messages;
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonSetter;
 import org.hkijena.jast.model.AssayType;
-import org.hkijena.jast.model.Dataset;
-import org.hkijena.jast.model.InputData;
+import org.hkijena.jast.model.entities.TimeSeries;
+import org.hkijena.jast.model.entities.Image;
 import org.hkijena.jast.utils.StringUtils;
 
 import java.util.HashMap;
@@ -135,16 +135,16 @@ public class DatasetUpdateMessage {
             this.ensureCircularPlate = ensureCircularPlate;
         }
 
-        public void update(Dataset dataset) {
-            dataset.setGrowthReductionThresholds(growthReductionThresholds);
-            dataset.setTimePointEarly(StringUtils.nullToEmpty(earlyTimePoint));
-            dataset.setTimePointLate(StringUtils.nullToEmpty(lateTimePoint));
-            dataset.setDdaDiskMinDiameter(ddaDiskMinDiameter);
-            dataset.setDdaDiskMaxDiameter(ddaDiskMaxDiameter);
-            dataset.setDdaDiskMinCircularity(ddaDiskMinCircularity);
-            dataset.setContrastMinValue(contrastMinValue);
-            dataset.setContrastMaxValue(contrastMaxValue);
-            dataset.setEnsureCircularPlate(ensureCircularPlate);
+        public void update(TimeSeries timeSeries) {
+            timeSeries.setGrowthReductionThresholds(growthReductionThresholds);
+            timeSeries.setTimePointEarly(StringUtils.nullToEmpty(earlyTimePoint));
+            timeSeries.setTimePointLate(StringUtils.nullToEmpty(lateTimePoint));
+            timeSeries.setDdaDiskMinDiameter(ddaDiskMinDiameter);
+            timeSeries.setDdaDiskMaxDiameter(ddaDiskMaxDiameter);
+            timeSeries.setDdaDiskMinCircularity(ddaDiskMinCircularity);
+            timeSeries.setContrastMinValue(contrastMinValue);
+            timeSeries.setContrastMaxValue(contrastMaxValue);
+            timeSeries.setEnsureCircularPlate(ensureCircularPlate);
         }
     }
 
@@ -276,17 +276,17 @@ public class DatasetUpdateMessage {
             this.assayType = assayType;
         }
 
-        public void update(InputData inputData) {
-            inputData.setSample(StringUtils.nullToEmpty(sample));
-            inputData.setExperiment(StringUtils.nullToEmpty(experiment));
-            inputData.setTimePoint(StringUtils.nullToEmpty(timePoint));
-            inputData.setPlateDiameter(plateDiameter);
-            inputData.setAssayType(AssayType.valueOf(StringUtils.orElse(assayType,AssayType.DDA.name())));
-            inputData.seteTestZOIShapePresetName(eTestZOIShapePresetName);
-            inputData.seteTestZOIShapePresetMcaRate(eTestZOIShapePresetMcaRate);
-            inputData.seteTestZOIShapePresetMcaIntercept(eTestZOIShapePresetMcaIntercept);
-            inputData.seteTestZOIShapePresetStripRate(eTestZOIShapePresetStripRate);
-            inputData.seteTestZOIShapePresetStripIntercept(eTestZOIShapePresetStripIntercept);
+        public void update(Image image) {
+            image.setSample(StringUtils.nullToEmpty(sample));
+            image.setExperiment(StringUtils.nullToEmpty(experiment));
+            image.setTimePoint(StringUtils.nullToEmpty(timePoint));
+            image.setPlateDiameter(plateDiameter);
+            image.setAssayType(AssayType.valueOf(StringUtils.orElse(assayType,AssayType.DDA.name())));
+            image.seteTestZOIShapePresetName(eTestZOIShapePresetName);
+            image.seteTestZOIShapePresetMcaRate(eTestZOIShapePresetMcaRate);
+            image.seteTestZOIShapePresetMcaIntercept(eTestZOIShapePresetMcaIntercept);
+            image.seteTestZOIShapePresetStripRate(eTestZOIShapePresetStripRate);
+            image.seteTestZOIShapePresetStripIntercept(eTestZOIShapePresetStripIntercept);
         }
     }
 

@@ -2,19 +2,19 @@ package org.hkijena.jast.model.messages;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonSetter;
-import org.hkijena.jast.model.Dataset;
+import org.hkijena.jast.model.entities.TimeSeries;
 
 public class AnalysisStatusMessage {
-    private Dataset.Status status = Dataset.Status.Preparing;
+    private TimeSeries.Status status = TimeSeries.Status.Preparing;
 
     private String log;
 
     @JsonGetter("status")
-    public Dataset.Status getStatus() {
+    public TimeSeries.Status getStatus() {
         return status;
     }
     @JsonSetter("status")
-    public void setStatus(Dataset.Status status) {
+    public void setStatus(TimeSeries.Status status) {
         this.status = status;
     }
 

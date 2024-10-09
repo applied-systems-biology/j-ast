@@ -2,10 +2,10 @@ package org.hkijena.jast.controller;
 
 import jakarta.servlet.http.HttpServletResponse;
 import org.hkijena.jast.config.RuntimeConfig;
-import org.hkijena.jast.model.Dataset;
-import org.hkijena.jast.model.InputData;
-import org.hkijena.jast.repositories.DatasetRepository;
-import org.hkijena.jast.repositories.InputDataRepository;
+import org.hkijena.jast.model.entities.TimeSeries;
+import org.hkijena.jast.model.entities.Image;
+import org.hkijena.jast.repositories.TimeSeriesRepository;
+import org.hkijena.jast.repositories.ImageRepository;
 import org.hkijena.jast.utils.RequestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,29 +23,29 @@ import java.nio.file.Paths;
 import java.util.Optional;
 
 @Controller
-public class InputDataController {
+public class ImageController {
     private final RuntimeConfig runtimeConfig;
-    private final DatasetRepository datasetRepository;
-    private final InputDataRepository inputDataRepository;
+    private final TimeSeriesRepository timeSeriesRepository;
+    private final ImageRepository imageRepository;
 
     @Autowired
-    public InputDataController(RuntimeConfig runtimeConfig, DatasetRepository datasetRepository, InputDataRepository inputDataRepository) {
+    public ImageController(RuntimeConfig runtimeConfig, TimeSeriesRepository timeSeriesRepository, ImageRepository imageRepository) {
         this.runtimeConfig = runtimeConfig;
-        this.datasetRepository = datasetRepository;
-        this.inputDataRepository = inputDataRepository;
+        this.timeSeriesRepository = timeSeriesRepository;
+        this.imageRepository = imageRepository;
     }
 
     @GetMapping("/input-data/thumbnail/{id}")
     public ModelAndView getThumbnail(HttpServletResponse response, Authentication authentication, @PathVariable long id) throws IOException {
-        Optional<InputData> inputData_ = inputDataRepository.findById(id);
+        Optional<Image> inputData_ = imageRepository.findById(id);
         if(inputData_.isPresent()) {
-            InputData inputData = inputData_.get();
+            Image image = inputData_.get();
 
-            if(!inputData.getDataset().canAccess(authentication)) {
+            if(!image.getSeries().canAccess(authentication)) {
                 throw new ResponseStatusException(HttpStatus.FORBIDDEN);
             }
 
-            RequestUtils.sendContent(response, Paths.get(inputData.getThumbnailStoragePath()));
+            RequestUtils.sendContent(response, Paths.get(image.getThumbnailStoragePath()));
             return null;
         }
         else {
@@ -55,15 +55,15 @@ public class InputDataController {
 
     @GetMapping("/input-data/view/{id}")
     public ModelAndView view(HttpServletResponse response, Authentication authentication, @PathVariable long id) throws IOException {
-        Optional<InputData> inputData_ = inputDataRepository.findById(id);
+        Optional<Image> inputData_ = imageRepository.findById(id);
         if(inputData_.isPresent()) {
-            InputData inputData = inputData_.get();
+            Image image = inputData_.get();
 
-            if(!inputData.getDataset().canAccess(authentication)) {
+            if(!image.getSeries().canAccess(authentication)) {
                 throw new ResponseStatusException(HttpStatus.FORBIDDEN);
             }
 
-            RequestUtils.sendContent(response, Paths.get(inputData.getStoragePath()));
+            RequestUtils.sendContent(response, Paths.get(image.getStoragePath()));
             return null;
         }
         else {
@@ -73,15 +73,15 @@ public class InputDataController {
 
     @GetMapping("/input-data/download/{id}")
     public ModelAndView download(HttpServletResponse response, Authentication authentication, @PathVariable long id) throws IOException {
-        Optional<InputData> inputData_ = inputDataRepository.findById(id);
+        Optional<Image> inputData_ = imageRepository.findById(id);
         if(inputData_.isPresent()) {
-            InputData inputData = inputData_.get();
+            Image image = inputData_.get();
 
-            if(!inputData.getDataset().canAccess(authentication)) {
+            if(!image.getSeries().canAccess(authentication)) {
                 throw new ResponseStatusException(HttpStatus.FORBIDDEN);
             }
 
-            RequestUtils.sendAttachment(response, Paths.get(inputData.getStoragePath()), inputData.getOriginalFileName());
+            RequestUtils.sendAttachment(response, Paths.get(image.getStoragePath()), image.getOriginalFileName());
             return null;
         }
         else {
@@ -91,19 +91,19 @@ public class InputDataController {
 
     @PostMapping("/input-data/delete/{id}")
     public void deleteInputData(HttpServletResponse response, Authentication authentication, @PathVariable long id) {
-        Optional<InputData> inputData_ = inputDataRepository.findById(id);
+        Optional<Image> inputData_ = imageRepository.findById(id);
         if(inputData_.isPresent()) {
-            InputData inputData = inputData_.get();
-            Dataset dataset = inputData.getDataset();
+            Image image = inputData_.get();
+            TimeSeries timeSeries = image.getSeries();
 
-            if(!inputData.getDataset().canEdit(authentication)) {
+            if(!image.getSeries().canEdit(authentication)) {
                 throw new ResponseStatusException(HttpStatus.FORBIDDEN);
             }
 
-            dataset.removeInputData(inputData);
-            datasetRepository.save(dataset);
-            inputDataRepository.delete(inputData);
-            inputData.deleteStorage(Path.of(dataset.getStoragePath()));
+            timeSeries.removeImage(image);
+            timeSeriesRepository.save(timeSeries);
+            imageRepository.delete(image);
+            image.deleteStorage(Path.of(timeSeries.getStoragePath()));
             response.setStatus(HttpStatus.OK.value());
         }
         else {

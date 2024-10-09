@@ -1,14 +1,13 @@
 package org.hkijena.jast.controller;
 
 import org.hkijena.jast.config.AccountConfig;
-import org.hkijena.jast.model.Dataset;
+import org.hkijena.jast.model.entities.TimeSeries;
 import org.hkijena.jast.model.Notification;
 import org.hkijena.jast.model.Privileges;
-import org.hkijena.jast.model.User;
-import org.hkijena.jipipe.webapp.growthassay.model.*;
+import org.hkijena.jast.model.entities.User;
 import org.hkijena.jast.model.messages.CreateUpdateUserMessage;
 import org.hkijena.jast.model.messages.DatasetAdminStatusMessage;
-import org.hkijena.jast.repositories.DatasetRepository;
+import org.hkijena.jast.repositories.TimeSeriesRepository;
 import org.hkijena.jast.repositories.UserRepository;
 import org.hkijena.jast.services.UserService;
 import org.hkijena.jast.utils.StringUtils;
@@ -34,15 +33,15 @@ public class AdminController {
 
     private final AccountConfig accountConfig;
     private final UserRepository userRepository;
-    private final DatasetRepository datasetRepository;
+    private final TimeSeriesRepository timeSeriesRepository;
     private final PasswordEncoder passwordEncoder;
     private final UserService userService;
 
     @Autowired
-    public AdminController(AccountConfig accountConfig, UserRepository userRepository, DatasetRepository datasetRepository, PasswordEncoder passwordEncoder, UserService userService) {
+    public AdminController(AccountConfig accountConfig, UserRepository userRepository, TimeSeriesRepository timeSeriesRepository, PasswordEncoder passwordEncoder, UserService userService) {
         this.accountConfig = accountConfig;
         this.userRepository = userRepository;
-        this.datasetRepository = datasetRepository;
+        this.timeSeriesRepository = timeSeriesRepository;
         this.passwordEncoder = passwordEncoder;
         this.userService = userService;
     }
@@ -54,26 +53,26 @@ public class AdminController {
         }
 
         model.addAttribute("accountConfig", accountConfig);
-        datasetRepository.putSortedToModel(model, authentication);
+        timeSeriesRepository.putSortedToModel(model, authentication);
         userRepository.putSortedToModel(model, authentication);
 
         return new ModelAndView("admin");
     }
 
-    @GetMapping("/admin/list-datasets")
+    @GetMapping("/admin/list-projects")
     public ResponseEntity<List<DatasetAdminStatusMessage>> getDatasetList(Authentication authentication) {
         if (authentication == null || !authentication.isAuthenticated() || !authentication.getAuthorities().contains(Privileges.PRIVILEGE_ADMIN)) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN);
         }
 
         List<DatasetAdminStatusMessage> result = new ArrayList<>();
-        for (Dataset dataset : datasetRepository.findAll()) {
+        for (TimeSeries timeSeries : timeSeriesRepository.findAll()) {
             DatasetAdminStatusMessage message = new DatasetAdminStatusMessage();
-            message.setId(dataset.getId());
-            message.setOwner(dataset.getOwner() != null ? dataset.getOwner().getEmail() : accountConfig.getAdminUsername());
-            message.setStatus(dataset.getStatus().toString());
-            message.setName(dataset.getName());
-            message.setCanCancel(dataset.getStatus() == Dataset.Status.Running);
+            message.setId(timeSeries.getId());
+            message.setOwner(timeSeries.getOwner() != null ? timeSeries.getOwner().getEmail() : accountConfig.getAdminUsername());
+            message.setStatus(timeSeries.getStatus().toString());
+            message.setName(timeSeries.getName());
+            message.setCanCancel(timeSeries.getStatus() == TimeSeries.Status.Running);
             result.add(message);
         }
 
@@ -89,15 +88,15 @@ public class AdminController {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN);
         }
 
-        for (Dataset dataset : datasetRepository.findAll()) {
-            if (!dataset.canEdit(authentication)) {
+        for (TimeSeries timeSeries : timeSeriesRepository.findAll()) {
+            if (!timeSeries.canEdit(authentication)) {
                 throw new ResponseStatusException(HttpStatus.FORBIDDEN);
             }
 
-            dataset.tryCancelCurrentJob();
-            dataset.setStatus(Dataset.Status.Preparing);
-            dataset.clearOutputData();
-            datasetRepository.save(dataset);
+            timeSeries.tryCancelCurrentJob();
+            timeSeries.setStatus(TimeSeries.Status.Preparing);
+            timeSeries.clearOutputData();
+            timeSeriesRepository.save(timeSeries);
         }
 
         Notification.pushToRedirect("All running analyses cancelled", "All running analyses were cancelled.", Notification.Style.info, redirectAttributes);
@@ -111,7 +110,7 @@ public class AdminController {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN);
         }
 
-        datasetRepository.putSortedToModel(model, authentication);
+        timeSeriesRepository.putSortedToModel(model, authentication);
         return new ModelAndView("admin-user-add");
     }
 
@@ -163,7 +162,7 @@ public class AdminController {
             User user = user_.get();
             CreateUpdateUserMessage message = new CreateUpdateUserMessage(user);
             model.addAttribute("user", message);
-            datasetRepository.putSortedToModel(model, authentication);
+            timeSeriesRepository.putSortedToModel(model, authentication);
 
             return new ModelAndView("admin-user-edit");
         } else {

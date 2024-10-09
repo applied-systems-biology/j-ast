@@ -2,9 +2,7 @@ package org.hkijena.jast.controller;
 
 import jakarta.servlet.http.HttpServletResponse;
 import org.hkijena.jast.config.RuntimeConfig;
-import org.hkijena.jast.model.OutputData;
-import org.hkijena.jast.repositories.DatasetRepository;
-import org.hkijena.jast.repositories.OutputDataRepository;
+import org.hkijena.jast.repositories.TimeSeriesRepository;
 import org.hkijena.jast.utils.RequestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,13 +20,13 @@ import java.util.Optional;
 @Controller
 public class OutputDataController {
     private final RuntimeConfig runtimeConfig;
-    private final DatasetRepository datasetRepository;
+    private final TimeSeriesRepository timeSeriesRepository;
     private final OutputDataRepository outputDataRepository;
 
     @Autowired
-    public OutputDataController(RuntimeConfig runtimeConfig, DatasetRepository datasetRepository, OutputDataRepository outputDataRepository) {
+    public OutputDataController(RuntimeConfig runtimeConfig, TimeSeriesRepository timeSeriesRepository, OutputDataRepository outputDataRepository) {
         this.runtimeConfig = runtimeConfig;
-        this.datasetRepository = datasetRepository;
+        this.timeSeriesRepository = timeSeriesRepository;
         this.outputDataRepository = outputDataRepository;
     }
 

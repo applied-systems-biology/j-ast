@@ -3,9 +3,9 @@ package org.hkijena.jast.controller;
 import jakarta.servlet.http.HttpServletRequest;
 import org.hkijena.jast.config.AccountConfig;
 import org.hkijena.jast.model.AdminPrincipal;
-import org.hkijena.jast.model.User;
+import org.hkijena.jast.model.entities.User;
 import org.hkijena.jast.model.UserPrincipal;
-import org.hkijena.jast.services.DatasetService;
+import org.hkijena.jast.services.ProjectService;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -14,11 +14,11 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 public class GlobalVariablesControllerAdvice {
 
     private final AccountConfig accountConfig;
-    private final DatasetService datasetService;
+    private final ProjectService projectService;
 
-    public GlobalVariablesControllerAdvice(AccountConfig accountConfig, DatasetService datasetService) {
+    public GlobalVariablesControllerAdvice(AccountConfig accountConfig, ProjectService projectService) {
         this.accountConfig = accountConfig;
-        this.datasetService = datasetService;
+        this.projectService = projectService;
     }
 
     @ModelAttribute("user")
@@ -43,6 +43,6 @@ public class GlobalVariablesControllerAdvice {
 
     @ModelAttribute("canCreateProject")
     public boolean canCreateProject(Authentication authentication) {
-        return datasetService.canCreateProject(authentication);
+        return projectService.canCreateProject(authentication);
     }
 }

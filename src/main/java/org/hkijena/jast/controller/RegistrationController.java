@@ -3,8 +3,8 @@ package org.hkijena.jast.controller;
 import org.hkijena.jast.config.AccountConfig;
 import org.hkijena.jast.model.messages.CreateUpdateUserMessage;
 import org.hkijena.jast.model.Notification;
-import org.hkijena.jast.model.User;
-import org.hkijena.jast.repositories.DatasetRepository;
+import org.hkijena.jast.model.entities.User;
+import org.hkijena.jast.repositories.TimeSeriesRepository;
 import org.hkijena.jast.repositories.UserRepository;
 import org.hkijena.jast.utils.StringUtils;
 import org.springframework.http.HttpStatus;
@@ -24,13 +24,13 @@ import java.util.Objects;
 
 @Controller
 public class RegistrationController {
-    private final DatasetRepository datasetRepository;
+    private final TimeSeriesRepository timeSeriesRepository;
     private final UserRepository userRepository;
     private final AccountConfig accountConfig;
     private final PasswordEncoder passwordEncoder;
 
-    public RegistrationController(DatasetRepository datasetRepository, UserRepository userRepository, AccountConfig accountConfig, PasswordEncoder passwordEncoder) {
-        this.datasetRepository = datasetRepository;
+    public RegistrationController(TimeSeriesRepository timeSeriesRepository, UserRepository userRepository, AccountConfig accountConfig, PasswordEncoder passwordEncoder) {
+        this.timeSeriesRepository = timeSeriesRepository;
         this.userRepository = userRepository;
         this.accountConfig = accountConfig;
         this.passwordEncoder = passwordEncoder;
@@ -40,8 +40,8 @@ public class RegistrationController {
     public ModelAndView loginError(Model model, RedirectAttributes redirectAttributes, Authentication authentication) {
 
         // Add basic info
-        datasetRepository.putSortedToModel(model, authentication);
-        model.addAttribute("currentDatasetId", -1);
+        timeSeriesRepository.putSortedToModel(model, authentication);
+        model.addAttribute("currentProjectId", -1);
 
         if(authentication == null || !authentication.isAuthenticated()) {
             if(accountConfig.isAllowGuestAccounts() || accountConfig.isAllowSelfRegister()) {
@@ -105,7 +105,7 @@ public class RegistrationController {
 
         Notification.pushToRedirect("Account created", "Please login with the E-mail '" + userName + "' and your password", Notification.Style.success, redirectAttributes);
         if(user.getRole() == User.Role.Guest) {
-            Notification.pushToRedirect("Guest account limitations", "Please note that guest accounts have a limit of " + accountConfig.getGuestDatasetLimit() + " data set(s) with at most " + accountConfig.getGuestInputDataLimit() + " images. " +
+            Notification.pushToRedirect("Guest account limitations", "Please note that guest accounts have a limit of " + accountConfig.getGuestProjectLimit() + " data set(s) with at most " + accountConfig.getguestImageLimit() + " images. " +
                     "Guest accounts will be automatically deleted after " + accountConfig.getGuestAccountExpireMinutes() + " minutes from now on." , Notification.Style.danger, redirectAttributes);
         }
 

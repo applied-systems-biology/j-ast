@@ -1,15 +1,15 @@
 <div th:fragment="modal-rename" class="modal" tabindex="-1" id="modal-rename">
-    <form th:action="@{'/dataset/rename/' + ${currentDatasetId}}" method="post">
+    <form th:action="@{'/timeSeries/rename/' + ${currentProjectId}}" method="post">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Rename dataset</h5>
+                    <h5 class="modal-title">Rename timeSeries</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <div class="mb-3">
                         <label for="datasetName" class="form-label">New name</label>
-                        <input type="text" class="form-control" id="datasetName" name="datasetName" placeholder="Dataset name" th:value="${currentDataset.name}">
+                        <input type="text" class="form-control" id="datasetName" name="datasetName" placeholder="Dataset name" th:value="${currentProject.name}">
                     </div>
                 </div>
                 <div class="modal-footer">

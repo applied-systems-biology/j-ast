@@ -2,15 +2,15 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title">Delete dataset</h5>
+        <h5 class="modal-title">Delete timeSeries</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <p>Do you really want to delete the dataset?</p>
+        <p>Do you really want to delete the timeSeries?</p>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
-        <form th:action="@{'/dataset/delete/' + ${currentDatasetId}}" method="post">
+        <form th:action="@{'/timeSeries/delete/' + ${currentProjectId}}" method="post">
           <button type="submit" class="btn btn-danger">Yes</button>
         </form>
       </div>

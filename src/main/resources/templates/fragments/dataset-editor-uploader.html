@@ -1,5 +1,5 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
-<div class="uploader" th:fragment="dataset-editor-uploader" style="display: block;">
+<div class="uploader" th:fragment="timeSeries-editor-uploader" style="display: block;">
     <div class="card">
         <div class="card-body">
             <div class="mb-3">
@@ -23,7 +23,7 @@
             const header = $('#_csrf_header').attr('content');
             return $.ajax({
                 type: "POST",
-                url: getURL("dataset/upload-input/" + currentDatasetId),
+                url: getURL("timeSeries/upload-input/" + currentProjectId),
                 data: formData,
                 processData: false,
                 contentType: false,

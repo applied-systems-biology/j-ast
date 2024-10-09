@@ -3,11 +3,10 @@ package org.hkijena.jast.controller;
 import org.hkijena.jast.config.AccountConfig;
 import org.hkijena.jast.model.AdminPrincipal;
 import org.hkijena.jast.model.Notification;
-import org.hkijena.jast.model.User;
+import org.hkijena.jast.model.entities.User;
 import org.hkijena.jast.model.UserPrincipal;
-import org.hkijena.jipipe.webapp.growthassay.model.*;
 import org.hkijena.jast.model.messages.CreateUpdateUserMessage;
-import org.hkijena.jast.repositories.DatasetRepository;
+import org.hkijena.jast.repositories.TimeSeriesRepository;
 import org.hkijena.jast.repositories.UserRepository;
 import org.hkijena.jast.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,14 +27,14 @@ import java.util.Objects;
 @Controller
 public class AccountController {
 
-    private final DatasetRepository datasetRepository;
+    private final TimeSeriesRepository timeSeriesRepository;
     private final UserRepository userRepository;
     private final AccountConfig accountConfig;
     private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public AccountController(DatasetRepository datasetRepository, UserRepository userRepository, AccountConfig accountConfig, PasswordEncoder passwordEncoder) {
-        this.datasetRepository = datasetRepository;
+    public AccountController(TimeSeriesRepository timeSeriesRepository, UserRepository userRepository, AccountConfig accountConfig, PasswordEncoder passwordEncoder) {
+        this.timeSeriesRepository = timeSeriesRepository;
         this.userRepository = userRepository;
         this.accountConfig = accountConfig;
         this.passwordEncoder = passwordEncoder;
@@ -44,7 +43,7 @@ public class AccountController {
     @GetMapping("/account")
     public ModelAndView getAccountIndex(Model model, Authentication authentication) {
         if(authentication != null && authentication.isAuthenticated()) {
-            datasetRepository.putSortedToModel(model, authentication);
+            timeSeriesRepository.putSortedToModel(model, authentication);
             User user;
             if(authentication.getPrincipal() instanceof UserPrincipal) {
                 user = ((UserPrincipal) authentication.getPrincipal()).getUser();
@@ -75,7 +74,7 @@ public class AccountController {
             }
             else if(authentication.getPrincipal() instanceof AdminPrincipal) {
                 Notification.pushToRedirect("Unable to update account!",
-                        "This admin account can only be changed by editing the web application settings file.",
+                        "This admin account can only be changed by editing the J-AST settings file.",
                         Notification.Style.danger,
                         redirectAttributes);
                 return new ModelAndView("redirect:/account");

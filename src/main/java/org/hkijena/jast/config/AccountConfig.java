@@ -14,8 +14,8 @@ public class AccountConfig {
     private String adminContact = "<Admin contact not provided>";
     private boolean allowSelfRegister = false;
     private boolean allowGuestAccounts = true;
-    private int guestDatasetLimit = 1;
-    private int guestInputDataLimit = 10;
+    private int guestProjectLimit = 1;
+    private int guestImageLimit = 10;
     private int guestAccountExpireMinutes = 60 * 24 * 3;
 
     public String getAdminContact() {
@@ -42,20 +42,20 @@ public class AccountConfig {
         this.allowGuestAccounts = allowGuestAccounts;
     }
 
-    public int getGuestDatasetLimit() {
-        return guestDatasetLimit;
+    public int getGuestProjectLimit() {
+        return guestProjectLimit;
     }
 
-    public void setGuestDatasetLimit(int guestDatasetLimit) {
-        this.guestDatasetLimit = guestDatasetLimit;
+    public void setGuestProjectLimit(int guestProjectLimit) {
+        this.guestProjectLimit = guestProjectLimit;
     }
 
-    public int getGuestInputDataLimit() {
-        return guestInputDataLimit;
+    public int getGuestImageLimit() {
+        return guestImageLimit;
     }
 
-    public void setGuestInputDataLimit(int guestInputDataLimit) {
-        this.guestInputDataLimit = guestInputDataLimit;
+    public void setGuestImageLimit(int guestImageLimit) {
+        this.guestImageLimit = guestImageLimit;
     }
 
     public int getGuestAccountExpireMinutes() {

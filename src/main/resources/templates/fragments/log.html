@@ -2,12 +2,12 @@
   <div class="card-header d-flex align-items-center gap-2">
     <span>Log</span>
     <div class="flex-grow-1"></div>
-    <a class="btn btn-outline-success" th:href="@{'/dataset/download-log/' + ${currentDatasetId}}">
+    <a class="btn btn-outline-success" th:href="@{'/timeSeries/download-log/' + ${currentProjectId}}">
       <i class="fa fas fa-download"></i> Download full log
     </a>
   </div>
   <div class="card-body">
-    <textarea id="log" class="form-control font-monospace dataset-run-log" readonly autocomplete="off">
+    <textarea id="log" class="form-control font-monospace timeSeries-run-log" readonly autocomplete="off">
     </textarea>
     <p class="text-muted small">
       For performance reasons, only the last 500 log lines are displayed

@@ -5,10 +5,10 @@
     <div class="row">
         <div class="col">
             <nav class="navbar bg-light rounded border p-3 d-flex flex-row gap-2">
-                <div th:if="${currentDatasetOwnedByOtherUser}" class="text-danger">
+                <div th:if="${currentProjectOwnedByOtherUser}" class="text-danger">
                     <i class="fa-solid fa-circle-user"></i>
                     Owned by
-                    <span th:text="${currentDatasetOwner}"></span>
+                    <span th:text="${currentProjectOwner}"></span>
                 </div>
                 <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal"
                         data-bs-target="#modal-rename"><i class="fa fas fa-edit"></i> Rename
@@ -24,7 +24,7 @@
                 <button type="button" class="btn btn-danger button-run" data-bs-toggle="modal" data-bs-target="#modal-reset">
                     <i class="fa fas fa-undo"></i> Discard results
                 </button>
-                <a class="btn btn-success button-run" th:href="@{'/dataset/download-results/zip/' + ${currentDatasetId}}">
+                <a class="btn btn-success button-run" th:href="@{'/timeSeries/download-results/zip/' + ${currentProjectId}}">
                     <i class="fa fas fa-download"></i> Download all results
                 </a>
             </nav>
@@ -42,12 +42,12 @@
             </div>
         </div>
     </div>
-    <div th:replace="~{fragments/modal-rename-dataset.html :: modal-rename}"></div>
-    <div th:replace="~{fragments/modal-delete-dataset.html :: modal-delete}"></div>
+    <div th:replace="~{fragments/modal-rename-timeSeries.html :: modal-rename}"></div>
+    <div th:replace="~{fragments/modal-delete-timeSeries.html :: modal-delete}"></div>
     <div th:replace="~{fragments/modal-reset-analysis.html :: modal-reset}"></div>
     <script th:inline="javascript">
         function queryStatus() {
-            $.getJSON(getURL("dataset/query-status/" + currentDatasetId), function (data) {
+            $.getJSON(getURL("timeSeries/query-status/" + currentProjectId), function (data) {
                 if(data["status"] !== "RunFinished") {
                     location.reload()
                 }

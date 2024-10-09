@@ -2,7 +2,7 @@ package org.hkijena.jast.model.messages;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonSetter;
-import org.hkijena.jast.model.User;
+import org.hkijena.jast.model.entities.User;
 
 public class CreateUpdateUserMessage {
 

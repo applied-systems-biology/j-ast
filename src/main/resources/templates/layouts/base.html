@@ -14,7 +14,7 @@
 <script th:src="@{/jquery/jquery-3.6.4.min.js}"></script>
 <script th:src="@{/bootstrap/js/bootstrap.bundle.min.js}"></script>
 <script th:inline="javascript">
-    const currentDatasetId = [[${currentDatasetId}]]
+    const currentProjectId = [[${currentProjectId}]]
 
     function getURL(path) {
         return [[@{'/'}]] + path
@@ -97,18 +97,18 @@
                     <span>Configure ZOI shapes</span>
                     <i class="fas fa-fw fa-ruler-combined ms-3"></i>
                 </a>
-                <a class="list-group-item list-group-item-action list-group-item-success d-flex justify-content-between align-items-center text-nowrap" th:href="@{/dataset/new}" th:if="${canCreateProject}">
-                    <span>Upload new dataset</span>
+                <a class="list-group-item list-group-item-action list-group-item-success d-flex justify-content-between align-items-center text-nowrap" th:href="@{/timeSeries/new}" th:if="${canCreateProject}">
+                    <span>Upload new timeSeries</span>
                     <i class="fas fa-fw fa-plus-circle ms-3"></i>
                 </a>
                 <a class="list-group-item list-group-item-action list-group-item-warning d-flex justify-content-between align-items-center text-nowrap" href="#" th:if="${!canCreateProject}">
                     <span>Dataset limit reached</span>
                     <i class="fas fa-fw fa-plus-circle ms-3"></i>
                 </a>
-                <th:block th:each="dataset: ${datasets}">
-                    <a class="list-group-item list-group-item-action d-flex justify-content-between align-items-center text-nowrap" th:classappend="${dataset.id == currentDatasetId ? 'active' : ''}" th:href="@{'/dataset/view/' + ${dataset.id}}">
-                        <span th:text="${dataset.name}"></span>
-                        <i class="fas fa-folder-open ms-3" th:id="'sidebar-dataset-status-' + ${dataset.id}"></i>
+                <th:block th:each="timeSeries: ${timeSeries}">
+                    <a class="list-group-item list-group-item-action d-flex justify-content-between align-items-center text-nowrap" th:classappend="${timeSeries.id == currentProjectId ? 'active' : ''}" th:href="@{'/timeSeries/view/' + ${timeSeries.id}}">
+                        <span th:text="${timeSeries.name}"></span>
+                        <i class="fas fa-folder-open ms-3" th:id="'sidebar-timeSeries-status-' + ${timeSeries.id}"></i>
                     </a>
                 </th:block>
 
@@ -149,9 +149,9 @@
 <script>
 
     function updateDatasetSideBar() {
-        $.getJSON(getURL("dataset/query-all-status"), function (data) {
+        $.getJSON(getURL("timeSeries/query-all-status"), function (data) {
             for (const [key, value] of Object.entries(data)) {
-                const elem = $("#sidebar-dataset-status-" + key)
+                const elem = $("#sidebar-timeSeries-status-" + key)
                 switch (value) {
                     case "Preparing":
                         elem.prop("class", "fa fas fa-folder-open ms-3")

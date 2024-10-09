@@ -1,10 +1,10 @@
-<div class="row" th:fragment="dataset-editor-toolbar">
+<div class="row" th:fragment="timeSeries-editor-toolbar">
   <div class="col">
     <nav class="navbar bg-light rounded border p-3 d-flex flex-row gap-2">
-      <div th:if="${currentDatasetOwnedByOtherUser}" class="text-danger">
+      <div th:if="${currentProjectOwnedByOtherUser}" class="text-danger">
         <i class="fa-solid fa-circle-user"></i>
         Owned by
-        <span th:text="${currentDatasetOwner}"></span>
+        <span th:text="${currentProjectOwner}"></span>
       </div>
       <button type="button" class="btn btn-outline-primary button-rename" data-bs-toggle="modal"
               data-bs-target="#modal-rename"><i class="fa fas fa-edit"></i> Rename

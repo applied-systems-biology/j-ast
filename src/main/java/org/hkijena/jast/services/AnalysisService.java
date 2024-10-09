@@ -14,14 +14,11 @@ import org.apache.commons.lang3.math.NumberUtils;
 import org.hibernate.Hibernate;
 import org.hkijena.jast.config.RuntimeConfig;
 import org.hkijena.jast.config.RuntimeParametersConfig;
-import org.hkijena.jast.model.Dataset;
-import org.hkijena.jast.model.InputData;
-import org.hkijena.jast.model.OutputData;
-import org.hkijena.jast.repositories.DatasetRepository;
-import org.hkijena.jast.repositories.InputDataRepository;
-import org.hkijena.jast.repositories.OutputDataRepository;
+import org.hkijena.jast.model.entities.TimeSeries;
+import org.hkijena.jast.model.entities.Image;
+import org.hkijena.jast.repositories.TimeSeriesRepository;
+import org.hkijena.jast.repositories.ImageRepository;
 import org.hkijena.jast.utils.*;
-import org.hkijena.jipipe.webapp.growthassay.utils.*;
 import org.jobrunr.jobs.context.JobContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
@@ -47,25 +44,25 @@ public class AnalysisService {
     private final RuntimeConfig runtimeConfig;
 
     private final RuntimeParametersConfig runtimeParametersConfig;
-    private final DatasetRepository datasetRepository;
+    private final TimeSeriesRepository timeSeriesRepository;
 
-    private final InputDataRepository inputDataRepository;
+    private final ImageRepository imageRepository;
     private final OutputDataRepository outputDataRepository;
 
     @Autowired
-    public AnalysisService(RuntimeConfig runtimeConfig, RuntimeParametersConfig runtimeParametersConfig, DatasetRepository datasetRepository, InputDataRepository inputDataRepository, OutputDataRepository outputDataRepository) {
+    public AnalysisService(RuntimeConfig runtimeConfig, RuntimeParametersConfig runtimeParametersConfig, TimeSeriesRepository timeSeriesRepository, ImageRepository imageRepository, OutputDataRepository outputDataRepository) {
         this.runtimeConfig = runtimeConfig;
         this.runtimeParametersConfig = runtimeParametersConfig;
-        this.datasetRepository = datasetRepository;
-        this.inputDataRepository = inputDataRepository;
+        this.timeSeriesRepository = timeSeriesRepository;
+        this.imageRepository = imageRepository;
         this.outputDataRepository = outputDataRepository;
     }
 
     public void cleanupAllOrphanedRunningTasks(JobContext context) {
-        datasetRepository.findAll().forEach(dataset -> {
-            if(dataset.getStatus() == Dataset.Status.Running) {
-                dataset.setStatus(Dataset.Status.RunInterrupted);
-                datasetRepository.save(dataset);
+        timeSeriesRepository.findAll().forEach(dataset -> {
+            if(dataset.getStatus() == TimeSeries.Status.Running) {
+                dataset.setStatus(TimeSeries.Status.RunInterrupted);
+                timeSeriesRepository.save(dataset);
 
                 Path workDirectory = Paths.get(dataset.getStoragePath()).resolve("project");
                 if(Files.isDirectory(workDirectory)) {
@@ -79,9 +76,9 @@ public class AnalysisService {
         });
     }
 
-    public void logInfo(String message, JobContext context, Dataset dataset) {
+    public void logInfo(String message, JobContext context, TimeSeries timeSeries) {
         context.logger().info(message);
-        Path logFilePath = Paths.get(dataset.getStoragePath()).resolve("log.txt");
+        Path logFilePath = Paths.get(timeSeries.getStoragePath()).resolve("log.txt");
         try {
             Files.writeString(logFilePath, "[INFO] " + message + "\n", StandardOpenOption.APPEND, StandardOpenOption.CREATE);
         } catch (IOException e) {
@@ -89,9 +86,9 @@ public class AnalysisService {
         }
     }
 
-    public void logError(String message, JobContext context, Dataset dataset) {
+    public void logError(String message, JobContext context, TimeSeries timeSeries) {
         context.logger().error(message);
-        Path logFilePath = Paths.get(dataset.getStoragePath()).resolve("log.txt");
+        Path logFilePath = Paths.get(timeSeries.getStoragePath()).resolve("log.txt");
         try {
             Files.writeString(logFilePath, "[ERROR] " + message + "\n", StandardOpenOption.APPEND, StandardOpenOption.CREATE);
         } catch (IOException e) {
@@ -101,13 +98,13 @@ public class AnalysisService {
 
     @Transactional(Transactional.TxType.REQUIRES_NEW)
     public void runAnalysis(long datasetId, JobContext context) {
-        Optional<Dataset> dataset_ = datasetRepository.findById(datasetId);
+        Optional<TimeSeries> dataset_ = timeSeriesRepository.findById(datasetId);
         if(dataset_.isPresent()) {
-            Dataset dataset = dataset_.get();
-            Hibernate.initialize(dataset.getInputData());
+            TimeSeries timeSeries = dataset_.get();
+            Hibernate.initialize(timeSeries.getImages());
 
             // Create a lockfile because interrupting the thread is not reliable
-            Path lockFilePath = Path.of(dataset.getStoragePath()).resolve("lockfile");
+            Path lockFilePath = Path.of(timeSeries.getStoragePath()).resolve("lockfile");
 
             try {
 
@@ -117,10 +114,10 @@ public class AnalysisService {
                 }
 
                 // Save job ID because tx not working
-                Files.writeString(Path.of(dataset.getStoragePath()).resolve("job-id.txt"), context.getJobId().toString(), StandardOpenOption.CREATE);
+                Files.writeString(Path.of(timeSeries.getStoragePath()).resolve("job-id.txt"), context.getJobId().toString(), StandardOpenOption.CREATE);
 
                 // Clean logs
-                Path logFilePath = Paths.get(dataset.getStoragePath()).resolve("log.txt");
+                Path logFilePath = Paths.get(timeSeries.getStoragePath()).resolve("log.txt");
                 Files.deleteIfExists(logFilePath);
 
                 ProgressInfo progressInfo = new ProgressInfo();
@@ -128,15 +125,15 @@ public class AnalysisService {
                 progressInfo.getEventBus().register(new Object() {
                     @Subscribe
                     public void onStatusUpdated(ProgressInfo.StatusUpdatedEvent event) {
-                        logInfo( event.render(), context, dataset);
+                        logInfo( event.render(), context, timeSeries);
                     }
                 });
 
                 // Get & cleanup work directory
                 progressInfo.log("Creating and cleaning work directory");
                 progressInfo.incrementProgress();
-                Path workDirectory = Paths.get(dataset.getStoragePath()).resolve("project");
-                Path resultServiceDirectory = Paths.get(dataset.getStoragePath()).resolve("results");
+                Path workDirectory = Paths.get(timeSeries.getStoragePath()).resolve("project");
+                Path resultServiceDirectory = Paths.get(timeSeries.getStoragePath()).resolve("results");
                 if(Files.isDirectory(workDirectory)) {
                     FileSystemUtils.deleteRecursively(workDirectory);
                 }
@@ -157,7 +154,7 @@ public class AnalysisService {
                 // Copy inputs into the raw directory
                 progressInfo.log("Copying inputs");
                 progressInfo.incrementProgress();
-                for (InputData data : dataset.getInputData()) {
+                for (Image data : timeSeries.getImages()) {
                     Files.copy(Paths.get(data.getStoragePath()), inputDirectory.resolve(data.getFinalFileName() + ".png"));
                 }
 
@@ -171,16 +168,16 @@ public class AnalysisService {
                 ObjectNode parameterOverrides = JsonUtils.getObjectMapper().createObjectNode();
                 parameterOverrides.set(runtimeParametersConfig.getInputFolderListParameterKey(), JsonUtils.readFromString("[\"raw\"]", JsonNode.class));
                 Map<String, String> timePointFilterConfig = new HashMap<>();
-                timePointFilterConfig.put("expression", "#Timepoint == \"" + dataset.getTimePointEarly() + "\"");
+                timePointFilterConfig.put("expression", "#Timepoint == \"" + timeSeries.getTimePointEarly() + "\"");
                 parameterOverrides.set(runtimeParametersConfig.getTimePointEarlyFilterParameterKey(), JsonUtils.getObjectMapper().convertValue(timePointFilterConfig, JsonNode.class));
                 parameterOverrides.set(runtimeParametersConfig.getGrowthReductionThresholdsParameterKey(), JsonUtils.getObjectMapper()
-                        .convertValue(dataset.tryParseGrowthReductionThresholds().stream().map(d -> d / 100.0).collect(Collectors.toList()), JsonNode.class));
-                parameterOverrides.set(runtimeParametersConfig.getDdaMinDiameterParameterKey(), new DoubleNode(dataset.getDdaDiskMinDiameter()));
-                parameterOverrides.set(runtimeParametersConfig.getDdaMaxDiameterParameterKey(), new DoubleNode(dataset.getDdaDiskMaxDiameter()));
-                parameterOverrides.set(runtimeParametersConfig.getDdaMinCircularityParameterKey(), new DoubleNode(dataset.getDdaDiskMinCircularity()));
-                parameterOverrides.set(runtimeParametersConfig.getContrastMinValueParameterKey(), new DoubleNode(dataset.getContrastMinValue()));
-                parameterOverrides.set(runtimeParametersConfig.getContrastMaxValueParameterKey(), new DoubleNode(dataset.getContrastMaxValue()));
-                parameterOverrides.set(runtimeParametersConfig.getEnsureCircularPlateParameterKey(), dataset.isEnsureCircularPlate() ? BooleanNode.TRUE : BooleanNode.FALSE);
+                        .convertValue(timeSeries.tryParseGrowthReductionThresholds().stream().map(d -> d / 100.0).collect(Collectors.toList()), JsonNode.class));
+                parameterOverrides.set(runtimeParametersConfig.getDdaMinDiameterParameterKey(), new DoubleNode(timeSeries.getDdaDiskMinDiameter()));
+                parameterOverrides.set(runtimeParametersConfig.getDdaMaxDiameterParameterKey(), new DoubleNode(timeSeries.getDdaDiskMaxDiameter()));
+                parameterOverrides.set(runtimeParametersConfig.getDdaMinCircularityParameterKey(), new DoubleNode(timeSeries.getDdaDiskMinCircularity()));
+                parameterOverrides.set(runtimeParametersConfig.getContrastMinValueParameterKey(), new DoubleNode(timeSeries.getContrastMinValue()));
+                parameterOverrides.set(runtimeParametersConfig.getContrastMaxValueParameterKey(), new DoubleNode(timeSeries.getContrastMaxValue()));
+                parameterOverrides.set(runtimeParametersConfig.getEnsureCircularPlateParameterKey(), timeSeries.isEnsureCircularPlate() ? BooleanNode.TRUE : BooleanNode.FALSE);
                 JsonUtils.saveToFile(parameterOverrides, parameterOverridesFile);
 
                 // Run analysis
@@ -241,7 +238,7 @@ public class AnalysisService {
                 // Postprocessing results
                 progressInfo.log("Postprocessing results");
                 progressInfo.incrementProgress();
-                dataset.clearOutputData();
+                timeSeries.clearOutputData();
 
                 Path resultsAllInOneFile = workDirectory.resolve("results").resolve("results_all_in_one.csv");
                 CSVFormat csvFormat = CSVFormat.DEFAULT.builder().setHeader().setSkipHeaderRecord(true).build();
@@ -254,7 +251,7 @@ public class AnalysisService {
                         double fog = NumberUtils.createDouble(record.get("FoG"));
                         double rad = NumberUtils.createDouble(record.get("RAD_mm"));
                         double threshold = NumberUtils.createDouble(record.get("#Threshold"));
-                        List<InputData> inputData = inputDataRepository.findByDatasetAndExperimentAndSample(dataset, experiment, sample);
+                        List<Image> inputData = imageRepository.findByDatasetAndExperimentAndSample(timeSeries, experiment, sample);
 
                         outputData.setExperiment(experiment);
                         outputData.setSample(sample);
@@ -271,7 +268,7 @@ public class AnalysisService {
                         outputData.setVisualizationThumbnailStoragePath(visualizationThumbnailPath.toAbsolutePath().toString());
 
                         outputData = outputDataRepository.save(outputData);
-                        dataset.addOutputData(outputData);
+                        timeSeries.addOutputData(outputData);
                     }
                 }
 
@@ -283,21 +280,21 @@ public class AnalysisService {
                 Path zipFile = resultServiceDirectory.resolve("results.zip");
                 ProgressInfo zipProgress = progressInfo.resolveAndLog("Compressing results");
                 progressInfo.incrementProgress();
-                ArchiveUtils.zipDirectory(workDirectory, StringUtils.makeFilesystemCompatible("" + dataset.getName()), zipFile, zipProgress);
+                ArchiveUtils.zipDirectory(workDirectory, StringUtils.makeFilesystemCompatible("" + timeSeries.getName()), zipFile, zipProgress);
 
                 if(!Files.isRegularFile(lockFilePath)) {
                     throw new InterruptedException();
                 }
 
                 // Finalize the analysis
-                dataset.setStatus(Dataset.Status.RunFinished);
-                datasetRepository.save(dataset);
+                timeSeries.setStatus(TimeSeries.Status.RunFinished);
+                timeSeriesRepository.save(timeSeries);
             }
             catch (Throwable e) {
-                dataset.setStatus(Dataset.Status.RunInterrupted);
-                datasetRepository.save(dataset);
+                timeSeries.setStatus(TimeSeries.Status.RunInterrupted);
+                timeSeriesRepository.save(timeSeries);
                 e.printStackTrace();
-                logError(e.toString(), context, dataset);
+                logError(e.toString(), context, timeSeries);
             }
             finally {
                 try {

@@ -1,4 +1,4 @@
-<div th:fragment="dataset-editor-table">
+<div th:fragment="timeSeries-editor-table">
     <div class="card-body">
         <div>
             <table class="table align-middle">
@@ -17,55 +17,55 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="inputData: ${currentDataset?.inputData}"
-                    th:id="'input-data-editor-' + ${inputData.id}" class="input-data-editor">
+                <tr th:each="image: ${currentProject?.image}"
+                    th:id="'input-data-editor-' + ${image.id}" class="input-data-editor">
                     <th scope="col">
                         <div class="d-flex flex-row">
                             <button class="button-delete-input-data btn btn-sm btn-outline-danger"
-                                    th:data-input-data-id="${inputData.id}"><i class="fa fas fa-times"></i>
+                                    th:data-input-data-id="${image.id}"><i class="fa fas fa-times"></i>
                             </button>
                             <a class="ms-1 btn btn-sm btn-outline-primary"
-                               th:href="@{'/input-data/download/' + ${inputData.id}}"><i
+                               th:href="@{'/input-data/download/' + ${image.id}}"><i
                                     class="fa fas fa-download"></i></a>
                         </div>
                     </th>
-                    <th scope="col"><a th:href="@{'/input-data/view/' + ${inputData.id}}"
+                    <th scope="col"><a th:href="@{'/input-data/view/' + ${image.id}}"
                                        target="_blank"><img
-                            th:src="@{'/input-data/thumbnail/' + ${inputData.id}}" alt="Thumbnail"/></a>
+                            th:src="@{'/input-data/thumbnail/' + ${image.id}}" alt="Thumbnail"/></a>
                     </th>
                     <th scope="col">
-                        <select class="form-select input-data-editor" th:data-input-data-id="${inputData.id}" data-input-data-property="assayType">
-                            <option th:selected="${inputData.assayType.toString().equals('DDA')}" value="DDA">DDA</option>
-                            <option th:selected="${inputData.assayType.toString().equals('ETest')}" value="ETest">E-Test</option>
+                        <select class="form-select input-data-editor" th:data-input-data-id="${image.id}" data-input-data-property="assayType">
+                            <option th:selected="${image.assayType.toString().equals('DDA')}" value="DDA">DDA</option>
+                            <option th:selected="${image.assayType.toString().equals('ETest')}" value="ETest">E-Test</option>
                         </select>
                     </th>
-<!--                    <th scope="col" class="text-muted" th:text="${inputData.imageWidth + ' ⨉ ' + inputData.imageHeight + ' px'}"></th>-->
-                    <th scope="col" class="fs-6 font-monospace fw-light" th:text="${inputData.originalFileName}"></th>
-                    <th scope="col"><input class="form-control input-data-editor" type="text" data-input-data-property="experiment" th:data-input-data-id="${inputData.id}" th:value="${inputData.experiment}" autocomplete="off"/></th>
-                    <th scope="col"><input class="form-control input-data-editor" type="text" data-input-data-property="sample" th:data-input-data-id="${inputData.id}" th:value="${inputData.sample}" autocomplete="off"/></th>
-                    <th scope="col"><input class="form-control input-data-editor" type="text" data-input-data-property="timePoint" th:data-input-data-id="${inputData.id}" th:value="${inputData.timePoint}" autocomplete="off"/></th>
-                    <th scope="col"><input class="form-control input-data-editor" type="number" step="any" min="0" data-input-data-property="plateDiameter" th:data-input-data-id="${inputData.id}" th:value="${inputData.plateDiameter}" autocomplete="off"/></th>
-                    <th scope="col" th:if="${inputData.assayType.toString().equals('DDA')}">
+<!--                    <th scope="col" class="text-muted" th:text="${image.imageWidth + ' ⨉ ' + image.imageHeight + ' px'}"></th>-->
+                    <th scope="col" class="fs-6 font-monospace fw-light" th:text="${image.originalFileName}"></th>
+                    <th scope="col"><input class="form-control input-data-editor" type="text" data-input-data-property="experiment" th:data-input-data-id="${image.id}" th:value="${image.experiment}" autocomplete="off"/></th>
+                    <th scope="col"><input class="form-control input-data-editor" type="text" data-input-data-property="sample" th:data-input-data-id="${image.id}" th:value="${image.sample}" autocomplete="off"/></th>
+                    <th scope="col"><input class="form-control input-data-editor" type="text" data-input-data-property="timePoint" th:data-input-data-id="${image.id}" th:value="${image.timePoint}" autocomplete="off"/></th>
+                    <th scope="col"><input class="form-control input-data-editor" type="number" step="any" min="0" data-input-data-property="plateDiameter" th:data-input-data-id="${image.id}" th:value="${image.plateDiameter}" autocomplete="off"/></th>
+                    <th scope="col" th:if="${image.assayType.toString().equals('DDA')}">
                         <div class="btn btn-sm btn-outline-secondary w-100"><i class="fa-solid fa-circle me-1" style="color: #DDE4E9"></i> Auto</div>
                     </th>
-                    <th scope="col" th:if="${inputData.assayType.toString().equals('ETest')}">
+                    <th scope="col" th:if="${image.assayType.toString().equals('ETest')}">
                         <div class="dropdown w-100">
-                            <button th:id="${'input-data-dropdown-zoi-shape-' + inputData.id}" th:data-input-data-id="${inputData.id}"
-                                    th:data-zoi-shape-name="${inputData.eTestZOIShapePresetName}"
-                                    th:data-zoi-shape-mca-rate="${inputData.eTestZOIShapePresetMcaRate}"
-                                    th:data-zoi-shape-mca-intercept="${inputData.eTestZOIShapePresetMcaIntercept}"
-                                    th:data-zoi-shape-strip-rate="${inputData.eTestZOIShapePresetStripRate}"
-                                    th:data-zoi-shape-strip-intercept="${inputData.eTestZOIShapePresetStripIntercept}"
+                            <button th:id="${'input-data-dropdown-zoi-shape-' + image.id}" th:data-input-data-id="${image.id}"
+                                    th:data-zoi-shape-name="${image.eTestZOIShapePresetName}"
+                                    th:data-zoi-shape-mca-rate="${image.eTestZOIShapePresetMcaRate}"
+                                    th:data-zoi-shape-mca-intercept="${image.eTestZOIShapePresetMcaIntercept}"
+                                    th:data-zoi-shape-strip-rate="${image.eTestZOIShapePresetStripRate}"
+                                    th:data-zoi-shape-strip-intercept="${image.eTestZOIShapePresetStripIntercept}"
                                     class="btn btn-sm btn-outline-secondary dropdown-toggle w-100 input-data-editor-dropdown-zoi-shape"
                                     type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                <i th:id="${'input-data-dropdown-zoi-shape-icon-' + inputData.id}" class="fa-solid fa-circle me-1"></i>
-                                <span th:id="${'input-data-dropdown-zoi-shape-text-' + inputData.id}"></span>
+                                <i th:id="${'input-data-dropdown-zoi-shape-icon-' + image.id}" class="fa-solid fa-circle me-1"></i>
+                                <span th:id="${'input-data-dropdown-zoi-shape-text-' + image.id}"></span>
                             </button>
                             <ul class="dropdown-menu">
-                                <li><a class="dropdown-item disabled" href="#"><strong>MCA Rate</strong> <span th:id="${'input-data-dropdown-zoi-shape-current-mca-rate-' + inputData.id}"></span></a></li>
-                                <li><a class="dropdown-item disabled" href="#"><strong>MCA Intercept</strong> <span th:id="${'input-data-dropdown-zoi-shape-current-mca-intercept-' + inputData.id}"></span></a></li>
-                                <li><a class="dropdown-item disabled" href="#"><strong>Strip Rate</strong> <span th:id="${'input-data-dropdown-zoi-shape-current-strip-rate-' + inputData.id}"></span></a></li>
-                                <li><a class="dropdown-item disabled" href="#"><strong>Strip Intercept</strong> <span th:id="${'input-data-dropdown-zoi-shape-current-strip-intercept-' + inputData.id}"></span></a></li>
+                                <li><a class="dropdown-item disabled" href="#"><strong>MCA Rate</strong> <span th:id="${'input-data-dropdown-zoi-shape-current-mca-rate-' + image.id}"></span></a></li>
+                                <li><a class="dropdown-item disabled" href="#"><strong>MCA Intercept</strong> <span th:id="${'input-data-dropdown-zoi-shape-current-mca-intercept-' + image.id}"></span></a></li>
+                                <li><a class="dropdown-item disabled" href="#"><strong>Strip Rate</strong> <span th:id="${'input-data-dropdown-zoi-shape-current-strip-rate-' + image.id}"></span></a></li>
+                                <li><a class="dropdown-item disabled" href="#"><strong>Strip Intercept</strong> <span th:id="${'input-data-dropdown-zoi-shape-current-strip-intercept-' + image.id}"></span></a></li>
                                 <li><hr class="dropdown-divider"></li>
                                 <button class="dropdown-item input-data-select-zoi-shape-dropdown-item"
                                         data-zoi-shape-name="Auto"
@@ -73,7 +73,7 @@
                                         data-zoi-shape-mca-intercept="0"
                                         data-zoi-shape-strip-rate="0"
                                         data-zoi-shape-strip-intercept="0"
-                                        th:data-input-data-id="${inputData.id}" type="button" >
+                                        th:data-input-data-id="${image.id}" type="button" >
                                     <i class="fa-solid fa-circle me-1"></i>
                                     <span>Auto</span>
                                 </button>
@@ -84,7 +84,7 @@
                                             th:data-zoi-shape-mca-intercept="${preset.mcaIntercept}"
                                             th:data-zoi-shape-strip-rate="${preset.stripRate}"
                                             th:data-zoi-shape-strip-intercept="${preset.stripIntercept}"
-                                            th:data-input-data-id="${inputData.id}"
+                                            th:data-input-data-id="${image.id}"
                                             type="button" >
                                         <i class="fa-solid fa-circle me-1"></i>
                                         <span></span>

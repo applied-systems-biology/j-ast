@@ -4,14 +4,15 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.hkijena.jast.config.AccountConfig;
 import org.hkijena.jast.config.RuntimeConfig;
 import org.hkijena.jast.model.*;
-import org.hkijena.jipipe.webapp.growthassay.model.*;
+import org.hkijena.jast.model.entities.Project;
+import org.hkijena.jast.model.entities.TimeSeries;
+import org.hkijena.jast.model.entities.Image;
 import org.hkijena.jast.model.messages.AnalysisStatusMessage;
 import org.hkijena.jast.model.messages.DatasetUpdateMessage;
-import org.hkijena.jast.repositories.DatasetRepository;
-import org.hkijena.jast.repositories.InputDataRepository;
-import org.hkijena.jast.repositories.ZOIShapePresetRepository;
+import org.hkijena.jast.repositories.ProjectRepository;
+import org.hkijena.jast.repositories.ImageRepository;
 import org.hkijena.jast.services.AnalysisService;
-import org.hkijena.jast.services.DatasetService;
+import org.hkijena.jast.services.ProjectService;
 import org.hkijena.jast.utils.ImageUtils;
 import org.hkijena.jast.utils.RequestUtils;
 import org.hkijena.jast.utils.StringUtils;
@@ -41,123 +42,90 @@ import java.nio.file.Paths;
 import java.util.*;
 
 @Controller
-public class DatasetController {
+public class ProjectController {
 
     private final RuntimeConfig runtimeConfig;
 
     private final AccountConfig accountConfig;
-    private final DatasetRepository datasetRepository;
-    private final InputDataRepository inputDataRepository;
-    private final ZOIShapePresetRepository zoiShapePresetRepository;
+    private final ProjectRepository projectRepository;
+    private final ImageRepository imageRepository;
     private final JobScheduler jobScheduler;
     private final AnalysisService analysisService;
-    private final DatasetService datasetService;
+    private final ProjectService projectService;
 
     @Autowired
-    public DatasetController(RuntimeConfig runtimeConfig, AccountConfig accountConfig, DatasetRepository datasetRepository, InputDataRepository inputDataRepository, ZOIShapePresetRepository zoiShapePresetRepository, JobScheduler jobScheduler, AnalysisService analysisService, DatasetService datasetService) {
+    public ProjectController(RuntimeConfig runtimeConfig, AccountConfig accountConfig, ProjectRepository projectRepository, ImageRepository imageRepository, JobScheduler jobScheduler, AnalysisService analysisService, ProjectService projectService) {
         this.runtimeConfig = runtimeConfig;
         this.accountConfig = accountConfig;
-        this.datasetRepository = datasetRepository;
-        this.inputDataRepository = inputDataRepository;
-        this.zoiShapePresetRepository = zoiShapePresetRepository;
+        this.projectRepository = projectRepository;
+        this.imageRepository = imageRepository;
         this.jobScheduler = jobScheduler;
         this.analysisService = analysisService;
-        this.datasetService = datasetService;
+        this.projectService = projectService;
     }
 
-    @GetMapping("/dataset/new")
-    public ModelAndView newDataset(Model model, Authentication authentication) throws IOException {
+    @GetMapping("/project/new")
+    public ModelAndView newProject(Model model, Authentication authentication) throws IOException {
         if(authentication == null || !authentication.isAuthenticated() || !authentication.getAuthorities().contains(Privileges.PRIVILEGE_CREATE_TASKS)) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN);
         }
-        if(!datasetService.canCreateProject(authentication)) {
+        if(!projectService.canCreateProject(authentication)) {
             return new ModelAndView("redirect:/");
         }
-        Dataset dataset = new Dataset();
-        Path storageDir;
-        if(StringUtils.isNullOrEmpty(runtimeConfig.getCustomTempDirectory())) {
-            storageDir = Files.createTempDirectory("jip-webapp");
-        }
-        else {
-            storageDir = Files.createTempDirectory(Paths.get(runtimeConfig.getCustomTempDirectory()), "jip-webapp");
-        }
-        dataset.setStoragePath(storageDir.toString());
+        Project project = new Project();
         if(authentication.getPrincipal() instanceof UserPrincipal) {
-            dataset.setOwner(((UserPrincipal) authentication.getPrincipal()).getUser());
+            project.setOwner(((UserPrincipal) authentication.getPrincipal()).getUser());
         }
-        dataset = datasetRepository.save(dataset);
-        return new ModelAndView("redirect:/dataset/view/" + dataset.getId());
+        project = projectRepository.save(project);
+        return new ModelAndView("redirect:/project/view/" + project.getId());
     }
 
-    @GetMapping("/dataset/view/{id}")
-    public ModelAndView viewDataset(Model model, Authentication authentication, @PathVariable long id) {
-        Optional<Dataset> dataset_ = datasetRepository.findById(id);
-        if (dataset_.isPresent()) {
-            Dataset dataset = dataset_.get();
+    @GetMapping("/project/view/{id}")
+    public ModelAndView viewProject(Model model, Authentication authentication, @PathVariable long id) {
+        Optional<Project> project_ = projectRepository.findById(id);
+        if (project_.isPresent()) {
+            Project project = project_.get();
 
-            if(!dataset.canAccess(authentication)) {
+            if(!project.canAccess(authentication)) {
                 throw new ResponseStatusException(HttpStatus.FORBIDDEN);
             }
 
-            datasetRepository.putSortedToModel(model, authentication);
-            model.addAttribute("currentDataset", dataset);
-            model.addAttribute("currentDatasetId", dataset.getId());
+            projectRepository.putSortedToModel(model, authentication);
+            model.addAttribute("currentProject", project);
+            model.addAttribute("currentProjectId", project.getId());
 
             // Add owner information
-            if(dataset.isOwnedBy(authentication)) {
-                model.addAttribute("currentDatasetOwnedByOtherUser", false);
+            if(project.isOwnedBy(authentication)) {
+                model.addAttribute("currentProjectOwnedByOtherUser", false);
             }
             else {
-                model.addAttribute("currentDatasetOwnedByOtherUser", true);
-                model.addAttribute("currentDatasetOwner", dataset.getOwner() != null ? dataset.getOwner().getEmail() : accountConfig.getAdminUsername());
+                model.addAttribute("currentProjectOwnedByOtherUser", true);
+                model.addAttribute("currentProjectOwner", project.getOwner() != null ? project.getOwner().getEmail() : accountConfig.getAdminUsername());
             }
 
             // Add limits info
-            model.addAttribute("guestInputDataLimit", accountConfig.getGuestInputDataLimit());
+            model.addAttribute("guestImageLimit", accountConfig.getGuestImageLimit());
 
-            switch (dataset.getStatus()) {
-                case Preparing -> {
-
-                    // Add available ZOI shapes
-                    model.addAttribute("zoiShapes", zoiShapePresetRepository.getAvailableByAuthentication(authentication));
-
-                    return new ModelAndView("dataset-editor");
-                }
-                case Running -> {
-                    return new ModelAndView("dataset-run");
-                }
-                case RunInterrupted -> {
-                    return new ModelAndView("dataset-run-interrupted");
-                }
-                case RunFinished -> {
-                    return new ModelAndView("dataset-run-finished");
-                }
-                default -> throw new UnsupportedOperationException();
-            }
-
+            return new ModelAndView("dataset-editor");
         } else {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
     }
 
-    @PostMapping("/dataset/delete/{id}")
-    public ModelAndView deleteDataset(Authentication authentication, RedirectAttributes redirectAttributes, @PathVariable long id) {
-        Optional<Dataset> dataset_ = datasetRepository.findById(id);
-        if(dataset_.isPresent()) {
+    @PostMapping("/project/delete/{id}")
+    public ModelAndView deleteProject(Authentication authentication, RedirectAttributes redirectAttributes, @PathVariable long id) {
+        Optional<Project> project_ = projectRepository.findById(id);
+        if (project_.isPresent()) {
 
-            Dataset dataset = dataset_.get();
+            Project project = project_.get();
 
-            if(!dataset.canEdit(authentication)) {
+            if(!project.canEdit(authentication)) {
                 throw new ResponseStatusException(HttpStatus.FORBIDDEN);
             }
 
-            if(dataset.getStatus() == Dataset.Status.Running) {
-                throw new ResponseStatusException(HttpStatus.FORBIDDEN);
-            }
+            projectService.delete(project);
 
-            datasetService.delete(dataset);
-
-            Notification.pushToRedirect("Dataset deleted", "The dataset '" + dataset.getName() + "' was deleted.", Notification.Style.success, redirectAttributes);
+            Notification.pushToRedirect("Project deleted", "The project '" + project.getName() + "' was deleted.", Notification.Style.success, redirectAttributes);
             return new ModelAndView("redirect:/");
         }
         else {
@@ -165,13 +133,13 @@ public class DatasetController {
         }
     }
 
-    @PostMapping("/dataset/rename/{id}")
+    @PostMapping("/project/rename/{id}")
     public ModelAndView renameDataset(Authentication authentication, @PathVariable long id, @RequestParam("datasetName") String datasetName) {
-        Optional<Dataset> dataset_ = datasetRepository.findById(id);
-        if(dataset_.isPresent()) {
-            Dataset dataset = dataset_.get();
+        Optional<Project> project_ = projectRepository.findById(id);
+        if (project_.isPresent()) {
+            Project project = project_.get();
 
-            if(!dataset.canEdit(authentication)) {
+            if(!project.canEdit(authentication)) {
                 throw new ResponseStatusException(HttpStatus.FORBIDDEN);
             }
 
@@ -179,49 +147,32 @@ public class DatasetController {
             if(StringUtils.isNullOrEmpty(datasetName)) {
                 datasetName = "Unnamed";
             }
-            dataset.setName(datasetName);
-            datasetRepository.save(dataset);
-            return new ModelAndView("redirect:/dataset/view/" + id);
+            project.setName(datasetName);
+            projectRepository.save(project);
+            return new ModelAndView("redirect:/project/view/" + id);
         }
         else {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
     }
 
-    @GetMapping("/dataset/validate/{id}")
-    public ResponseEntity<ValidationResult> validateDataset(Authentication authentication, @PathVariable long id) {
-        Optional<Dataset> dataset_ = datasetRepository.findById(id);
-        if(dataset_.isPresent()) {
-
-            Dataset dataset = dataset_.get();
-            if(!dataset.canAccess(authentication)) {
-                throw new ResponseStatusException(HttpStatus.FORBIDDEN);
-            }
-
-            return ResponseEntity.ok(dataset.validate());
-        }
-        else {
-            return ResponseEntity.notFound().build();
-        }
-    }
-
-    @PostMapping("/dataset/upload-input/{id}")
+    @PostMapping("/project/upload/{id}")
     public ResponseEntity<?> uploadFileToDataset(Authentication authentication, @PathVariable long id, RedirectAttributes redirectAttributes, @RequestParam("imageFile") MultipartFile imageFile) {
-        Optional<Dataset> dataset_ = datasetRepository.findById(id);
+        Optional<TimeSeries> dataset_ = timeSeriesRepository.findById(id);
         if(dataset_.isPresent()) {
-            Dataset dataset = dataset_.get();
+            TimeSeries timeSeries = dataset_.get();
 
-            if(!dataset.canEdit(authentication)) {
+            if(!timeSeries.canEdit(authentication)) {
                 throw new ResponseStatusException(HttpStatus.FORBIDDEN);
             }
 
-            if(dataset.getStatus() != Dataset.Status.Preparing) {
+            if(timeSeries.getStatus() != TimeSeries.Status.Preparing) {
                 throw new ResponseStatusException(HttpStatus.FORBIDDEN);
             }
 
             // Create target directory
-            Path targetDir = Paths.get(dataset.getStoragePath()).resolve("inputs_raw");
-            Path targetDirThumbnails = Paths.get(dataset.getStoragePath()).resolve("inputs_raw_thumbnails");
+            Path targetDir = Paths.get(timeSeries.getStoragePath()).resolve("inputs_raw");
+            Path targetDirThumbnails = Paths.get(timeSeries.getStoragePath()).resolve("inputs_raw_thumbnails");
             try {
                 Files.createDirectories(targetDir);
                 Files.createDirectories(targetDirThumbnails);
@@ -235,7 +186,7 @@ public class DatasetController {
             int numLimitReached = 0;
             List<String> failureNames = new ArrayList<>();
             if(imageFile != null && !imageFile.isEmpty()) {
-                if(datasetService.canUploadInput(dataset, authentication)) {
+                if(projectService.canUploadImage(timeSeries, authentication)) {
                     try {
                         try (InputStream stream = imageFile.getInputStream()) {
                             BufferedImage image = ImageIO.read(stream);
@@ -252,7 +203,7 @@ public class DatasetController {
                             ImageUtils.createThumbnail(image, 64, 64, thumbnailStoragePath);
 
                             // Create object
-                            InputData inputData = new InputData();
+                            Image inputData = new Image();
                             inputData.setOriginalFileName(StringUtils.nullToEmpty(imageFile.getOriginalFilename()));
                             inputData.setStoragePath(imageStoragePath.toString());
                             inputData.setThumbnailStoragePath(thumbnailStoragePath.toString());
@@ -260,7 +211,7 @@ public class DatasetController {
                             inputData.setImageWidth(image.getWidth());
                             inputData.setImageHeight(image.getHeight());
 
-                            dataset.addInputData(inputData);
+                            timeSeries.addImage(inputData);
                             ++numSuccess;
                         }
                     } catch (Throwable e) {
@@ -275,7 +226,7 @@ public class DatasetController {
                     ++numLimitReached;
                 }
             }
-            datasetRepository.save(dataset);
+            timeSeriesRepository.save(timeSeries);
 
             if(numSuccess > 0) {
                 Notification.pushToRedirect("Successfully imported images",
@@ -291,7 +242,7 @@ public class DatasetController {
             }
             if(numLimitReached > 0) {
                 Notification.pushToRedirect("Input image limit reached",
-                        "Guests can only upload up to " + accountConfig.getGuestInputDataLimit() + " images per data set",
+                        "Guests can only upload up to " + accountConfig.getguestImageLimit() + " images per data set",
                         Notification.Style.danger,
                         redirectAttributes);
             }
@@ -303,25 +254,25 @@ public class DatasetController {
         }
     }
 
-    @PostMapping("/dataset/update/{id}")
+    @PostMapping("/project/update/{id}")
     public void update(HttpServletResponse response, Authentication authentication, @PathVariable long id, @RequestBody DatasetUpdateMessage message) {
-        Optional<Dataset> dataset_ = datasetRepository.findById(id);
+        Optional<TimeSeries> dataset_ = timeSeriesRepository.findById(id);
         if(dataset_.isPresent()) {
-            Dataset dataset = dataset_.get();
+            TimeSeries timeSeries = dataset_.get();
 
-            if(!dataset.canEdit(authentication)) {
+            if(!timeSeries.canEdit(authentication)) {
                 throw new ResponseStatusException(HttpStatus.FORBIDDEN);
             }
 
-            if(dataset.getStatus() == Dataset.Status.Preparing) {
-                message.getParametersUpdateMessage().update(dataset);
-                datasetRepository.save(dataset);
+            if(timeSeries.getStatus() == TimeSeries.Status.Preparing) {
+                message.getParametersUpdateMessage().update(timeSeries);
+                timeSeriesRepository.save(timeSeries);
                 for (DatasetUpdateMessage.InputDataUpdateMessage inputDataUpdateMessage : message.getInputDataUpdateMessageMap().values()) {
-                    Optional<InputData> inputData_ = inputDataRepository.findById(inputDataUpdateMessage.getId());
+                    Optional<Image> inputData_ = imageRepository.findById(inputDataUpdateMessage.getId());
                     if (inputData_.isPresent()) {
-                        InputData inputData = inputData_.get();
-                        inputDataUpdateMessage.update(inputData);
-                        inputDataRepository.save(inputData);
+                        Image image = inputData_.get();
+                        inputDataUpdateMessage.update(image);
+                        imageRepository.save(image);
                     }
                 }
             }
@@ -334,38 +285,38 @@ public class DatasetController {
         }
     }
 
-    @PostMapping("/dataset/run/{id}")
+    @PostMapping("/project/run/{id}")
     public ModelAndView run(RedirectAttributes redirectAttributes, Authentication authentication, @PathVariable long id) {
-        Optional<Dataset> dataset_ = datasetRepository.findById(id);
+        Optional<TimeSeries> dataset_ = timeSeriesRepository.findById(id);
         if(dataset_.isPresent()) {
-            Dataset dataset = dataset_.get();
+            TimeSeries timeSeries = dataset_.get();
 
-            if(!dataset.canEdit(authentication)) {
+            if(!timeSeries.canEdit(authentication)) {
                 throw new ResponseStatusException(HttpStatus.FORBIDDEN);
             }
 
-            if(dataset.getStatus() == Dataset.Status.Preparing) {
-                if (dataset.validate().isValid()) {
+            if(timeSeries.getStatus() == TimeSeries.Status.Preparing) {
+                if (timeSeries.validate().isValid()) {
 
-                    Path logFilePath = Paths.get(dataset.getStoragePath()).resolve("log.txt");
+                    Path logFilePath = Paths.get(timeSeries.getStoragePath()).resolve("log.txt");
                     try {
                         Files.deleteIfExists(logFilePath);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
 
-                    dataset.setStatus(Dataset.Status.Running);
-                    datasetRepository.save(dataset);
+                    timeSeries.setStatus(TimeSeries.Status.Running);
+                    timeSeriesRepository.save(timeSeries);
                     jobScheduler.enqueue(() -> analysisService.runAnalysis(id, JobContext.Null));
-                    return new ModelAndView("redirect:/dataset/view/" + id);
+                    return new ModelAndView("redirect:/project/view/" + id);
                 } else {
                     Notification.pushToRedirect("Dataset is invalid!", "Validation checks failed.", Notification.Style.danger, redirectAttributes);
-                    return new ModelAndView("redirect:/dataset/view/" + id);
+                    return new ModelAndView("redirect:/project/view/" + id);
                 }
             }
             else {
                 Notification.pushToRedirect("Dataset is not ready!", "An analysis is currently in progress.", Notification.Style.danger, redirectAttributes);
-                return new ModelAndView("redirect:/dataset/view/" + id);
+                return new ModelAndView("redirect:/project/view/" + id);
             }
         }
         else {
@@ -373,46 +324,46 @@ public class DatasetController {
         }
     }
 
-    @PostMapping("/dataset/reset/{id}")
+    @PostMapping("/project/reset/{id}")
     public ModelAndView reset(RedirectAttributes redirectAttributes, Authentication authentication, @PathVariable long id) {
-        Optional<Dataset> dataset_ = datasetRepository.findById(id);
+        Optional<TimeSeries> dataset_ = timeSeriesRepository.findById(id);
         if(dataset_.isPresent()) {
-            Dataset dataset = dataset_.get();
+            TimeSeries timeSeries = dataset_.get();
 
-            if(!dataset.canEdit(authentication)) {
+            if(!timeSeries.canEdit(authentication)) {
                 throw new ResponseStatusException(HttpStatus.FORBIDDEN);
             }
 
-            dataset.tryCancelCurrentJob();
+            timeSeries.tryCancelCurrentJob();
 
-            dataset.setStatus(Dataset.Status.Preparing);
-            dataset.clearOutputData();
-            datasetRepository.save(dataset);
+            timeSeries.setStatus(TimeSeries.Status.Preparing);
+            timeSeries.clearOutputData();
+            timeSeriesRepository.save(timeSeries);
             Notification.pushToRedirect("Dataset reset", "You can now edit all parameters and modify the inputs.", Notification.Style.info, redirectAttributes);
-            return new ModelAndView("redirect:/dataset/view/" + id);
+            return new ModelAndView("redirect:/project/view/" + id);
         }
         else {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
     }
 
-    @GetMapping("/dataset/query-status/{id}")
+    @GetMapping("/project/query-status/{id}")
     public ResponseEntity<AnalysisStatusMessage> queryDatasetStatus(Authentication authentication, @PathVariable long id) {
-        Optional<Dataset> dataset_ = datasetRepository.findById(id);
+        Optional<TimeSeries> dataset_ = timeSeriesRepository.findById(id);
         if(dataset_.isPresent()) {
-            Dataset dataset = dataset_.get();
+            TimeSeries timeSeries = dataset_.get();
 
-            if(!dataset.canAccess(authentication)) {
+            if(!timeSeries.canAccess(authentication)) {
                 throw new ResponseStatusException(HttpStatus.FORBIDDEN);
             }
 
             AnalysisStatusMessage message = new AnalysisStatusMessage();
-            message.setStatus(dataset.getStatus());
+            message.setStatus(timeSeries.getStatus());
 
             StringBuilder stringBuilder = new StringBuilder();
 
             try {
-                Path logFilePath = Paths.get(dataset.getStoragePath()).resolve("log.txt");
+                Path logFilePath = Paths.get(timeSeries.getStoragePath()).resolve("log.txt");
                 if(Files.isRegularFile(logFilePath)) {
                     List<String> lines = Files.readAllLines(logFilePath);
                     for (int i = Math.max(0, lines.size() - 500 - 1); i < lines.size(); i++) {
@@ -435,17 +386,17 @@ public class DatasetController {
         }
     }
 
-    @GetMapping("/dataset/download-log/{id}")
+    @GetMapping("/project/download-log/{id}")
     public void downloadDatasetLog(HttpServletResponse httpServletResponse, Authentication authentication, @PathVariable long id) throws IOException {
-        Optional<Dataset> dataset_ = datasetRepository.findById(id);
-        if(dataset_.isPresent() && dataset_.get().getStatus() != Dataset.Status.Preparing) {
-            Dataset dataset = dataset_.get();
+        Optional<TimeSeries> dataset_ = timeSeriesRepository.findById(id);
+        if(dataset_.isPresent() && dataset_.get().getStatus() != TimeSeries.Status.Preparing) {
+            TimeSeries timeSeries = dataset_.get();
 
-            if(!dataset.canAccess(authentication)) {
+            if(!timeSeries.canAccess(authentication)) {
                 throw new ResponseStatusException(HttpStatus.FORBIDDEN);
             }
 
-            Path logFilePath = Paths.get(dataset.getStoragePath()).resolve("log.txt");
+            Path logFilePath = Paths.get(timeSeries.getStoragePath()).resolve("log.txt");
             if(Files.isRegularFile(logFilePath)) {
                 RequestUtils.sendAttachment(httpServletResponse, logFilePath, "log.txt");
             }
@@ -458,19 +409,19 @@ public class DatasetController {
         }
     }
 
-    @GetMapping("/dataset/download-results/zip/{id}")
+    @GetMapping("/project/download-results/zip/{id}")
     public void downloadAllResultsAsZIP(HttpServletResponse httpServletResponse, Authentication authentication, @PathVariable long id) throws IOException {
-        Optional<Dataset> dataset_ = datasetRepository.findById(id);
-        if(dataset_.isPresent() && dataset_.get().getStatus() != Dataset.Status.Preparing) {
-            Dataset dataset = dataset_.get();
+        Optional<TimeSeries> dataset_ = timeSeriesRepository.findById(id);
+        if(dataset_.isPresent() && dataset_.get().getStatus() != TimeSeries.Status.Preparing) {
+            TimeSeries timeSeries = dataset_.get();
 
-            if(!dataset.canAccess(authentication)) {
+            if(!timeSeries.canAccess(authentication)) {
                 throw new ResponseStatusException(HttpStatus.FORBIDDEN);
             }
 
-            Path resultsFilePath = Paths.get(dataset.getStoragePath()).resolve("results").resolve("results.zip");
+            Path resultsFilePath = Paths.get(timeSeries.getStoragePath()).resolve("results").resolve("results.zip");
             if(Files.isRegularFile(resultsFilePath)) {
-                RequestUtils.sendAttachment(httpServletResponse, resultsFilePath, StringUtils.makeFilesystemCompatible(dataset.getName()) + "-results.zip");
+                RequestUtils.sendAttachment(httpServletResponse, resultsFilePath, StringUtils.makeFilesystemCompatible(timeSeries.getName()) + "-results.zip");
             }
             else {
                 throw new ResponseStatusException(HttpStatus.NOT_FOUND);
@@ -481,19 +432,19 @@ public class DatasetController {
         }
     }
 
-    @GetMapping("/dataset/download-results/xlsx-per-experiment/{id}")
+    @GetMapping("/project/download-results/xlsx-per-experiment/{id}")
     public void downloadXLSXPerExperimentResults(HttpServletResponse httpServletResponse, Authentication authentication, @PathVariable long id) throws IOException {
-        Optional<Dataset> dataset_ = datasetRepository.findById(id);
-        if(dataset_.isPresent() && dataset_.get().getStatus() != Dataset.Status.Preparing) {
-            Dataset dataset = dataset_.get();
+        Optional<TimeSeries> dataset_ = timeSeriesRepository.findById(id);
+        if(dataset_.isPresent() && dataset_.get().getStatus() != TimeSeries.Status.Preparing) {
+            TimeSeries timeSeries = dataset_.get();
 
-            if(!dataset.canAccess(authentication)) {
+            if(!timeSeries.canAccess(authentication)) {
                 throw new ResponseStatusException(HttpStatus.FORBIDDEN);
             }
 
-            Path resultsFilePath = Paths.get(dataset.getStoragePath()).resolve("project").resolve("results").resolve("results_per_experiment.xlsx");
+            Path resultsFilePath = Paths.get(timeSeries.getStoragePath()).resolve("project").resolve("results").resolve("results_per_experiment.xlsx");
             if(Files.isRegularFile(resultsFilePath)) {
-                RequestUtils.sendAttachment(httpServletResponse, resultsFilePath, StringUtils.makeFilesystemCompatible(dataset.getName()) + "-results_per_experiment.xlsx");
+                RequestUtils.sendAttachment(httpServletResponse, resultsFilePath, StringUtils.makeFilesystemCompatible(timeSeries.getName()) + "-results_per_experiment.xlsx");
             }
             else {
                 throw new ResponseStatusException(HttpStatus.NOT_FOUND);
@@ -504,19 +455,19 @@ public class DatasetController {
         }
     }
 
-    @GetMapping("/dataset/download-results/xlsx-classic/{id}")
+    @GetMapping("/project/download-results/xlsx-classic/{id}")
     public void downloadXLSXClassicResults(HttpServletResponse httpServletResponse, Authentication authentication, @PathVariable long id) throws IOException {
-        Optional<Dataset> dataset_ = datasetRepository.findById(id);
-        if(dataset_.isPresent() && dataset_.get().getStatus() != Dataset.Status.Preparing) {
-            Dataset dataset = dataset_.get();
+        Optional<TimeSeries> dataset_ = timeSeriesRepository.findById(id);
+        if(dataset_.isPresent() && dataset_.get().getStatus() != TimeSeries.Status.Preparing) {
+            TimeSeries timeSeries = dataset_.get();
 
-            if(!dataset.canAccess(authentication)) {
+            if(!timeSeries.canAccess(authentication)) {
                 throw new ResponseStatusException(HttpStatus.FORBIDDEN);
             }
 
-            Path resultsFilePath = Paths.get(dataset.getStoragePath()).resolve("project").resolve("results").resolve("results_all_in_one_classic.xlsx");
+            Path resultsFilePath = Paths.get(timeSeries.getStoragePath()).resolve("project").resolve("results").resolve("results_all_in_one_classic.xlsx");
             if(Files.isRegularFile(resultsFilePath)) {
-                RequestUtils.sendAttachment(httpServletResponse, resultsFilePath, StringUtils.makeFilesystemCompatible(dataset.getName()) + "-results_all_in_one_classic.xlsx");
+                RequestUtils.sendAttachment(httpServletResponse, resultsFilePath, StringUtils.makeFilesystemCompatible(timeSeries.getName()) + "-results_all_in_one_classic.xlsx");
             }
             else {
                 throw new ResponseStatusException(HttpStatus.NOT_FOUND);
@@ -527,19 +478,19 @@ public class DatasetController {
         }
     }
 
-    @GetMapping("/dataset/download-results/xlsx-all-in-one/{id}")
+    @GetMapping("/project/download-results/xlsx-all-in-one/{id}")
     public void downloadXLSXAllInOneResults(HttpServletResponse httpServletResponse, Authentication authentication, @PathVariable long id) throws IOException {
-        Optional<Dataset> dataset_ = datasetRepository.findById(id);
-        if(dataset_.isPresent() && dataset_.get().getStatus() != Dataset.Status.Preparing) {
-            Dataset dataset = dataset_.get();
+        Optional<TimeSeries> dataset_ = timeSeriesRepository.findById(id);
+        if(dataset_.isPresent() && dataset_.get().getStatus() != TimeSeries.Status.Preparing) {
+            TimeSeries timeSeries = dataset_.get();
 
-            if(!dataset.canAccess(authentication)) {
+            if(!timeSeries.canAccess(authentication)) {
                 throw new ResponseStatusException(HttpStatus.FORBIDDEN);
             }
 
-            Path resultsFilePath = Paths.get(dataset.getStoragePath()).resolve("project").resolve("results").resolve("results_all_in_one.xlsx");
+            Path resultsFilePath = Paths.get(timeSeries.getStoragePath()).resolve("project").resolve("results").resolve("results_all_in_one.xlsx");
             if(Files.isRegularFile(resultsFilePath)) {
-                RequestUtils.sendAttachment(httpServletResponse, resultsFilePath, StringUtils.makeFilesystemCompatible(dataset.getName()) + "-results_all_in_one.xlsx");
+                RequestUtils.sendAttachment(httpServletResponse, resultsFilePath, StringUtils.makeFilesystemCompatible(timeSeries.getName()) + "-results_all_in_one.xlsx");
             }
             else {
                 throw new ResponseStatusException(HttpStatus.NOT_FOUND);
@@ -550,19 +501,19 @@ public class DatasetController {
         }
     }
 
-    @GetMapping("/dataset/download-results/csv/{id}")
+    @GetMapping("/project/download-results/csv/{id}")
     public void downloadCSVAllInOneResults(HttpServletResponse httpServletResponse, Authentication authentication, @PathVariable long id) throws IOException {
-        Optional<Dataset> dataset_ = datasetRepository.findById(id);
-        if(dataset_.isPresent() && dataset_.get().getStatus() != Dataset.Status.Preparing) {
-            Dataset dataset = dataset_.get();
+        Optional<TimeSeries> dataset_ = timeSeriesRepository.findById(id);
+        if(dataset_.isPresent() && dataset_.get().getStatus() != TimeSeries.Status.Preparing) {
+            TimeSeries timeSeries = dataset_.get();
 
-            if(!dataset.canAccess(authentication)) {
+            if(!timeSeries.canAccess(authentication)) {
                 throw new ResponseStatusException(HttpStatus.FORBIDDEN);
             }
 
-            Path resultsFilePath = Paths.get(dataset.getStoragePath()).resolve("project").resolve("results").resolve("results_all_in_one.csv");
+            Path resultsFilePath = Paths.get(timeSeries.getStoragePath()).resolve("project").resolve("results").resolve("results_all_in_one.csv");
             if(Files.isRegularFile(resultsFilePath)) {
-                RequestUtils.sendAttachment(httpServletResponse, resultsFilePath, StringUtils.makeFilesystemCompatible(dataset.getName()) + "-results_all_in_one.csv");
+                RequestUtils.sendAttachment(httpServletResponse, resultsFilePath, StringUtils.makeFilesystemCompatible(timeSeries.getName()) + "-results_all_in_one.csv");
             }
             else {
                 throw new ResponseStatusException(HttpStatus.NOT_FOUND);
@@ -573,14 +524,14 @@ public class DatasetController {
         }
     }
 
-    @GetMapping("/dataset/query-all-status")
-    public ResponseEntity<Map<Long, Dataset.Status>> queryAllDatasetStatus(Authentication authentication) {
+    @GetMapping("/project/query-all-status")
+    public ResponseEntity<Map<Long, TimeSeries.Status>> queryAllDatasetStatus(Authentication authentication) {
         if(authentication == null || !authentication.isAuthenticated()) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN);
         }
-        Map<Long, Dataset.Status> result = new HashMap<>();
-        for (Dataset dataset : datasetRepository.getByAuthentication(authentication)) {
-            result.put(dataset.getId(), dataset.getStatus());
+        Map<Long, TimeSeries.Status> result = new HashMap<>();
+        for (TimeSeries timeSeries : timeSeriesRepository.getByAuthentication(authentication)) {
+            result.put(timeSeries.getId(), timeSeries.getStatus());
         }
         return ResponseEntity.ok(result);
     }

@@ -1,4 +1,4 @@
-package org.hkijena.jast.model;
+package org.hkijena.jast.model.entities;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;

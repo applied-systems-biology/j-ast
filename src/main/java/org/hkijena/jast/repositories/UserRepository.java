@@ -2,7 +2,7 @@ package org.hkijena.jast.repositories;
 
 import com.google.common.collect.Lists;
 import org.hkijena.jast.model.Privileges;
-import org.hkijena.jast.model.User;
+import org.hkijena.jast.model.entities.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Repository;

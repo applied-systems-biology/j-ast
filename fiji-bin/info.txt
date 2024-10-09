@@ -1,5 +1,0 @@
-Info
-----
-
-Put Fiji.app into this directory
-Configure in application.yaml runtime/fiji-path (Fiji root) and runtime/fiji-executable-path (Fiji executable or a wrapper)

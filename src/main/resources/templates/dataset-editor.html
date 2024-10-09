@@ -3,19 +3,19 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 <body>
 <section layout:fragment="content" class="container-fluid pt-3">
-    <div th:replace="~{fragments/dataset-editor-toolbar.html :: dataset-editor-toolbar}"></div>
+    <div th:replace="~{fragments/timeSeries-editor-toolbar.html :: timeSeries-editor-toolbar}"></div>
     <div class="row mt-3 mb-3">
         <div class="col">
             <div class="card">
                 <div class="card-body">
                     <ul class="nav nav-tabs" id="tab-bar" role="tablist">
                         <li class="nav-item" role="presentation">
-                            <button class="nav-link" th:classappend="${currentDataset.isEmpty() ? 'active' : ''}" id="upload-tab" data-bs-toggle="tab" data-bs-target="#upload-tab-pane" type="button" role="tab"
+                            <button class="nav-link" th:classappend="${currentProject.isEmpty() ? 'active' : ''}" id="upload-tab" data-bs-toggle="tab" data-bs-target="#upload-tab-pane" type="button" role="tab"
                                     aria-controls="upload-tab-pane" aria-selected="true">❶ Upload
                             </button>
                         </li>
                         <li class="nav-item" role="presentation">
-                            <button class="nav-link" th:classappend="${!currentDataset.isEmpty() ? 'active' : ''}" id="data-tab" data-bs-toggle="tab" data-bs-target="#data-tab-pane" type="button" role="tab" aria-controls="data-tab-pane"
+                            <button class="nav-link" th:classappend="${!currentProject.isEmpty() ? 'active' : ''}" id="data-tab" data-bs-toggle="tab" data-bs-target="#data-tab-pane" type="button" role="tab" aria-controls="data-tab-pane"
                                     aria-selected="false">❷ Data
                             </button>
                         </li>
@@ -32,14 +32,14 @@
                     </ul>
                     <div class="tab-content" id="myTabContent">
                         <div class="tab-pane fade border-start border-bottom border-end rounded-bottom" id="upload-tab-pane" role="tabpanel"
-                             aria-labelledby="upload-tab" tabindex="0" th:classappend="${currentDataset.isEmpty() ? 'active show' : ''}">
+                             aria-labelledby="upload-tab" tabindex="0" th:classappend="${currentProject.isEmpty() ? 'active show' : ''}">
                             <div class="d-flex flex-column gap-1 p-2">
                                 <div class="card">
                                     <ul class="list-group list-group-flush">
                                         <li class="list-group-item bg-light text-danger" sec:authorize="hasAuthority('ROLE_GUEST')">
-                                            <i class="fa fas fa-warning"></i> Guests can only add up to <span th:text="${guestInputDataLimit}"></span> images per dataset. If you
+                                            <i class="fa fas fa-warning"></i> Guests can only add up to <span th:text="${guestImageLimit}"></span> images per timeSeries. If you
                                             want to try the software on
-                                            other data, please delete entries or create a new dataset.
+                                            other data, please delete entries or create a new timeSeries.
                                         </li>
                                         <li class="list-group-item bg-light">
                                             <i class="fa fas fa-info-circle"></i> We recommend to name your files according one of the following patterns: <code>[type]_[experiment]_[sample]_[time
@@ -52,11 +52,11 @@
                                     </ul>
                                 </div>
 
-                                <div th:replace="~{fragments/dataset-editor-uploader.html :: dataset-editor-uploader}"></div>
+                                <div th:replace="~{fragments/timeSeries-editor-uploader.html :: timeSeries-editor-uploader}"></div>
                             </div>
 
                         </div>
-                        <div class="tab-pane fade border-start border-bottom border-end rounded-bottom" id="data-tab-pane" role="tabpanel" aria-labelledby="data-tab" tabindex="0" th:classappend="${!currentDataset.isEmpty() ? 'active show' : ''}">
+                        <div class="tab-pane fade border-start border-bottom border-end rounded-bottom" id="data-tab-pane" role="tabpanel" aria-labelledby="data-tab" tabindex="0" th:classappend="${!currentProject.isEmpty() ? 'active show' : ''}">
                             <div class="d-flex flex-column gap-1 p-2">
                                 <div class="card">
                                     <ul class="list-group list-group-flush">
@@ -68,19 +68,19 @@
                                         </li>
                                     </ul>
                                 </div>
-                                <div th:replace="~{fragments/dataset-editor-table.html :: dataset-editor-table}"></div>
+                                <div th:replace="~{fragments/timeSeries-editor-table.html :: timeSeries-editor-table}"></div>
                             </div>
                         </div>
                         <div class="tab-pane fade border-start border-bottom border-end rounded-bottom" id="parameters-tab-pane" role="tabpanel" aria-labelledby="parameters-tab"
                              tabindex="0">
                             <div class="d-flex flex-column gap-1 p-2">
-                                <div th:replace="~{fragments/dataset-editor-parameters.html :: dataset-editor-parameters}"></div>
+                                <div th:replace="~{fragments/timeSeries-editor-parameters.html :: timeSeries-editor-parameters}"></div>
                             </div>
                         </div>
                         <div class="tab-pane fade border-start border-bottom border-end rounded-bottom" id="validation-tab-pane" role="tabpanel" aria-labelledby="validation-tab"
                              tabindex="0">
                             <div class="d-flex flex-column gap-1 p-2">
-                                <div th:replace="~{fragments/dataset-editor-validation.html :: dataset-editor-validation}"></div>
+                                <div th:replace="~{fragments/timeSeries-editor-validation.html :: timeSeries-editor-validation}"></div>
                             </div>
                         </div>
                     </div>
@@ -89,8 +89,8 @@
         </div>
     </div>
 
-    <div th:replace="~{fragments/modal-rename-dataset.html :: modal-rename}"></div>
-    <div th:replace="~{fragments/modal-delete-dataset.html :: modal-delete}"></div>
+    <div th:replace="~{fragments/modal-rename-timeSeries.html :: modal-rename}"></div>
+    <div th:replace="~{fragments/modal-delete-timeSeries.html :: modal-delete}"></div>
     <div th:replace="~{fragments/modal-run-analysis.html :: modal-run}"></div>
 
     <script th:inline="javascript">
@@ -104,7 +104,7 @@
         function updateInputDataAndParameters() {
             let message = {
                 parameters: {},
-                inputData: {}
+                image: {}
             }
 
             // Input data
@@ -119,29 +119,14 @@
                 }
 
                 // Add to map if not exists
-                if (!(inputDataIdKey in message.inputData)) {
-                    message["inputData"][inputDataIdKey] = {
+                if (!(inputDataIdKey in message.image)) {
+                    message["image"][inputDataIdKey] = {
                         id: inputDataId
                     }
                 }
 
                 // set the property
-                message.inputData[inputDataIdKey][inputDataProperty] = value
-            })
-
-            // console.log(JSON.stringify(message))
-
-            // Input data ZOI shape parameter
-            $(".input-data-editor-dropdown-zoi-shape").each(function () {
-                const inputDataId = $(this).data("inputDataId")
-                const inputDataIdKey = "" + inputDataId
-
-                // set the properties
-                message.inputData[inputDataIdKey]["etest-zoi-shape-preset-name"] = $(this).data("zoiShapeName") || "Unnamed"
-                message.inputData[inputDataIdKey]["etest-zoi-shape-preset-mca-intercept"] = Number($(this).data("zoiShapeMcaIntercept"))
-                message.inputData[inputDataIdKey]["etest-zoi-shape-preset-mca-rate"] = Number($(this).data("zoiShapeMcaRate"))
-                message.inputData[inputDataIdKey]["etest-zoi-shape-preset-strip-intercept"] = Number($(this).data("zoiShapeStripIntercept"))
-                message.inputData[inputDataIdKey]["etest-zoi-shape-preset-strip-rate"] = Number($(this).data("zoiShapeStripRate"))
+                message.image[inputDataIdKey][inputDataProperty] = value
             })
 
             // Parameters
@@ -163,7 +148,7 @@
 
             const token = $('#_csrf').attr('content');
             const header = $('#_csrf_header').attr('content');
-            return $.ajax(getURL("dataset/update/" + currentDatasetId), {
+            return $.ajax(getURL("timeSeries/update/" + currentProjectId), {
                 type: "POST",
                 data: JSON.stringify(message),
                 dataType: "html",
@@ -202,7 +187,7 @@
             $(".validation-issues").html("")
             $(".data-validation-invalid").hide()
 
-            $.getJSON(getURL("dataset/validate/" + currentDatasetId), function (data) {
+            $.getJSON(getURL("timeSeries/validate/" + currentProjectId), function (data) {
                 if (data["is-valid"]) {
                     $(".button-run").prop("disabled", false)
                     $(".validation-status-success").show()
@@ -244,65 +229,12 @@
             }, 1000)
         }
 
-        function getZOIShapeColor(mcaRate, mcaIntercept, stripRate, stripIntercept) {
-            if (mcaRate === 0 && mcaIntercept === 0 && stripRate === 0 && stripIntercept === 0) {
-                return colorToHexString([221, 228, 233, 255])
-            }
-
-            const hash = Math.abs(mcaIntercept ^ mcaRate ^ stripIntercept ^ stripRate);
-            const hue = (hash & 0xFFFF) % 360 / 360.0;
-            const hsbColor = HSBtoRGB(hue, 75.91 / 100, 86.27 / 100);
-            return colorToHexString(hsbColor);
-        }
-
-        function updateZoiShapeDropdownButtons() {
-            $(".input-data-editor-dropdown-zoi-shape").each(function () {
-                const dataId = $(this).data("inputDataId")
-                const zoiShapeName = $(this).data("zoiShapeName")
-                const zoiShapeMcaRate = Number($(this).data("zoiShapeMcaRate"))
-                const zoiShapeMcaIntercept = Number($(this).data("zoiShapeMcaIntercept"))
-                const zoiShapeStripRate = Number($(this).data("zoiShapeStripRate"))
-                const zoiShapeStripIntercept = Number($(this).data("zoiShapeStripIntercept"))
-                $("#input-data-dropdown-zoi-shape-text-" + dataId).text(zoiShapeName || "Unnamed")
-                $("#input-data-dropdown-zoi-shape-icon-" + dataId).css("color", getZOIShapeColor(zoiShapeMcaRate, zoiShapeMcaIntercept, zoiShapeStripRate, zoiShapeStripIntercept))
-                $("#input-data-dropdown-zoi-shape-current-mca-rate-" + dataId).text(zoiShapeMcaRate)
-                $("#input-data-dropdown-zoi-shape-current-mca-intercept-" + dataId).text(zoiShapeMcaIntercept)
-                $("#input-data-dropdown-zoi-shape-current-strip-rate-" + dataId).text(zoiShapeStripRate)
-                $("#input-data-dropdown-zoi-shape-current-strip-intercept-" + dataId).text(zoiShapeStripIntercept)
-            })
-        }
-
         function registerUpdateSchedulerListeners() {
             $(".input-data-editor").on("input", function () {
                 scheduleUpdateTimer()
             })
             $(".input-parameter-editor").on("input", function () {
                 scheduleUpdateTimer()
-            })
-            $(".input-data-select-zoi-shape-dropdown-item").click(function () {
-                // User clicks the dropdown item
-                // Updates the associated button
-                const dataId = $(this).data("inputDataId")
-                $("#input-data-dropdown-zoi-shape-" + dataId)
-                    .data("zoiShapeName", $(this).data("zoiShapeName") || "Unnamed")
-                    .data("zoiShapeMcaRate", $(this).data("zoiShapeMcaRate"))
-                    .data("zoiShapeMcaIntercept", $(this).data("zoiShapeMcaIntercept"))
-                    .data("zoiShapeStripRate", $(this).data("zoiShapeStripRate"))
-                    .data("zoiShapeStripIntercept", $(this).data("zoiShapeStripIntercept"))
-                scheduleUpdateTimer()
-                updateZoiShapeDropdownButtons()
-            })
-        }
-
-        function updateZoiShapeDropdownItems() {
-            $(".input-data-select-zoi-shape-dropdown-item").each(function () {
-                const zoiShapeName = $(this).data("zoiShapeName")
-                const zoiShapeMcaRate = Number($(this).data("zoiShapeMcaRate"))
-                const zoiShapeMcaIntercept = Number($(this).data("zoiShapeMcaIntercept"))
-                const zoiShapeStripRate = Number($(this).data("zoiShapeStripRate"))
-                const zoiShapeStripIntercept = Number($(this).data("zoiShapeStripIntercept"))
-                $(this).find("span").text(zoiShapeName || "Unnamed")
-                $(this).find("i").css("color", getZOIShapeColor(zoiShapeMcaRate, zoiShapeMcaIntercept, zoiShapeStripRate, zoiShapeStripIntercept))
             })
         }
 
@@ -311,13 +243,11 @@
             registerDeleteInputData()
             registerUpdateSchedulerListeners()
             runValidation()
-            updateZoiShapeDropdownItems()
-            updateZoiShapeDropdownButtons()
         })
     </script>
     <script th:inline="javascript">
         function reloadOnStatusChange() {
-            $.getJSON(getURL("dataset/query-status/" + currentDatasetId), function (data) {
+            $.getJSON(getURL("timeSeries/query-status/" + currentProjectId), function (data) {
                 if (data["status"] !== "Preparing") {
                     location.reload()
                 }
