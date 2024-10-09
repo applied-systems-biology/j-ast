@@ -8,7 +8,7 @@ popd || exit 1
 rm -rvf target
 mkdir target
 
-cp -v ../target/jipipe-webapp-growth-assay-analyzer-*.jar target/webapp.jar
+cp -v ../target/j-ast-*.jar target/webapp.jar
 cp -rv ../fiji-bin/linux target/fiji-bin-linux
 
 rm -rv target/fiji-bin-linux/jipipe/backups

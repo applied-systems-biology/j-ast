@@ -1,0 +1,150 @@
+package org.hkijena.jast.model;
+
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+
+import java.io.Serial;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+
+@Entity
+@Table(name = "users")
+public class User {
+    @Serial
+    private static final long serialVersionUID = 1L;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id")
+    private Long id;
+
+    @Column(name = "email", unique = true, columnDefinition = "VARCHAR(320)")
+    @NotNull
+    private String email = "";
+
+    @Column(name = "first_name", columnDefinition = "TEXT")
+    private String firstName = "";
+
+    @Column(name = "last_name", columnDefinition = "TEXT")
+    private String lastName = "";
+
+    @Column(name = "affiliation", columnDefinition = "TEXT")
+    private String affiliation = "";
+
+    @Column(name = "password", columnDefinition = "TEXT")
+    private String password = "";
+
+    @Column(name = "role")
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    private Role role = Role.User;
+
+    @Column(name = "allow_login")
+    @NotNull
+    private boolean allowLogin = true;
+
+    @Column(name = "guest_expire")
+    private LocalDateTime guestExpire = LocalDateTime.now();
+
+    public String getAffiliation() {
+        return affiliation;
+    }
+
+    public void setAffiliation(String affiliation) {
+        this.affiliation = affiliation;
+    }
+
+    public LocalDateTime getGuestExpire() {
+        return guestExpire;
+    }
+
+    public void setGuestExpire(LocalDateTime guestExpire) {
+        this.guestExpire = guestExpire;
+    }
+
+    public boolean isAllowLogin() {
+        return allowLogin;
+    }
+
+    public void setAllowLogin(boolean locked) {
+        this.allowLogin = locked;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String username) {
+        this.email = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
+    }
+
+    public String renderGuestExpireAdmin() {
+        if(role == Role.Guest) {
+            if(guestExpire == null) {
+                return "Now";
+            }
+            else {
+                return ChronoUnit.MINUTES.between(LocalDateTime.now(), guestExpire) + " min";
+            }
+        }
+        return "-";
+    }
+
+    public String renderGuestExpireTopBar() {
+        if(role == Role.Guest) {
+            if(guestExpire == null) {
+                return "Guest session expired";
+            }
+            else {
+                return "Guest session (" +  ChronoUnit.MINUTES.between(LocalDateTime.now(), guestExpire) + " min left before deletion)";
+            }
+        }
+        return "-";
+    }
+
+    public enum Role {
+        User,
+        Guest,
+        Admin
+    }
+}

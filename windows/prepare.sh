@@ -8,7 +8,7 @@ popd || exit 1
 rm -rvf app
 mkdir app
 
-cp -v ../target/jipipe-webapp-growth-assay-analyzer-*.jar app/webapp.jar
+cp -v ../target/j-ast-*.jar app/webapp.jar
 cp -rv ../fiji-bin/windows app/fiji-bin-windows
 cp -rv jre app/jre
 
