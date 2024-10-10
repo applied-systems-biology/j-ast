@@ -5,6 +5,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.web.servlet.support.RequestContextUtils;
 
+import java.io.ByteArrayInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -39,11 +40,32 @@ public class RequestUtils {
         IOUtils.closeQuietly(response.getOutputStream());
     }
 
+    public static void sendAttachment(HttpServletResponse response, byte[] data, String fileName, String contentType) throws IOException {
+        response.setContentType(contentType);
+        response.setHeader("Content-Length", Long.toString(data.length));
+        response.setHeader("Content-Disposition", "attachment; filename=\"" + fileName +"\"");
+
+        var ins = new ByteArrayInputStream(data);
+        IOUtils.copy(ins, response.getOutputStream());
+        IOUtils.closeQuietly(ins);
+        IOUtils.closeQuietly(response.getOutputStream());
+    }
+
     public static void sendContent(HttpServletResponse response, Path absoluteCurrentEntryPath) throws IOException {
         response.setContentType(Files.probeContentType(absoluteCurrentEntryPath));
         response.setHeader("Content-Length", Long.toString(Files.size(absoluteCurrentEntryPath)));
 
         var ins = new FileInputStream(absoluteCurrentEntryPath.toFile());
+        IOUtils.copy(ins, response.getOutputStream());
+        IOUtils.closeQuietly(ins);
+        IOUtils.closeQuietly(response.getOutputStream());
+    }
+
+    public static void sendContent(HttpServletResponse response, byte[] data, String contentType) throws IOException {
+        response.setContentType(contentType);
+        response.setHeader("Content-Length", Long.toString(data.length));
+
+        var ins = new ByteArrayInputStream(data);
         IOUtils.copy(ins, response.getOutputStream());
         IOUtils.closeQuietly(ins);
         IOUtils.closeQuietly(response.getOutputStream());

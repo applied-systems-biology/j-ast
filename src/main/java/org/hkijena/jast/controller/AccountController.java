@@ -6,7 +6,7 @@ import org.hkijena.jast.model.Notification;
 import org.hkijena.jast.model.entities.User;
 import org.hkijena.jast.model.UserPrincipal;
 import org.hkijena.jast.model.messages.CreateUpdateUserMessage;
-import org.hkijena.jast.repositories.TimeSeriesRepository;
+import org.hkijena.jast.repositories.ProjectRepository;
 import org.hkijena.jast.repositories.UserRepository;
 import org.hkijena.jast.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,14 +27,14 @@ import java.util.Objects;
 @Controller
 public class AccountController {
 
-    private final TimeSeriesRepository timeSeriesRepository;
+    private final ProjectRepository projectRepository;
     private final UserRepository userRepository;
     private final AccountConfig accountConfig;
     private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public AccountController(TimeSeriesRepository timeSeriesRepository, UserRepository userRepository, AccountConfig accountConfig, PasswordEncoder passwordEncoder) {
-        this.timeSeriesRepository = timeSeriesRepository;
+    public AccountController(ProjectRepository projectRepository, UserRepository userRepository, AccountConfig accountConfig, PasswordEncoder passwordEncoder) {
+        this.projectRepository = projectRepository;
         this.userRepository = userRepository;
         this.accountConfig = accountConfig;
         this.passwordEncoder = passwordEncoder;
@@ -43,7 +43,7 @@ public class AccountController {
     @GetMapping("/account")
     public ModelAndView getAccountIndex(Model model, Authentication authentication) {
         if(authentication != null && authentication.isAuthenticated()) {
-            timeSeriesRepository.putSortedToModel(model, authentication);
+            projectRepository.putSortedToModel(model, authentication);
             User user;
             if(authentication.getPrincipal() instanceof UserPrincipal) {
                 user = ((UserPrincipal) authentication.getPrincipal()).getUser();

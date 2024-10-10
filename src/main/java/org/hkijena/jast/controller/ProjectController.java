@@ -2,7 +2,6 @@ package org.hkijena.jast.controller;
 
 import jakarta.servlet.http.HttpServletResponse;
 import org.hkijena.jast.config.AccountConfig;
-import org.hkijena.jast.config.RuntimeConfig;
 import org.hkijena.jast.model.*;
 import org.hkijena.jast.model.entities.Project;
 import org.hkijena.jast.model.entities.Image;
@@ -42,8 +41,6 @@ import java.util.*;
 @Controller
 public class ProjectController {
 
-    private final RuntimeConfig runtimeConfig;
-
     private final AccountConfig accountConfig;
     private final ProjectRepository projectRepository;
     private final ImageRepository imageRepository;
@@ -52,8 +49,7 @@ public class ProjectController {
     private final ProjectService projectService;
 
     @Autowired
-    public ProjectController(RuntimeConfig runtimeConfig, AccountConfig accountConfig, ProjectRepository projectRepository, ImageRepository imageRepository, JobScheduler jobScheduler, AnalysisService analysisService, ProjectService projectService) {
-        this.runtimeConfig = runtimeConfig;
+    public ProjectController(AccountConfig accountConfig, ProjectRepository projectRepository, ImageRepository imageRepository, JobScheduler jobScheduler, AnalysisService analysisService, ProjectService projectService) {
         this.accountConfig = accountConfig;
         this.projectRepository = projectRepository;
         this.imageRepository = imageRepository;
@@ -156,26 +152,12 @@ public class ProjectController {
 
     @PostMapping("/project/upload/{id}")
     public ResponseEntity<?> uploadFileToDataset(Authentication authentication, @PathVariable long id, RedirectAttributes redirectAttributes, @RequestParam("imageFile") MultipartFile imageFile) {
-        Optional<TimeSeries> dataset_ = timeSeriesRepository.findById(id);
-        if(dataset_.isPresent()) {
-            TimeSeries timeSeries = dataset_.get();
+        Optional<Project> project_ = projectRepository.findById(id);
+        if (project_.isPresent()) {
+            Project project = project_.get();
 
-            if(!timeSeries.canEdit(authentication)) {
+            if(!project.canEdit(authentication)) {
                 throw new ResponseStatusException(HttpStatus.FORBIDDEN);
-            }
-
-            if(timeSeries.getStatus() != TimeSeries.Status.Preparing) {
-                throw new ResponseStatusException(HttpStatus.FORBIDDEN);
-            }
-
-            // Create target directory
-            Path targetDir = Paths.get(timeSeries.getStoragePath()).resolve("inputs_raw");
-            Path targetDirThumbnails = Paths.get(timeSeries.getStoragePath()).resolve("inputs_raw_thumbnails");
-            try {
-                Files.createDirectories(targetDir);
-                Files.createDirectories(targetDirThumbnails);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
             }
 
             // Iterate through images and organize them
@@ -184,32 +166,23 @@ public class ProjectController {
             int numLimitReached = 0;
             List<String> failureNames = new ArrayList<>();
             if(imageFile != null && !imageFile.isEmpty()) {
-                if(projectService.canUploadImage(timeSeries, authentication)) {
+                if(projectService.canUploadImage(project, authentication)) {
                     try {
                         try (InputStream stream = imageFile.getInputStream()) {
-                            BufferedImage image = ImageIO.read(stream);
-                            if (image == null) {
+                            BufferedImage bufferedImage = ImageIO.read(stream);
+                            if (bufferedImage == null) {
                                 throw new NullPointerException("Unable to load image!");
                             }
 
-                            // Re-save as PNG
-                            Path imageStoragePath = Files.createTempFile(targetDir, "img", ".png");
-                            Path thumbnailStoragePath = targetDirThumbnails.resolve(imageStoragePath.getFileName());
-                            ImageIO.write(image, "PNG", imageStoragePath.toFile());
-
-                            // Create thumbnail
-                            ImageUtils.createThumbnail(image, 64, 64, thumbnailStoragePath);
-
                             // Create object
-                            Image inputData = new Image();
-                            inputData.setOriginalFileName(StringUtils.nullToEmpty(imageFile.getOriginalFilename()));
-                            inputData.setStoragePath(imageStoragePath.toString());
-                            inputData.setThumbnailStoragePath(thumbnailStoragePath.toString());
-                            inputData.tryAutoFill(StringUtils.nullToEmpty(imageFile.getOriginalFilename()));
-                            inputData.setImageWidth(image.getWidth());
-                            inputData.setImageHeight(image.getHeight());
+                            Image image = new Image();
+                            image.setOriginalFileName(StringUtils.nullToEmpty(imageFile.getOriginalFilename()));
+                            image.setImageWidth(bufferedImage.getWidth());
+                            image.setImageHeight(bufferedImage.getHeight());
+                            image.setRawData(ImageUtils.toPNGByteArray(bufferedImage));
+                            image.setThumbnailData(ImageUtils.toPNGByteArray(ImageUtils.createThumbnail(bufferedImage, 128, 128)));
 
-                            timeSeries.addImage(inputData);
+                            project.addImage(image);
                             ++numSuccess;
                         }
                     } catch (Throwable e) {
@@ -224,7 +197,7 @@ public class ProjectController {
                     ++numLimitReached;
                 }
             }
-            timeSeriesRepository.save(timeSeries);
+            projectRepository.save(project);
 
             if(numSuccess > 0) {
                 Notification.pushToRedirect("Successfully imported images",
@@ -240,7 +213,7 @@ public class ProjectController {
             }
             if(numLimitReached > 0) {
                 Notification.pushToRedirect("Input image limit reached",
-                        "Guests can only upload up to " + accountConfig.getguestImageLimit() + " images per data set",
+                        "Guests can only upload up to " + accountConfig.getGuestImageLimit() + " images per data set",
                         Notification.Style.danger,
                         redirectAttributes);
             }
@@ -250,288 +223,6 @@ public class ProjectController {
         else {
             return ResponseEntity.notFound().build();
         }
-    }
-
-    @PostMapping("/project/update/{id}")
-    public void update(HttpServletResponse response, Authentication authentication, @PathVariable long id, @RequestBody DatasetUpdateMessage message) {
-        Optional<TimeSeries> dataset_ = timeSeriesRepository.findById(id);
-        if(dataset_.isPresent()) {
-            TimeSeries timeSeries = dataset_.get();
-
-            if(!timeSeries.canEdit(authentication)) {
-                throw new ResponseStatusException(HttpStatus.FORBIDDEN);
-            }
-
-            if(timeSeries.getStatus() == TimeSeries.Status.Preparing) {
-                message.getParametersUpdateMessage().update(timeSeries);
-                timeSeriesRepository.save(timeSeries);
-                for (DatasetUpdateMessage.InputDataUpdateMessage inputDataUpdateMessage : message.getInputDataUpdateMessageMap().values()) {
-                    Optional<Image> inputData_ = imageRepository.findById(inputDataUpdateMessage.getId());
-                    if (inputData_.isPresent()) {
-                        Image image = inputData_.get();
-                        inputDataUpdateMessage.update(image);
-                        imageRepository.save(image);
-                    }
-                }
-            }
-            else {
-                throw new ResponseStatusException(HttpStatus.FORBIDDEN);
-            }
-        }
-        else {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-        }
-    }
-
-    @PostMapping("/project/run/{id}")
-    public ModelAndView run(RedirectAttributes redirectAttributes, Authentication authentication, @PathVariable long id) {
-        Optional<TimeSeries> dataset_ = timeSeriesRepository.findById(id);
-        if(dataset_.isPresent()) {
-            TimeSeries timeSeries = dataset_.get();
-
-            if(!timeSeries.canEdit(authentication)) {
-                throw new ResponseStatusException(HttpStatus.FORBIDDEN);
-            }
-
-            if(timeSeries.getStatus() == TimeSeries.Status.Preparing) {
-                if (timeSeries.validate().isValid()) {
-
-                    Path logFilePath = Paths.get(timeSeries.getStoragePath()).resolve("log.txt");
-                    try {
-                        Files.deleteIfExists(logFilePath);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-
-                    timeSeries.setStatus(TimeSeries.Status.Running);
-                    timeSeriesRepository.save(timeSeries);
-                    jobScheduler.enqueue(() -> analysisService.runAnalysis(id, JobContext.Null));
-                    return new ModelAndView("redirect:/project/view/" + id);
-                } else {
-                    Notification.pushToRedirect("Dataset is invalid!", "Validation checks failed.", Notification.Style.danger, redirectAttributes);
-                    return new ModelAndView("redirect:/project/view/" + id);
-                }
-            }
-            else {
-                Notification.pushToRedirect("Dataset is not ready!", "An analysis is currently in progress.", Notification.Style.danger, redirectAttributes);
-                return new ModelAndView("redirect:/project/view/" + id);
-            }
-        }
-        else {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-        }
-    }
-
-    @PostMapping("/project/reset/{id}")
-    public ModelAndView reset(RedirectAttributes redirectAttributes, Authentication authentication, @PathVariable long id) {
-        Optional<TimeSeries> dataset_ = timeSeriesRepository.findById(id);
-        if(dataset_.isPresent()) {
-            TimeSeries timeSeries = dataset_.get();
-
-            if(!timeSeries.canEdit(authentication)) {
-                throw new ResponseStatusException(HttpStatus.FORBIDDEN);
-            }
-
-            timeSeries.tryCancelCurrentJob();
-
-            timeSeries.setStatus(TimeSeries.Status.Preparing);
-            timeSeries.clearOutputData();
-            timeSeriesRepository.save(timeSeries);
-            Notification.pushToRedirect("Dataset reset", "You can now edit all parameters and modify the inputs.", Notification.Style.info, redirectAttributes);
-            return new ModelAndView("redirect:/project/view/" + id);
-        }
-        else {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-        }
-    }
-
-    @GetMapping("/project/query-status/{id}")
-    public ResponseEntity<AutoProcessStatusMessage> queryDatasetStatus(Authentication authentication, @PathVariable long id) {
-        Optional<TimeSeries> dataset_ = timeSeriesRepository.findById(id);
-        if(dataset_.isPresent()) {
-            TimeSeries timeSeries = dataset_.get();
-
-            if(!timeSeries.canAccess(authentication)) {
-                throw new ResponseStatusException(HttpStatus.FORBIDDEN);
-            }
-
-            AutoProcessStatusMessage message = new AutoProcessStatusMessage();
-            message.setStatus(timeSeries.getStatus());
-
-            StringBuilder stringBuilder = new StringBuilder();
-
-            try {
-                Path logFilePath = Paths.get(timeSeries.getStoragePath()).resolve("log.txt");
-                if(Files.isRegularFile(logFilePath)) {
-                    List<String> lines = Files.readAllLines(logFilePath);
-                    for (int i = Math.max(0, lines.size() - 500 - 1); i < lines.size(); i++) {
-                        stringBuilder.append(lines.get(i)).append("\n");
-                    }
-                }
-                else {
-                    stringBuilder.append("[QUEUE] Job is enqueued. Please wait ...");
-                }
-            }
-            catch (IOException ignored) {
-            }
-
-            message.setLog(stringBuilder.toString());
-
-            return ResponseEntity.ok(message);
-        }
-        else {
-            return ResponseEntity.notFound().build();
-        }
-    }
-
-    @GetMapping("/project/download-log/{id}")
-    public void downloadDatasetLog(HttpServletResponse httpServletResponse, Authentication authentication, @PathVariable long id) throws IOException {
-        Optional<TimeSeries> dataset_ = timeSeriesRepository.findById(id);
-        if(dataset_.isPresent() && dataset_.get().getStatus() != TimeSeries.Status.Preparing) {
-            TimeSeries timeSeries = dataset_.get();
-
-            if(!timeSeries.canAccess(authentication)) {
-                throw new ResponseStatusException(HttpStatus.FORBIDDEN);
-            }
-
-            Path logFilePath = Paths.get(timeSeries.getStoragePath()).resolve("log.txt");
-            if(Files.isRegularFile(logFilePath)) {
-                RequestUtils.sendAttachment(httpServletResponse, logFilePath, "log.txt");
-            }
-            else {
-                throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-            }
-        }
-        else {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-        }
-    }
-
-    @GetMapping("/project/download-results/zip/{id}")
-    public void downloadAllResultsAsZIP(HttpServletResponse httpServletResponse, Authentication authentication, @PathVariable long id) throws IOException {
-        Optional<TimeSeries> dataset_ = timeSeriesRepository.findById(id);
-        if(dataset_.isPresent() && dataset_.get().getStatus() != TimeSeries.Status.Preparing) {
-            TimeSeries timeSeries = dataset_.get();
-
-            if(!timeSeries.canAccess(authentication)) {
-                throw new ResponseStatusException(HttpStatus.FORBIDDEN);
-            }
-
-            Path resultsFilePath = Paths.get(timeSeries.getStoragePath()).resolve("results").resolve("results.zip");
-            if(Files.isRegularFile(resultsFilePath)) {
-                RequestUtils.sendAttachment(httpServletResponse, resultsFilePath, StringUtils.makeFilesystemCompatible(timeSeries.getName()) + "-results.zip");
-            }
-            else {
-                throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-            }
-        }
-        else {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-        }
-    }
-
-    @GetMapping("/project/download-results/xlsx-per-experiment/{id}")
-    public void downloadXLSXPerExperimentResults(HttpServletResponse httpServletResponse, Authentication authentication, @PathVariable long id) throws IOException {
-        Optional<TimeSeries> dataset_ = timeSeriesRepository.findById(id);
-        if(dataset_.isPresent() && dataset_.get().getStatus() != TimeSeries.Status.Preparing) {
-            TimeSeries timeSeries = dataset_.get();
-
-            if(!timeSeries.canAccess(authentication)) {
-                throw new ResponseStatusException(HttpStatus.FORBIDDEN);
-            }
-
-            Path resultsFilePath = Paths.get(timeSeries.getStoragePath()).resolve("project").resolve("results").resolve("results_per_experiment.xlsx");
-            if(Files.isRegularFile(resultsFilePath)) {
-                RequestUtils.sendAttachment(httpServletResponse, resultsFilePath, StringUtils.makeFilesystemCompatible(timeSeries.getName()) + "-results_per_experiment.xlsx");
-            }
-            else {
-                throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-            }
-        }
-        else {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-        }
-    }
-
-    @GetMapping("/project/download-results/xlsx-classic/{id}")
-    public void downloadXLSXClassicResults(HttpServletResponse httpServletResponse, Authentication authentication, @PathVariable long id) throws IOException {
-        Optional<TimeSeries> dataset_ = timeSeriesRepository.findById(id);
-        if(dataset_.isPresent() && dataset_.get().getStatus() != TimeSeries.Status.Preparing) {
-            TimeSeries timeSeries = dataset_.get();
-
-            if(!timeSeries.canAccess(authentication)) {
-                throw new ResponseStatusException(HttpStatus.FORBIDDEN);
-            }
-
-            Path resultsFilePath = Paths.get(timeSeries.getStoragePath()).resolve("project").resolve("results").resolve("results_all_in_one_classic.xlsx");
-            if(Files.isRegularFile(resultsFilePath)) {
-                RequestUtils.sendAttachment(httpServletResponse, resultsFilePath, StringUtils.makeFilesystemCompatible(timeSeries.getName()) + "-results_all_in_one_classic.xlsx");
-            }
-            else {
-                throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-            }
-        }
-        else {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-        }
-    }
-
-    @GetMapping("/project/download-results/xlsx-all-in-one/{id}")
-    public void downloadXLSXAllInOneResults(HttpServletResponse httpServletResponse, Authentication authentication, @PathVariable long id) throws IOException {
-        Optional<TimeSeries> dataset_ = timeSeriesRepository.findById(id);
-        if(dataset_.isPresent() && dataset_.get().getStatus() != TimeSeries.Status.Preparing) {
-            TimeSeries timeSeries = dataset_.get();
-
-            if(!timeSeries.canAccess(authentication)) {
-                throw new ResponseStatusException(HttpStatus.FORBIDDEN);
-            }
-
-            Path resultsFilePath = Paths.get(timeSeries.getStoragePath()).resolve("project").resolve("results").resolve("results_all_in_one.xlsx");
-            if(Files.isRegularFile(resultsFilePath)) {
-                RequestUtils.sendAttachment(httpServletResponse, resultsFilePath, StringUtils.makeFilesystemCompatible(timeSeries.getName()) + "-results_all_in_one.xlsx");
-            }
-            else {
-                throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-            }
-        }
-        else {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-        }
-    }
-
-    @GetMapping("/project/download-results/csv/{id}")
-    public void downloadCSVAllInOneResults(HttpServletResponse httpServletResponse, Authentication authentication, @PathVariable long id) throws IOException {
-        Optional<TimeSeries> dataset_ = timeSeriesRepository.findById(id);
-        if(dataset_.isPresent() && dataset_.get().getStatus() != TimeSeries.Status.Preparing) {
-            TimeSeries timeSeries = dataset_.get();
-
-            if(!timeSeries.canAccess(authentication)) {
-                throw new ResponseStatusException(HttpStatus.FORBIDDEN);
-            }
-
-            Path resultsFilePath = Paths.get(timeSeries.getStoragePath()).resolve("project").resolve("results").resolve("results_all_in_one.csv");
-            if(Files.isRegularFile(resultsFilePath)) {
-                RequestUtils.sendAttachment(httpServletResponse, resultsFilePath, StringUtils.makeFilesystemCompatible(timeSeries.getName()) + "-results_all_in_one.csv");
-            }
-            else {
-                throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-            }
-        }
-        else {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-        }
-    }
-
-    @GetMapping("/project/query-all-status")
-    public ResponseEntity<Map<Long, TimeSeries.Status>> queryAllDatasetStatus(Authentication authentication) {
-        if(authentication == null || !authentication.isAuthenticated()) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
-        }
-        Map<Long, TimeSeries.Status> result = new HashMap<>();
-        for (TimeSeries timeSeries : timeSeriesRepository.getByAuthentication(authentication)) {
-            result.put(timeSeries.getId(), timeSeries.getStatus());
-        }
-        return ResponseEntity.ok(result);
     }
 
     @EventListener(ApplicationReadyEvent.class)

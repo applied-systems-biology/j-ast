@@ -1,10 +1,11 @@
 package org.hkijena.jast.controller;
 
 import jakarta.servlet.http.HttpServletResponse;
-import org.hkijena.jast.config.RuntimeConfig;
 import org.hkijena.jast.model.entities.Image;
-import org.hkijena.jast.repositories.TimeSeriesRepository;
+import org.hkijena.jast.model.entities.Project;
+import org.hkijena.jast.repositories.ProjectRepository;
 import org.hkijena.jast.repositories.ImageRepository;
+import org.hkijena.jast.utils.MimeTypeUtils;
 import org.hkijena.jast.utils.RequestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,34 +18,31 @@ import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.io.IOException;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Optional;
 
 @Controller
 public class ImageController {
-    private final RuntimeConfig runtimeConfig;
-    private final TimeSeriesRepository timeSeriesRepository;
+    private final ProjectRepository projectRepository;
     private final ImageRepository imageRepository;
 
     @Autowired
-    public ImageController(RuntimeConfig runtimeConfig, TimeSeriesRepository timeSeriesRepository, ImageRepository imageRepository) {
-        this.runtimeConfig = runtimeConfig;
-        this.timeSeriesRepository = timeSeriesRepository;
+    public ImageController(ProjectRepository projectRepository, ImageRepository imageRepository) {
+        this.projectRepository = projectRepository;
         this.imageRepository = imageRepository;
     }
 
-    @GetMapping("/input-data/thumbnail/{id}")
+    @GetMapping("/image/thumbnail/{id}")
     public ModelAndView getThumbnail(HttpServletResponse response, Authentication authentication, @PathVariable long id) throws IOException {
         Optional<Image> inputData_ = imageRepository.findById(id);
         if(inputData_.isPresent()) {
             Image image = inputData_.get();
 
-            if(!image.getSeries().canAccess(authentication)) {
+            if(!image.getProject().canAccess(authentication)) {
                 throw new ResponseStatusException(HttpStatus.FORBIDDEN);
             }
 
-            RequestUtils.sendContent(response, Paths.get(image.getThumbnailStoragePath()));
+            RequestUtils.sendContent(response, image.getThumbnailData(), MimeTypeUtils.MIME_TYPE_PNG);
             return null;
         }
         else {
@@ -52,17 +50,17 @@ public class ImageController {
         }
     }
 
-    @GetMapping("/input-data/view/{id}")
+    @GetMapping("/image/view/{id}")
     public ModelAndView view(HttpServletResponse response, Authentication authentication, @PathVariable long id) throws IOException {
         Optional<Image> inputData_ = imageRepository.findById(id);
         if(inputData_.isPresent()) {
             Image image = inputData_.get();
 
-            if(!image.getSeries().canAccess(authentication)) {
+            if(!image.getProject().canAccess(authentication)) {
                 throw new ResponseStatusException(HttpStatus.FORBIDDEN);
             }
 
-            RequestUtils.sendContent(response, Paths.get(image.getStoragePath()));
+            RequestUtils.sendContent(response, image.getRawData(), MimeTypeUtils.MIME_TYPE_PNG);
             return null;
         }
         else {
@@ -70,17 +68,17 @@ public class ImageController {
         }
     }
 
-    @GetMapping("/input-data/download/{id}")
+    @GetMapping("/image/download/{id}")
     public ModelAndView download(HttpServletResponse response, Authentication authentication, @PathVariable long id) throws IOException {
         Optional<Image> inputData_ = imageRepository.findById(id);
         if(inputData_.isPresent()) {
             Image image = inputData_.get();
 
-            if(!image.getSeries().canAccess(authentication)) {
+            if(!image.getProject().canAccess(authentication)) {
                 throw new ResponseStatusException(HttpStatus.FORBIDDEN);
             }
 
-            RequestUtils.sendAttachment(response, Paths.get(image.getStoragePath()), image.getOriginalFileName());
+            RequestUtils.sendAttachment(response, image.getRawData(), image.getOriginalFileName(), MimeTypeUtils.MIME_TYPE_PNG);
             return null;
         }
         else {
@@ -88,21 +86,20 @@ public class ImageController {
         }
     }
 
-    @PostMapping("/input-data/delete/{id}")
-    public void deleteInputData(HttpServletResponse response, Authentication authentication, @PathVariable long id) {
+    @PostMapping("/image/delete/{id}")
+    public void deleteImage(HttpServletResponse response, Authentication authentication, @PathVariable long id) {
         Optional<Image> inputData_ = imageRepository.findById(id);
         if(inputData_.isPresent()) {
             Image image = inputData_.get();
-            TimeSeries timeSeries = image.getSeries();
+            Project project = image.getProject();
 
-            if(!image.getSeries().canEdit(authentication)) {
+            if(!project.canEdit(authentication)) {
                 throw new ResponseStatusException(HttpStatus.FORBIDDEN);
             }
 
-            timeSeries.removeImage(image);
-            timeSeriesRepository.save(timeSeries);
+            project.removeImage(image);
+            projectRepository.save(project);
             imageRepository.delete(image);
-            image.deleteStorage(Path.of(timeSeries.getStoragePath()));
             response.setStatus(HttpStatus.OK.value());
         }
         else {

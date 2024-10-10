@@ -53,6 +53,30 @@ public class Image {
     @ManyToOne(fetch = FetchType.LAZY)
     private Project project;
 
+    @Lob
+    @Column(name = "raw_data", columnDefinition = "BLOB")
+    private byte[] rawData;
+
+    @Lob
+    @Column(name = "thumbnail_data", columnDefinition = "BLOB")
+    private byte[] thumbnailData;
+
+    public byte[] getRawData() {
+        return rawData;
+    }
+
+    public void setRawData(byte[] rawData) {
+        this.rawData = rawData;
+    }
+
+    public byte[] getThumbnailData() {
+        return thumbnailData;
+    }
+
+    public void setThumbnailData(byte[] thumbnailData) {
+        this.thumbnailData = thumbnailData;
+    }
+
     public @NotNull AssayType getAssayType() {
         return assayType;
     }

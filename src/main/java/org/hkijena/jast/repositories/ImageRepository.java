@@ -9,8 +9,6 @@ import java.util.List;
 
 @Repository
 public interface ImageRepository extends CrudRepository<Image, Long> {
-    List<Image> findBySeriesAndExperimentAndSample(TimeSeries timeSeries, String experiment, String sample);
-    List<Image> findBySeries(TimeSeries timeSeries);
     List<Image> findByProject(Project project);
     int countByProject(Project project);
 }

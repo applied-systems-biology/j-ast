@@ -3,10 +3,11 @@ package org.hkijena.jast.controller;
 import org.hkijena.jast.config.AccountConfig;
 import org.hkijena.jast.model.Notification;
 import org.hkijena.jast.model.Privileges;
+import org.hkijena.jast.model.entities.Project;
 import org.hkijena.jast.model.entities.User;
 import org.hkijena.jast.model.messages.CreateUpdateUserMessage;
-import org.hkijena.jast.model.messages.DatasetAdminStatusMessage;
-import org.hkijena.jast.repositories.TimeSeriesRepository;
+import org.hkijena.jast.model.messages.ProjectAdminStatusMessage;
+import org.hkijena.jast.repositories.ProjectRepository;
 import org.hkijena.jast.repositories.UserRepository;
 import org.hkijena.jast.services.UserService;
 import org.hkijena.jast.utils.StringUtils;
@@ -32,15 +33,15 @@ public class AdminController {
 
     private final AccountConfig accountConfig;
     private final UserRepository userRepository;
-    private final TimeSeriesRepository timeSeriesRepository;
+    private final ProjectRepository projectRepository;
     private final PasswordEncoder passwordEncoder;
     private final UserService userService;
 
     @Autowired
-    public AdminController(AccountConfig accountConfig, UserRepository userRepository, TimeSeriesRepository timeSeriesRepository, PasswordEncoder passwordEncoder, UserService userService) {
+    public AdminController(AccountConfig accountConfig, UserRepository userRepository, ProjectRepository projectRepository, PasswordEncoder passwordEncoder, UserService userService) {
         this.accountConfig = accountConfig;
         this.userRepository = userRepository;
-        this.timeSeriesRepository = timeSeriesRepository;
+        this.projectRepository = projectRepository;
         this.passwordEncoder = passwordEncoder;
         this.userService = userService;
     }
@@ -52,30 +53,28 @@ public class AdminController {
         }
 
         model.addAttribute("accountConfig", accountConfig);
-        timeSeriesRepository.putSortedToModel(model, authentication);
+        projectRepository.putSortedToModel(model, authentication);
         userRepository.putSortedToModel(model, authentication);
 
         return new ModelAndView("admin");
     }
 
     @GetMapping("/admin/list-projects")
-    public ResponseEntity<List<DatasetAdminStatusMessage>> getDatasetList(Authentication authentication) {
+    public ResponseEntity<List<ProjectAdminStatusMessage>> getDatasetList(Authentication authentication) {
         if (authentication == null || !authentication.isAuthenticated() || !authentication.getAuthorities().contains(Privileges.PRIVILEGE_ADMIN)) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN);
         }
 
-        List<DatasetAdminStatusMessage> result = new ArrayList<>();
-        for (TimeSeries timeSeries : timeSeriesRepository.findAll()) {
-            DatasetAdminStatusMessage message = new DatasetAdminStatusMessage();
-            message.setId(timeSeries.getId());
-            message.setOwner(timeSeries.getOwner() != null ? timeSeries.getOwner().getEmail() : accountConfig.getAdminUsername());
-            message.setStatus(timeSeries.getStatus().toString());
-            message.setName(timeSeries.getName());
-            message.setCanCancel(timeSeries.getStatus() == TimeSeries.Status.Running);
+        List<ProjectAdminStatusMessage> result = new ArrayList<>();
+        for (Project project : projectRepository.findAll()) {
+            ProjectAdminStatusMessage message = new ProjectAdminStatusMessage();
+            message.setId(project.getId());
+            message.setOwner(project.getOwner() != null ? project.getOwner().getEmail() : accountConfig.getAdminUsername());
+            message.setName(project.getName());
             result.add(message);
         }
 
-        result.sort(Comparator.comparing(DatasetAdminStatusMessage::getOwner).thenComparing(DatasetAdminStatusMessage::getName));
+        result.sort(Comparator.comparing(ProjectAdminStatusMessage::getOwner).thenComparing(ProjectAdminStatusMessage::getName));
 
         return ResponseEntity.ok(result);
     }
@@ -87,15 +86,11 @@ public class AdminController {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN);
         }
 
-        for (TimeSeries timeSeries : timeSeriesRepository.findAll()) {
-            if (!timeSeries.canEdit(authentication)) {
+        for (Project project : projectRepository.findAll()) {
+            if(!project.canEdit(authentication)) {
                 throw new ResponseStatusException(HttpStatus.FORBIDDEN);
             }
-
-            timeSeries.tryCancelCurrentJob();
-            timeSeries.setStatus(TimeSeries.Status.Preparing);
-            timeSeries.clearOutputData();
-            timeSeriesRepository.save(timeSeries);
+            // TODO: missing implementation
         }
 
         Notification.pushToRedirect("All running analyses cancelled", "All running analyses were cancelled.", Notification.Style.info, redirectAttributes);
@@ -109,7 +104,7 @@ public class AdminController {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN);
         }
 
-        timeSeriesRepository.putSortedToModel(model, authentication);
+        projectRepository.putSortedToModel(model, authentication);
         return new ModelAndView("admin-user-add");
     }
 
@@ -161,7 +156,7 @@ public class AdminController {
             User user = user_.get();
             CreateUpdateUserMessage message = new CreateUpdateUserMessage(user);
             model.addAttribute("user", message);
-            timeSeriesRepository.putSortedToModel(model, authentication);
+            projectRepository.putSortedToModel(model, authentication);
 
             return new ModelAndView("admin-user-edit");
         } else {

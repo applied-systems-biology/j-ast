@@ -3,24 +3,12 @@ package org.hkijena.jast.model.messages;
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonSetter;
 
-public class DatasetAdminStatusMessage {
+public class ProjectAdminStatusMessage {
 
     private long id;
     private String owner;
     private String name;
     private String status;
-
-    private boolean canCancel;
-
-    @JsonGetter("can-cancel")
-    public boolean isCanCancel() {
-        return canCancel;
-    }
-
-    @JsonSetter("can-cancel")
-    public void setCanCancel(boolean canCancel) {
-        this.canCancel = canCancel;
-    }
 
     @JsonGetter("id")
     public long getId() {

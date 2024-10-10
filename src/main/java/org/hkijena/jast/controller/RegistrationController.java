@@ -4,7 +4,7 @@ import org.hkijena.jast.config.AccountConfig;
 import org.hkijena.jast.model.messages.CreateUpdateUserMessage;
 import org.hkijena.jast.model.Notification;
 import org.hkijena.jast.model.entities.User;
-import org.hkijena.jast.repositories.TimeSeriesRepository;
+import org.hkijena.jast.repositories.ProjectRepository;
 import org.hkijena.jast.repositories.UserRepository;
 import org.hkijena.jast.utils.StringUtils;
 import org.springframework.http.HttpStatus;
@@ -24,13 +24,13 @@ import java.util.Objects;
 
 @Controller
 public class RegistrationController {
-    private final TimeSeriesRepository timeSeriesRepository;
+    private final ProjectRepository projectRepository;
     private final UserRepository userRepository;
     private final AccountConfig accountConfig;
     private final PasswordEncoder passwordEncoder;
 
-    public RegistrationController(TimeSeriesRepository timeSeriesRepository, UserRepository userRepository, AccountConfig accountConfig, PasswordEncoder passwordEncoder) {
-        this.timeSeriesRepository = timeSeriesRepository;
+    public RegistrationController(ProjectRepository projectRepository, UserRepository userRepository, AccountConfig accountConfig, PasswordEncoder passwordEncoder) {
+        this.projectRepository = projectRepository;
         this.userRepository = userRepository;
         this.accountConfig = accountConfig;
         this.passwordEncoder = passwordEncoder;
@@ -40,7 +40,7 @@ public class RegistrationController {
     public ModelAndView loginError(Model model, RedirectAttributes redirectAttributes, Authentication authentication) {
 
         // Add basic info
-        timeSeriesRepository.putSortedToModel(model, authentication);
+        projectRepository.putSortedToModel(model, authentication);
         model.addAttribute("currentProjectId", -1);
 
         if(authentication == null || !authentication.isAuthenticated()) {
@@ -105,7 +105,7 @@ public class RegistrationController {
 
         Notification.pushToRedirect("Account created", "Please login with the E-mail '" + userName + "' and your password", Notification.Style.success, redirectAttributes);
         if(user.getRole() == User.Role.Guest) {
-            Notification.pushToRedirect("Guest account limitations", "Please note that guest accounts have a limit of " + accountConfig.getGuestProjectLimit() + " data set(s) with at most " + accountConfig.getguestImageLimit() + " images. " +
+            Notification.pushToRedirect("Guest account limitations", "Please note that guest accounts have a limit of " + accountConfig.getGuestProjectLimit() + " data set(s) with at most " + accountConfig.getGuestImageLimit() + " images. " +
                     "Guest accounts will be automatically deleted after " + accountConfig.getGuestAccountExpireMinutes() + " minutes from now on." , Notification.Style.danger, redirectAttributes);
         }
 
