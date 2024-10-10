@@ -1,7 +1,6 @@
 package org.hkijena.jast.repositories;
 
 import org.hkijena.jast.model.entities.Project;
-import org.hkijena.jast.model.entities.TimeSeries;
 import org.hkijena.jast.model.entities.Image;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;

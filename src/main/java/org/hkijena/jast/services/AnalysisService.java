@@ -14,7 +14,6 @@ import org.apache.commons.lang3.math.NumberUtils;
 import org.hibernate.Hibernate;
 import org.hkijena.jast.config.RuntimeConfig;
 import org.hkijena.jast.config.RuntimeParametersConfig;
-import org.hkijena.jast.model.entities.TimeSeries;
 import org.hkijena.jast.model.entities.Image;
 import org.hkijena.jast.repositories.TimeSeriesRepository;
 import org.hkijena.jast.repositories.ImageRepository;

@@ -1,7 +1,6 @@
 package org.hkijena.jast.controller;
 
 import org.hkijena.jast.config.AccountConfig;
-import org.hkijena.jast.model.entities.TimeSeries;
 import org.hkijena.jast.model.Notification;
 import org.hkijena.jast.model.Privileges;
 import org.hkijena.jast.model.entities.User;

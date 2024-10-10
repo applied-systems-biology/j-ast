@@ -4,7 +4,6 @@ import com.google.common.collect.ImmutableList;
 import jakarta.transaction.Transactional;
 import org.hkijena.jast.config.AccountConfig;
 import org.hkijena.jast.model.AdminPrincipal;
-import org.hkijena.jast.model.entities.TimeSeries;
 import org.hkijena.jast.model.entities.User;
 import org.hkijena.jast.model.UserPrincipal;
 import org.hkijena.jast.repositories.TimeSeriesRepository;

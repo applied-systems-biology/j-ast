@@ -34,17 +34,10 @@ public class Project {
     private User owner;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true, mappedBy = "project")
-    private List<TimeSeries> series = new ArrayList<>();
-
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true, mappedBy = "project")
     private List<Image> images = new ArrayList<>();
 
     public Long getId() {
         return id;
-    }
-
-    public List<TimeSeries> getSeries() {
-        return series;
     }
 
     public List<Image> getImages() {
@@ -67,16 +60,6 @@ public class Project {
     public void removeImage(Image image) {
         images.remove(image);
         image.setProject(null);
-    }
-
-    public void addSeries(TimeSeries series) {
-        this.series.add(series);
-        series.setProject(this);
-    }
-
-    public void removeSeries(TimeSeries series) {
-        this.series.remove(series);
-        series.setProject(null);
     }
 
     public User getOwner() {

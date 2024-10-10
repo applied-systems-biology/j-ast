@@ -2,6 +2,7 @@ package org.hkijena.jast.model.entities;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import org.hkijena.jast.model.AssayType;
 
 import java.io.Serial;
 
@@ -44,18 +45,20 @@ public class Image {
     @NotNull
     private double plateDiameter = 90;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    private TimeSeries series;
+    @Column(name = "assay_type")
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    private AssayType assayType = AssayType.Unknown;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Project project;
 
-    public TimeSeries getSeries() {
-        return series;
+    public @NotNull AssayType getAssayType() {
+        return assayType;
     }
 
-    public void setSeries(TimeSeries series) {
-        this.series = series;
+    public void setAssayType(@NotNull AssayType assayType) {
+        this.assayType = assayType;
     }
 
     public int getImageWidth() {

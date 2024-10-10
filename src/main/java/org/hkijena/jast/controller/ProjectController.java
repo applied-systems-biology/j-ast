@@ -5,10 +5,8 @@ import org.hkijena.jast.config.AccountConfig;
 import org.hkijena.jast.config.RuntimeConfig;
 import org.hkijena.jast.model.*;
 import org.hkijena.jast.model.entities.Project;
-import org.hkijena.jast.model.entities.TimeSeries;
 import org.hkijena.jast.model.entities.Image;
-import org.hkijena.jast.model.messages.AnalysisStatusMessage;
-import org.hkijena.jast.model.messages.DatasetUpdateMessage;
+import org.hkijena.jast.model.messages.AutoProcessStatusMessage;
 import org.hkijena.jast.repositories.ProjectRepository;
 import org.hkijena.jast.repositories.ImageRepository;
 import org.hkijena.jast.services.AnalysisService;
@@ -348,7 +346,7 @@ public class ProjectController {
     }
 
     @GetMapping("/project/query-status/{id}")
-    public ResponseEntity<AnalysisStatusMessage> queryDatasetStatus(Authentication authentication, @PathVariable long id) {
+    public ResponseEntity<AutoProcessStatusMessage> queryDatasetStatus(Authentication authentication, @PathVariable long id) {
         Optional<TimeSeries> dataset_ = timeSeriesRepository.findById(id);
         if(dataset_.isPresent()) {
             TimeSeries timeSeries = dataset_.get();
@@ -357,7 +355,7 @@ public class ProjectController {
                 throw new ResponseStatusException(HttpStatus.FORBIDDEN);
             }
 
-            AnalysisStatusMessage message = new AnalysisStatusMessage();
+            AutoProcessStatusMessage message = new AutoProcessStatusMessage();
             message.setStatus(timeSeries.getStatus());
 
             StringBuilder stringBuilder = new StringBuilder();

@@ -2,7 +2,6 @@ package org.hkijena.jast.controller;
 
 import jakarta.servlet.http.HttpServletResponse;
 import org.hkijena.jast.config.RuntimeConfig;
-import org.hkijena.jast.model.entities.TimeSeries;
 import org.hkijena.jast.model.entities.Image;
 import org.hkijena.jast.repositories.TimeSeriesRepository;
 import org.hkijena.jast.repositories.ImageRepository;

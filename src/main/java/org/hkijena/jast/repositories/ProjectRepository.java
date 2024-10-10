@@ -4,7 +4,6 @@ import com.google.common.collect.Lists;
 import org.hkijena.jast.model.AdminPrincipal;
 import org.hkijena.jast.model.UserPrincipal;
 import org.hkijena.jast.model.entities.Project;
-import org.hkijena.jast.model.entities.TimeSeries;
 import org.hkijena.jast.model.entities.User;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.security.core.Authentication;
