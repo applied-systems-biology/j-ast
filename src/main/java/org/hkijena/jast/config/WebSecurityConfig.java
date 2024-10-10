@@ -7,6 +7,7 @@ import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.config.annotation.web.WebSecurityConfigurer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.LogoutConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.core.session.SessionRegistryImpl;
@@ -38,19 +39,21 @@ public class WebSecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.authenticationProvider(authProvider());
-        http.sessionManagement()
+        http.sessionManagement((sessionManagement) -> sessionManagement
                 .sessionCreationPolicy(SessionCreationPolicy.ALWAYS)
                 .maximumSessions(1)
-                .sessionRegistry(sessionRegistry());
+                .sessionRegistry(sessionRegistry()));
         http.authorizeHttpRequests(authorize -> authorize.requestMatchers(AntPathRequestMatcher.antMatcher("/project/**"),
-                AntPathRequestMatcher.antMatcher("/input-data/**"),
-                AntPathRequestMatcher.antMatcher("/output-data/**"),
-                AntPathRequestMatcher.antMatcher("/account/**"),
-                AntPathRequestMatcher.antMatcher("/zoi-shapes/**")).authenticated()
+                        AntPathRequestMatcher.antMatcher("/image/**"),
+                        AntPathRequestMatcher.antMatcher("/account/**")).authenticated()
                 .requestMatchers(AntPathRequestMatcher.antMatcher("/admin/**")).hasRole("ADMIN")
                 .anyRequest().permitAll());
-        http.formLogin().loginPage("/login").failureUrl("/login-error").permitAll().and()
-                .logout().permitAll();
+        http.formLogin((formLogin) -> {
+                    formLogin.loginPage("/login")
+                            .failureUrl("/login-error")
+                            .permitAll();
+                })
+                .logout(LogoutConfigurer::permitAll);
         return http.build();
     }
 
