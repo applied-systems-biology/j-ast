@@ -1,7 +1,8 @@
 import {createRouter, createWebHistory, RouteRecordRaw} from 'vue-router'
 import AboutView from "@/views/AboutView.vue";
 import DocumentationView from "@/views/DocumentationView.vue";
-import AnalyzeView from "@/views/AnalyzeView.vue";
+import AnalyzeView from "@/views/ProjectView.vue";
+import ProjectView from "@/views/ProjectView.vue";
 
 declare module "vue-router" {
     interface RouteMeta {
@@ -12,8 +13,8 @@ declare module "vue-router" {
 const routes: Array<RouteRecordRaw> = [
     {
         path: '/',
-        name: 'analyze',
-        component: AnalyzeView,
+        name: 'project',
+        component: ProjectView,
         meta: { title: "J-AST" }
     },
     {

@@ -3,7 +3,7 @@
     <BNavbarBrand to="/">J-AST</BNavbarBrand>
     <BCollapse id="nav-collapse" is-nav>
       <BNavbarNav>
-        <BNavItem to="/">Analyze</BNavItem>
+        <BNavItem to="/">Project</BNavItem>
         <BNavItem to="/documentation">Documentation</BNavItem>
         <BNavItem to="/about">About</BNavItem>
       </BNavbarNav>
@@ -23,3 +23,5 @@ import {BNavbar, BNavbarBrand, BNavItem, BCollapse, BNavbarNav, useColorMode} fr
     mode.value = "light";
   })
 </script>
+<style lang="scss">
+</style>
