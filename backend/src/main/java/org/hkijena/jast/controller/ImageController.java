@@ -32,78 +32,78 @@ public class ImageController {
         this.imageRepository = imageRepository;
     }
 
-    @GetMapping("/image/thumbnail/{id}")
-    public ModelAndView getThumbnail(HttpServletResponse response, Authentication authentication, @PathVariable long id) throws IOException {
-        Optional<Image> inputData_ = imageRepository.findById(id);
-        if(inputData_.isPresent()) {
-            Image image = inputData_.get();
-
-            if(!image.getProject().canAccess(authentication)) {
-                throw new ResponseStatusException(HttpStatus.FORBIDDEN);
-            }
-
-            RequestUtils.sendContent(response, image.getThumbnailData(), MimeTypeUtils.MIME_TYPE_PNG);
-            return null;
-        }
-        else {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-        }
-    }
-
-    @GetMapping("/image/view/{id}")
-    public ModelAndView view(HttpServletResponse response, Authentication authentication, @PathVariable long id) throws IOException {
-        Optional<Image> inputData_ = imageRepository.findById(id);
-        if(inputData_.isPresent()) {
-            Image image = inputData_.get();
-
-            if(!image.getProject().canAccess(authentication)) {
-                throw new ResponseStatusException(HttpStatus.FORBIDDEN);
-            }
-
-            RequestUtils.sendContent(response, image.getRawData(), MimeTypeUtils.MIME_TYPE_PNG);
-            return null;
-        }
-        else {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-        }
-    }
-
-    @GetMapping("/image/download/{id}")
-    public ModelAndView download(HttpServletResponse response, Authentication authentication, @PathVariable long id) throws IOException {
-        Optional<Image> inputData_ = imageRepository.findById(id);
-        if(inputData_.isPresent()) {
-            Image image = inputData_.get();
-
-            if(!image.getProject().canAccess(authentication)) {
-                throw new ResponseStatusException(HttpStatus.FORBIDDEN);
-            }
-
-            RequestUtils.sendAttachment(response, image.getRawData(), image.getOriginalFileName(), MimeTypeUtils.MIME_TYPE_PNG);
-            return null;
-        }
-        else {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-        }
-    }
-
-    @PostMapping("/image/delete/{id}")
-    public void deleteImage(HttpServletResponse response, Authentication authentication, @PathVariable long id) {
-        Optional<Image> inputData_ = imageRepository.findById(id);
-        if(inputData_.isPresent()) {
-            Image image = inputData_.get();
-            Project project = image.getProject();
-
-            if(!project.canEdit(authentication)) {
-                throw new ResponseStatusException(HttpStatus.FORBIDDEN);
-            }
-
-            project.removeImage(image);
-            projectRepository.save(project);
-            imageRepository.delete(image);
-            response.setStatus(HttpStatus.OK.value());
-        }
-        else {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-        }
-    }
+//    @GetMapping("/image/thumbnail/{id}")
+//    public ModelAndView getThumbnail(HttpServletResponse response, Authentication authentication, @PathVariable long id) throws IOException {
+//        Optional<Image> inputData_ = imageRepository.findById(id);
+//        if(inputData_.isPresent()) {
+//            Image image = inputData_.get();
+//
+//            if(!image.getProject().canAccess(authentication)) {
+//                throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+//            }
+//
+//            RequestUtils.sendContent(response, image.getThumbnailData(), MimeTypeUtils.MIME_TYPE_PNG);
+//            return null;
+//        }
+//        else {
+//            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+//        }
+//    }
+//
+//    @GetMapping("/image/view/{id}")
+//    public ModelAndView view(HttpServletResponse response, Authentication authentication, @PathVariable long id) throws IOException {
+//        Optional<Image> inputData_ = imageRepository.findById(id);
+//        if(inputData_.isPresent()) {
+//            Image image = inputData_.get();
+//
+//            if(!image.getProject().canAccess(authentication)) {
+//                throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+//            }
+//
+//            RequestUtils.sendContent(response, image.getRawData(), MimeTypeUtils.MIME_TYPE_PNG);
+//            return null;
+//        }
+//        else {
+//            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+//        }
+//    }
+//
+//    @GetMapping("/image/download/{id}")
+//    public ModelAndView download(HttpServletResponse response, Authentication authentication, @PathVariable long id) throws IOException {
+//        Optional<Image> inputData_ = imageRepository.findById(id);
+//        if(inputData_.isPresent()) {
+//            Image image = inputData_.get();
+//
+//            if(!image.getProject().canAccess(authentication)) {
+//                throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+//            }
+//
+//            RequestUtils.sendAttachment(response, image.getRawData(), image.getOriginalFileName(), MimeTypeUtils.MIME_TYPE_PNG);
+//            return null;
+//        }
+//        else {
+//            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+//        }
+//    }
+//
+//    @PostMapping("/image/delete/{id}")
+//    public void deleteImage(HttpServletResponse response, Authentication authentication, @PathVariable long id) {
+//        Optional<Image> inputData_ = imageRepository.findById(id);
+//        if(inputData_.isPresent()) {
+//            Image image = inputData_.get();
+//            Project project = image.getProject();
+//
+//            if(!project.canEdit(authentication)) {
+//                throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+//            }
+//
+//            project.removeImage(image);
+//            projectRepository.save(project);
+//            imageRepository.delete(image);
+//            response.setStatus(HttpStatus.OK.value());
+//        }
+//        else {
+//            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+//        }
+//    }
 }

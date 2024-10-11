@@ -36,79 +36,79 @@ public class RegistrationController {
         this.passwordEncoder = passwordEncoder;
     }
 
-    @GetMapping("/register")
-    public ModelAndView loginError(Model model, RedirectAttributes redirectAttributes, Authentication authentication) {
-
-        // Add basic info
-        projectRepository.putSortedToModel(model, authentication);
-        model.addAttribute("currentProjectId", -1);
-
-        if(authentication == null || !authentication.isAuthenticated()) {
-            if(accountConfig.isAllowGuestAccounts() || accountConfig.isAllowSelfRegister()) {
-                model.addAttribute("allowAccountTypeGuest", accountConfig.isAllowGuestAccounts());
-                model.addAttribute("allowAccountTypeUser", accountConfig.isAllowSelfRegister());
-                return new ModelAndView("register");
-            }
-            else {
-                Notification.pushToRedirect("Registration not supported", "Please contact " + accountConfig.getAdminContact() + " to ask for an account.", Notification.Style.danger, redirectAttributes);
-                return new ModelAndView("redirect:/");
-            }
-        }
-        else {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
-        }
-    }
-
-    @PostMapping("/register")
-    public ModelAndView createUser(Authentication authentication, RedirectAttributes redirectAttributes, @ModelAttribute CreateUpdateUserMessage createUpdateUserMessage) {
-        if(authentication != null && authentication.isAuthenticated()) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
-        }
-        if(createUpdateUserMessage.getRole() == User.Role.Admin) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
-        }
-        if(createUpdateUserMessage.getRole() == User.Role.Guest && !accountConfig.isAllowGuestAccounts()) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
-        }
-        if(createUpdateUserMessage.getRole() == User.Role.User && !accountConfig.isAllowSelfRegister()) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
-        }
-
-        String userName = createUpdateUserMessage.getEmail().trim().toLowerCase();
-        if(StringUtils.isNullOrEmpty(userName)) {
-            Notification.pushToRedirect("E-Mail is empty!", "The provided E-Mail is empty'!", Notification.Style.danger, redirectAttributes);
-            return new ModelAndView("redirect:/register");
-        }
-        if(accountConfig.getAdminUsername().equalsIgnoreCase(userName) || userRepository.existsByEmailIgnoreCase(userName)) {
-            Notification.pushToRedirect("User already exists!", "There is already a user with the E-Mail-Address '" + userName + "'!", Notification.Style.danger, redirectAttributes);
-            return new ModelAndView("redirect:/register");
-        }
-        if(StringUtils.isNullOrEmpty(createUpdateUserMessage.getNewPassword())) {
-            Notification.pushToRedirect("Empty password!", "The provided password was empty!", Notification.Style.danger, redirectAttributes);
-            return new ModelAndView("redirect:/register");
-        }
-        if(!Objects.equals(createUpdateUserMessage.getNewPassword(), createUpdateUserMessage.getNewPasswordConfirm())) {
-            Notification.pushToRedirect("Passwords are not equal!", "Please confirm the password via the dedicated field.", Notification.Style.danger, redirectAttributes);
-            return new ModelAndView("redirect:/register");
-        }
-
-        User user = new User();
-        user.setEmail(userName);
-        user.setRole(createUpdateUserMessage.getRole());
-        user.setPassword(passwordEncoder.encode(createUpdateUserMessage.getNewPassword()));
-        user.setFirstName(StringUtils.nullToEmpty(createUpdateUserMessage.getFirstName()));
-        user.setLastName(StringUtils.nullToEmpty(createUpdateUserMessage.getLastName()));
-        if(user.getRole() == User.Role.Guest) {
-            user.setGuestExpire(LocalDateTime.now().plusMinutes(accountConfig.getGuestAccountExpireMinutes()));
-        }
-        userRepository.save(user);
-
-        Notification.pushToRedirect("Account created", "Please login with the E-mail '" + userName + "' and your password", Notification.Style.success, redirectAttributes);
-        if(user.getRole() == User.Role.Guest) {
-            Notification.pushToRedirect("Guest account limitations", "Please note that guest accounts have a limit of " + accountConfig.getGuestProjectLimit() + " data set(s) with at most " + accountConfig.getGuestImageLimit() + " images. " +
-                    "Guest accounts will be automatically deleted after " + accountConfig.getGuestAccountExpireMinutes() + " minutes from now on." , Notification.Style.danger, redirectAttributes);
-        }
-
-        return new ModelAndView("redirect:/login");
-    }
+//    @GetMapping("/register")
+//    public ModelAndView loginError(Model model, RedirectAttributes redirectAttributes, Authentication authentication) {
+//
+//        // Add basic info
+//        projectRepository.putSortedToModel(model, authentication);
+//        model.addAttribute("currentProjectId", -1);
+//
+//        if(authentication == null || !authentication.isAuthenticated()) {
+//            if(accountConfig.isAllowGuestAccounts() || accountConfig.isAllowSelfRegister()) {
+//                model.addAttribute("allowAccountTypeGuest", accountConfig.isAllowGuestAccounts());
+//                model.addAttribute("allowAccountTypeUser", accountConfig.isAllowSelfRegister());
+//                return new ModelAndView("register");
+//            }
+//            else {
+//                Notification.pushToRedirect("Registration not supported", "Please contact " + accountConfig.getAdminContact() + " to ask for an account.", Notification.Style.danger, redirectAttributes);
+//                return new ModelAndView("redirect:/");
+//            }
+//        }
+//        else {
+//            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+//        }
+//    }
+//
+//    @PostMapping("/register")
+//    public ModelAndView createUser(Authentication authentication, RedirectAttributes redirectAttributes, @ModelAttribute CreateUpdateUserMessage createUpdateUserMessage) {
+//        if(authentication != null && authentication.isAuthenticated()) {
+//            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+//        }
+//        if(createUpdateUserMessage.getRole() == User.Role.Admin) {
+//            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+//        }
+//        if(createUpdateUserMessage.getRole() == User.Role.Guest && !accountConfig.isAllowGuestAccounts()) {
+//            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+//        }
+//        if(createUpdateUserMessage.getRole() == User.Role.User && !accountConfig.isAllowSelfRegister()) {
+//            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+//        }
+//
+//        String userName = createUpdateUserMessage.getEmail().trim().toLowerCase();
+//        if(StringUtils.isNullOrEmpty(userName)) {
+//            Notification.pushToRedirect("E-Mail is empty!", "The provided E-Mail is empty'!", Notification.Style.danger, redirectAttributes);
+//            return new ModelAndView("redirect:/register");
+//        }
+//        if(accountConfig.getAdminUsername().equalsIgnoreCase(userName) || userRepository.existsByEmailIgnoreCase(userName)) {
+//            Notification.pushToRedirect("User already exists!", "There is already a user with the E-Mail-Address '" + userName + "'!", Notification.Style.danger, redirectAttributes);
+//            return new ModelAndView("redirect:/register");
+//        }
+//        if(StringUtils.isNullOrEmpty(createUpdateUserMessage.getNewPassword())) {
+//            Notification.pushToRedirect("Empty password!", "The provided password was empty!", Notification.Style.danger, redirectAttributes);
+//            return new ModelAndView("redirect:/register");
+//        }
+//        if(!Objects.equals(createUpdateUserMessage.getNewPassword(), createUpdateUserMessage.getNewPasswordConfirm())) {
+//            Notification.pushToRedirect("Passwords are not equal!", "Please confirm the password via the dedicated field.", Notification.Style.danger, redirectAttributes);
+//            return new ModelAndView("redirect:/register");
+//        }
+//
+//        User user = new User();
+//        user.setEmail(userName);
+//        user.setRole(createUpdateUserMessage.getRole());
+//        user.setPassword(passwordEncoder.encode(createUpdateUserMessage.getNewPassword()));
+//        user.setFirstName(StringUtils.nullToEmpty(createUpdateUserMessage.getFirstName()));
+//        user.setLastName(StringUtils.nullToEmpty(createUpdateUserMessage.getLastName()));
+//        if(user.getRole() == User.Role.Guest) {
+//            user.setGuestExpire(LocalDateTime.now().plusMinutes(accountConfig.getGuestAccountExpireMinutes()));
+//        }
+//        userRepository.save(user);
+//
+//        Notification.pushToRedirect("Account created", "Please login with the E-mail '" + userName + "' and your password", Notification.Style.success, redirectAttributes);
+//        if(user.getRole() == User.Role.Guest) {
+//            Notification.pushToRedirect("Guest account limitations", "Please note that guest accounts have a limit of " + accountConfig.getGuestProjectLimit() + " data set(s) with at most " + accountConfig.getGuestImageLimit() + " images. " +
+//                    "Guest accounts will be automatically deleted after " + accountConfig.getGuestAccountExpireMinutes() + " minutes from now on." , Notification.Style.danger, redirectAttributes);
+//        }
+//
+//        return new ModelAndView("redirect:/login");
+//    }
 }

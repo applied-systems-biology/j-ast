@@ -22,37 +22,37 @@ public class IndexController {
         this.projectRepository = projectRepository;
     }
 
-    @GetMapping("/")
-    public ModelAndView index(Model model, Authentication authentication) {
-        projectRepository.putSortedToModel(model, authentication);
-        model.addAttribute("currentProjectId", -1);
-        return new ModelAndView("index");
-    }
-
-    @GetMapping("/login")
-    public ModelAndView showLoginForm(Model model, Authentication authentication) {
-        if(authentication == null || !authentication.isAuthenticated()) {
-            projectRepository.putSortedToModel(model, authentication);
-            model.addAttribute("currentProjectId", -1);
-            return new ModelAndView("login");
-        }
-        else {
-            return new ModelAndView("redirect:/");
-        }
-    }
-
-    @GetMapping("/login-error")
-    public ModelAndView loginError(Model model, Authentication authentication) {
-        if(authentication == null || !authentication.isAuthenticated()) {
-            projectRepository.putSortedToModel(model, authentication);
-            model.addAttribute("currentProjectId", -1);
-            List<Notification> notificationList = new ArrayList<>();
-            notificationList.add(new Notification("Login error!", "Could not authenticate! Are the username and the password correct?", "danger"));
-            model.addAttribute("notifications", notificationList);
-            return new ModelAndView("login");
-        }
-        else {
-            return new ModelAndView("redirect:/");
-        }
-    }
+//    @GetMapping("/")
+//    public ModelAndView index(Model model, Authentication authentication) {
+//        projectRepository.putSortedToModel(model, authentication);
+//        model.addAttribute("currentProjectId", -1);
+//        return new ModelAndView("index");
+//    }
+//
+//    @GetMapping("/login")
+//    public ModelAndView showLoginForm(Model model, Authentication authentication) {
+//        if(authentication == null || !authentication.isAuthenticated()) {
+//            projectRepository.putSortedToModel(model, authentication);
+//            model.addAttribute("currentProjectId", -1);
+//            return new ModelAndView("login");
+//        }
+//        else {
+//            return new ModelAndView("redirect:/");
+//        }
+//    }
+//
+//    @GetMapping("/login-error")
+//    public ModelAndView loginError(Model model, Authentication authentication) {
+//        if(authentication == null || !authentication.isAuthenticated()) {
+//            projectRepository.putSortedToModel(model, authentication);
+//            model.addAttribute("currentProjectId", -1);
+//            List<Notification> notificationList = new ArrayList<>();
+//            notificationList.add(new Notification("Login error!", "Could not authenticate! Are the username and the password correct?", "danger"));
+//            model.addAttribute("notifications", notificationList);
+//            return new ModelAndView("login");
+//        }
+//        else {
+//            return new ModelAndView("redirect:/");
+//        }
+//    }
 }

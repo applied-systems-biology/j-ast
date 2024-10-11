@@ -58,172 +58,172 @@ public class ProjectController {
         this.projectService = projectService;
     }
 
-    @GetMapping("/project/new")
-    public ModelAndView newProject(Model model, Authentication authentication) throws IOException {
-        if(authentication == null || !authentication.isAuthenticated() || !authentication.getAuthorities().contains(Privileges.PRIVILEGE_CREATE_TASKS)) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
-        }
-        if(!projectService.canCreateProject(authentication)) {
-            return new ModelAndView("redirect:/");
-        }
-        Project project = new Project();
-        if(authentication.getPrincipal() instanceof UserPrincipal) {
-            project.setOwner(((UserPrincipal) authentication.getPrincipal()).getUser());
-        }
-        project = projectRepository.save(project);
-        return new ModelAndView("redirect:/project/view/" + project.getId());
-    }
-
-    @GetMapping("/project/view/{id}")
-    public ModelAndView viewProject(Model model, Authentication authentication, @PathVariable long id) {
-        Optional<Project> project_ = projectRepository.findById(id);
-        if (project_.isPresent()) {
-            Project project = project_.get();
-
-            if(!project.canAccess(authentication)) {
-                throw new ResponseStatusException(HttpStatus.FORBIDDEN);
-            }
-
-            projectRepository.putSortedToModel(model, authentication);
-            model.addAttribute("currentProject", project);
-            model.addAttribute("currentProjectId", project.getId());
-
-            // Add owner information
-            if(project.isOwnedBy(authentication)) {
-                model.addAttribute("currentProjectOwnedByOtherUser", false);
-            }
-            else {
-                model.addAttribute("currentProjectOwnedByOtherUser", true);
-                model.addAttribute("currentProjectOwner", project.getOwner() != null ? project.getOwner().getEmail() : accountConfig.getAdminUsername());
-            }
-
-            // Add limits info
-            model.addAttribute("guestImageLimit", accountConfig.getGuestImageLimit());
-
-            return new ModelAndView("dataset-editor");
-        } else {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-        }
-    }
-
-    @PostMapping("/project/delete/{id}")
-    public ModelAndView deleteProject(Authentication authentication, RedirectAttributes redirectAttributes, @PathVariable long id) {
-        Optional<Project> project_ = projectRepository.findById(id);
-        if (project_.isPresent()) {
-
-            Project project = project_.get();
-
-            if(!project.canEdit(authentication)) {
-                throw new ResponseStatusException(HttpStatus.FORBIDDEN);
-            }
-
-            projectService.delete(project);
-
-            Notification.pushToRedirect("Project deleted", "The project '" + project.getName() + "' was deleted.", Notification.Style.success, redirectAttributes);
-            return new ModelAndView("redirect:/");
-        }
-        else {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-        }
-    }
-
-    @PostMapping("/project/rename/{id}")
-    public ModelAndView renameDataset(Authentication authentication, @PathVariable long id, @RequestParam("datasetName") String datasetName) {
-        Optional<Project> project_ = projectRepository.findById(id);
-        if (project_.isPresent()) {
-            Project project = project_.get();
-
-            if(!project.canEdit(authentication)) {
-                throw new ResponseStatusException(HttpStatus.FORBIDDEN);
-            }
-
-            datasetName = StringUtils.nullToEmpty(datasetName).trim();
-            if(StringUtils.isNullOrEmpty(datasetName)) {
-                datasetName = "Unnamed";
-            }
-            project.setName(datasetName);
-            projectRepository.save(project);
-            return new ModelAndView("redirect:/project/view/" + id);
-        }
-        else {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-        }
-    }
-
-    @PostMapping("/project/upload/{id}")
-    public ResponseEntity<?> uploadFileToDataset(Authentication authentication, @PathVariable long id, RedirectAttributes redirectAttributes, @RequestParam("imageFile") MultipartFile imageFile) {
-        Optional<Project> project_ = projectRepository.findById(id);
-        if (project_.isPresent()) {
-            Project project = project_.get();
-
-            if(!project.canEdit(authentication)) {
-                throw new ResponseStatusException(HttpStatus.FORBIDDEN);
-            }
-
-            // Iterate through images and organize them
-            int numSuccess = 0;
-            int numFailures = 0;
-            int numLimitReached = 0;
-            List<String> failureNames = new ArrayList<>();
-            if(imageFile != null && !imageFile.isEmpty()) {
-                if(projectService.canUploadImage(project, authentication)) {
-                    try {
-                        try (InputStream stream = imageFile.getInputStream()) {
-                            BufferedImage bufferedImage = ImageIO.read(stream);
-                            if (bufferedImage == null) {
-                                throw new NullPointerException("Unable to load image!");
-                            }
-
-                            // Create object
-                            Image image = new Image();
-                            image.setOriginalFileName(StringUtils.nullToEmpty(imageFile.getOriginalFilename()));
-                            image.setImageWidth(bufferedImage.getWidth());
-                            image.setImageHeight(bufferedImage.getHeight());
-                            image.setRawData(ImageUtils.toPNGByteArray(bufferedImage));
-                            image.setThumbnailData(ImageUtils.toPNGByteArray(ImageUtils.createThumbnail(bufferedImage, 128, 128)));
-
-                            project.addImage(image);
-                            ++numSuccess;
-                        }
-                    } catch (Throwable e) {
-                        ++numFailures;
-
-                        if (!StringUtils.isNullOrEmpty(imageFile.getOriginalFilename())) {
-                            failureNames.add(imageFile.getOriginalFilename());
-                        }
-                    }
-                }
-                else {
-                    ++numLimitReached;
-                }
-            }
-            projectRepository.save(project);
-
-            if(numSuccess > 0) {
-                Notification.pushToRedirect("Successfully imported images",
-                        numSuccess + " images were successfully imported.",
-                        Notification.Style.success,
-                        redirectAttributes);
-            }
-            if(numFailures > 0) {
-                Notification.pushToRedirect("Unable to import images",
-                        numFailures + " images could not be imported! Please ensure to only provide PNG files. Affected files: " + String.join(", ", failureNames),
-                        Notification.Style.danger,
-                        redirectAttributes);
-            }
-            if(numLimitReached > 0) {
-                Notification.pushToRedirect("Input image limit reached",
-                        "Guests can only upload up to " + accountConfig.getGuestImageLimit() + " images per data set",
-                        Notification.Style.danger,
-                        redirectAttributes);
-            }
-
-            return ResponseEntity.ok("Upload successful");
-        }
-        else {
-            return ResponseEntity.notFound().build();
-        }
-    }
+//    @GetMapping("/project/new")
+//    public ModelAndView newProject(Model model, Authentication authentication) throws IOException {
+//        if(authentication == null || !authentication.isAuthenticated() || !authentication.getAuthorities().contains(Privileges.PRIVILEGE_CREATE_TASKS)) {
+//            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+//        }
+//        if(!projectService.canCreateProject(authentication)) {
+//            return new ModelAndView("redirect:/");
+//        }
+//        Project project = new Project();
+//        if(authentication.getPrincipal() instanceof UserPrincipal) {
+//            project.setOwner(((UserPrincipal) authentication.getPrincipal()).getUser());
+//        }
+//        project = projectRepository.save(project);
+//        return new ModelAndView("redirect:/project/view/" + project.getId());
+//    }
+//
+//    @GetMapping("/project/view/{id}")
+//    public ModelAndView viewProject(Model model, Authentication authentication, @PathVariable long id) {
+//        Optional<Project> project_ = projectRepository.findById(id);
+//        if (project_.isPresent()) {
+//            Project project = project_.get();
+//
+//            if(!project.canAccess(authentication)) {
+//                throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+//            }
+//
+//            projectRepository.putSortedToModel(model, authentication);
+//            model.addAttribute("currentProject", project);
+//            model.addAttribute("currentProjectId", project.getId());
+//
+//            // Add owner information
+//            if(project.isOwnedBy(authentication)) {
+//                model.addAttribute("currentProjectOwnedByOtherUser", false);
+//            }
+//            else {
+//                model.addAttribute("currentProjectOwnedByOtherUser", true);
+//                model.addAttribute("currentProjectOwner", project.getOwner() != null ? project.getOwner().getEmail() : accountConfig.getAdminUsername());
+//            }
+//
+//            // Add limits info
+//            model.addAttribute("guestImageLimit", accountConfig.getGuestImageLimit());
+//
+//            return new ModelAndView("dataset-editor");
+//        } else {
+//            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+//        }
+//    }
+//
+//    @PostMapping("/project/delete/{id}")
+//    public ModelAndView deleteProject(Authentication authentication, RedirectAttributes redirectAttributes, @PathVariable long id) {
+//        Optional<Project> project_ = projectRepository.findById(id);
+//        if (project_.isPresent()) {
+//
+//            Project project = project_.get();
+//
+//            if(!project.canEdit(authentication)) {
+//                throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+//            }
+//
+//            projectService.delete(project);
+//
+//            Notification.pushToRedirect("Project deleted", "The project '" + project.getName() + "' was deleted.", Notification.Style.success, redirectAttributes);
+//            return new ModelAndView("redirect:/");
+//        }
+//        else {
+//            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+//        }
+//    }
+//
+//    @PostMapping("/project/rename/{id}")
+//    public ModelAndView renameDataset(Authentication authentication, @PathVariable long id, @RequestParam("datasetName") String datasetName) {
+//        Optional<Project> project_ = projectRepository.findById(id);
+//        if (project_.isPresent()) {
+//            Project project = project_.get();
+//
+//            if(!project.canEdit(authentication)) {
+//                throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+//            }
+//
+//            datasetName = StringUtils.nullToEmpty(datasetName).trim();
+//            if(StringUtils.isNullOrEmpty(datasetName)) {
+//                datasetName = "Unnamed";
+//            }
+//            project.setName(datasetName);
+//            projectRepository.save(project);
+//            return new ModelAndView("redirect:/project/view/" + id);
+//        }
+//        else {
+//            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+//        }
+//    }
+//
+//    @PostMapping("/project/upload/{id}")
+//    public ResponseEntity<?> uploadFileToDataset(Authentication authentication, @PathVariable long id, RedirectAttributes redirectAttributes, @RequestParam("imageFile") MultipartFile imageFile) {
+//        Optional<Project> project_ = projectRepository.findById(id);
+//        if (project_.isPresent()) {
+//            Project project = project_.get();
+//
+//            if(!project.canEdit(authentication)) {
+//                throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+//            }
+//
+//            // Iterate through images and organize them
+//            int numSuccess = 0;
+//            int numFailures = 0;
+//            int numLimitReached = 0;
+//            List<String> failureNames = new ArrayList<>();
+//            if(imageFile != null && !imageFile.isEmpty()) {
+//                if(projectService.canUploadImage(project, authentication)) {
+//                    try {
+//                        try (InputStream stream = imageFile.getInputStream()) {
+//                            BufferedImage bufferedImage = ImageIO.read(stream);
+//                            if (bufferedImage == null) {
+//                                throw new NullPointerException("Unable to load image!");
+//                            }
+//
+//                            // Create object
+//                            Image image = new Image();
+//                            image.setOriginalFileName(StringUtils.nullToEmpty(imageFile.getOriginalFilename()));
+//                            image.setImageWidth(bufferedImage.getWidth());
+//                            image.setImageHeight(bufferedImage.getHeight());
+//                            image.setRawData(ImageUtils.toPNGByteArray(bufferedImage));
+//                            image.setThumbnailData(ImageUtils.toPNGByteArray(ImageUtils.createThumbnail(bufferedImage, 128, 128)));
+//
+//                            project.addImage(image);
+//                            ++numSuccess;
+//                        }
+//                    } catch (Throwable e) {
+//                        ++numFailures;
+//
+//                        if (!StringUtils.isNullOrEmpty(imageFile.getOriginalFilename())) {
+//                            failureNames.add(imageFile.getOriginalFilename());
+//                        }
+//                    }
+//                }
+//                else {
+//                    ++numLimitReached;
+//                }
+//            }
+//            projectRepository.save(project);
+//
+//            if(numSuccess > 0) {
+//                Notification.pushToRedirect("Successfully imported images",
+//                        numSuccess + " images were successfully imported.",
+//                        Notification.Style.success,
+//                        redirectAttributes);
+//            }
+//            if(numFailures > 0) {
+//                Notification.pushToRedirect("Unable to import images",
+//                        numFailures + " images could not be imported! Please ensure to only provide PNG files. Affected files: " + String.join(", ", failureNames),
+//                        Notification.Style.danger,
+//                        redirectAttributes);
+//            }
+//            if(numLimitReached > 0) {
+//                Notification.pushToRedirect("Input image limit reached",
+//                        "Guests can only upload up to " + accountConfig.getGuestImageLimit() + " images per data set",
+//                        Notification.Style.danger,
+//                        redirectAttributes);
+//            }
+//
+//            return ResponseEntity.ok("Upload successful");
+//        }
+//        else {
+//            return ResponseEntity.notFound().build();
+//        }
+//    }
 
     @EventListener(ApplicationReadyEvent.class)
     public void onApplicationStarting(ApplicationReadyEvent event) {

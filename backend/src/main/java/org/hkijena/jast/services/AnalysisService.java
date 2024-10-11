@@ -1,55 +1,22 @@
 package org.hkijena.jast.services;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.BooleanNode;
-import com.fasterxml.jackson.databind.node.DoubleNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.google.common.eventbus.Subscribe;
-import jakarta.transaction.Transactional;
-import org.apache.commons.csv.CSVFormat;
-import org.apache.commons.csv.CSVRecord;
-import org.apache.commons.exec.CommandLine;
-import org.apache.commons.exec.ExecuteWatchdog;
-import org.apache.commons.lang3.math.NumberUtils;
-import org.hibernate.Hibernate;
 import org.hkijena.jast.config.RuntimeConfig;
-import org.hkijena.jast.config.RuntimeParametersConfig;
-import org.hkijena.jast.model.entities.Image;
 import org.hkijena.jast.repositories.ImageRepository;
 import org.hkijena.jast.repositories.ProjectRepository;
-import org.hkijena.jast.utils.*;
 import org.jobrunr.jobs.context.JobContext;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
-import org.springframework.util.FileSystemUtils;
-
-import javax.imageio.ImageIO;
-import java.io.FileReader;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class AnalysisService {
 
     private final RuntimeConfig runtimeConfig;
-
-    private final RuntimeParametersConfig runtimeParametersConfig;
     private final ImageRepository imageRepository;
     private final ProjectRepository projectRepository;
 
     @Autowired
-    public AnalysisService(RuntimeConfig runtimeConfig, RuntimeParametersConfig runtimeParametersConfig, ImageRepository imageRepository, ProjectRepository projectRepository) {
+    public AnalysisService(RuntimeConfig runtimeConfig, ImageRepository imageRepository, ProjectRepository projectRepository) {
         this.runtimeConfig = runtimeConfig;
-        this.runtimeParametersConfig = runtimeParametersConfig;
         this.projectRepository = projectRepository;
         this.imageRepository = imageRepository;
     }

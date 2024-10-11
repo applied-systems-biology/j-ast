@@ -1,26 +1,25 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <BNavbar>
+    <BNavbarBrand to="/">J-AST</BNavbarBrand>
+    <BCollapse id="nav-collapse" is-nav>
+      <BNavbarNav>
+        <BNavItem to="/">Analyze</BNavItem>
+        <BNavItem to="/documentation">Documentation</BNavItem>
+        <BNavItem to="/about">About</BNavItem>
+      </BNavbarNav>
+      <BNavbarNav class="ms-auto mb-2 mb-lg-0">
+        <BNavItem>Login</BNavItem>
+      </BNavbarNav>
+    </BCollapse>
+  </BNavbar>
+  <router-view/>
 </template>
+<script setup>
+import {BNavbar, BNavbarBrand, BNavItem, BCollapse, BNavbarNav, useColorMode} from "bootstrap-vue-next";
+  import {onMounted} from "vue";
+  const mode = useColorMode();
 
-<script>
-import HelloWorld from './components/HelloWorld.vue'
-
-export default {
-  name: 'App',
-  components: {
-    HelloWorld
-  }
-}
+  onMounted(function () {
+    mode.value = "light";
+  })
 </script>
-
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
-</style>

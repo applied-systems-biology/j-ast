@@ -1,3 +1,5 @@
+server:
+  port: 8081
 spring:
   datasource:
     url: jdbc:h2:file:./storage/database
@@ -32,16 +34,6 @@ runtime:
   fiji-wrapper: '/usr/bin/xvfb-run'
   fiji-wrapper-args: [ '-a' ]
   custom-temp-directory: "./storage/data"
-runtime-parameters:
-  time-point-early-filter-parameter-key: 'e3d4a323-851b-49f8-960d-80e972ff94ad/filter'
-  growth-reduction-thresholds-parameter-key: 'f37619df-9f61-4033-b000-1271b68b5f68/variables/thresholds'
-  dda-min-diameter-parameter-key: '0f0ac686-e04e-4591-819e-31b5bf755759/jipipe:algorithm:custom-expression-variables/minFeret'
-  dda-max-diameter-parameter-key: '0f0ac686-e04e-4591-819e-31b5bf755759/jipipe:algorithm:custom-expression-variables/maxFeret'
-  dda-min-circularity-parameter-key: '0f0ac686-e04e-4591-819e-31b5bf755759/jipipe:algorithm:custom-expression-variables/minCirc'
-  contrast-min-value-parameter-key: '5bfee4f0-7076-4959-b097-ac557442fa98/custom-min'
-  contrast-max-value-parameter-key: '5bfee4f0-7076-4959-b097-ac557442fa98/custom-max'
-  input-folder-list-parameter-key: '99ac157f-2519-4a3b-8621-72952d9a86d1/folder-paths'
-  ensure-circular-plate-parameter-key: '2fbccdbb-e361-4645-b954-593692b75e2e/jipipe:algorithm:custom-expression-variables/circular-plate'
 accounts:
   admin-username: 'admin@localhost'
   admin-password: 'Ckw55ryzy1mXGxb8'

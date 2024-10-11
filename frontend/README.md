@@ -1,4 +1,4 @@
-# frontend
+# J-AST frontend
 
 ## Project setup
 ```
