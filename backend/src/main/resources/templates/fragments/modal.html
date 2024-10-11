@@ -1,0 +1,19 @@
+<div th:fragment="modalSubmit (title, text, action, actionText, cancelText)" class="modal" tabindex="-1" id="modal-submit">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" th:text="${title}"></h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p th:text="${text}"></p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" th:text="${cancelText}">Cancel</button>
+        <form th:action="${action}" method="post">
+          <button type="submit" class="btn btn-success" th:text="${actionText}">OK</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
