@@ -22,7 +22,6 @@
     </q-drawer>
     <q-page-container>
       bbb
-      <EditProjectNameDialog v-model="editProjectNameDialogOpen" @onProjectNameChanged="onProjectNameChanged"/>
     </q-page-container>
     <q-footer>
       <ImprintComponent/>
@@ -35,24 +34,37 @@ import ImprintComponent from "components/ImprintComponent.vue";
 import LoginButtonComponent from "components/LoginButtonComponent.vue";
 import HeaderLogoButtonComponent from "components/HeaderLogoButtonComponent.vue";
 import {Ref, ref} from "vue";
-import EditProjectNameDialog from "components/EditProjectNameDialog.vue";
 import ToggleButton from "components/ToggleButton.vue";
 import ImageUploaderComponent from "components/ImageUploaderComponent.vue";
+import {useQuasar} from "quasar";
 
+const $q = useQuasar()
 const drawerLeft: Ref<boolean> = ref(false)
 const projectName: Ref<string> = ref("")
-const editProjectNameDialogOpen = ref(false)
 
 defineOptions({
   name: 'ProjectLayout'
 });
 
 function editProjectName() {
-  editProjectNameDialogOpen.value = true;
+  $q.dialog({
+    title: 'Edit project name',
+    message: 'Please enter a new project name',
+    prompt: {
+      model: projectName.value,
+      type: 'text'
+    },
+    cancel: true,
+    persistent: true
+  }).onOk((data : string) => {
+    projectName.value = data
+    // console.log('>>>> OK, received', data)
+  }).onCancel(() => {
+    // console.log('>>>> Cancel')
+  }).onDismiss(() => {
+    // console.log('I am triggered on both OK and Cancel')
+  })
 }
 
-function onProjectNameChanged(newValue: string) {
-  projectName.value = newValue
-}
 
 </script>
