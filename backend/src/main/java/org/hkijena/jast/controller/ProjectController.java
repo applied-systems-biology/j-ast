@@ -1,18 +1,11 @@
 package org.hkijena.jast.controller;
 
-import jakarta.servlet.http.HttpServletResponse;
 import org.hkijena.jast.config.AccountConfig;
-import org.hkijena.jast.model.*;
-import org.hkijena.jast.model.entities.Project;
-import org.hkijena.jast.model.entities.Image;
-import org.hkijena.jast.model.messages.AutoProcessStatusMessage;
+import org.hkijena.jast.payloads.ProjectInfoMessage;
 import org.hkijena.jast.repositories.ProjectRepository;
 import org.hkijena.jast.repositories.ImageRepository;
 import org.hkijena.jast.services.AnalysisService;
 import org.hkijena.jast.services.ProjectService;
-import org.hkijena.jast.utils.ImageUtils;
-import org.hkijena.jast.utils.RequestUtils;
-import org.hkijena.jast.utils.StringUtils;
 import org.jobrunr.jobs.context.JobContext;
 import org.jobrunr.scheduling.JobScheduler;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,21 +15,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.server.ResponseStatusException;
-import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Controller
 public class ProjectController {
@@ -56,6 +39,14 @@ public class ProjectController {
         this.jobScheduler = jobScheduler;
         this.analysisService = analysisService;
         this.projectService = projectService;
+    }
+
+    @GetMapping("/api/list-projects")
+    public ResponseEntity<List<ProjectInfoMessage>> listProjects(Authentication authentication) {
+        if(authentication == null || !authentication.isAuthenticated()) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+        }
+        return new ResponseEntity<>(new ArrayList<ProjectInfoMessage>());
     }
 
 //    @GetMapping("/project/new")

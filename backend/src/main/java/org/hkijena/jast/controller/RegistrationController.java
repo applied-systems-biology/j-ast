@@ -1,26 +1,10 @@
 package org.hkijena.jast.controller;
 
 import org.hkijena.jast.config.AccountConfig;
-import org.hkijena.jast.model.messages.CreateUpdateUserMessage;
-import org.hkijena.jast.model.Notification;
-import org.hkijena.jast.model.entities.User;
 import org.hkijena.jast.repositories.ProjectRepository;
 import org.hkijena.jast.repositories.UserRepository;
-import org.hkijena.jast.utils.StringUtils;
-import org.springframework.http.HttpStatus;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.server.ResponseStatusException;
-import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
-import java.time.LocalDateTime;
-import java.util.Objects;
 
 @Controller
 public class RegistrationController {

@@ -1,4 +1,4 @@
-package org.hkijena.jast.model.messages;
+package org.hkijena.jast.payloads;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonSetter;

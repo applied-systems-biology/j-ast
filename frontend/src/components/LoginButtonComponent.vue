@@ -1,6 +1,11 @@
 <template>
-  <q-btn @click="showLoginDialog" v-if="!authStore.isLoggedIn" color="green">Login</q-btn>
-  <q-btn @click="doLogout" v-if="authStore.isLoggedIn" color="red">Logout</q-btn>
+  <div class="q-gutter-sm flex row">
+    <q-btn v-if="authStore.role == 'Admin'" no-caps color="blue-grey" icon="settings">Admin</q-btn>
+    <q-btn v-if="authStore.isLoggedIn" no-caps color="blue-grey" icon="person">{{ authStore.username + " (" + authStore.role + ")" }}</q-btn>
+    <q-btn @click="showLoginDialog" v-if="!authStore.isLoggedIn" color="green">Login</q-btn>
+    <q-btn @click="doLogout" v-if="authStore.isLoggedIn" color="red">Logout</q-btn>
+  </div>
+
   <q-dialog v-model="displayLoginDialog" persistent>
     <q-card>
       <q-card-section class="row items-center q-pb-none">
