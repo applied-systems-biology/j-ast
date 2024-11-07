@@ -12,11 +12,14 @@
         <q-separator dark />
 
         <q-card-actions>
-          <q-btn flat @click="newProject">Start a new project</q-btn>
+          <q-btn :disable="!authStore.isLoggedIn" flat @click="newProject">Start a new project</q-btn>
+          <q-chip outline color="white" square icon="warning" v-if="!authStore.isLoggedIn">
+            You are currently not logged in
+          </q-chip>
         </q-card-actions>
       </q-card>
     </div>
-    <div class="row q-gutter-md">
+    <div class="row q-gutter-md" v-if="authStore.isLoggedIn">
       <q-skeleton class="project-item" type="rect"/>
       <q-btn class="project-item" size="lg" icon="add" color="green" outline no-caps @click="newProject">New project</q-btn>
     </div>
@@ -25,8 +28,10 @@
 <script setup lang="ts">
 
 import {useQuasar} from "quasar";
+import {useAuthStore} from "stores/auth-store";
 
 const $q = useQuasar()
+const authStore = useAuthStore()
 
 function newProject() {
   $q.dialog({
