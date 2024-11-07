@@ -37,8 +37,11 @@ runtime:
 accounts:
   admin-username: 'admin@localhost'
   admin-password: 'Ckw55ryzy1mXGxb8'
+security:
+  jwt-expiration-in-minutes: 60
+  jwt-secret: "8TJGD0tLb0M20pxRyasR3ajktjYVfhzqVauIleiKfRJdy3SVKr95JYpC7enixXeD"
 #server:
 #  servlet:
 #    context-path: '/abc'
-
+debug: off
 

@@ -23,6 +23,6 @@ import LoginButtonComponent from "components/LoginButtonComponent.vue";
 import HeaderLogoButtonComponent from "components/HeaderLogoButtonComponent.vue";
 
 defineOptions({
-  name: 'IndexLayout'
+  name: 'DefaultLayout'
 });
 </script>

@@ -22,7 +22,6 @@ public class Privileges {
     public static final GrantedAuthority PRIVILEGE_DELETE_OTHER_ACCOUNT = new SimpleGrantedAuthority("DELETE_OTHER_ACCOUNT");
     public static final GrantedAuthority PRIVILEGE_EDIT_OWN_ACCOUNT = new SimpleGrantedAuthority("EDIT_OWN_ACCOUNT");
     public static final GrantedAuthority PRIVILEGE_EDIT_OTHER_ACCOUNT = new SimpleGrantedAuthority("EDIT_OTHER_ACCOUNT");
-    public static final GrantedAuthority PRIVILEGE_EDIT_GLOBAL_ZOI_SHAPE_PRESETS = new SimpleGrantedAuthority("PRIVILEGE_EDIT_GLOBAL_ZOI_SHAPE_PRESETS");
 
     public static final Set<GrantedAuthority> ROLE_USER_PRIVILEGES;
 
@@ -48,8 +47,7 @@ public class Privileges {
                 PRIVILEGE_EDIT_ALL_TASKS,
                 PRIVILEGE_CREATE_ACCOUNT,
                 PRIVILEGE_DELETE_OTHER_ACCOUNT,
-                PRIVILEGE_EDIT_OTHER_ACCOUNT,
-                PRIVILEGE_EDIT_GLOBAL_ZOI_SHAPE_PRESETS
+                PRIVILEGE_EDIT_OTHER_ACCOUNT
         ));
     }
 }
