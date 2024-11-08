@@ -12,9 +12,12 @@ import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.Function;
 
 @Component
@@ -42,6 +45,14 @@ public class JwtUtil {
         return extractClaim(token, Claims::getExpiration, verify);
     }
 
+    public boolean isAccessToken(String token, boolean verify) {
+        return Objects.equals(extractClaim(token, claims -> claims.get(TOKEN_CLAIM_KEY_TYPE, String.class), verify), TOKEN_CLAIM_VALUE_TYPE_ACCESS);
+    }
+
+    public boolean isRefreshToken(String token, boolean verify) {
+        return Objects.equals(extractClaim(token, claims -> claims.get(TOKEN_CLAIM_KEY_TYPE, String.class), verify), TOKEN_CLAIM_VALUE_TYPE_REFRESH);
+    }
+
     public <T> T extractClaim(String token, Function<Claims, T> claimsResolver, boolean verify) {
         final Claims claims = extractAllClaims(token, verify);
         return claimsResolver.apply(claims);
@@ -61,20 +72,54 @@ public class JwtUtil {
         }
     }
 
-    public String generateAccessToken(String username) {
-        Map<String, Object> claims = new HashMap<>();
-        claims.put(TOKEN_CLAIM_KEY_TYPE, TOKEN_CLAIM_VALUE_TYPE_ACCESS);
-        return createToken(claims, username, jwtConfig.getJwtAccessTokenExpirationInMinutes() * 60L * 1000);
-    }
-
-    public String generateRefreshToken(String username) {
-        Map<String, Object> claims = new HashMap<>();
-        claims.put(TOKEN_CLAIM_KEY_TYPE, TOKEN_CLAIM_VALUE_TYPE_REFRESH);
-        return createToken(claims, username, jwtConfig.getJwtRefreshTokenExpirationInMinutes() * 60L * 1000);
-    }
-
     public Date getNewRefreshExpirationDate() {
         return new Date(System.currentTimeMillis() + jwtConfig.getJwtRefreshTokenExpirationInMinutes() * 60L * 1000);
+    }
+
+    public Date getNewAccessExpirationDate() {
+        return new Date(System.currentTimeMillis() + jwtConfig.getJwtAccessTokenExpirationInMinutes() * 60L * 1000);
+    }
+
+    public Date getNewLimitedRefreshExpirationDate(LocalDateTime limit) {
+        if(limit != null) {
+            long millis = Duration.between(LocalDateTime.now(), limit).toMillis();
+            if(millis > 0) {
+                return new Date(System.currentTimeMillis() + Math.min(jwtConfig.getJwtRefreshTokenExpirationInMinutes() * 60L * 1000, millis));
+            }
+            else {
+                return null;
+            }
+        }
+        else {
+            return getNewRefreshExpirationDate();
+        }
+    }
+
+    public Date getNewLimitedAccessExpirationDate(LocalDateTime limit) {
+        if(limit != null) {
+            long millis = Duration.between(LocalDateTime.now(), limit).toMillis();
+            if(millis > 0) {
+                return new Date(System.currentTimeMillis() + Math.min(jwtConfig.getJwtAccessTokenExpirationInMinutes() * 60L * 1000, millis));
+            }
+            else {
+                return null;
+            }
+        }
+        else {
+            return getNewAccessExpirationDate();
+        }
+    }
+
+    public String generateAccessToken(String username, Date expiration) {
+        Map<String, Object> claims = new HashMap<>();
+        claims.put(TOKEN_CLAIM_KEY_TYPE, TOKEN_CLAIM_VALUE_TYPE_ACCESS);
+        return Jwts.builder()
+                .claims(claims)
+                .subject(username)
+                .issuedAt(new Date(System.currentTimeMillis()))
+                .expiration(expiration)
+                .signWith(getSecretKey())
+                .compact();
     }
 
     public String generateRefreshToken(String username, Date expiration) {
@@ -85,16 +130,6 @@ public class JwtUtil {
                 .subject(username)
                 .issuedAt(new Date(System.currentTimeMillis()))
                 .expiration(expiration)
-                .signWith(getSecretKey())
-                .compact();
-    }
-
-    private String createToken(Map<String, Object> claims, String subject, long lifetimeMilliseconds) {
-        return Jwts.builder()
-                .claims(claims)
-                .subject(subject)
-                .issuedAt(new Date(System.currentTimeMillis()))
-                .expiration(new Date(System.currentTimeMillis() + lifetimeMilliseconds))
                 .signWith(getSecretKey())
                 .compact();
     }

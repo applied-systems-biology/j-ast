@@ -118,30 +118,6 @@ public class User {
         this.role = role;
     }
 
-    public String renderGuestExpireAdmin() {
-        if(role == Role.Guest) {
-            if(guestExpire == null) {
-                return "Now";
-            }
-            else {
-                return ChronoUnit.MINUTES.between(LocalDateTime.now(), guestExpire) + " min";
-            }
-        }
-        return "-";
-    }
-
-    public String renderGuestExpireTopBar() {
-        if(role == Role.Guest) {
-            if(guestExpire == null) {
-                return "Guest session expired";
-            }
-            else {
-                return "Guest session (" +  ChronoUnit.MINUTES.between(LocalDateTime.now(), guestExpire) + " min left before deletion)";
-            }
-        }
-        return "-";
-    }
-
     public enum Role {
         User,
         Guest,

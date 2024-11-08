@@ -4,6 +4,7 @@ import org.hkijena.jast.model.entities.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
 
 public class UserPrincipal implements UserDetails {
@@ -36,7 +37,15 @@ public class UserPrincipal implements UserDetails {
 
     @Override
     public boolean isAccountNonExpired() {
-        return true;
+        if(user.getRole() == User.Role.Guest) {
+            if(user.getGuestExpire() != null) {
+                return LocalDateTime.now().isBefore(user.getGuestExpire());
+            }
+            return false;
+        }
+        else {
+            return true;
+        }
     }
 
     @Override

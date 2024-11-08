@@ -49,8 +49,17 @@ public class AuthenticationController {
 
             UserAuthenticationLoginResponse response = new UserAuthenticationLoginResponse();
             response.setUsername(userDetails.getUsername());
-            response.setAccessToken(jwtUtil.generateAccessToken(userDetails.getUsername()));
-            response.setRefreshToken(jwtUtil.generateRefreshToken(userDetails.getUsername()));
+
+            LocalDateTime limit = tryExtractGuestLimit(userDetails);
+            Date accessExpirationDate = jwtUtil.getNewLimitedAccessExpirationDate(limit);
+            Date refreshExpirationDate = jwtUtil.getNewLimitedRefreshExpirationDate(limit);
+
+            if(accessExpirationDate == null || refreshExpirationDate == null) {
+                throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Access expired");
+            }
+
+            response.setAccessToken(jwtUtil.generateAccessToken(userDetails.getUsername(), accessExpirationDate));
+            response.setRefreshToken(jwtUtil.generateRefreshToken(userDetails.getUsername(), refreshExpirationDate));
             if (userDetails instanceof UserPrincipal) {
                 User user = ((UserPrincipal) userDetails).getUser();
                 response.setRole(user.getRole());
@@ -63,6 +72,18 @@ public class AuthenticationController {
         } catch (BadCredentialsException ex) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
+    }
+
+    private LocalDateTime tryExtractGuestLimit(UserDetails userDetails) {
+        LocalDateTime limit = null;
+        if(userDetails instanceof UserPrincipal principal) {
+            if(principal.getUser().getRole() == User.Role.Guest) {
+                if(principal.isAccountNonExpired()) {
+                    limit = principal.getUser().getGuestExpire();
+                }
+            }
+        }
+        return limit;
     }
 
     @PostMapping("api/auth/refresh")
@@ -78,12 +99,8 @@ public class AuthenticationController {
                     return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
                 }
 
-                // Extract the refresh token's expiration date
-                Date expiration = jwtUtil.extractExpiration(request.getRefreshToken(), true);
-
-                // Check if the expiration is within the limits
-                if(expiration.after(jwtUtil.getNewRefreshExpirationDate())) {
-                    // Reject
+                // Check if we have the correct token types
+                if(!jwtUtil.isAccessToken(request.getAccessToken(), false) || !jwtUtil.isRefreshToken(request.getRefreshToken(), true)) {
                     return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
                 }
 
@@ -93,9 +110,26 @@ public class AuthenticationController {
                 if (!principal.isAccountNonExpired() && !principal.isAccountNonLocked()) {
                     throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
                 }
+
+                // Extract the refresh token's expiration date
+                Date refreshExpirationDateFromToken = jwtUtil.extractExpiration(request.getRefreshToken(), true);
+                LocalDateTime limit = tryExtractGuestLimit(principal);
+                Date accessExpirationDate = jwtUtil.getNewLimitedAccessExpirationDate(limit);
+                Date refreshExpirationDate = jwtUtil.getNewLimitedRefreshExpirationDate(limit);
+
+                if(accessExpirationDate == null || refreshExpirationDate == null) {
+                    throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Access expired");
+                }
+
+                // Update the expiration date if needed
+                // To Prefer the smaller date
+                if(!refreshExpirationDateFromToken.after(refreshExpirationDate)) {
+                    refreshExpirationDate = refreshExpirationDateFromToken;
+                }
+
                 UserAuthenticationRefreshResponse response = new UserAuthenticationRefreshResponse();
-                response.setRefreshToken(jwtUtil.generateRefreshToken(principal.getUsername(), expiration)); // Do not extend expiration
-                response.setAccessToken(jwtUtil.generateAccessToken(principal.getUsername()));
+                response.setRefreshToken(jwtUtil.generateRefreshToken(principal.getUsername(), refreshExpirationDate)); // Do not extend expiration
+                response.setAccessToken(jwtUtil.generateAccessToken(principal.getUsername(), accessExpirationDate));
                 return ResponseEntity.ok(response);
             }
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();

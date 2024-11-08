@@ -57,6 +57,12 @@ public class JwtTokenFilter extends OncePerRequestFilter implements ApplicationC
             return;
         }
 
+        // Check if we have an access token
+        if (!jwtUtil.isAccessToken(token, true)) {
+            chain.doFilter(request, response);
+            return;
+        }
+
         // Get user identity and set it on the spring security context
         String username = jwtUtil.extractUsername(token, true);
         if(accountConfig.getAdminUsername().equals(username)) {
