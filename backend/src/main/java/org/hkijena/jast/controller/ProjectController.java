@@ -46,7 +46,7 @@ public class ProjectController {
         if(authentication == null || !authentication.isAuthenticated()) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN);
         }
-        return new ResponseEntity<>(new ArrayList<ProjectInfoMessage>());
+        return ResponseEntity.ok(new ArrayList<>());
     }
 
 //    @GetMapping("/project/new")

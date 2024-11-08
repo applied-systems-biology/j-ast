@@ -38,10 +38,11 @@ accounts:
   admin-username: 'admin@localhost'
   admin-password: 'Ckw55ryzy1mXGxb8'
 security:
-  jwt-expiration-in-minutes: 60
   jwt-secret: "8TJGD0tLb0M20pxRyasR3ajktjYVfhzqVauIleiKfRJdy3SVKr95JYpC7enixXeD"
+  jwt-access-token-expiration-in-minutes: 60
+  jwt-refresh-token-expiration-in-minutes: 1440
 #server:
 #  servlet:
 #    context-path: '/abc'
-debug: off
+debug: on
 

@@ -27,8 +27,8 @@
 <script setup lang="ts">
 import {ref} from "vue";
 import {useQuasar} from "quasar";
-import axios from "axios";
 import {useAuthStore} from "stores/auth-store";
+import {api} from "boot/axios";
 
 const $q = useQuasar()
 const displayLoginDialog = ref(false)
@@ -45,12 +45,13 @@ function doLogin() {
   $q.loading.show({
     message: 'Validating user credentials ...'
   })
-  axios.post("/api/login", {
+  api.post("/auth/login", {
     username: loginName.value,
     password: loginPassword.value,
   })
     .then(response => {
-      authStore.token = response.data.token
+      authStore.accessToken = response.data.accessToken
+      authStore.refreshToken = response.data.refreshToken
       authStore.username = response.data.username
       authStore.role = response.data.role
       authStore.authorities = response.data.authorities
@@ -66,7 +67,7 @@ function doLogin() {
 }
 
 function doLogout() {
-  authStore.logout()
+  authStore.doLogout()
 }
 
 </script>

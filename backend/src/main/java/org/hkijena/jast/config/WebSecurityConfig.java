@@ -63,23 +63,6 @@ public class WebSecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-//        http.authenticationProvider(authProvider());
-//        http.sessionManagement((sessionManagement) -> sessionManagement
-//                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-//                .maximumSessions(1)
-//                .sessionRegistry(sessionRegistry()));
-//        http.authorizeHttpRequests(authorize -> authorize.requestMatchers(AntPathRequestMatcher.antMatcher("/project/**"),
-//                        AntPathRequestMatcher.antMatcher("/image/**"),
-//                        AntPathRequestMatcher.antMatcher("/account/**")).authenticated()
-//                .requestMatchers(AntPathRequestMatcher.antMatcher("/admin/**")).hasRole("ADMIN")
-//                .anyRequest().permitAll());
-//        http.formLogin((formLogin) -> {
-//                    formLogin.loginPage("/login")
-//                            .failureUrl("/login-error")
-//                            .permitAll();
-//                })
-//                .logout(LogoutConfigurer::permitAll);
-
         // Enable CORS and disable CSRF
         http.csrf(AbstractHttpConfigurer::disable);
 //        http.cors(Customizer.withDefaults());
@@ -99,7 +82,7 @@ public class WebSecurityConfig {
 
         // Configure permissions
         http.authorizeHttpRequests(authorize -> authorize
-                .requestMatchers(AntPathRequestMatcher.antMatcher("/api/login")).permitAll()
+                .requestMatchers(AntPathRequestMatcher.antMatcher("/api/auth/**")).permitAll()
                 .requestMatchers(AntPathRequestMatcher.antMatcher("/api/test")).permitAll()
                 .requestMatchers(AntPathRequestMatcher.antMatcher("/api/admin/**")).hasRole("ADMIN")
                 .anyRequest().authenticated());

@@ -1,4 +1,4 @@
-package org.hkijena.jast.payloads;
+package org.hkijena.jast.payloads.auth;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonSetter;
@@ -6,8 +6,9 @@ import org.hkijena.jast.model.entities.User;
 
 import java.util.List;
 
-public class UserAuthenticationResponse {
-    private String token;
+public class UserAuthenticationLoginResponse {
+    private String accessToken;
+    private String refreshToken;
     private String username;
     private User.Role role;
     private List<String> authorities;
@@ -23,14 +24,24 @@ public class UserAuthenticationResponse {
         this.guestExpireSeconds = guestExpireSeconds;
     }
 
-    @JsonGetter("token")
-    public String getToken() {
-        return token;
+    @JsonGetter("refreshToken")
+    public String getRefreshToken() {
+        return refreshToken;
     }
 
-    @JsonSetter("token")
-    public void setToken(String token) {
-        this.token = token;
+    @JsonSetter("refreshToken")
+    public void setRefreshToken(String refreshToken) {
+        this.refreshToken = refreshToken;
+    }
+
+    @JsonGetter("accessToken")
+    public String getAccessToken() {
+        return accessToken;
+    }
+
+    @JsonSetter("accessToken")
+    public void setAccessToken(String accessToken) {
+        this.accessToken = accessToken;
     }
 
     @JsonGetter("username")

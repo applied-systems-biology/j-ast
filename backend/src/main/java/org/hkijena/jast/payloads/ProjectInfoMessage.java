@@ -4,26 +4,41 @@ import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonSetter;
 
 public class ProjectInfoMessage {
-    private String projectName;
-    private String projectOwner;
+    private int id;
+    private String name;
+    private String owner;
 
     @JsonGetter("name")
-    public String getProjectName() {
-        return projectName;
+    public String getName() {
+        return name;
     }
 
     @JsonSetter("name")
-    public void setProjectName(String projectName) {
-        this.projectName = projectName;
+    public void setName(String name) {
+        this.name = name;
     }
 
+    /**
+     * The username of the owner
+     * @return the username
+     */
     @JsonGetter("owner")
-    public String getProjectOwner() {
-        return projectOwner;
+    public String getOwner() {
+        return owner;
     }
 
     @JsonSetter("owner")
-    public void setProjectOwner(String projectOwner) {
-        this.projectOwner = projectOwner;
+    public void setOwner(String owner) {
+        this.owner = owner;
+    }
+
+    @JsonGetter("id")
+    public int getId() {
+        return id;
+    }
+
+    @JsonSetter("id")
+    public void setId(int id) {
+        this.id = id;
     }
 }

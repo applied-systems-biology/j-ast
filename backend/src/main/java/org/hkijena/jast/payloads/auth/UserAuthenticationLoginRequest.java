@@ -1,9 +1,9 @@
-package org.hkijena.jast.payloads;
+package org.hkijena.jast.payloads.auth;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonSetter;
 
-public class UserAuthenticationRequest {
+public class UserAuthenticationLoginRequest {
     private String username;
     private String password;
 

@@ -12,7 +12,8 @@
         <q-separator dark />
 
         <q-card-actions>
-          <q-btn :disable="!authStore.isLoggedIn" flat @click="newProject">Start a new project</q-btn>
+          <q-btn :disable="!authStore.isLoggedIn" icon="add" flat @click="newProject">Start a new project</q-btn>
+          <q-btn :disable="!authStore.isLoggedIn" icon="refresh" flat @click="refreshProjectList">Refresh</q-btn>
           <q-chip outline color="white" square icon="warning" v-if="!authStore.isLoggedIn">
             You are currently not logged in
           </q-chip>
@@ -20,19 +21,35 @@
       </q-card>
     </div>
     <div class="row q-gutter-md" v-if="authStore.isLoggedIn">
-      <q-skeleton class="project-item" type="rect"/>
+      <q-skeleton v-if="projectList == null" class="project-item" type="rect"/>
       <q-btn class="project-item" size="lg" icon="add" color="green" outline no-caps @click="newProject">New project</q-btn>
+    </div>
+    <div v-if="isLoggedIn">
+      {{ authStore.accessToken }} {{ extractTokenExpAsString(authStore.accessToken) }}<br/>
+      {{ authStore.refreshToken }} {{ extractTokenExpAsString(authStore.refreshToken) }}
+      <q-btn @click="refreshTokenTest">Refresh</q-btn>
     </div>
   </q-page>
 </template>
 <script setup lang="ts">
 
 import {useQuasar} from "quasar";
-import {useAuthStore} from "stores/auth-store";
+import {extractTokenExpAsString, useAuthStore} from "stores/auth-store";
+import {ref} from "vue";
+import {storeToRefs} from "pinia";
+import {api} from "boot/axios";
+import {useWatchInterval} from "../composables/UseWatchInterval";
+
+type ProjectInfo = { id: number, name: string, owner: string }
 
 const $q = useQuasar()
 const authStore = useAuthStore()
+const { isLoggedIn } = storeToRefs(authStore)
+const projectList = ref<Array<ProjectInfo> | null>()
 
+/**
+ * Creates a new project
+ */
 function newProject() {
   $q.dialog({
     title: 'Create new project',
@@ -49,6 +66,34 @@ function newProject() {
   }).onDismiss(() => {
   })
 }
+
+/**
+ * Populate/clear the project list
+ */
+function refreshProjectList() {
+  projectList.value = null
+  if(isLoggedIn.value) {
+    api.get("/list-projects")
+      .then((result) => {
+        projectList.value = result.data
+      })
+  }
+  else {
+    projectList.value = null
+  }
+}
+
+/**
+ * Watch for auto-updating the project list
+ */
+useWatchInterval(isLoggedIn, () => {
+ refreshProjectList()
+})
+
+function refreshTokenTest() {
+  authStore.doRefreshToken()
+}
+
 </script>
 <style scoped>
 .project-item {

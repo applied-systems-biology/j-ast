@@ -61,7 +61,7 @@
 
 <script setup lang="ts">
 import ImprintComponent from "components/ImprintComponent.vue";
-import LoginButtonComponent from "components/LoginButtonComponent.vue";
+import LoginButtonComponent from "components/AuthManagerComponent.vue";
 import HeaderLogoButtonComponent from "components/HeaderLogoButtonComponent.vue";
 import {Ref, ref} from "vue";
 import ToggleButton from "components/ToggleButton.vue";

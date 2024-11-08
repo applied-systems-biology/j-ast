@@ -7,14 +7,23 @@ import org.springframework.validation.annotation.Validated;
 @Validated
 public class JwtConfig {
     private String jwtSecret = "8TJGD0tLb0M20pxRyasR3ajktjYVfhzqVauIleiKfRJdy3SVKr95JYpC7enixXeD";
-    private int jwtExpirationInMinutes = 60;
+    private int jwtAccessTokenExpirationInMinutes = 60;
+    private int jwtRefreshTokenExpirationInMinutes = 24 * 60;
 
-    public int getJwtExpirationInMinutes() {
-        return jwtExpirationInMinutes;
+    public int getJwtRefreshTokenExpirationInMinutes() {
+        return jwtRefreshTokenExpirationInMinutes;
     }
 
-    public void setJwtExpirationInMinutes(int jwtExpirationInMinutes) {
-        this.jwtExpirationInMinutes = jwtExpirationInMinutes;
+    public void setJwtRefreshTokenExpirationInMinutes(int jwtRefreshTokenExpirationInMinutes) {
+        this.jwtRefreshTokenExpirationInMinutes = jwtRefreshTokenExpirationInMinutes;
+    }
+
+    public int getJwtAccessTokenExpirationInMinutes() {
+        return jwtAccessTokenExpirationInMinutes;
+    }
+
+    public void setJwtAccessTokenExpirationInMinutes(int jwtAccessTokenExpirationInMinutes) {
+        this.jwtAccessTokenExpirationInMinutes = jwtAccessTokenExpirationInMinutes;
     }
 
     public String getJwtSecret() {
