@@ -24,17 +24,12 @@
       <q-skeleton v-if="projectList == null" class="project-item" type="rect"/>
       <q-btn class="project-item" size="lg" icon="add" color="green" outline no-caps @click="newProject">New project</q-btn>
     </div>
-    <div v-if="isLoggedIn">
-      {{ authStore.accessToken }} {{ extractTokenExpAsString(authStore.accessToken) }}<br/>
-      {{ authStore.refreshToken }} {{ extractTokenExpAsString(authStore.refreshToken) }}
-      <q-btn @click="refreshTokenTest">Refresh</q-btn>
-    </div>
   </q-page>
 </template>
 <script setup lang="ts">
 
 import {useQuasar} from "quasar";
-import {extractTokenExpAsString, useAuthStore} from "stores/auth-store";
+import {useAuthStore} from "stores/auth-store";
 import {ref} from "vue";
 import {storeToRefs} from "pinia";
 import {api} from "boot/axios";
@@ -89,10 +84,6 @@ function refreshProjectList() {
 useWatchInterval(isLoggedIn, () => {
  refreshProjectList()
 })
-
-function refreshTokenTest() {
-  authStore.doRefreshToken()
-}
 
 </script>
 <style scoped>
