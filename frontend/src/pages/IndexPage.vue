@@ -22,6 +22,24 @@
     </div>
     <div class="row q-gutter-md" v-if="authStore.isLoggedIn">
       <q-skeleton v-if="projectList == null" class="project-item" type="rect"/>
+      <q-btn v-for="project in projectList" :key="project.id" color="blue-grey-2" class="project-item" size="lg" outline no-caps @click="openProject(project.id)" push>
+        <div class="row items-start no-wrap full-width text-blue-grey">
+          <q-icon left name="folder" />
+          <div class="text-center ellipsis" >
+            {{ project.name }}
+          </div>
+        </div>
+        <div class="row items-start no-wrap full-width text-caption text-blue-grey">
+          <div class="flex column">
+            <div class="text-left ellipsis">
+              ID {{ project.id }}
+            </div>
+            <div class="text-left">
+              Owner: {{ project.owner || "Admin" }}
+            </div>
+          </div>
+        </div>
+      </q-btn>
       <q-btn class="project-item" size="lg" icon="add" color="green" outline no-caps @click="newProject">New project</q-btn>
     </div>
   </q-page>
@@ -34,13 +52,14 @@ import {ref} from "vue";
 import {storeToRefs} from "pinia";
 import {api} from "boot/axios";
 import {useWatchInterval} from "../composables/UseWatchInterval";
-
-type ProjectInfo = { id: number, name: string, owner: string }
+import {CreateEditProjectRequest, ProjectInfoMessage} from "src/types/common";
+import {useRouter} from "vue-router";
 
 const $q = useQuasar()
 const authStore = useAuthStore()
+const router = useRouter()
 const { isLoggedIn } = storeToRefs(authStore)
-const projectList = ref<Array<ProjectInfo> | null>()
+const projectList = ref<Array<ProjectInfoMessage> | null>()
 
 /**
  * Creates a new project
@@ -56,7 +75,22 @@ function newProject() {
     cancel: true,
     persistent: true
   }).onOk((data : string) => {
-    console.log(data)
+    api.post("/new-project", { name: data } as CreateEditProjectRequest)
+      .then((result) => {
+        const info = result.data as ProjectInfoMessage;
+        $q.notify({
+          type: 'positive',
+          message: `Created new project "${info.name}"`
+        })
+        router.push(`/project/${info.id}`)
+      })
+      .catch((reason) => {
+        console.log(reason);
+        $q.notify({
+          type: 'negative',
+          message: "Unable to create project!"
+        })
+      })
   }).onCancel(() => {
   }).onDismiss(() => {
   })
@@ -76,6 +110,10 @@ function refreshProjectList() {
   else {
     projectList.value = null
   }
+}
+
+function openProject(id : number) {
+  router.push(`/project/${id}`)
 }
 
 /**

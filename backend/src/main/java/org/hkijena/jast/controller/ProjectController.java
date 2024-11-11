@@ -1,11 +1,16 @@
 package org.hkijena.jast.controller;
 
+import org.apache.commons.lang3.math.NumberUtils;
 import org.hkijena.jast.config.AccountConfig;
+import org.hkijena.jast.model.UserPrincipal;
+import org.hkijena.jast.model.entities.Project;
+import org.hkijena.jast.payloads.CreateEditProjectRequest;
 import org.hkijena.jast.payloads.ProjectInfoMessage;
 import org.hkijena.jast.repositories.ProjectRepository;
 import org.hkijena.jast.repositories.ImageRepository;
 import org.hkijena.jast.services.AnalysisService;
 import org.hkijena.jast.services.ProjectService;
+import org.hkijena.jast.utils.StringUtils;
 import org.jobrunr.jobs.context.JobContext;
 import org.jobrunr.scheduling.JobScheduler;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,10 +21,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 public class ProjectController {
@@ -41,12 +50,72 @@ public class ProjectController {
         this.projectService = projectService;
     }
 
+    private Project getProjectById(String id) {
+        if(!NumberUtils.isCreatable(id)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+        }
+        int projectId = Integer.parseInt(id);
+        Optional<Project> project = projectRepository.findById((long) projectId);
+        if(project.isPresent()) {
+            return project.get();
+        }
+        else {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
+    }
+
     @GetMapping("/api/list-projects")
     public ResponseEntity<List<ProjectInfoMessage>> listProjects(Authentication authentication) {
-        if(authentication == null || !authentication.isAuthenticated()) {
+        validateAuthentication(authentication);
+        ArrayList<ProjectInfoMessage> result = new ArrayList<>();
+        for (Project project : projectRepository.getByAuthentication(authentication)) {
+            result.add(new ProjectInfoMessage(project));
+        }
+        return ResponseEntity.ok(result);
+    }
+
+    private static void validateAuthentication(Authentication authentication) {
+        if (authentication == null || !authentication.isAuthenticated()) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN);
         }
-        return ResponseEntity.ok(new ArrayList<>());
+    }
+
+    @GetMapping("/api/project/{id}")
+    public ResponseEntity<ProjectInfoMessage> getProject(Authentication authentication, @PathVariable("id") String id) {
+        validateAuthentication(authentication);
+        if(!NumberUtils.isCreatable(id)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+        }
+        return ResponseEntity.ok(new ProjectInfoMessage(getProjectById(id)));
+    }
+
+    @PostMapping("/api/project/{id}/edit")
+    public ResponseEntity<ProjectInfoMessage> editProject(Authentication authentication, @PathVariable("id") String id, @RequestBody CreateEditProjectRequest request) {
+        validateAuthentication(authentication);
+        Project project = getProjectById(id);
+        if(project.canEdit(authentication)) {
+            project.setName(StringUtils.orElse(request.getName(), "Unnamed project"));
+            projectRepository.save(project);
+            return ResponseEntity.ok(new ProjectInfoMessage(project));
+        }
+        else {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+        }
+    }
+
+    @PostMapping("/api/new-project")
+    public ResponseEntity<ProjectInfoMessage> createProject(Authentication authentication, @RequestBody CreateEditProjectRequest request) {
+        validateAuthentication(authentication);
+        if (!projectService.canCreateProject(authentication)) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+        }
+        Project project = new Project();
+        project.setName(StringUtils.orElse(request.getName(), "Unnamed project"));
+        if (authentication.getPrincipal() instanceof UserPrincipal) {
+            project.setOwner(((UserPrincipal) authentication.getPrincipal()).getUser());
+        }
+        project = projectRepository.save(project);
+        return ResponseEntity.ok(new ProjectInfoMessage(project));
     }
 
 //    @GetMapping("/project/new")

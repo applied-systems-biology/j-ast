@@ -63,12 +63,15 @@
 import ImprintComponent from "components/ImprintComponent.vue";
 import LoginButtonComponent from "components/AuthManagerComponent.vue";
 import HeaderLogoButtonComponent from "components/HeaderLogoButtonComponent.vue";
-import {Ref, ref} from "vue";
+import {onMounted, Ref, ref, computed} from "vue";
 import ToggleButton from "components/ToggleButton.vue";
 import ImageUploaderComponent from "components/ImageUploaderComponent.vue";
 import {useQuasar} from "quasar";
 import { VueDraggableNext as draggable } from "vue-draggable-next";
 import dummyImage from "assets/etest.png"
+import {useRoute} from "vue-router";
+import {api} from "boot/axios";
+import {CreateEditProjectRequest, ProjectInfoMessage} from "src/types/common";
 
 type DragEvent = {
   to: HTMLElement
@@ -81,8 +84,11 @@ type DragEvent = {
 }
 
 const $q = useQuasar()
+const $route = useRoute()
 const drawerLeft: Ref<boolean> = ref(false)
-const projectName: Ref<string> = ref("")
+const projectName = computed(() => projectInfo.value?.name ?? null)
+const projectId = $route.params.id
+const projectInfo: Ref<ProjectInfoMessage | null> = ref(null)
 
 const list = ref([
   { name: 'John', id: 1 },
@@ -104,18 +110,16 @@ function editProjectName() {
     title: 'Edit project name',
     message: 'Please enter a new project name',
     prompt: {
-      model: projectName.value,
+      model: projectName.value || "",
       type: 'text'
     },
     cancel: true,
     persistent: true
   }).onOk((data : string) => {
-    projectName.value = data
-    // console.log('>>>> OK, received', data)
-  }).onCancel(() => {
-    // console.log('>>>> Cancel')
-  }).onDismiss(() => {
-    // console.log('I am triggered on both OK and Cancel')
+    api.post(`/project/${projectId}/edit`, { name: data } as CreateEditProjectRequest)
+      .then(response => {
+        projectInfo.value = response.data as ProjectInfoMessage
+      })
   })
 }
 
@@ -126,6 +130,16 @@ function autoSortImages() {
   })
 }
 
+function reloadProjectInfo() {
+  api.get(`/project/${projectId}`)
+    .then(response => {
+      projectInfo.value = response.data as ProjectInfoMessage
+    })
+}
+
+onMounted(() => {
+  reloadProjectInfo()
+})
 
 </script>
 <style scoped>

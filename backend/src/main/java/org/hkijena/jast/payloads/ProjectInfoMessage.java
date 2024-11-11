@@ -2,11 +2,22 @@ package org.hkijena.jast.payloads;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonSetter;
+import org.hkijena.jast.model.entities.Project;
 
 public class ProjectInfoMessage {
-    private int id;
+    private long id;
     private String name;
     private String owner;
+
+    public ProjectInfoMessage() {
+
+    }
+
+    public ProjectInfoMessage(Project project) {
+        this.id = project.getId();
+        this.name = project.getName();
+        this.owner = project.getOwner() != null ? project.getOwner().getEmail() : "";
+    }
 
     @JsonGetter("name")
     public String getName() {
@@ -33,12 +44,12 @@ public class ProjectInfoMessage {
     }
 
     @JsonGetter("id")
-    public int getId() {
+    public long getId() {
         return id;
     }
 
     @JsonSetter("id")
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 }
