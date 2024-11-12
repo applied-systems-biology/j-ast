@@ -6,6 +6,7 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.Base64;
 
 public class ImageUtils {
     public static BufferedImage createThumbnail(BufferedImage image, int thumbnailWidth, int thumbnailHeight) {
@@ -25,5 +26,9 @@ public class ImageUtils {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public static String toPNGBase64String(byte[] bytes) {
+        return "data:image/png;base64," + Base64.getEncoder().encodeToString(bytes);
     }
 }

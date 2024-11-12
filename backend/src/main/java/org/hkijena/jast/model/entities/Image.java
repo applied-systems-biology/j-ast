@@ -19,15 +19,15 @@ public class Image {
 
     @Column(name = "experiment", columnDefinition = "TEXT")
     @NotNull
-    private String experiment;
+    private String experiment = "";
 
     @Column(name = "sample", columnDefinition = "TEXT")
     @NotNull
-    private String sample;
+    private String sample = "";
 
     @Column(name = "timepoint", columnDefinition = "TEXT")
     @NotNull
-    private String timePoint;
+    private String timePoint = "";
 
     @Column(name = "original_file_name", columnDefinition = "TEXT")
     @NotNull
@@ -53,6 +53,14 @@ public class Image {
     @ManyToOne(fetch = FetchType.LAZY)
     private Project project;
 
+    @Column(name = "group_row")
+    @NotNull
+    private int groupRow = -1;
+
+    @Column(name = "group_column")
+    @NotNull
+    private int groupColumn = -1;
+
     @Lob
     @Column(name = "raw_data", columnDefinition = "BLOB")
     private byte[] rawData;
@@ -60,6 +68,24 @@ public class Image {
     @Lob
     @Column(name = "thumbnail_data", columnDefinition = "BLOB")
     private byte[] thumbnailData;
+
+    @NotNull
+    public int getGroupColumn() {
+        return groupColumn;
+    }
+
+    public void setGroupColumn(@NotNull int groupColumn) {
+        this.groupColumn = groupColumn;
+    }
+
+    @NotNull
+    public int getGroupRow() {
+        return groupRow;
+    }
+
+    public void setGroupRow(@NotNull int groupRow) {
+        this.groupRow = groupRow;
+    }
 
     public byte[] getRawData() {
         return rawData;

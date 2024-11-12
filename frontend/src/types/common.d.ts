@@ -8,6 +8,17 @@ export interface ProjectInfoMessage {
   owner: string;
 }
 
+export interface ImageInfoMessage {
+  id: number,
+  projectId: number,
+  fileName: string,
+  owner: string,
+  experiment: string,
+  sample: string,
+  timePoint: string,
+  thumbnailData: string
+}
+
 /**
  * Sent to the backend to create a project
  */

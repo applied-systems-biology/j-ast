@@ -8,6 +8,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class APITestController {
     @RequestMapping(path = "/api/test")
     public @ResponseBody String test() {
-        return "Test ABC";
+        return "Hello from J-AST";
     }
 }

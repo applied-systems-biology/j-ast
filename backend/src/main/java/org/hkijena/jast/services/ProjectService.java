@@ -1,13 +1,18 @@
 package org.hkijena.jast.services;
 
+import org.apache.commons.lang3.math.NumberUtils;
 import org.hkijena.jast.config.AccountConfig;
 import org.hkijena.jast.model.*;
 import org.hkijena.jast.model.entities.Project;
 import org.hkijena.jast.model.entities.User;
 import org.hkijena.jast.repositories.ProjectRepository;
 import org.hkijena.jast.repositories.ImageRepository;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
+
+import java.util.Optional;
 
 @Service
 public class ProjectService {
@@ -63,5 +68,29 @@ public class ProjectService {
             }
         }
         return false;
+    }
+
+    public Project getProjectByStringIdOrError(String id) {
+        if(!NumberUtils.isCreatable(id)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+        }
+        int projectId = Integer.parseInt(id);
+        Optional<Project> project = projectRepository.findById((long) projectId);
+        if(project.isPresent()) {
+            return project.get();
+        }
+        else {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    public Project getProjectByIdOrError(long projectId) {
+        Optional<Project> project = projectRepository.findById((long) projectId);
+        if(project.isPresent()) {
+            return project.get();
+        }
+        else {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
     }
 }
