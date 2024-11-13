@@ -13,6 +13,7 @@ import java.util.*;
 public class ProjectImagesPayload {
 
     private Map<Long, ImagePayload> imagesById = new HashMap<>();
+    private List<Long> imageIds = new ArrayList<>();
     private Row unsortedRow = new Row();
     private List<Row> groupRows = new ArrayList<>();
 
@@ -23,6 +24,7 @@ public class ProjectImagesPayload {
     public ProjectImagesPayload(Project project) {
         int maxRow = -1;
         for (Image image : project.getImages()) {
+            imageIds.add(image.getId());
             imagesById.put(image.getId(), ImagePayload.create(image));
             maxRow = Math.max(maxRow, image.getGroupRow());
 
@@ -44,6 +46,16 @@ public class ProjectImagesPayload {
                 groupRows.add(row);
             }
         }
+    }
+
+    @JsonGetter("imageIds")
+    public List<Long> getImageIds() {
+        return imageIds;
+    }
+
+    @JsonSetter("imageIds")
+    public void setImageIds(List<Long> imageIds) {
+        this.imageIds = imageIds;
     }
 
     @JsonGetter("unsortedRow")
