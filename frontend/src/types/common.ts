@@ -1,4 +1,8 @@
-import { Type } from 'class-transformer';
+import { Type, plainToInstance, ClassConstructor, Expose } from 'class-transformer';
+
+export function plainToInstanceStrict<T, V>(cls : ClassConstructor<T>, plain: V): T {
+  return plainToInstance(cls, plain, { excludeExtraneousValues: true, exposeUnsetFields: false })
+}
 
 /**
  * Message that contains basic infos about a project
@@ -17,15 +21,34 @@ export enum AssayType {
 }
 
 export class ImagePayload {
+  @Expose()
   id: number = -1;
+
+  @Expose()
   projectId: number = -1;
+
+  @Expose()
   fileName: string = "";
+
+  @Expose()
   owner: string = "";
+
+  @Expose()
   experiment: string = "";
+
+  @Expose()
   sample: string = "";
+
+  @Expose()
   timePoint: string = "";
+
+  @Expose()
   assayType: AssayType = AssayType.Unknown;
+
+  @Expose()
   groupRow : number = -1;
+
+  @Expose()
   groupColumn : number = -1;
 
   /**
@@ -37,15 +60,22 @@ export class ImagePayload {
 }
 
 export class ProjectImagesPayloadRow {
+  @Expose()
   @Type(() => ImagePayload)
   images: ImagePayload[] = [];
 }
 
 export class ProjectImagesPayload {
 
+  @Expose()
   @Type(() => ImagePayload)
   imagesById : Record<string, ImagePayload> = {};
 
+  @Expose()
+  @Type(() => Number)
+  imageIds : Array<number> = [];
+
+  @Expose()
   @Type(() => ProjectImagesPayloadRow)
   groupRows: ProjectImagesPayloadRow[] = [];
   unsortedRow: ProjectImagesPayloadRow = new ProjectImagesPayloadRow();
@@ -75,6 +105,17 @@ export class ProjectImagesPayload {
     else {
       return new ImagePayload()
     }
+  }
+
+  /**
+   * Returns the largest group column value (or -1)
+   */
+  maxColumn() {
+    return Math.max(...this.groupRows.map(x => Math.max(...x.images.map(y => y.groupColumn),-1)), -1);
+  }
+
+  getNumImages() {
+    return this.imageIds.length
   }
 }
 

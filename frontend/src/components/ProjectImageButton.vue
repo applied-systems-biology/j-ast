@@ -57,20 +57,23 @@ function clicked() {
 }
 
 </script>
-<style scoped>
+<style scoped lang="scss">
+
+$grid-item-size: 10rem;
+
 .thumbnail {
-  width: var(--size);
-  height: var(--size);
+  width: $grid-item-size;
+  height: $grid-item-size;
 }
 
 .content {
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: calc(var(--size) - 1rem);
+  width: calc($grid-item-size - 1rem);
 }
 
 .text-caption {
-  width: calc(var(--size) - 1rem);
+  width: calc($grid-item-size - 1rem);
 }
 </style>

@@ -50,111 +50,35 @@
     >
       <ProjectImageEditor v-model="selectedImage" />
     </q-drawer>
-    <!--    <q-page padding class="q-gutter-sm">-->
-    <!--      &lt;!&ndash; Unsorted row &ndash;&gt;-->
-    <!--      <q-card class="bg-indigo text-white">-->
-    <!--        <q-card-section>-->
-    <!--          <div class="text-h6">Unsorted images</div>-->
-    <!--        </q-card-section>-->
-    <!--        <q-card-section>-->
-    <!--          <q-scroll-area class="data-list-row">-->
-    <!--            <draggable-->
-    <!--              v-if="projectImages.unsortedRow.images"-->
-    <!--              class="draggable"-->
-    <!--              :list="projectImages.unsortedRow.images"-->
-    <!--              :group="{ name: 'g1' }">-->
-    <!--              <ProjectImageButton v-for="image in projectImages.unsortedRow.images"-->
-    <!--                                  :key="image.id"-->
-    <!--                                  :current-image="image"-->
-    <!--                                  :selected-image-id="selectedImageId"-->
-    <!--                                  @clicked="onImageClicked"/>-->
-    <!--            </draggable>-->
-
-    <!--          </q-scroll-area>-->
-    <!--        </q-card-section>-->
-    <!--        <q-separator dark/>-->
-    <!--        <q-card-actions>-->
-    <!--          <q-btn flat @click="autoSortImages">Auto-sort</q-btn>-->
-    <!--        </q-card-actions>-->
-    <!--      </q-card>-->
-    <!--    </q-page>-->
     <q-page-container>
       <q-page padding class="q-gutter-sm">
-        <q-card class="bg-indigo text-white">
-          <q-card-section>
-            <div class="text-h6">Unsorted images</div>
-          </q-card-section>
-          <q-card-section>
-<!--            <q-scroll-area class="data-list-row">-->
-              <draggable
-                class="draggable"
-                :list="projectImages.unsortedRow.images"
-                :group="{ name: 'g1' }"
-              >
-                <ProjectImageButton
-                  v-for="image in projectImages.unsortedRow.images"
-                  :key="image.id"
-                  :current-image="image"
-                  :selected-image-id="selectedImageId"
-                  @clicked="onImageClicked"
-                />
-              </draggable>
-<!--            </q-scroll-area>-->
-          </q-card-section>
-          <q-separator dark />
-          <q-card-actions>
-            <q-btn flat @click="autoSortImages">Auto-sort</q-btn>
-          </q-card-actions>
-        </q-card>
-
-        <!-- Existing rows -->
-        <!--        <q-card v-for="rowIndex in maxImageRow" :key="rowIndex" class="bg-blue-grey-4 text-white">-->
-        <!--          <q-card-section>-->
-        <!--            <div class="text-h6">{{ rowIndex }}</div>-->
-        <!--          </q-card-section>-->
-
-        <!--          <q-card-section>-->
-        <!--            <q-scroll-area class="data-list-row">-->
-        <!--              <draggable-->
-        <!--                class="draggable"-->
-        <!--                v-model="projectImages"-->
-        <!--                :group="{ name: 'images', pull: true, put: true }">-->
-        <!--                <transition-group name="fade">-->
-        <!--                </transition-group>-->
-        <!--              </draggable>-->
-        <!--            </q-scroll-area>-->
-        <!--          </q-card-section>-->
-        <!--        </q-card>-->
-
-        <!-- New row -->
-        <!--                <q-card class="bg-blue-grey-4 text-white">-->
-        <!--                  <q-card-section>-->
-        <!--&lt;!&ndash;                    <div class="text-h6">{{ maxImageRow + 1 }}</div>&ndash;&gt;-->
-        <!--                  </q-card-section>-->
-
-        <!--                  <q-card-section>-->
-        <!--                    <q-scroll-area class="data-list-row">-->
-        <!--                      <draggable-->
-        <!--                        class="draggable"-->
-        <!--                        :list="projectImages"-->
-        <!--                        :group="{ name: 'g1' }">-->
-        <!--                        <transition-group name="fade">-->
-        <!--                        </transition-group>-->
-        <!--                      </draggable>-->
-        <!--                    </q-scroll-area>-->
-        <!--                  </q-card-section>-->
-        <!--                </q-card>-->
-        <!--                <div class="flex m-10">-->
-        <!--                  <draggable class="dragArea list-group w-full" :list="projectImages">-->
-        <!--                    <div-->
-        <!--                      class="list-group-item bg-gray-300 m-1 p-3 rounded-md text-center"-->
-        <!--                      v-for="element in projectImages"-->
-        <!--                      :key="'vdb' + element.id"-->
-        <!--                    >-->
-        <!--                      {{ element.fileName }}-->
-        <!--                    </div>-->
-        <!--                  </draggable>-->
-        <!--                </div>-->
+<!--        <q-card class="bg-indigo text-white">-->
+<!--          <q-card-section>-->
+<!--            <div class="text-h6">Unsorted images</div>-->
+<!--          </q-card-section>-->
+<!--          <q-card-section>-->
+<!--&lt;!&ndash;            <q-scroll-area class="data-list-row">&ndash;&gt;-->
+<!--              <draggable-->
+<!--                class="draggable"-->
+<!--                :list="projectImages.unsortedRow.images"-->
+<!--                :group="{ name: 'g1' }"-->
+<!--              >-->
+<!--                <ProjectImageButton-->
+<!--                  v-for="image in projectImages.unsortedRow.images"-->
+<!--                  :key="image.id"-->
+<!--                  :current-image="image"-->
+<!--                  :selected-image-id="selectedImageId"-->
+<!--                  @clicked="onImageClicked"-->
+<!--                />-->
+<!--              </draggable>-->
+<!--&lt;!&ndash;            </q-scroll-area>&ndash;&gt;-->
+<!--          </q-card-section>-->
+<!--          <q-separator dark />-->
+<!--          <q-card-actions>-->
+<!--            <q-btn flat @click="autoSortImages">Auto-sort</q-btn>-->
+<!--          </q-card-actions>-->
+<!--        </q-card>-->
+        <ImageArrangerComponent v-model="projectImages" />
       </q-page>
     </q-page-container>
     <q-footer>
@@ -171,7 +95,7 @@ import { onMounted, Ref, ref, computed } from 'vue';
 import ToggleButton from 'components/ToggleButton.vue';
 import ImageUploaderComponent from 'components/ImageUploaderComponent.vue';
 import { useQuasar } from 'quasar';
-import { VueDraggableNext as draggable } from 'vue-draggable-next';
+// import { VueDraggableNext as draggable } from 'vue-draggable-next';
 import { useRoute, useRouter } from 'vue-router';
 import { api } from 'boot/axios';
 import {
@@ -179,9 +103,10 @@ import {
   ProjectImagesPayload,
   ProjectMetadataPayload,
 } from 'src/types/common';
-import ProjectImageButton from 'components/ProjectImageButton.vue';
+// import ProjectImageButton from 'components/ProjectImageButton.vue';
 import ProjectImageEditor from 'components/ProjectImageEditor.vue';
 import { plainToInstance } from 'class-transformer';
+import ImageArrangerComponent from 'components/ImageArrangerComponent.vue';
 
 // type DragEvent = {
 //   to: HTMLElement; // list, in which moved element
@@ -207,27 +132,11 @@ const projectInfo: Ref<ProjectMetadataPayload> = ref(
 const projectImages = ref<ProjectImagesPayload>(new ProjectImagesPayload());
 const selectedImageId = ref<number>(-1);
 
-// Components
-// const unsortedDraggableRowElement = useTemplateRef<HTMLElement>("unsortedDraggableRowElementRef")
-
 // Computed values
 const drawerRight = computed(() => selectedImageId.value >= 0);
 const selectedImage = computed(() =>
   projectImages.value.getImageById(selectedImageId.value)
 );
-// const maxImageRow = computed(() => Math.max(...projectImages.value.map((image) => image.groupRow), 0))
-// const unsortedImages = computed(() => projectImages.value.filter((image) => image.groupRow < 0 || image.groupColumn < 0))
-
-// function handleDrag(evt: DragEvent) {
-//   console.log('Item moved:', evt.item);
-//   console.log('From list:', evt.from);
-//   console.log('To list:', evt.to);
-//   console.log('To list:', evt.to.getAttribute("data-target-row"));
-//   console.log("From index:", evt.oldDraggableIndex)
-//   console.log("To index:", evt.newDraggableIndex)
-//   // console.log(unsortedDraggableRowElement.value)
-//   // console.log(evt.to == unsortedDraggableRowElement.value)
-// }
 
 defineOptions({
   name: 'ProjectLayout',
@@ -297,12 +206,12 @@ function deleteSelectedImage() {
   }
 }
 
-function autoSortImages() {
-  $q.notify({
-    type: 'negative',
-    message: 'This function is currently not available.',
-  });
-}
+// function autoSortImages() {
+//   $q.notify({
+//     type: 'negative',
+//     message: 'This function is currently not available.',
+//   });
+// }
 
 function reloadProjectInfo() {
   api.get<ProjectMetadataPayload>(`/project/${projectId}`).then((response) => {
@@ -312,6 +221,8 @@ function reloadProjectInfo() {
     .get<ProjectImagesPayload>(`/project/${projectId}/images`)
     .then((response) => {
       let payload = plainToInstance(ProjectImagesPayload, response.data);
+      console.log(response.data)
+      console.log(payload)
       payload.fixRowReferences();
       projectImages.value = payload;
 
@@ -324,46 +235,17 @@ function reloadProjectInfo() {
     });
 }
 
-function onImageClicked(imageId: number) {
-  if (selectedImageId.value == imageId) {
-    selectedImageId.value = -1;
-  } else {
-    selectedImageId.value = imageId;
-  }
-}
+// function onImageClicked(imageId: number) {
+//   if (selectedImageId.value == imageId) {
+//     selectedImageId.value = -1;
+//   } else {
+//     selectedImageId.value = imageId;
+//   }
+// }
 
 onMounted(() => {
   reloadProjectInfo();
 });
 </script>
 <style scoped>
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.5s;
-}
-
-.fade-enter,
-.fade-leave-to {
-  opacity: 0;
-}
-
-.fade-move {
-  transition: transform 0.5s;
-}
-
-.data-list-row {
-  --size: 10rem;
-  height: calc(var(--size) + 8rem);
-}
-
-.data-list-row .draggable {
-  display: flex;
-  flex-direction: row;
-  gap: 1rem;
-}
-
-.draggable {
-  background: green;
-  height: calc(var(--size) + 8rem);
-}
 </style>
