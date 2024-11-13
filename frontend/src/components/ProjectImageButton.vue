@@ -4,7 +4,8 @@
          :color="selectedImageId === currentImage.id ? 'green-3' : 'blue-grey-2'"
          @click="clicked">
     <div class="content">
-      <q-img class="thumbnail" :src="currentImage.thumbnailData" fit="contain"/>
+      <q-img v-if="thumbnail" class="thumbnail" :src="thumbnail" fit="contain"/>
+      <q-skeleton v-else type="rect" class="thumbnail"/>
       <div class="label text-left">
         <div class="text-caption ellipsis">
           {{ currentImage.fileName }}
@@ -39,6 +40,9 @@
 </template>
 <script setup lang="ts">
 import {ImagePayload} from "src/types/common";
+import { ref } from 'vue';
+
+const thumbnail = ref<string>("")
 
 const props = defineProps<{
   currentImage: ImagePayload,

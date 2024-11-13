@@ -4,6 +4,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.hkijena.jast.model.entities.Image;
 import org.hkijena.jast.model.entities.Project;
 import org.hkijena.jast.payloads.ImagePayload;
+import org.hkijena.jast.payloads.ProjectImagesPayload;
 import org.hkijena.jast.repositories.ProjectRepository;
 import org.hkijena.jast.repositories.ImageRepository;
 import org.hkijena.jast.services.ProjectService;
@@ -35,6 +36,16 @@ public class ImageController {
         this.imageRepository = imageRepository;
         this.projectService = projectService;
         this.userService = userService;
+    }
+
+    @GetMapping("/api/project/{id}/images")
+    public ResponseEntity<ProjectImagesPayload> getImagesPayload(Authentication authentication, @PathVariable long id) {
+        userService.validateAuthentication(authentication);
+        Project project = projectService.getProjectByIdOrError(id);
+        if (!project.canAccess(authentication)) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
+        }
+        return ResponseEntity.ok(new ProjectImagesPayload(project));
     }
 
     @GetMapping("/api/project/{id}/list-images")

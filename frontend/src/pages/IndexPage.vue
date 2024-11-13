@@ -56,12 +56,13 @@ import {api} from "boot/axios";
 import {useWatchInterval} from "../composables/UseWatchInterval";
 import {CreateEditProjectRequest, ProjectMetadataPayload} from "src/types/common";
 import {useRouter} from "vue-router";
+import { plainToInstance } from 'class-transformer';
 
 const $q = useQuasar()
 const authStore = useAuthStore()
 const router = useRouter()
 const { isLoggedIn } = storeToRefs(authStore)
-const projectList = ref<Array<ProjectMetadataPayload> | null>()
+const projectList = ref<ProjectMetadataPayload[] | null>()
 
 /**
  * Creates a new project
@@ -79,7 +80,7 @@ function newProject() {
   }).onOk((data : string) => {
     api.post("/new-project", { name: data } as CreateEditProjectRequest)
       .then((result) => {
-        const info = result.data as ProjectMetadataPayload;
+        const info = plainToInstance(ProjectMetadataPayload, result.data)
         $q.notify({
           type: 'positive',
           message: `Created new project "${info.name}"`
@@ -104,7 +105,7 @@ function newProject() {
 function refreshProjectList() {
   projectList.value = null
   if(isLoggedIn.value) {
-    api.get("/list-projects")
+    api.get<ProjectMetadataPayload[]>("/list-projects")
       .then((result) => {
         projectList.value = result.data
       })
