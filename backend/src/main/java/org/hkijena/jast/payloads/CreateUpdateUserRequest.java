@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonSetter;
 import org.hkijena.jast.model.entities.User;
 
-public class CreateUpdateUserMessage {
+public class CreateUpdateUserRequest {
 
     private long id = -1;
 
@@ -18,11 +18,11 @@ public class CreateUpdateUserMessage {
     private boolean allowLogin = true;
     private User.Role role = User.Role.User;
 
-    public CreateUpdateUserMessage() {
+    public CreateUpdateUserRequest() {
 
     }
 
-    public CreateUpdateUserMessage(User user) {
+    public CreateUpdateUserRequest(User user) {
         this.id = user.getId();
         this.email = user.getEmail();
         this.firstName = user.getFirstName();

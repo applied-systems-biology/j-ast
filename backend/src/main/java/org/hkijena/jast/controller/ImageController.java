@@ -3,7 +3,7 @@ package org.hkijena.jast.controller;
 import jakarta.servlet.http.HttpServletResponse;
 import org.hkijena.jast.model.entities.Image;
 import org.hkijena.jast.model.entities.Project;
-import org.hkijena.jast.payloads.ImageInfoMessage;
+import org.hkijena.jast.payloads.ImagePayload;
 import org.hkijena.jast.repositories.ProjectRepository;
 import org.hkijena.jast.repositories.ImageRepository;
 import org.hkijena.jast.services.ProjectService;
@@ -38,15 +38,15 @@ public class ImageController {
     }
 
     @GetMapping("/api/project/{id}/list-images")
-    public ResponseEntity<List<ImageInfoMessage>> listImages(Authentication authentication, @PathVariable long id) {
+    public ResponseEntity<List<ImagePayload>> listImages(Authentication authentication, @PathVariable long id) {
         userService.validateAuthentication(authentication);
         Project project = projectService.getProjectByIdOrError(id);
         if (!project.canAccess(authentication)) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
         }
-        List<ImageInfoMessage> result = new ArrayList<>();
+        List<ImagePayload> result = new ArrayList<>();
         for (Image image : project.getImages()) {
-            result.add(ImageInfoMessage.create(image));
+            result.add(ImagePayload.create(image));
         }
         return ResponseEntity.ok(result);
     }

@@ -5,7 +5,7 @@ import org.hkijena.jast.model.UserPrincipal;
 import org.hkijena.jast.model.entities.Image;
 import org.hkijena.jast.model.entities.Project;
 import org.hkijena.jast.payloads.CreateEditProjectRequest;
-import org.hkijena.jast.payloads.ProjectInfoMessage;
+import org.hkijena.jast.payloads.ProjectMetadataPayload;
 import org.hkijena.jast.repositories.ProjectRepository;
 import org.hkijena.jast.repositories.ImageRepository;
 import org.hkijena.jast.services.AnalysisService;
@@ -55,29 +55,29 @@ public class ProjectController {
     }
 
     @GetMapping("/api/list-projects")
-    public ResponseEntity<List<ProjectInfoMessage>> listProjects(Authentication authentication) {
+    public ResponseEntity<List<ProjectMetadataPayload>> listProjects(Authentication authentication) {
         userService.validateAuthentication(authentication);
-        ArrayList<ProjectInfoMessage> result = new ArrayList<>();
+        ArrayList<ProjectMetadataPayload> result = new ArrayList<>();
         for (Project project : projectRepository.getByAuthentication(authentication)) {
-            result.add(ProjectInfoMessage.create(project));
+            result.add(ProjectMetadataPayload.create(project));
         }
         return ResponseEntity.ok(result);
     }
 
     @GetMapping("/api/project/{id}")
-    public ResponseEntity<ProjectInfoMessage> getProject(Authentication authentication, @PathVariable("id") long id) {
+    public ResponseEntity<ProjectMetadataPayload> getProject(Authentication authentication, @PathVariable("id") long id) {
         userService.validateAuthentication(authentication);
-        return ResponseEntity.ok(ProjectInfoMessage.create(projectService.getProjectByIdOrError(id)));
+        return ResponseEntity.ok(ProjectMetadataPayload.create(projectService.getProjectByIdOrError(id)));
     }
 
     @PostMapping("/api/project/{id}/edit")
-    public ResponseEntity<ProjectInfoMessage> editProject(Authentication authentication, @PathVariable("id") long id, @RequestBody CreateEditProjectRequest request) {
+    public ResponseEntity<ProjectMetadataPayload> editProject(Authentication authentication, @PathVariable("id") long id, @RequestBody CreateEditProjectRequest request) {
         userService.validateAuthentication(authentication);
         Project project = projectService.getProjectByIdOrError(id);
         if(project.canEdit(authentication)) {
             project.setName(StringUtils.orElse(request.getName(), "Unnamed project"));
             projectRepository.save(project);
-            return ResponseEntity.ok(ProjectInfoMessage.create(project));
+            return ResponseEntity.ok(ProjectMetadataPayload.create(project));
         }
         else {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN);
@@ -85,7 +85,7 @@ public class ProjectController {
     }
 
     @PostMapping("/api/new-project")
-    public ResponseEntity<ProjectInfoMessage> createProject(Authentication authentication, @RequestBody CreateEditProjectRequest request) {
+    public ResponseEntity<ProjectMetadataPayload> createProject(Authentication authentication, @RequestBody CreateEditProjectRequest request) {
         userService.validateAuthentication(authentication);
         if (!projectService.canCreateProject(authentication)) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN);
@@ -96,7 +96,7 @@ public class ProjectController {
             project.setOwner(((UserPrincipal) authentication.getPrincipal()).getUser());
         }
         project = projectRepository.save(project);
-        return ResponseEntity.ok(ProjectInfoMessage.create(project));
+        return ResponseEntity.ok(ProjectMetadataPayload.create(project));
     }
 
     @PostMapping("/api/project/{id}/upload-raw-image")

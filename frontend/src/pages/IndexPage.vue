@@ -25,6 +25,8 @@
       <q-btn v-for="project in projectList" :key="project.id" color="blue-grey-2" class="project-item" size="lg" outline no-caps @click="openProject(project.id)" push>
         <div class="row items-start no-wrap full-width text-blue-grey">
           <q-icon left name="folder" />
+        </div>
+        <div class="row items-start no-wrap full-width text-blue-grey">
           <div class="text-center ellipsis" >
             {{ project.name }}
           </div>
@@ -52,14 +54,14 @@ import {ref} from "vue";
 import {storeToRefs} from "pinia";
 import {api} from "boot/axios";
 import {useWatchInterval} from "../composables/UseWatchInterval";
-import {CreateEditProjectRequest, ProjectInfoMessage} from "src/types/common";
+import {CreateEditProjectRequest, ProjectMetadataPayload} from "src/types/common";
 import {useRouter} from "vue-router";
 
 const $q = useQuasar()
 const authStore = useAuthStore()
 const router = useRouter()
 const { isLoggedIn } = storeToRefs(authStore)
-const projectList = ref<Array<ProjectInfoMessage> | null>()
+const projectList = ref<Array<ProjectMetadataPayload> | null>()
 
 /**
  * Creates a new project
@@ -77,7 +79,7 @@ function newProject() {
   }).onOk((data : string) => {
     api.post("/new-project", { name: data } as CreateEditProjectRequest)
       .then((result) => {
-        const info = result.data as ProjectInfoMessage;
+        const info = result.data as ProjectMetadataPayload;
         $q.notify({
           type: 'positive',
           message: `Created new project "${info.name}"`

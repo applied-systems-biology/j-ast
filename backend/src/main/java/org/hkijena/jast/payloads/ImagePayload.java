@@ -1,12 +1,11 @@
 package org.hkijena.jast.payloads;
 
-import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonSetter;
+import org.hkijena.jast.model.AssayType;
 import org.hkijena.jast.model.entities.Image;
 import org.hkijena.jast.utils.ImageUtils;
 
-public record ImageInfoMessage (
+public record ImagePayload(
     @JsonProperty long id,
     @JsonProperty long projectId,
     @JsonProperty String fileName,
@@ -14,18 +13,21 @@ public record ImageInfoMessage (
     @JsonProperty String experiment,
     @JsonProperty String sample,
     @JsonProperty String timePoint,
-    @JsonProperty String thumbnailData
+    @JsonProperty int groupRow,
+    @JsonProperty int groupColumn,
+    @JsonProperty AssayType assayType
 ) {
 
-    public static ImageInfoMessage create(Image image) {
-        return new ImageInfoMessage(image.getId(),
+    public static ImagePayload create(Image image) {
+        return new ImagePayload(image.getId(),
                 image.getProject().getId(),
                 image.getOriginalFileName(),
                 image.getProject().getOwner() != null ? image.getProject().getOwner().getEmail() : "",
                 image.getExperiment(),
                 image.getSample(),
                 image.getTimePoint(),
-                ImageUtils.toPNGBase64String(image.getThumbnailData())
-                );
+                image.getGroupRow(),
+                image.getGroupColumn(),
+                image.getAssayType());
     }
 }
