@@ -5,18 +5,18 @@
         v-for="(k, columnIndex) in ((projectImages?.unsortedRow.images.length || 0) + 1)"
         :key="`col-${columnIndex}`"
         class="grid-slot"
-        :class="{ 'dragging-over': isDragging && dragOverSlot === indexToSlot(-1, columnIndex) }"
-        @dragover.prevent="onDragOver(indexToSlot(-1, columnIndex))"
-        @dragenter.prevent="onDragEnter(indexToSlot(-1, columnIndex))"
-        @dragleave.prevent="onDragLeave(indexToSlot(-1, columnIndex))"
-        @drop="onDrop(indexToSlot(-1, columnIndex))">
+        :class="{ 'dragging-over': isDragging && dragOverSlot?.equals(new SlotIndex(-1, columnIndex)) }"
+        @dragover.prevent="onDragOver(new SlotIndex(-1, columnIndex))"
+        @dragenter.prevent="onDragEnter(new SlotIndex(-1, columnIndex))"
+        @dragleave.prevent="onDragLeave(new SlotIndex(-1, columnIndex))"
+        @drop="onDrop(new SlotIndex(-1, columnIndex))">
       <ProjectImageButton
         v-if="getUnsortedImage(columnIndex)"
         :current-image="getUnsortedImage(columnIndex)!"
         :selected-image-id="selectedImageId"
         class="draggable-item"
         draggable="true"
-        @dragstart="onDragStart(indexToSlot(-1, columnIndex))"
+        @dragstart="onDragStart(new SlotIndex(-1, columnIndex))"
         @dragend="onDragEnd"
       />
       </div>
@@ -26,11 +26,11 @@
         v-for="(j, columnIndex) in (numCols + 1)"
         :key="`col-${columnIndex}`"
         class="grid-slot"
-        :class="{ 'dragging-over': isDragging && dragOverSlot === indexToSlot(rowIndex, columnIndex) }"
-        @dragover.prevent="onDragOver(indexToSlot(rowIndex, columnIndex))"
-        @dragenter.prevent="onDragEnter(indexToSlot(rowIndex, columnIndex))"
-        @dragleave.prevent="onDragLeave(indexToSlot(rowIndex, columnIndex))"
-        @drop="onDrop(indexToSlot(rowIndex, columnIndex))"
+        :class="{ 'dragging-over': isDragging && dragOverSlot?.equals(new SlotIndex(rowIndex, columnIndex)) }"
+        @dragover.prevent="onDragOver(new SlotIndex(rowIndex, columnIndex))"
+        @dragenter.prevent="onDragEnter(new SlotIndex(rowIndex, columnIndex))"
+        @dragleave.prevent="onDragLeave(new SlotIndex(rowIndex, columnIndex))"
+        @drop="onDrop(new SlotIndex(rowIndex, columnIndex))"
       >
       </div>
     </div>
@@ -58,6 +58,10 @@ class SlotIndex {
   equals(other: SlotIndex): boolean {
     return this.row === other.row && this.column === other.column;
   }
+
+  toString() : string {
+    return `Slot[${this.row}, ${this.column}]`
+  }
 }
 
 const projectImages = defineModel<ProjectImagesPayload>()
@@ -66,8 +70,8 @@ const numCols = computed(() => projectImages.value ? projectImages.value.maxColu
 const numRows = computed(() => projectImages.value ? projectImages.value.groupRows.length : 0)
 
 const isDragging = ref(false);
-const dragSlot = ref<string | null>(null);
-const dragOverSlot = ref<string | null>(null);
+const dragSlot = ref<SlotIndex | null>(null);
+const dragOverSlot = ref<SlotIndex | null>(null);
 
 function getUnsortedImage(index : number) {
   console.log(index, projectImages.value?.unsortedRow.images[index])
