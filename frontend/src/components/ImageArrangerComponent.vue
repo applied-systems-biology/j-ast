@@ -18,6 +18,7 @@
         draggable="true"
         @dragstart="onDragStart(new SlotIndex(-1, columnIndex))"
         @dragend="onDragEnd"
+        @clicked="onImageClicked"
       />
       </div>
     </div>
@@ -31,6 +32,7 @@
         @dragenter.prevent="onDragEnter(new SlotIndex(rowIndex, columnIndex))"
         @dragleave.prevent="onDragLeave(new SlotIndex(rowIndex, columnIndex))"
         @drop="onDrop(new SlotIndex(rowIndex, columnIndex))"
+        @clicked="onImageClicked"
       >
       </div>
     </div>
@@ -45,6 +47,10 @@ import { computed, ref } from 'vue';
 import { ProjectImagesPayload } from 'src/types/common';
 import { instanceToPlain } from 'class-transformer';
 import ProjectImageButton from 'components/ProjectImageButton.vue';
+
+const emit = defineEmits<{
+  (e: "selectedImageChanged", selectedImageId: number) : void
+}>()
 
 class SlotIndex {
   row: number;
@@ -74,7 +80,6 @@ const dragSlot = ref<SlotIndex | null>(null);
 const dragOverSlot = ref<SlotIndex | null>(null);
 
 function getUnsortedImage(index : number) {
-  console.log(index, projectImages.value?.unsortedRow.images[index])
   return projectImages.value?.unsortedRow.images[index] || undefined;
 }
 
@@ -117,6 +122,16 @@ function onDrop(slot: SlotIndex) {
   // gridItems.value[index] = draggedItem;
 
   onDragEnd();
+}
+
+function onImageClicked(imageId : number) {
+    if(selectedImageId.value == imageId) {
+      selectedImageId.value = -1;
+    }
+    else {
+      selectedImageId.value = imageId;
+    }
+    emit("selectedImageChanged", selectedImageId.value);
 }
 
 </script>

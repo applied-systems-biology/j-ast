@@ -52,33 +52,7 @@
     </q-drawer>
     <q-page-container>
       <q-page padding class="q-gutter-sm">
-<!--        <q-card class="bg-indigo text-white">-->
-<!--          <q-card-section>-->
-<!--            <div class="text-h6">Unsorted images</div>-->
-<!--          </q-card-section>-->
-<!--          <q-card-section>-->
-<!--&lt;!&ndash;            <q-scroll-area class="data-list-row">&ndash;&gt;-->
-<!--              <draggable-->
-<!--                class="draggable"-->
-<!--                :list="projectImages.unsortedRow.images"-->
-<!--                :group="{ name: 'g1' }"-->
-<!--              >-->
-<!--                <ProjectImageButton-->
-<!--                  v-for="image in projectImages.unsortedRow.images"-->
-<!--                  :key="image.id"-->
-<!--                  :current-image="image"-->
-<!--                  :selected-image-id="selectedImageId"-->
-<!--                  @clicked="onImageClicked"-->
-<!--                />-->
-<!--              </draggable>-->
-<!--&lt;!&ndash;            </q-scroll-area>&ndash;&gt;-->
-<!--          </q-card-section>-->
-<!--          <q-separator dark />-->
-<!--          <q-card-actions>-->
-<!--            <q-btn flat @click="autoSortImages">Auto-sort</q-btn>-->
-<!--          </q-card-actions>-->
-<!--        </q-card>-->
-        <ImageArrangerComponent v-model="projectImages" />
+        <ImageArrangerComponent v-model="projectImages" @selected-image-changed="onSelectedImageChanged"/>
       </q-page>
     </q-page-container>
     <q-footer>
@@ -103,22 +77,9 @@ import {
   ProjectImagesPayload,
   ProjectMetadataPayload,
 } from 'src/types/common';
-// import ProjectImageButton from 'components/ProjectImageButton.vue';
 import ProjectImageEditor from 'components/ProjectImageEditor.vue';
 import { plainToInstance } from 'class-transformer';
 import ImageArrangerComponent from 'components/ImageArrangerComponent.vue';
-
-// type DragEvent = {
-//   to: HTMLElement; // list, in which moved element
-//   from: HTMLElement; // previous list
-//   item: HTMLElement; // dragged element
-//   clone: HTMLElement;
-//   oldIndex?: number; // old index within parent
-//   newIndex?: number; // new index within parent
-//   oldDraggableIndex?: number; // old index within parent, only counting draggable elements
-//   newDraggableIndex?: number; // new index within parent, only counting draggable elements
-//   pullMode?: "clone" | true | false; // Pull mode if dragging into another sortable, otherwise undefined
-// };
 
 const $q = useQuasar();
 const $route = useRoute();
@@ -206,13 +167,6 @@ function deleteSelectedImage() {
   }
 }
 
-// function autoSortImages() {
-//   $q.notify({
-//     type: 'negative',
-//     message: 'This function is currently not available.',
-//   });
-// }
-
 function reloadProjectInfo() {
   api.get<ProjectMetadataPayload>(`/project/${projectId}`).then((response) => {
     projectInfo.value = plainToInstance(ProjectMetadataPayload, response.data);
@@ -226,8 +180,6 @@ function reloadProjectInfo() {
       payload.fixRowReferences();
       projectImages.value = payload;
 
-      //
-
       // Un-select the image
       if (!selectedImage.value) {
         selectedImageId.value = -1;
@@ -235,13 +187,9 @@ function reloadProjectInfo() {
     });
 }
 
-// function onImageClicked(imageId: number) {
-//   if (selectedImageId.value == imageId) {
-//     selectedImageId.value = -1;
-//   } else {
-//     selectedImageId.value = imageId;
-//   }
-// }
+function onSelectedImageChanged(newImageId : number) {
+  selectedImageId.value = newImageId;
+}
 
 onMounted(() => {
   reloadProjectInfo();
