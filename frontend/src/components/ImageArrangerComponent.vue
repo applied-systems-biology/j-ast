@@ -34,19 +34,29 @@
         @drop="onDrop(new SlotIndex(rowIndex, columnIndex))"
         @clicked="onImageClicked"
       >
+        <ProjectImageButton
+          v-if="getImageBySlot(rowIndex, columnIndex)"
+          :current-image="getImageBySlot(rowIndex, columnIndex)!"
+          :selected-image-id="selectedImageId"
+          class="draggable-item"
+          draggable="true"
+          @dragstart="onDragStart(new SlotIndex(rowIndex, columnIndex))"
+          @dragend="onDragEnd"
+          @clicked="onImageClicked"
+        />
       </div>
     </div>
   </div>
-  {{ numCols }}
-  {{ projectImages?.getNumImages() }}
-  {{ Object.keys(JSON.parse(JSON.stringify(projectImages?.imagesById))) }}
-  {{ Object.keys(projectImages ? instanceToPlain(projectImages?.imagesById) : {}) }}
+  <pre>
+    {{ JSON.stringify(projectImages, null, 2) }}
+  </pre>
+
 </template>
 <script setup lang="ts">
 import { computed, ref } from 'vue';
 import { ProjectImagesPayload } from 'src/types/common';
-import { instanceToPlain } from 'class-transformer';
 import ProjectImageButton from 'components/ProjectImageButton.vue';
+import { useQuasar } from 'quasar';
 
 const emit = defineEmits<{
   (e: "selectedImageChanged", selectedImageId: number) : void
@@ -70,6 +80,7 @@ class SlotIndex {
   }
 }
 
+const $q = useQuasar()
 const projectImages = defineModel<ProjectImagesPayload>()
 const selectedImageId = ref<number>(-1)
 const numCols = computed(() => projectImages.value ? projectImages.value.maxColumn() + 1 : 0)
@@ -81,6 +92,10 @@ const dragOverSlot = ref<SlotIndex | null>(null);
 
 function getUnsortedImage(index : number) {
   return projectImages.value?.unsortedRow.images[index] || undefined;
+}
+
+function getImageBySlot(row : number, column : number) {
+  return projectImages.value?.getImageBySlot(row, column) || undefined
 }
 
 function onDragStart(slot: SlotIndex){
@@ -109,19 +124,29 @@ function onDragLeave(slot: SlotIndex) {
   dragOverSlot.value = null;
 }
 
-function onDrop(slot: SlotIndex) {
-  if (dragSlot.value === null || dragSlot.value === slot) {
+function onDrop(targetSlot: SlotIndex) {
+  if (dragSlot.value === null || dragSlot.value === targetSlot) {
+    return;
+  }
+  const sourceSlot : SlotIndex = dragSlot.value;
+  if(sourceSlot.equals(targetSlot)) {
+    return
+  }
+  if(!projectImages.value) {
     return;
   }
 
-  console.log("SWAP " + dragSlot.value + " --> " + slot);
-
-  // Swap items
-  // const draggedItem = gridItems.value[dragSlot.value];
-  // gridItems.value[dragSlot.value] = gridItems.value[index];
-  // gridItems.value[index] = draggedItem;
-
+  const payload : ProjectImagesPayload = projectImages.value
+  const success = payload.swapOrMove(sourceSlot, targetSlot)
   onDragEnd();
+  if(success) {
+    projectImages.value?.uploadToBackend().catch(() => {
+      $q.notify({
+        "type": "error",
+        "message": "Error while updating",
+      })
+    })
+  }
 }
 
 function onImageClicked(imageId : number) {
@@ -169,8 +194,7 @@ $grid-item-height: 16rem;
 }
 
 .grid-slot.dragging-over {
-  border-color: #42a5f5;
-  background-color: #e3f2fd;
+  border-color: $purple;
 }
 
 .draggable-item {

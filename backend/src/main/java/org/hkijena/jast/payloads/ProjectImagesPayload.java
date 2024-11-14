@@ -12,6 +12,7 @@ import java.util.*;
  */
 public class ProjectImagesPayload {
 
+    private long projectId;
     private Map<Long, ImagePayload> imagesById = new HashMap<>();
     private List<Long> imageIds = new ArrayList<>();
     private Row unsortedRow = new Row();
@@ -22,31 +23,50 @@ public class ProjectImagesPayload {
     }
 
     public ProjectImagesPayload(Project project) {
-        int maxRow = -1;
+        this.projectId = project.getId();
+        int numRows = 0;
         for (Image image : project.getImages()) {
             imageIds.add(image.getId());
-            imagesById.put(image.getId(), ImagePayload.create(image));
-            maxRow = Math.max(maxRow, image.getGroupRow());
+            imagesById.put(image.getId(), new ImagePayload(image));
+            numRows = Math.max(numRows, image.getGroupRow() + 1);
 
             // Sort unsorted images
             if(image.getGroupRow() < 0 || image.getGroupColumn() < 0) {
-                unsortedRow.images.add(ImagePayload.create(image));
+                unsortedRow.images.add(new ImagePayload(image));
             }
         }
-        unsortedRow.images.sort(Comparator.comparing(ImagePayload::groupColumn));
+        unsortedRow.images.sort(Comparator.comparing(ImagePayload::getGroupColumn));
 
-        if(maxRow > 0) {
-            for (int i = 0; i < maxRow + 1; i++) {
+        // We assign a group column based on the order
+        List<ImagePayload> images = unsortedRow.images;
+        for (int i = 0; i < images.size(); i++) {
+            ImagePayload image = images.get(i);
+            image.setGroupColumn(i);
+        }
+
+        // Handle the sorted rows
+        if(numRows > 0) {
+            for (int i = 0; i < numRows; i++) {
                 Row row = new Row();
                 for (Image image : project.getImages()) {
                     if (image.getGroupRow() == i && image.getGroupColumn() >= 0) {
-                        row.images.add(ImagePayload.create(image));
+                        row.images.add(new ImagePayload(image));
                     }
                 }
-                row.images.sort(Comparator.comparing(ImagePayload::groupColumn));
+                row.images.sort(Comparator.comparing(ImagePayload::getGroupColumn));
                 groupRows.add(row);
             }
         }
+    }
+
+    @JsonGetter("projectId")
+    public long getProjectId() {
+        return projectId;
+    }
+
+    @JsonSetter("projectId")
+    public void setProjectId(long projectId) {
+        this.projectId = projectId;
     }
 
     @JsonGetter("imageIds")

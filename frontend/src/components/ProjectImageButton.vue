@@ -65,6 +65,7 @@
         >
           <i>&lt;No assay type&gt;</i>
         </div>
+        {{ currentImage.groupRow }} {{ currentImage.groupColumn }}
       </div>
     </div>
   </q-btn>
@@ -72,9 +73,10 @@
 <script setup lang="ts">
 import { ImagePayload } from 'src/types/common';
 import { onMounted, ref } from 'vue';
-import { api } from 'boot/axios';
+import { useProjectImageThumbnailStore } from 'stores/project-image-thumbnail-store';
 
 const thumbnail = ref<string>('');
+const thumbnailStore = useProjectImageThumbnailStore();
 
 const props = defineProps<{
   currentImage: ImagePayload;
@@ -89,15 +91,9 @@ function clicked() {
 }
 
 onMounted(() => {
-  if (!thumbnail.value) {
-    api
-      .get(`/image/${props.currentImage.id}/thumbnail`, {
-        responseType: 'blob',
-      })
-      .then((response) => {
-        thumbnail.value = URL.createObjectURL(response.data);
-      });
-  }
+  thumbnailStore.fetchImage(props.currentImage.id).then(data => {
+    thumbnail.value = data || ""
+  })
 });
 </script>
 <style scoped lang="scss">

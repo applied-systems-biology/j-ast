@@ -19,9 +19,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @RestController
 public class ImageController {
@@ -57,7 +56,7 @@ public class ImageController {
         }
         List<ImagePayload> result = new ArrayList<>();
         for (Image image : project.getImages()) {
-            result.add(ImagePayload.create(image));
+            result.add(new ImagePayload(image));
         }
         return ResponseEntity.ok(result);
     }
@@ -96,40 +95,51 @@ public class ImageController {
         }
     }
 
-//
-//    @GetMapping("/image/view/{id}")
-//    public ModelAndView view(HttpServletResponse response, Authentication authentication, @PathVariable long id) throws IOException {
-//        Optional<Image> inputData_ = imageRepository.findById(id);
-//        if(inputData_.isPresent()) {
-//            Image image = inputData_.get();
-//
-//            if(!image.getProject().canAccess(authentication)) {
-//                throw new ResponseStatusException(HttpStatus.FORBIDDEN);
-//            }
-//
-//            RequestUtils.sendContent(response, image.getRawData(), MimeTypeUtils.MIME_TYPE_PNG);
-//            return null;
-//        }
-//        else {
-//            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-//        }
-//    }
-//
-//    @GetMapping("/image/download/{id}")
-//    public ModelAndView download(HttpServletResponse response, Authentication authentication, @PathVariable long id) throws IOException {
-//        Optional<Image> inputData_ = imageRepository.findById(id);
-//        if(inputData_.isPresent()) {
-//            Image image = inputData_.get();
-//
-//            if(!image.getProject().canAccess(authentication)) {
-//                throw new ResponseStatusException(HttpStatus.FORBIDDEN);
-//            }
-//
-//            RequestUtils.sendAttachment(response, image.getRawData(), image.getOriginalFileName(), MimeTypeUtils.MIME_TYPE_PNG);
-//            return null;
-//        }
-//        else {
-//            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-//        }
-//    }
+    @PostMapping("/api/project/{id}/update-images")
+    public void updateImages(Authentication authentication, @PathVariable long id, @RequestBody ProjectImagesPayload imagesPayload) {
+        userService.validateAuthentication(authentication);
+        Project project = projectService.getProjectByIdOrError(id);
+        if(!project.canEdit(authentication)) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+        }
+
+        // Check if the images are actually owned by the project
+        Set<Long> imageIdsInProject = project.getImages().stream().map(Image::getId).collect(Collectors.toSet());
+        for (Map.Entry<Long, ImagePayload> entry : imagesPayload.getImagesById().entrySet()) {
+            if(entry.getKey() != entry.getValue().getId()) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Inconsistent data");
+            }
+            if(entry.getValue().getProjectId() != project.getId()) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Inconsistent data");
+            }
+            if(!imageIdsInProject.contains(entry.getKey())) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Inconsistent data");
+            }
+        }
+
+        // Update the images in the database
+        List<Image> images = new ArrayList<>();
+        for (Map.Entry<Long, ImagePayload> entry : imagesPayload.getImagesById().entrySet()) {
+            Image image = imageRepository.findById(entry.getKey()).orElseThrow();
+            ImagePayload payload = entry.getValue();
+            image.updateFromPayload(payload);
+            images.add(image);
+        }
+        imageRepository.saveAll(images);
+    }
+
+    @PostMapping("/api/image/{id}/update")
+    public void updateImage(Authentication authentication, @PathVariable long id, @RequestBody ImagePayload imagePayload) {
+        userService.validateAuthentication(authentication);
+        Optional<Image> image_ = imageRepository.findById(id);
+        if(image_.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
+        Image image = image_.get();
+        if(!image.getProject().canEdit(authentication)) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+        }
+        image.updateFromPayload(imagePayload);
+        imageRepository.save(image);
+    }
 }
