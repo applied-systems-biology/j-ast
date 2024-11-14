@@ -78,6 +78,8 @@ export class ProjectImagesPayload {
   @Expose()
   @Type(() => ProjectImagesPayloadRow)
   groupRows: ProjectImagesPayloadRow[] = [];
+
+  @Expose()
   unsortedRow: ProjectImagesPayloadRow = new ProjectImagesPayloadRow();
 
   /**
@@ -90,6 +92,12 @@ export class ProjectImagesPayload {
         if (imageId.toString() in this.imagesById) {
           row.images[i] = this.imagesById[imageId.toString()]!;
         }
+      }
+    }
+    for (let i = 0; i < this.unsortedRow.images.length; i++) {
+      const imageId =  this.unsortedRow.images[i].id;
+      if (imageId.toString() in this.imagesById) {
+        this.unsortedRow.images[i] = this.imagesById[imageId.toString()]!;
       }
     }
   }

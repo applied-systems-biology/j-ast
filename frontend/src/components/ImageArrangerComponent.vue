@@ -1,28 +1,37 @@
 <template>
   <div class="grid-container">
     <div class="grid-row grid-row-unsorted">
-
-    </div>
-    <div v-for="rowIndex in (numRows + 1)" :key="`row-${rowIndex}`" class="grid-row">
       <div
-        v-for="columnIndex in (numCols + 1)"
+        v-for="(k, columnIndex) in ((projectImages?.unsortedRow.images.length || 0) + 1)"
         :key="`col-${columnIndex}`"
         class="grid-slot"
-        :class="{ 'dragging-over': isDragging && dragOverSlot === index }"
-        @dragover.prevent="onDragOver(index)"
-        @dragenter.prevent="onDragEnter(index)"
-        @dragleave.prevent="onDragLeave(index)"
-        @drop="onDrop(index)"
+        :class="{ 'dragging-over': isDragging && dragOverSlot === indexToSlot(-1, columnIndex) }"
+        @dragover.prevent="onDragOver(indexToSlot(-1, columnIndex))"
+        @dragenter.prevent="onDragEnter(indexToSlot(-1, columnIndex))"
+        @dragleave.prevent="onDragLeave(indexToSlot(-1, columnIndex))"
+        @drop="onDrop(indexToSlot(-1, columnIndex))">
+      <ProjectImageButton
+        v-if="getUnsortedImage(columnIndex)"
+        :current-image="getUnsortedImage(columnIndex)!"
+        :selected-image-id="selectedImageId"
+        class="draggable-item"
+        draggable="true"
+        @dragstart="onDragStart(indexToSlot(-1, columnIndex))"
+        @dragend="onDragEnd"
+      />
+      </div>
+    </div>
+    <div v-for="(i, rowIndex) in (numRows + 1)" :key="`row-${rowIndex}`" class="grid-row">
+      <div
+        v-for="(j, columnIndex) in (numCols + 1)"
+        :key="`col-${columnIndex}`"
+        class="grid-slot"
+        :class="{ 'dragging-over': isDragging && dragOverSlot === indexToSlot(rowIndex, columnIndex) }"
+        @dragover.prevent="onDragOver(indexToSlot(rowIndex, columnIndex))"
+        @dragenter.prevent="onDragEnter(indexToSlot(rowIndex, columnIndex))"
+        @dragleave.prevent="onDragLeave(indexToSlot(rowIndex, columnIndex))"
+        @drop="onDrop(indexToSlot(rowIndex, columnIndex))"
       >
-<!--        <div-->
-<!--          v-if="item"-->
-<!--          class="draggable-item"-->
-<!--          draggable="true"-->
-<!--          @dragstart="onDragStart(index)"-->
-<!--          @dragend="onDragEnd"-->
-<!--        >-->
-<!--          {{ item }}-->
-<!--        </div>-->
       </div>
     </div>
   </div>
@@ -35,8 +44,24 @@
 import { computed, ref } from 'vue';
 import { ProjectImagesPayload } from 'src/types/common';
 import { instanceToPlain } from 'class-transformer';
+import ProjectImageButton from 'components/ProjectImageButton.vue';
+
+class SlotIndex {
+  row: number;
+  column : number;
+
+  constructor(row : number, column : number) {
+    this.row = row;
+    this.column  = column;
+  }
+
+  equals(other: SlotIndex): boolean {
+    return this.row === other.row && this.column === other.column;
+  }
+}
 
 const projectImages = defineModel<ProjectImagesPayload>()
+const selectedImageId = ref<number>(-1)
 const numCols = computed(() => projectImages.value ? projectImages.value.maxColumn() + 1 : 0)
 const numRows = computed(() => projectImages.value ? projectImages.value.groupRows.length : 0)
 
@@ -44,49 +69,57 @@ const isDragging = ref(false);
 const dragSlot = ref<string | null>(null);
 const dragOverSlot = ref<string | null>(null);
 
-const onDragStart = (slot: string) => {
-  dragSlot.value = index;
-  isDragging.value = true;
-};
+function getUnsortedImage(index : number) {
+  console.log(index, projectImages.value?.unsortedRow.images[index])
+  return projectImages.value?.unsortedRow.images[index] || undefined;
+}
 
-const onDragEnd = () => {
+function onDragStart(slot: SlotIndex){
+  dragSlot.value = slot;
+  isDragging.value = true;
+}
+
+function onDragEnd() {
   dragSlot.value = null;
   dragOverSlot.value = null;
   isDragging.value = false;
-};
+}
 
-const onDragOver = (slot: string) => {
+function onDragOver (slot: SlotIndex) {
   if (dragSlot.value !== slot) {
     dragOverSlot.value = slot;
   }
-};
+}
 
-const onDragEnter = (slot: string) => {
-  dragOverSlot.value = index;
-};
+function onDragEnter(slot: SlotIndex) {
+  dragOverSlot.value = slot;
+}
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const onDragLeave = (slot: string) => {
+function onDragLeave(slot: SlotIndex) {
   dragOverSlot.value = null;
-};
+}
 
-const onDrop = (slot: string) => {
-  if (dragSlot.value === null || dragSlot.value === index) {
+function onDrop(slot: SlotIndex) {
+  if (dragSlot.value === null || dragSlot.value === slot) {
     return;
   }
 
+  console.log("SWAP " + dragSlot.value + " --> " + slot);
+
   // Swap items
-  const draggedItem = gridItems.value[dragSlot.value];
-  gridItems.value[dragSlot.value] = gridItems.value[index];
-  gridItems.value[index] = draggedItem;
+  // const draggedItem = gridItems.value[dragSlot.value];
+  // gridItems.value[dragSlot.value] = gridItems.value[index];
+  // gridItems.value[index] = draggedItem;
 
   onDragEnd();
-};
+}
 
 </script>
 <style scoped lang="scss">
 
-$grid-item-size: 10rem;
+$grid-item-width: 10rem;
+$grid-item-height: 16rem;
 
 .grid-container {
   display: flex;
@@ -96,7 +129,10 @@ $grid-item-size: 10rem;
 
 .grid-row {
   background: green;
-  height: $grid-item-size;
+  height: $grid-item-height;
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
 }
 
 .grid-row-unsorted {
@@ -104,8 +140,8 @@ $grid-item-size: 10rem;
 }
 
 .grid-slot {
-  width: $grid-item-size;
-  height: $grid-item-size;
+  width: $grid-item-width;
+  height: $grid-item-height;
   border: 2px dashed #ccc;
   display: flex;
   align-items: center;
@@ -119,13 +155,8 @@ $grid-item-size: 10rem;
 }
 
 .draggable-item {
-  width: 80px;
-  height: 80px;
-  background-color: #42a5f5;
-  color: white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  width: $grid-item-width;
+  height: $grid-item-height;
   cursor: grab;
 }
 

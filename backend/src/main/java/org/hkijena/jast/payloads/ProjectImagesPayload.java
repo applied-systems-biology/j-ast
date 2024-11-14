@@ -33,6 +33,7 @@ public class ProjectImagesPayload {
                 unsortedRow.images.add(ImagePayload.create(image));
             }
         }
+        unsortedRow.images.sort(Comparator.comparing(ImagePayload::groupColumn));
 
         if(maxRow > 0) {
             for (int i = 0; i < maxRow + 1; i++) {
