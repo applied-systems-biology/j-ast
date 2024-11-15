@@ -1,43 +1,34 @@
 <template>
-  aa
   <konva-stage ref="stage" :config="stageConfig">
     <konva-layer>
-      <!-- Rectangle Example -->
+      <konva-image :config="backgroundImageConfig" />
+    </konva-layer>
+    <konva-layer ref="maskLayer">
       <konva-rect
         :config="rectConfig"
       />
     </konva-layer>
-
-<!--      &lt;!&ndash; Freehand Drawing Layer &ndash;&gt;-->
-<!--      <konva-layer ref="drawingLayer">-->
-<!--        <konva-line-->
-<!--          konva-for="(line, index) in lines"-->
-<!--          :key="index"-->
-<!--          :config="{-->
-<!--              points: line.points,-->
-<!--              stroke: 'red',-->
-<!--              strokeWidth: 3,-->
-<!--              lineCap: 'round',-->
-<!--              lineJoin: 'round'-->
-<!--            }"-->
-<!--        />-->
-<!--      </konva-layer>-->
   </konva-stage>
+  <q-btn @click="saveImage">Save</q-btn>
 <!--  <q-btn @click="clearDrawing" label="Clear Drawing" color="primary" />-->
 </template>
 <script setup lang="ts">
-// import { ref, reactive } from 'vue';
-// import Stage from "vue-konva"
-// import Layer from 'vue-konva';
-// import Rect from "vue-konva"
-import { reactive } from 'vue';
-// import { Stage, Layer, Rect, Line } from 'vue-konva';
+import {onMounted, reactive, useTemplateRef} from 'vue';
+import {api} from "boot/axios";
+
+type KonvaImageConfig = {
+  image: HTMLImageElement | null;
+}
 
 const stageConfig = reactive({
-  width: 800,
-  height: 600,
+  width: 16,
+  height: 16,
   draggable: false
 });
+
+const backgroundImageConfig : KonvaImageConfig = reactive({
+  image: null
+})
 
 const rectConfig = reactive({
   x: 50,
@@ -47,38 +38,38 @@ const rectConfig = reactive({
   fill: 'blue',
   draggable: true
 });
-//
-// const lines = ref([]);
-// let isDrawing = false;
-//
-// const handleClick = () => {
-//   console.log('Rectangle clicked');
-// };
-//
-// const startDrawing = (event) => {
-//   isDrawing = true;
-//   lines.value.push({ points: [] });
-// };
-//
-// const draw = (event) => {
-//   if (!isDrawing) return;
-//   const stage = event.target.getStage();
-//   const pointer = stage.getPointerPosition();
-//   const line = lines.value[lines.value.length - 1];
-//   line.points.push(pointer.x, pointer.y);
-// };
-//
-// const endDrawing = () => {
-//   isDrawing = false;
-// };
-//
-// const clearDrawing = () => {
-//   lines.value = [];
-// };
+
+const stage = useTemplateRef<any>("stage")
+const maskLayer = useTemplateRef<any>("maskLayer")
+
+function saveImage() {
+  if(maskLayer.value) {
+    console.log(maskLayer.value.getNode().toDataURL())
+    // console.log(stage.value.toDataURL())
+  }
+}
+
+onMounted(() => {
+  api.get(`/image/52/raw`, { responseType: 'blob' }).then(response => {
+    const imageUrl = URL.createObjectURL(response.data); // Create a URL from the blob
+
+    // Create a new Image object
+    const imageObj = new Image();
+    imageObj.src = imageUrl;
+
+    // Wait for the image to load
+    imageObj.onload = () => {
+      // Update the image config once the image is loaded
+      backgroundImageConfig.image = imageObj;
+      stageConfig.width = imageObj.width;
+      stageConfig.height = imageObj.height;
+    };
+  })
+})
+
 </script>
-<style scoped lang="scss">
-#container {
-  width: 100%;
-  height: 100%;
+<style lang="scss">
+.konvajs-content {
+  border: 1px solid black;
 }
 </style>
