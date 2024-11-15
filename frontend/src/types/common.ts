@@ -74,6 +74,23 @@ export class ImagePayload {
   uploadToBackend(): Promise<void> {
     return api.post(`/image/${this.id}/update`, instanceToPlain(this));
   }
+
+  getMetadataAsBadges() : Array<{ text: string, color: string, icon: string, type: string }> {
+    const result : Array<{ text: string, color: string, icon: string, type: string }> = []
+    if(this.experiment) {
+      result.push({ text: this.experiment, icon: "fa-solid fa-vial-virus", color: "#62a0ea", type: "Experiment" })
+    }
+    if(this.sample) {
+      result.push({ text: this.sample, icon: "fa-solid fa-flask", color: "#33d17a", type: "Sample" })
+    }
+    if(this.timePoint) {
+      result.push({ text: this.timePoint, icon: "fa-solid fa-clock", color: "#e5a50a", type: "Time point" })
+    }
+    if(this.assayType && this.assayType != AssayType.Unknown) {
+      result.push({ text: this.assayType, icon: "fa-solid fa-gear", color: "#9141ac", type: "Assay type" })
+    }
+    return result
+  }
 }
 
 export class ProjectImagesPayloadRow {

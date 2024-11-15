@@ -27,7 +27,8 @@
                 draggable="true"
                 @dragstart="onDragStart(new SlotIndex(-1, columnIndex))"
                 @dragend="onDragEnd"
-                @clicked="onImageClicked"
+                @added-to-selection="onImageAddToSelection"
+                @selected-exclusively="onImageSelectedExclusively"
               />
             </div>
           </div>
@@ -77,7 +78,8 @@
             draggable="true"
             @dragstart="onDragStart(new SlotIndex(rowIndex, columnIndex))"
             @dragend="onDragEnd"
-            @clicked="onImageClicked"
+            @added-to-selection="onImageAddToSelection"
+            @selected-exclusively="onImageSelectedExclusively"
           />
         </div>
       </div>
@@ -185,13 +187,18 @@ function onDrop(targetSlot: SlotIndex) {
   }
 }
 
-function onImageClicked(imageId: number) {
+function onImageSelectedExclusively(imageId: number) {
   if (selectedImageId.value == imageId) {
     selectedImageId.value = -1;
   } else {
     selectedImageId.value = imageId;
   }
 }
+
+function onImageAddToSelection(imageId: number) {
+  console.log("add:", imageId);
+}
+
 </script>
 <style scoped lang="scss">
 $grid-item-width: 18rem;

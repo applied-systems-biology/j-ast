@@ -3,7 +3,7 @@
     no-caps
     class="shadow-3 item text-black"
     :color="selectedImageId === currentImage.id ? 'green-3' : 'blue-grey-2'"
-    @click="clicked"
+    @click="clicked($event)"
   >
     <div class="content q-gutter-sm">
       <q-img
@@ -14,62 +14,19 @@
       />
       <q-skeleton v-else type="rect" class="thumbnail" />
       <div class="label text-left">
-        <div class="text-caption ellipsis">
+        <div class="filename text-caption ellipsis">
           {{ currentImage.fileName }}
         </div>
-        <div
-          v-if="currentImage.experiment"
-          class="text-caption ellipsis text-blue-grey"
-        >
-          <q-icon name="fa-solid fa-flask" />
-          {{ currentImage.experiment }}
+        <div class="badges">
+          <q-badge v-for="badge in metadataAsBadges" :key="badge.type" :style="{ backgroundColor: badge.color }">
+            <q-icon :name="badge.icon" />
+            <span class="q-ml-sm">{{ badge.text}}</span>
+          </q-badge>
         </div>
-        <div
-          v-if="!currentImage.experiment"
-          class="text-caption ellipsis text-blue-grey"
-        >
-          <q-icon name="fa-solid fa-flask" />
-          <i>&lt;No experiment&gt;</i>
-        </div>
-        <div
-          v-if="currentImage.sample"
-          class="text-caption ellipsis text-blue-grey"
-        >
-          {{ currentImage.sample }}
-        </div>
-        <div
-          v-if="!currentImage.sample"
-          class="text-caption ellipsis text-blue-grey"
-        >
-          <q-icon name="fa-solid fa-flask"/>
-          <i>&lt;No sample&gt;</i>
-        </div>
-        <div
-          v-if="currentImage.timePoint"
-          class="text-caption ellipsis text-blue-grey"
-        >
-          {{ currentImage.timePoint }}
-        </div>
-        <div
-          v-if="!currentImage.timePoint"
-          class="text-caption ellipsis text-blue-grey"
-        >
-          <q-icon name="fa-solid fa-flask" />
-          <i>&lt;No time point&gt;</i>
-        </div>
-        <div
-          v-if="currentImage.assayType"
-          class="text-caption ellipsis text-blue-grey"
-        >
-          <q-icon name="fa-solid fa-flask" />
-          {{ currentImage.assayType }}
-        </div>
-        <div
-          v-if="!currentImage.assayType"
-          class="text-caption ellipsis text-blue-grey"
-        >
-          <q-icon name="fa-solid fa-flask" />
-          <i>&lt;No assay type&gt;</i>
+        <!-- TODO: will be needed for later -->
+        <div class="progress text-indigo" v-if="false">
+          <q-spinner-hourglass size="xs"/>
+          <span class="text-caption">Working ...</span>
         </div>
       </div>
     </div>
@@ -77,8 +34,9 @@
 </template>
 <script setup lang="ts">
 import { ImagePayload } from 'src/types/common';
-import { onMounted, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import { useProjectImageThumbnailStore } from 'stores/project-image-thumbnail-store';
+import { plainToInstance } from 'class-transformer';
 
 const thumbnail = ref<string>('');
 const thumbnailStore = useProjectImageThumbnailStore();
@@ -88,11 +46,20 @@ const props = defineProps<{
   selectedImageId: number;
 }>();
 const emit = defineEmits<{
-  (e: 'clicked', imageId: number): void;
+  (e: 'selectedExclusively', imageId: number): void;
+  (e: 'addedToSelection', imageId: number): void;
 }>();
 
-function clicked() {
-  emit('clicked', props.currentImage.id);
+const metadataAsBadges = computed(() => plainToInstance(ImagePayload, props.currentImage).getMetadataAsBadges())
+
+function clicked(event : Event) {
+  const mouseEvent = event as MouseEvent;
+  if(mouseEvent.shiftKey) {
+    emit("addedToSelection", props.currentImage.id)
+  }
+  else {
+    emit("selectedExclusively", props.currentImage.id)
+  }
 }
 
 onMounted(() => {
@@ -111,6 +78,19 @@ $thumbnail-size: 6rem;
 
 .label {
   width: 10rem;
+  height: $thumbnail-size;
+  display: flex;
+  flex-direction: column;
+}
+
+.badges {
+  flex-grow: 1;
+  overflow: hidden;
+
+  .q-badge {
+    margin: 2px;
+    font-size: 0.6rem;
+  }
 }
 
 .content {
