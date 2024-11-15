@@ -18,7 +18,7 @@
           {{ currentImage.fileName }}
         </div>
         <div class="badges">
-          <q-badge v-for="badge in metadataAsBadges" :key="badge.type" :style="{ backgroundColor: badge.color }">
+          <q-badge v-for="badge in metadataAsBadges" :key="`${badge.type}-${badge.text}`" :style="{ backgroundColor: badge.color }">
             <q-icon :name="badge.icon" />
             <span class="q-ml-sm">{{ badge.text}}</span>
           </q-badge>

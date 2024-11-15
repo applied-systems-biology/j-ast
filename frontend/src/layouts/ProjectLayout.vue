@@ -224,8 +224,8 @@ function reloadProjectInfo() {
     .get<ProjectImagesPayload>(`/project/${projectId}/images`)
     .then((response) => {
       let payload = plainToInstance(ProjectImagesPayload, response.data);
-      console.log(response.data);
-      console.log(payload);
+      // console.log(response.data);
+      // console.log(payload);
       payload.fixRowReferences();
       projectImages.value = payload;
 

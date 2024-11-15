@@ -54,7 +54,7 @@
           class="grid-column-label bg-indigo-1"
         >
           <q-scroll-area class="column-label-scroll-area">
-            <q-badge v-for="badge in getColumnBadges(columnIndex)" :key="badge.type" :style="{ backgroundColor: badge.color }">
+            <q-badge v-for="badge in getColumnBadges(columnIndex)" :key="`${badge.type}-${badge.text}`" :style="{ backgroundColor: badge.color }">
               <q-icon :name="badge.icon" />
               <span class="q-ml-sm">{{ badge.text}}</span>
             </q-badge>
@@ -68,7 +68,7 @@
       >
         <div class="grid-row-label">
           <q-scroll-area class="row-label-scroll-area">
-            <q-badge v-for="badge in getRowBadges(rowIndex)" :key="badge.type" :style="{ backgroundColor: badge.color }">
+            <q-badge v-for="badge in getRowBadges(rowIndex)" :key="`${badge.type}-${badge.text}`" :style="{ backgroundColor: badge.color }">
               <q-icon :name="badge.icon" />
               <span class="q-ml-sm">{{ badge.text}}</span>
             </q-badge>
@@ -265,6 +265,9 @@ $grid-column-label-height: 5rem;
   border-top-left-radius: 3px;
   border-top-right-radius: 3px;
   padding: 4px;
+  .q-badge {
+    margin: 2px;
+  }
 }
 
 .column-label-scroll-area {

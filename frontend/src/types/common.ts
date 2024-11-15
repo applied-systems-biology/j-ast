@@ -134,6 +134,18 @@ export class ProjectImagesPayloadRow {
     });
   }
 
+  removeById(id: number) {
+    this.images = this.images.filter((image) => image.id !== id);
+  }
+
+  removeDuplicates() {
+    const byId : Record<string, ImagePayload> = { }
+    for (const image of this.images) {
+      byId[image.id.toString()] = image
+    }
+    this.images = Array.from(Object.values(byId))
+  }
+
   getRowMetadataAsBadges(): Array<Badge> {
     const result : Array<Badge> = []
     const allExperiments = new Set<string>
@@ -160,13 +172,13 @@ export class ProjectImagesPayloadRow {
       result.push(createAssayTypeBadge(value));
     }
     if(allExperiments.size == 0) {
-      result.push({ text: "N/A", icon: "fa-solid fa-vial-virus", color: "#c0bfbc", type: "Experiment" })
+      result.push({ text: "N/A", icon: "fa-solid fa-vial-virus", color: "#c0bfbc", type: "NAExperiment" })
     }
     if(allSamples.size == 0) {
-      result.push({ text: "N/A", icon: "fa-solid fa-flask", color: "#c0bfbc", type: "Experiment" })
+      result.push({ text: "N/A", icon: "fa-solid fa-flask", color: "#c0bfbc", type: "NASample" })
     }
     if(allAssayTypes.size == 0) {
-      result.push({ text: "N/A", icon: "fa-solid fa-gear", color: "#c0bfbc", type: "Experiment" })
+      result.push({ text: "N/A", icon: "fa-solid fa-gear", color: "#c0bfbc", type: "NAAssayType" })
     }
     return result
   }
@@ -268,7 +280,7 @@ export class ProjectImagesPayload {
 
         const targetRow = this.unsortedRow;
 
-        targetRow.images.splice(targetRow.images.indexOf(sourceImage), 1);
+        targetRow.removeById(sourceImage.id)
         targetRow.images.push(sourceImage);
         sourceImage.groupColumn = targetRow.images.length;
 
@@ -283,7 +295,7 @@ export class ProjectImagesPayload {
         }
         const targetRow = this.groupRows[targetSlot.row];
 
-        sourceRow.images.splice(sourceRow.images.indexOf(sourceImage), 1);
+        sourceRow.removeById(sourceImage.id);
         sourceImage.groupColumn = targetSlot.column;
         sourceImage.groupRow = targetSlot.row;
         targetRow.images.push(sourceImage);
@@ -297,7 +309,7 @@ export class ProjectImagesPayload {
         const sourceRow = this.groupRows[sourceSlot.row];
         const targetRow = this.unsortedRow;
 
-        sourceRow.images.splice(sourceRow.images.indexOf(sourceImage), 1);
+        sourceRow.removeById(sourceImage.id);
         sourceImage.groupColumn = targetRow.images.length;
         sourceImage.groupRow = -1;
         targetRow.images.push(sourceImage);
@@ -314,10 +326,13 @@ export class ProjectImagesPayload {
         }
         const targetRow = this.groupRows[targetSlot.row];
 
-        sourceRow.images.splice(sourceRow.images.indexOf(sourceImage), 1);
+        sourceRow.removeById(sourceImage.id);
         sourceImage.groupColumn = targetSlot.column;
         sourceImage.groupRow = targetSlot.row;
         targetRow.images.push(sourceImage);
+
+        targetRow.removeDuplicates()
+        console.log(targetRow)
 
         return true;
       }
@@ -398,7 +413,7 @@ export class ProjectImagesPayload {
       result.push(createTimePointBadge(value));
     }
     if(allTimePoints.size == 0) {
-      result.push({ text: "N/A", icon: "fa-solid fa-clock", color: "#c0bfbc", type: "Time point" })
+      result.push({ text: "N/A", icon: "fa-solid fa-clock", color: "#c0bfbc", type: "NATimePoint" })
     }
     return result
   }
