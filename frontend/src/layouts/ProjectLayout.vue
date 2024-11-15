@@ -51,7 +51,7 @@
       <ProjectImageEditor v-model="selectedImage" />
     </q-drawer>
     <q-page-container>
-      <q-page padding class="q-gutter-sm">
+      <q-page class="flex column q-gutter-sm">
         <ImageArrangerComponent v-model="projectImages" @selected-image-changed="onSelectedImageChanged"/>
       </q-page>
     </q-page-container>

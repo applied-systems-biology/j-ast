@@ -5,7 +5,7 @@
     :color="selectedImageId === currentImage.id ? 'green-3' : 'blue-grey-2'"
     @click="clicked"
   >
-    <div class="content">
+    <div class="content q-gutter-sm">
       <q-img
         v-if="thumbnail"
         class="thumbnail"
@@ -65,7 +65,6 @@
         >
           <i>&lt;No assay type&gt;</i>
         </div>
-        {{ currentImage.groupRow }} {{ currentImage.groupColumn }}
       </div>
     </div>
   </q-btn>
@@ -97,22 +96,24 @@ onMounted(() => {
 });
 </script>
 <style scoped lang="scss">
-$grid-item-size: 9rem;
+$thumbnail-size: 6rem;
 
 .thumbnail {
-  width: $grid-item-size;
-  height: $grid-item-size;
+  width: $thumbnail-size;
+  height: $thumbnail-size;
+}
+
+.label {
+  width: 10rem;
 }
 
 .content {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
-  width: calc($grid-item-size - 1rem);
 }
 
 .text-caption {
-  width: calc($grid-item-size - 1rem);
-  font-size: 0.7rem;
+  font-size: 0.6rem;
 }
 </style>
