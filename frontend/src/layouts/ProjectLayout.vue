@@ -18,29 +18,43 @@
         </q-toolbar-title>
         <LoginButtonComponent />
       </q-toolbar>
-      <q-toolbar class="bg-primary text-white">
+      <q-toolbar class="bg-primary text-white edit-toolbar">
         <ToggleButton
           not-selected-icon="upload"
           selected-icon="close"
-          class="bg-secondary q-mr-sm"
+          class="bg-secondary"
           v-model="drawerLeft"
           >Upload
         </ToggleButton>
         <ToggleButton
           selected-icon="close"
           not-selected-icon="sort"
-          class="bg-secondary q-mr-sm"
-          v-model="drawerUnsortedImages">
-          <span v-if="projectImages?.unsortedRow.images.length" class="text-bold flex flex-center">Unsorted images ({{ projectImages?.unsortedRow.images.length || 0 }})</span>
+          class="bg-secondary"
+          v-model="drawerUnsortedImages"
+        >
+          <span
+            v-if="projectImages?.unsortedRow.images.length"
+            class="text-bold flex flex-center"
+            >Unsorted images ({{
+              projectImages?.unsortedRow.images.length || 0
+            }})</span
+          >
           <span v-else class="text-bold flex flex-center">Unsorted images</span>
         </ToggleButton>
         <q-btn
+          icon="deselect"
+          color="secondary"
+          v-if="selectedImageIds.length > 0"
+          @click="selectedImageIds = []"
+          >Clear selection
+        </q-btn>
+        <q-btn
           icon="delete"
           color="red-5"
-          v-if="selectedImageId >= 0"
-          @click="deleteSelectedImage"
-          >Delete</q-btn
-        >
+          v-if="selectedImageIds.length > 0"
+          @click="deleteSelectedImages"
+          >Delete
+        </q-btn>
       </q-toolbar>
     </q-header>
     <q-drawer elevated side="left" bordered v-model="drawerLeft">
@@ -57,13 +71,22 @@
       class="q-pa-sm q-gutter-sm"
     >
       <div class="row reverse">
-        <q-btn icon="close" flat padding="none" @click="selectedImageId=-1"/>
+        <q-btn
+          icon="close"
+          flat
+          padding="none"
+          @click="selectedImageIds = []"
+        />
       </div>
       <ProjectImageEditor v-model="selectedImage" />
     </q-drawer>
     <q-page-container>
       <q-page class="flex column q-gutter-sm">
-        <ImageArrangerComponent v-model="projectImages" v-model:selectedImageId="selectedImageId" :show-unsorted="drawerUnsortedImages"/>
+        <ImageArrangerComponent
+          v-model="projectImages"
+          v-model:selectedImageIds="selectedImageIds"
+          :show-unsorted="drawerUnsortedImages"
+        />
       </q-page>
     </q-page-container>
   </q-layout>
@@ -92,19 +115,23 @@ const $q = useQuasar();
 const $route = useRoute();
 const router = useRouter();
 const drawerLeft: Ref<boolean> = ref(false);
-const drawerUnsortedImages = ref(false)
+const drawerUnsortedImages = ref(false);
 const projectName = computed(() => projectInfo.value?.name ?? undefined);
 const projectId = $route.params.id;
 const projectInfo: Ref<ProjectMetadataPayload> = ref(
   new ProjectMetadataPayload()
 );
 const projectImages = ref<ProjectImagesPayload>(new ProjectImagesPayload());
-const selectedImageId = ref<number>(-1);
+const selectedImageIds = ref<Array<number>>([]);
 
 // Computed values
-const drawerRight = computed(() => selectedImageId.value >= 0);
+const drawerRight = computed(() => selectedImageIds.value.length > 0);
 const selectedImage = computed(() =>
-  projectImages.value.getImageById(selectedImageId.value)
+  projectImages.value.getImageById(
+    selectedImageIds.value.length > 0
+      ? selectedImageIds.value[selectedImageIds.value.length - 1]
+      : -1
+  )
 );
 
 defineOptions({
@@ -154,11 +181,11 @@ function deleteProject() {
   });
 }
 
-function deleteSelectedImage() {
-  if (selectedImage.value) {
+function deleteSelectedImages() {
+  if (selectedImageIds.value.length > 0) {
     $q.dialog({
-      title: 'Delete image',
-      message: `Do your really want to delete the image '${selectedImage.value.fileName}'?`,
+      title: 'Delete images',
+      message: `Do your really want to delete the selected images?`,
       cancel: {
         label: 'No',
       },
@@ -168,7 +195,11 @@ function deleteSelectedImage() {
       },
       persistent: true,
     }).onOk(() => {
-      api.post(`/image/${selectedImageId.value}/delete`, {}).then(() => {
+      const promises = [];
+      for (const id of selectedImageIds.value) {
+        promises.push(api.post(`/image/${id}/delete`));
+      }
+      Promise.all(promises).then(() => {
         reloadProjectInfo();
       });
     });
@@ -183,18 +214,17 @@ function reloadProjectInfo() {
     .get<ProjectImagesPayload>(`/project/${projectId}/images`)
     .then((response) => {
       let payload = plainToInstance(ProjectImagesPayload, response.data);
-      console.log(response.data)
-      console.log(payload)
+      console.log(response.data);
+      console.log(payload);
       payload.fixRowReferences();
       projectImages.value = payload;
 
-      // Un-select the image
-      if (!selectedImage.value) {
-        selectedImageId.value = -1;
-      }
+      // Un-select the images
+      selectedImageIds.value = [];
 
-      // Setup the unsorted images drawer
-      drawerUnsortedImages.value = projectImages.value.unsortedRow.images.length > 0
+      // Set up the unsorted images drawer
+      drawerUnsortedImages.value =
+        projectImages.value.unsortedRow.images.length > 0;
     });
 }
 
@@ -202,5 +232,8 @@ onMounted(() => {
   reloadProjectInfo();
 });
 </script>
-<style scoped>
+<style scoped lang="scss">
+.edit-toolbar > * {
+  margin-right: 10px;
+}
 </style>

@@ -2,7 +2,7 @@
   <q-btn
     no-caps
     class="shadow-3 item text-black"
-    :color="selectedImageId === currentImage.id ? 'green-3' : 'blue-grey-2'"
+    :color="selectionColor"
     @click="clicked($event)"
   >
     <div class="content q-gutter-sm">
@@ -43,22 +43,35 @@ const thumbnailStore = useProjectImageThumbnailStore();
 
 const props = defineProps<{
   currentImage: ImagePayload;
-  selectedImageId: number;
+  selectedImageIds: Array<number>;
 }>();
 const emit = defineEmits<{
-  (e: 'selectedExclusively', imageId: number): void;
-  (e: 'addedToSelection', imageId: number): void;
+  (e: 'imageSelected', imageId: number, exclusive: boolean): void;
 }>();
 
 const metadataAsBadges = computed(() => plainToInstance(ImagePayload, props.currentImage).getMetadataAsBadges())
+const selectionColor = computed(() => {
+  const index = props.selectedImageIds.indexOf(props.currentImage.id)
+  if(index >= 0) {
+    if(index == props.selectedImageIds.length - 1) {
+      return "green-3"
+    }
+    else {
+      return "blue-3"
+    }
+  }
+  else {
+    return"blue-grey-2";
+  }
+})
 
 function clicked(event : Event) {
   const mouseEvent = event as MouseEvent;
   if(mouseEvent.shiftKey) {
-    emit("addedToSelection", props.currentImage.id)
+    emit("imageSelected", props.currentImage.id, false)
   }
   else {
-    emit("selectedExclusively", props.currentImage.id)
+    emit("imageSelected", props.currentImage.id, true)
   }
 }
 

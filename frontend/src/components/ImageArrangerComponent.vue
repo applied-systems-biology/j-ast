@@ -6,12 +6,12 @@
       </q-card-section>
 
       <!-- Unsorted -->
-      <q-card-section >
+      <q-card-section>
         <q-scroll-area class="unsorted-scroll-area" visible>
           <div class="grid-row grid-row-unsorted bg-indigo-1">
             <div
               v-for="(k, columnIndex) in (projectImages?.unsortedRow.images
-              .length || 0) + 1"
+                .length || 0) + 1"
               :key="`col-${columnIndex}`"
               class="grid-slot"
               @dragover.prevent="onDragOver(new SlotIndex(-1, columnIndex))"
@@ -22,13 +22,12 @@
               <ProjectImageButton
                 v-if="getUnsortedImage(columnIndex)"
                 :current-image="getUnsortedImage(columnIndex)!"
-                :selected-image-id="selectedImageId"
+                :selected-image-ids="selectedImageIds"
                 class="draggable-item"
                 draggable="true"
                 @dragstart="onDragStart(new SlotIndex(-1, columnIndex))"
                 @dragend="onDragEnd"
-                @added-to-selection="onImageAddToSelection"
-                @selected-exclusively="onImageSelectedExclusively"
+                @image-selected="onImageSelected"
               />
             </div>
           </div>
@@ -42,14 +41,18 @@
         <q-btn flat>Action 2</q-btn>
       </q-card-actions>
 
-      <q-separator/>
+      <q-separator />
     </q-card>
 
     <q-scroll-area class="table-scroll-area q-mt-md" visible>
       <!-- Sorted -->
       <div class="grid-column-header">
         <div class="grid-row-label"></div>
-        <div v-for="(k, columnIndex) in numCols" :key="`column-label-${columnIndex}`" class="grid-column-label bg-indigo-1">
+        <div
+          v-for="(k, columnIndex) in numCols"
+          :key="`column-label-${columnIndex}`"
+          class="grid-column-label bg-indigo-1"
+        >
           {{ columnIndex }}
         </div>
       </div>
@@ -73,13 +76,12 @@
           <ProjectImageButton
             v-if="getImageBySlot(rowIndex, columnIndex)"
             :current-image="getImageBySlot(rowIndex, columnIndex)!"
-            :selected-image-id="selectedImageId"
+            :selected-image-ids="selectedImageIds"
             class="draggable-item"
             draggable="true"
             @dragstart="onDragStart(new SlotIndex(rowIndex, columnIndex))"
             @dragend="onDragEnd"
-            @added-to-selection="onImageAddToSelection"
-            @selected-exclusively="onImageSelectedExclusively"
+            @image-selected="onImageSelected"
           />
         </div>
       </div>
@@ -94,7 +96,7 @@ import { useQuasar } from 'quasar';
 
 defineProps<{
   showUnsorted: boolean;
-}>()
+}>();
 
 class SlotIndex {
   row: number;
@@ -115,7 +117,9 @@ class SlotIndex {
 }
 
 const $q = useQuasar();
-const selectedImageId = defineModel<number>("selectedImageId", { required: true });
+const selectedImageIds = defineModel<Array<number>>('selectedImageIds', {
+  required: true,
+});
 const projectImages = defineModel<ProjectImagesPayload>();
 const numCols = computed(() =>
   projectImages.value ? projectImages.value.maxColumn() + 1 : 0
@@ -187,18 +191,27 @@ function onDrop(targetSlot: SlotIndex) {
   }
 }
 
-function onImageSelectedExclusively(imageId: number) {
-  if (selectedImageId.value == imageId) {
-    selectedImageId.value = -1;
+function onImageSelected(imageId: number, exclusive: boolean) {
+  const isMulti = selectedImageIds.value.length > 1;
+  const alreadySelected = selectedImageIds.value.includes(imageId)
+  if (alreadySelected) {
+    if(exclusive && isMulti) {
+      // Select only that image
+      selectedImageIds.value = [imageId]
+    }
+    else {
+      // Remove from selection
+      selectedImageIds.value.splice(selectedImageIds.value.indexOf(imageId), 1);
+    }
   } else {
-    selectedImageId.value = imageId;
+    if (exclusive) {
+      // Select only that image
+      selectedImageIds.value = [imageId]
+    } else {
+      selectedImageIds.value.push(imageId);
+    }
   }
 }
-
-function onImageAddToSelection(imageId: number) {
-  console.log("add:", imageId);
-}
-
 </script>
 <style scoped lang="scss">
 $grid-item-width: 18rem;
@@ -226,6 +239,7 @@ $grid-column-label-height: 5rem;
   margin-left: 10px;
   padding-left: 10px;
   margin-bottom: 10px;
+
   .grid-row-label {
     border: none;
   }
