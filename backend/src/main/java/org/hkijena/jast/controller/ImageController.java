@@ -95,6 +95,23 @@ public class ImageController {
         }
     }
 
+    @GetMapping("/api/image/{id}/raw")
+    public void getRaw(HttpServletResponse response, Authentication authentication, @PathVariable long id) throws IOException {
+        userService.validateAuthentication(authentication);
+        Optional<Image> inputData_ = imageRepository.findById(id);
+        if (inputData_.isPresent()) {
+            Image image = inputData_.get();
+
+            if (!image.getProject().canAccess(authentication)) {
+                throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+            }
+
+            RequestUtils.sendContent(response, image.getRawData(), MimeTypeUtils.MIME_TYPE_PNG);
+        } else {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
+    }
+
     @PostMapping("/api/image/{id}/delete")
     public void deleteImage(Authentication authentication, @PathVariable long id) {
         userService.validateAuthentication(authentication);
