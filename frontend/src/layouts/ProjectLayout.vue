@@ -23,8 +23,12 @@
           not-selected-icon="upload"
           selected-icon="close"
           class="bg-secondary"
-          v-model="drawerLeft"
-          >Upload
+          v-model="drawerLeft">
+          Upload
+          <q-tooltip>
+            Allows you to upload raw image files.
+            Please note that all new images will be put into the "Unsorted images" list.
+          </q-tooltip>
         </ToggleButton>
         <ToggleButton
           selected-icon="close"
@@ -40,20 +44,26 @@
             }})</span
           >
           <span v-else class="text-bold flex flex-center">Unsorted images</span>
+          <q-tooltip>All images that have not yet been organized are stored here.</q-tooltip>
         </ToggleButton>
         <q-btn
           icon="deselect"
-          color="secondary"
+          color="blue"
           v-if="selectedImageIds.length > 0"
           @click="selectedImageIds = []"
-          >Clear selection
+          ><q-tooltip>
+          Clears the current selection
+        </q-tooltip>
         </q-btn>
         <q-btn
           icon="delete"
           color="red-5"
           v-if="selectedImageIds.length > 0"
           @click="deleteSelectedImages"
-          >Delete
+          >
+          <q-tooltip>
+            Deletes the selected image(s)
+          </q-tooltip>
         </q-btn>
       </q-toolbar>
     </q-header>
