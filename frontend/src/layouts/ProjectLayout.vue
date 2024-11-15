@@ -26,6 +26,14 @@
           v-model="drawerLeft"
           >Upload
         </ToggleButton>
+        <ToggleButton
+          selected-icon="close"
+          not-selected-icon="sort"
+          class="bg-secondary q-mr-sm"
+          v-model="drawerUnsortedImages">
+          <span v-if="projectImages?.unsortedRow.images.length" class="text-bold flex flex-center">Unsorted images ({{ projectImages?.unsortedRow.images.length || 0 }})</span>
+          <span v-else class="text-bold flex flex-center">Unsorted images</span>
+        </ToggleButton>
         <q-btn
           icon="delete"
           color="red-5"
@@ -52,7 +60,7 @@
     </q-drawer>
     <q-page-container>
       <q-page class="flex column q-gutter-sm">
-        <ImageArrangerComponent v-model="projectImages" @selected-image-changed="onSelectedImageChanged"/>
+        <ImageArrangerComponent v-model="projectImages" @selected-image-changed="onSelectedImageChanged" :show-unsorted="drawerUnsortedImages"/>
       </q-page>
     </q-page-container>
     <q-footer>
@@ -85,6 +93,7 @@ const $q = useQuasar();
 const $route = useRoute();
 const router = useRouter();
 const drawerLeft: Ref<boolean> = ref(false);
+const drawerUnsortedImages = ref(true)
 const projectName = computed(() => projectInfo.value?.name ?? undefined);
 const projectId = $route.params.id;
 const projectInfo: Ref<ProjectMetadataPayload> = ref(

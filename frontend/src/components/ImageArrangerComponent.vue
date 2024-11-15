@@ -1,20 +1,14 @@
 <template>
   <div class="grid-container">
-    <q-card class="full-width" flat>
+    <q-card class="full-width bg-indigo-1" v-if="showUnsorted" flat>
       <q-card-section class="flex row q-gutter-sm">
-        <ToggleButton
-          flat
-          selected-icon="keyboard_arrow_down"
-          not-selected-icon="keyboard_arrow_up"
-          v-model="showUnsorted"
-        />
-        <div v-if="projectImages?.unsortedRow.images.length" class="text-bold flex flex-center">Unsorted images ({{ projectImages?.unsortedRow.images.length || 0 }})</div>
-        <div v-else class="text-bold flex flex-center">Unsorted images</div>
+        <div class="text-bold flex flex-center">Unsorted images</div>
       </q-card-section>
 
-      <q-card-section v-if="showUnsorted">
+      <!-- Unsorted -->
+      <q-card-section >
         <q-scroll-area class="unsorted-scroll-area" visible>
-          <div class="grid-row grid-row-unsorted">
+          <div class="grid-row grid-row-unsorted bg-indigo-1">
             <div
               v-for="(k, columnIndex) in (projectImages?.unsortedRow.images
               .length || 0) + 1"
@@ -40,9 +34,9 @@
         </q-scroll-area>
       </q-card-section>
 
-      <q-separator v-if="showUnsorted" />
+      <q-separator />
 
-      <q-card-actions v-if="showUnsorted">
+      <q-card-actions>
         <q-btn flat>Action 1</q-btn>
         <q-btn flat>Action 2</q-btn>
       </q-card-actions>
@@ -50,12 +44,22 @@
       <q-separator/>
     </q-card>
 
-    <q-scroll-area class="table-scroll-area" visible>
+    <q-scroll-area class="table-scroll-area q-mt-md" visible>
+      <!-- Sorted -->
+      <div class="grid-column-header">
+        <div class="grid-row-label">a</div>
+        <div v-for="(k, columnIndex) in numCols" :key="`column-label-${columnIndex}`" class="grid-column-label bg-indigo-1">
+
+        </div>
+      </div>
       <div
         v-for="(i, rowIndex) in numRows + 1"
         :key="`row-${rowIndex}`"
-        class="grid-row"
+        class="grid-row bg-indigo-1"
       >
+        <div class="grid-row-label">
+          {{ rowIndex }}
+        </div>
         <div
           v-for="(j, columnIndex) in numCols + 1"
           :key="`col-${columnIndex}`"
@@ -85,11 +89,13 @@ import { computed, ref } from 'vue';
 import { ProjectImagesPayload } from 'src/types/common';
 import ProjectImageButton from 'components/ProjectImageButton.vue';
 import { useQuasar } from 'quasar';
-import ToggleButton from 'components/ToggleButton.vue';
 
 const emit = defineEmits<{
   (e: 'selectedImageChanged', selectedImageId: number): void;
 }>();
+defineProps<{
+  showUnsorted: boolean;
+}>()
 
 class SlotIndex {
   row: number;
@@ -118,8 +124,6 @@ const numCols = computed(() =>
 const numRows = computed(() =>
   projectImages.value ? projectImages.value.groupRows.length : 0
 );
-
-const showUnsorted = ref(true);
 
 const isDragging = ref(false);
 const dragSlot = ref<SlotIndex | null>(null);
@@ -196,9 +200,36 @@ function onImageClicked(imageId: number) {
 <style scoped lang="scss">
 $grid-item-width: 18rem;
 $grid-item-height: 8rem;
+$grid-row-label-width: 10rem;
+$grid-column-label-height: 5rem;
+
+.grid-row-label {
+  width: $grid-row-label-width;
+  border-right: 1px solid #ccc;
+  height: 100%;
+}
+
+.grid-column-label {
+  width: $grid-item-width;
+  height: $grid-column-label-height;
+  margin-left: 10px;
+  border-top-left-radius: 3px;
+  border-top-right-radius: 3px;
+}
+
+.grid-column-header {
+  display: flex;
+  flex-direction: row;
+  margin-left: 10px;
+  padding-left: 10px;
+  margin-bottom: 10px;
+  .grid-row-label {
+    border: none;
+  }
+}
 
 .grid-container {
-  border: 1px red solid;
+  //border: 1px red solid;
   flex-grow: 1;
   display: flex;
   flex-direction: column;
@@ -221,11 +252,18 @@ $grid-item-height: 8rem;
 
 .grid-row {
   //background: green;
-  height: $grid-item-height;
+  height: calc($grid-item-height + 1rem);
   display: flex;
   flex-direction: row;
+  align-items: center;
   gap: 10px;
+  margin-bottom: 10px;
+  margin-left: 10px;
+  padding-left: 10px;
+  padding-right: 10px;
+  margin-right: 10px;
   overflow: visible;
+  border-radius: 3px;
 }
 
 //.grid-row-unsorted {
