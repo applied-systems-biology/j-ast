@@ -47,6 +47,23 @@ public class ImageController {
         return ResponseEntity.ok(new ProjectImagesPayload(project));
     }
 
+    @GetMapping("/api/image/{id}")
+    public ResponseEntity<ImagePayload> getImagePayload(Authentication authentication, @PathVariable long id) {
+        userService.validateAuthentication(authentication);
+        Optional<Image> inputData_ = imageRepository.findById(id);
+        if (inputData_.isPresent()) {
+            Image image = inputData_.get();
+
+            if (!image.getProject().canAccess(authentication)) {
+                throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+            }
+
+            return ResponseEntity.ok(new ImagePayload(image));
+        } else {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
+    }
+
     @GetMapping("/api/project/{id}/list-images")
     public ResponseEntity<List<ImagePayload>> listImages(Authentication authentication, @PathVariable long id) {
         userService.validateAuthentication(authentication);
@@ -99,20 +116,20 @@ public class ImageController {
     public void updateImages(Authentication authentication, @PathVariable long id, @RequestBody ProjectImagesPayload imagesPayload) {
         userService.validateAuthentication(authentication);
         Project project = projectService.getProjectByIdOrError(id);
-        if(!project.canEdit(authentication)) {
+        if (!project.canEdit(authentication)) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN);
         }
 
         // Check if the images are actually owned by the project
         Set<Long> imageIdsInProject = project.getImages().stream().map(Image::getId).collect(Collectors.toSet());
         for (Map.Entry<Long, ImagePayload> entry : imagesPayload.getImagesById().entrySet()) {
-            if(entry.getKey() != entry.getValue().getId()) {
+            if (entry.getKey() != entry.getValue().getId()) {
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Inconsistent data");
             }
-            if(entry.getValue().getProjectId() != project.getId()) {
+            if (entry.getValue().getProjectId() != project.getId()) {
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Inconsistent data");
             }
-            if(!imageIdsInProject.contains(entry.getKey())) {
+            if (!imageIdsInProject.contains(entry.getKey())) {
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Inconsistent data");
             }
         }
@@ -132,11 +149,11 @@ public class ImageController {
     public void updateImage(Authentication authentication, @PathVariable long id, @RequestBody ImagePayload imagePayload) {
         userService.validateAuthentication(authentication);
         Optional<Image> image_ = imageRepository.findById(id);
-        if(image_.isEmpty()) {
+        if (image_.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
         Image image = image_.get();
-        if(!image.getProject().canEdit(authentication)) {
+        if (!image.getProject().canEdit(authentication)) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN);
         }
         image.updateFromPayload(imagePayload);

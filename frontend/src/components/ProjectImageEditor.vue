@@ -30,11 +30,13 @@
     :options="['DDA', 'ETest', 'Unknown']"
     @update:model-value="onUpdateAssayType"
   />
+  <ProjectImageAnnotationButton v-model="model" annotation-type-id="stripOrDisk" annotation-type-name="ETest strip/DDA disk"/>
 </template>
 <script setup lang="ts">
 import { AssayType, ImagePayload } from 'src/types/common';
 import { debounce, useQuasar } from 'quasar';
 import { plainToInstance } from 'class-transformer';
+import ProjectImageAnnotationButton from 'components/ProjectImageAnnotationButton.vue';
 
 const $q = useQuasar()
 type SelectValue = string | number | null;

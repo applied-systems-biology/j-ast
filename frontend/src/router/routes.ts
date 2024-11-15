@@ -16,6 +16,11 @@ const routes: RouteRecordRaw[] = [
     component: () => import('layouts/ProjectLayout.vue'),
     children: [],
   },
+  {
+    path: "/annotation/:annotationTypeId/:imageId",
+    component: () => import('layouts/ImageAnnotationLayout.vue'),
+    children: [],
+  },
   // Always leave this as last one,
   // but you can also remove it
   {
