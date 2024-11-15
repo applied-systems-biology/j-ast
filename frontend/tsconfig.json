@@ -2,7 +2,7 @@
   "extends": "@quasar/app-vite/tsconfig-preset",
   "compilerOptions": {
     "baseUrl": ".",
-    "target": "ES5",
+    "target": "ES6",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true
   },

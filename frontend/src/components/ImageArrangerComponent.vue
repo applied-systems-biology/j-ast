@@ -53,7 +53,12 @@
           :key="`column-label-${columnIndex}`"
           class="grid-column-label bg-indigo-1"
         >
-          {{ columnIndex }}
+          <q-scroll-area class="column-label-scroll-area">
+            <q-badge v-for="badge in getColumnBadges(columnIndex)" :key="badge.type" :style="{ backgroundColor: badge.color }">
+              <q-icon :name="badge.icon" />
+              <span class="q-ml-sm">{{ badge.text}}</span>
+            </q-badge>
+          </q-scroll-area>
         </div>
       </div>
       <div
@@ -62,7 +67,12 @@
         class="grid-row bg-indigo-1"
       >
         <div class="grid-row-label">
-          {{ rowIndex }}
+          <q-scroll-area class="row-label-scroll-area">
+            <q-badge v-for="badge in getRowBadges(rowIndex)" :key="badge.type" :style="{ backgroundColor: badge.color }">
+              <q-icon :name="badge.icon" />
+              <span class="q-ml-sm">{{ badge.text}}</span>
+            </q-badge>
+          </q-scroll-area>
         </div>
         <div
           v-for="(j, columnIndex) in numCols + 1"
@@ -90,7 +100,7 @@
 </template>
 <script setup lang="ts">
 import { computed, ref } from 'vue';
-import { ProjectImagesPayload } from 'src/types/common';
+import { Badge, ProjectImagesPayload, ProjectImagesPayloadRow } from 'src/types/common';
 import ProjectImageButton from 'components/ProjectImageButton.vue';
 import { useQuasar } from 'quasar';
 
@@ -138,6 +148,20 @@ function getUnsortedImage(index: number) {
 
 function getImageBySlot(row: number, column: number) {
   return projectImages.value?.getImageBySlot(row, column) || undefined;
+}
+
+function getRowBadges(rowIndex: number) : Array<Badge> {
+  const row : ProjectImagesPayloadRow | undefined = projectImages.value?.groupRows[rowIndex];
+  if(row) {
+    return row!.getRowMetadataAsBadges()
+  }
+  else {
+    return []
+  }
+}
+
+function getColumnBadges(columnIndex : number) : Array<Badge> {
+  return projectImages.value?.getColumnMetadataAsBadges(columnIndex) || []
 }
 
 function onDragStart(slot: SlotIndex) {
@@ -223,6 +247,15 @@ $grid-column-label-height: 5rem;
   width: $grid-row-label-width;
   border-right: 1px solid #ccc;
   height: 100%;
+  padding: 4px;
+  .q-badge {
+    margin: 2px;
+  }
+}
+
+.row-label-scroll-area {
+  width: 100%;
+  height: 100%;
 }
 
 .grid-column-label {
@@ -231,6 +264,12 @@ $grid-column-label-height: 5rem;
   margin-left: 10px;
   border-top-left-radius: 3px;
   border-top-right-radius: 3px;
+  padding: 4px;
+}
+
+.column-label-scroll-area {
+  width: 100%;
+  height: 100%;
 }
 
 .grid-column-header {

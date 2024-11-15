@@ -33,6 +33,29 @@ export enum AssayType {
   Unknown = 'Unknown',
 }
 
+export interface Badge {
+  text: string,
+  color: string,
+  icon: string,
+  type: string
+}
+
+function createExperimentBadge(value :string) : Badge {
+  return { text: value, icon: "fa-solid fa-vial-virus", color: "#62a0ea", type: "Experiment" }
+}
+
+function createSampleBadge(value :string) : Badge {
+  return { text: value, icon: "fa-solid fa-flask", color: "#33d17a", type: "Sample" }
+}
+
+function createTimePointBadge(value :string) : Badge {
+  return { text: value, icon: "fa-solid fa-clock", color: "#e5a50a", type: "Time point" }
+}
+
+function createAssayTypeBadge(value :string) : Badge {
+  return { text: value, icon: "fa-solid fa-gear", color: "#9141ac", type: "Assay type" }
+}
+
 export class ImagePayload {
   @Expose()
   id: number = -1;
@@ -75,19 +98,19 @@ export class ImagePayload {
     return api.post(`/image/${this.id}/update`, instanceToPlain(this));
   }
 
-  getMetadataAsBadges() : Array<{ text: string, color: string, icon: string, type: string }> {
-    const result : Array<{ text: string, color: string, icon: string, type: string }> = []
+  getMetadataAsBadges() : Array<Badge> {
+    const result : Array<Badge> = []
     if(this.experiment) {
-      result.push({ text: this.experiment, icon: "fa-solid fa-vial-virus", color: "#62a0ea", type: "Experiment" })
+      result.push(createExperimentBadge(this.experiment));
     }
     if(this.sample) {
-      result.push({ text: this.sample, icon: "fa-solid fa-flask", color: "#33d17a", type: "Sample" })
+      result.push(createSampleBadge(this.sample));
     }
     if(this.timePoint) {
-      result.push({ text: this.timePoint, icon: "fa-solid fa-clock", color: "#e5a50a", type: "Time point" })
+      result.push(createTimePointBadge(this.timePoint));
     }
     if(this.assayType && this.assayType != AssayType.Unknown) {
-      result.push({ text: this.assayType, icon: "fa-solid fa-gear", color: "#9141ac", type: "Assay type" })
+      result.push(createAssayTypeBadge(this.assayType));
     }
     return result
   }
@@ -109,6 +132,43 @@ export class ProjectImagesPayloadRow {
     this.images.forEach((image, index) => {
       image.groupColumn = index;
     });
+  }
+
+  getRowMetadataAsBadges(): Array<Badge> {
+    const result : Array<Badge> = []
+    const allExperiments = new Set<string>
+    const allSamples = new Set<string>
+    const allAssayTypes = new Set<string>
+    for(const image of this.images) {
+      if(image.experiment) {
+        allExperiments.add(image.experiment)
+      }
+      if(image.sample) {
+        allSamples.add(image.sample)
+      }
+      if(image.assayType && image.assayType != AssayType.Unknown) {
+        allAssayTypes.add(image.assayType)
+      }
+    }
+    for(const value of allExperiments) {
+      result.push(createExperimentBadge(value));
+    }
+    for(const value of allSamples) {
+      result.push(createSampleBadge(value));
+    }
+    for(const value of allAssayTypes) {
+      result.push(createAssayTypeBadge(value));
+    }
+    if(allExperiments.size == 0) {
+      result.push({ text: "N/A", icon: "fa-solid fa-vial-virus", color: "#c0bfbc", type: "Experiment" })
+    }
+    if(allSamples.size == 0) {
+      result.push({ text: "N/A", icon: "fa-solid fa-flask", color: "#c0bfbc", type: "Experiment" })
+    }
+    if(allAssayTypes.size == 0) {
+      result.push({ text: "N/A", icon: "fa-solid fa-gear", color: "#c0bfbc", type: "Experiment" })
+    }
+    return result
   }
 }
 
@@ -322,6 +382,25 @@ export class ProjectImagesPayload {
     }
 
     return false;
+  }
+
+  getColumnMetadataAsBadges(column : number): Array<Badge> {
+    const result : Array<Badge> = []
+    const allTimePoints = new Set<string>
+    for(const row of this.groupRows) {
+      for(const image of row.images) {
+        if(image.groupColumn == column && image.timePoint) {
+          allTimePoints.add(image.timePoint)
+        }
+      }
+    }
+    for(const value of allTimePoints) {
+      result.push(createTimePointBadge(value));
+    }
+    if(allTimePoints.size == 0) {
+      result.push({ text: "N/A", icon: "fa-solid fa-clock", color: "#c0bfbc", type: "Time point" })
+    }
+    return result
   }
 
   /**
