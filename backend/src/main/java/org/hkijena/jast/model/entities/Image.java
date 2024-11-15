@@ -3,6 +3,7 @@ package org.hkijena.jast.model.entities;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import org.hkijena.jast.model.AssayType;
+import org.hkijena.jast.payloads.ImagePayload;
 
 import java.io.Serial;
 
@@ -181,5 +182,15 @@ public class Image {
 
     public void setProject(Project project) {
         this.project = project;
+    }
+
+    public void updateFromPayload(ImagePayload payload) {
+        setOriginalFileName(payload.getFileName());
+        setExperiment(payload.getExperiment());
+        setAssayType(payload.getAssayType());
+        setSample(payload.getSample());
+        setTimePoint(payload.getTimePoint());
+        setGroupColumn(payload.getGroupColumn());
+        setGroupRow(payload.getGroupRow());
     }
 }
