@@ -26,7 +26,7 @@
 <script setup lang="ts">
 import {QUploader, useQuasar} from "quasar";
 import {useAuthStore} from "stores/auth-store";
-import {ref} from "vue";
+import {useTemplateRef} from "vue";
 
 type ValidationError = Array<{ failedPropValidation: string, file: File }>
 type UploadError ={ files: readonly any[]; xhr: any; }
@@ -38,7 +38,7 @@ const props = defineProps<{
 const emit = defineEmits<{
   (e: 'finished'): void
 }>();
-const uploader = ref<QUploader | null>(null)
+const uploader = useTemplateRef<QUploader>("uploader")
 
 function onError(info : UploadError) {
   console.log(info)
