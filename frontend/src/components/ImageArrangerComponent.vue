@@ -47,9 +47,9 @@
     <q-scroll-area class="table-scroll-area q-mt-md" visible>
       <!-- Sorted -->
       <div class="grid-column-header">
-        <div class="grid-row-label">a</div>
+        <div class="grid-row-label"></div>
         <div v-for="(k, columnIndex) in numCols" :key="`column-label-${columnIndex}`" class="grid-column-label bg-indigo-1">
-
+          {{ columnIndex }}
         </div>
       </div>
       <div
@@ -90,9 +90,6 @@ import { ProjectImagesPayload } from 'src/types/common';
 import ProjectImageButton from 'components/ProjectImageButton.vue';
 import { useQuasar } from 'quasar';
 
-const emit = defineEmits<{
-  (e: 'selectedImageChanged', selectedImageId: number): void;
-}>();
 defineProps<{
   showUnsorted: boolean;
 }>()
@@ -116,8 +113,8 @@ class SlotIndex {
 }
 
 const $q = useQuasar();
+const selectedImageId = defineModel<number>("selectedImageId", { required: true });
 const projectImages = defineModel<ProjectImagesPayload>();
-const selectedImageId = ref<number>(-1);
 const numCols = computed(() =>
   projectImages.value ? projectImages.value.maxColumn() + 1 : 0
 );
@@ -194,7 +191,6 @@ function onImageClicked(imageId: number) {
   } else {
     selectedImageId.value = imageId;
   }
-  emit('selectedImageChanged', selectedImageId.value);
 }
 </script>
 <style scoped lang="scss">

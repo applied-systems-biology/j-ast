@@ -56,21 +56,20 @@
       v-model="drawerRight"
       class="q-pa-sm q-gutter-sm"
     >
+      <div class="row reverse">
+        <q-btn icon="close" flat padding="none" @click="selectedImageId=-1"/>
+      </div>
       <ProjectImageEditor v-model="selectedImage" />
     </q-drawer>
     <q-page-container>
       <q-page class="flex column q-gutter-sm">
-        <ImageArrangerComponent v-model="projectImages" @selected-image-changed="onSelectedImageChanged" :show-unsorted="drawerUnsortedImages"/>
+        <ImageArrangerComponent v-model="projectImages" v-model:selectedImageId="selectedImageId" :show-unsorted="drawerUnsortedImages"/>
       </q-page>
     </q-page-container>
-    <q-footer>
-      <ImprintComponent />
-    </q-footer>
   </q-layout>
 </template>
 
 <script setup lang="ts">
-import ImprintComponent from 'components/ImprintComponent.vue';
 import LoginButtonComponent from 'components/AuthManagerComponent.vue';
 import HeaderLogoButtonComponent from 'components/HeaderLogoButtonComponent.vue';
 import { onMounted, Ref, ref, computed } from 'vue';
@@ -93,7 +92,7 @@ const $q = useQuasar();
 const $route = useRoute();
 const router = useRouter();
 const drawerLeft: Ref<boolean> = ref(false);
-const drawerUnsortedImages = ref(true)
+const drawerUnsortedImages = ref(false)
 const projectName = computed(() => projectInfo.value?.name ?? undefined);
 const projectId = $route.params.id;
 const projectInfo: Ref<ProjectMetadataPayload> = ref(
@@ -193,11 +192,10 @@ function reloadProjectInfo() {
       if (!selectedImage.value) {
         selectedImageId.value = -1;
       }
-    });
-}
 
-function onSelectedImageChanged(newImageId : number) {
-  selectedImageId.value = newImageId;
+      // Setup the unsorted images drawer
+      drawerUnsortedImages.value = projectImages.value.unsortedRow.images.length > 0
+    });
 }
 
 onMounted(() => {

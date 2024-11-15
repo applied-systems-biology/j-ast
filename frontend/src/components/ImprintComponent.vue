@@ -4,7 +4,7 @@ import logoNFDI from "assets/logo-nfdi4bioimage.png"
 </script>
 
 <template>
-  <div class="row q-pa-md">
+  <div class="flex text-caption q-pa-md flex-center">
     <div class="col-auto">
       J-AST was developed by Research Group Applied Systems Biology<br/>
       Head: Prof. Dr. Marc Thilo Figge HKI-Center for Systems Biology of Infection<br/>
@@ -26,6 +26,6 @@ import logoNFDI from "assets/logo-nfdi4bioimage.png"
 <style scoped>
 .logo-img {
   width: 200px;
-  height: 100px;
+  height: 50px;
 }
 </style>

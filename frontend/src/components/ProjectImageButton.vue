@@ -21,12 +21,14 @@
           v-if="currentImage.experiment"
           class="text-caption ellipsis text-blue-grey"
         >
+          <q-icon name="fa-solid fa-flask" />
           {{ currentImage.experiment }}
         </div>
         <div
           v-if="!currentImage.experiment"
           class="text-caption ellipsis text-blue-grey"
         >
+          <q-icon name="fa-solid fa-flask" />
           <i>&lt;No experiment&gt;</i>
         </div>
         <div
@@ -39,6 +41,7 @@
           v-if="!currentImage.sample"
           class="text-caption ellipsis text-blue-grey"
         >
+          <q-icon name="fa-solid fa-flask"/>
           <i>&lt;No sample&gt;</i>
         </div>
         <div
@@ -51,18 +54,21 @@
           v-if="!currentImage.timePoint"
           class="text-caption ellipsis text-blue-grey"
         >
+          <q-icon name="fa-solid fa-flask" />
           <i>&lt;No time point&gt;</i>
         </div>
         <div
           v-if="currentImage.assayType"
           class="text-caption ellipsis text-blue-grey"
         >
+          <q-icon name="fa-solid fa-flask" />
           {{ currentImage.assayType }}
         </div>
         <div
           v-if="!currentImage.assayType"
           class="text-caption ellipsis text-blue-grey"
         >
+          <q-icon name="fa-solid fa-flask" />
           <i>&lt;No assay type&gt;</i>
         </div>
       </div>
@@ -114,6 +120,10 @@ $thumbnail-size: 6rem;
 }
 
 .text-caption {
+  font-size: 0.6rem;
+}
+
+.q-icon {
   font-size: 0.6rem;
 }
 </style>
