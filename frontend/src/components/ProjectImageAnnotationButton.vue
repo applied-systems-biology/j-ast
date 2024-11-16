@@ -14,7 +14,7 @@ const props = defineProps<{
 }>()
 
 function openEditor() {
-  router.push(`/annotation/${props.annotationTypeId}/${model.value?.id}`)
+  router.push(`/image-annotation/${model.value?.id}/${props.annotationTypeId}`)
 }
 
 </script>

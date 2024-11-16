@@ -6,7 +6,12 @@ import org.hkijena.jast.model.AssayType;
 import org.hkijena.jast.payloads.ImagePayload;
 
 import java.io.Serial;
+import java.util.ArrayList;
+import java.util.List;
 
+/**
+ * An image dataset
+ */
 @Entity
 @Table(name = "images")
 public class Image {
@@ -42,10 +47,6 @@ public class Image {
     @NotNull
     private int imageHeight;
 
-    @Column(name = "plate_diameter_mm")
-    @NotNull
-    private double plateDiameter = 90;
-
     @Column(name = "assay_type")
     @NotNull
     @Enumerated(EnumType.STRING)
@@ -69,6 +70,23 @@ public class Image {
     @Lob
     @Column(name = "thumbnail_data", columnDefinition = "BLOB")
     private byte[] thumbnailData;
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true, mappedBy = "image")
+    private List<ImageAnnotation> imageAnnotations = new ArrayList<>();
+
+    public List<ImageAnnotation> getImageAnnotations() {
+        return imageAnnotations;
+    }
+
+    public void addImageAnnotation(ImageAnnotation imageAnnotation) {
+        imageAnnotations.add(imageAnnotation);
+        imageAnnotation.setImage(this);
+    }
+
+    public void removeImageAnnotation(ImageAnnotation imageAnnotation) {
+        imageAnnotations.remove(imageAnnotation);
+        imageAnnotation.setImage(null);
+    }
 
     @NotNull
     public int getGroupColumn() {
@@ -166,14 +184,6 @@ public class Image {
 
     public void setOriginalFileName(String originalFileName) {
         this.originalFileName = originalFileName;
-    }
-
-    public double getPlateDiameter() {
-        return plateDiameter;
-    }
-
-    public void setPlateDiameter(double plateDiameter) {
-        this.plateDiameter = plateDiameter;
     }
 
     public Project getProject() {

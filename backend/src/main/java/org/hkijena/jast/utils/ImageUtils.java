@@ -9,6 +9,13 @@ import java.nio.file.Path;
 import java.util.Base64;
 
 public class ImageUtils {
+
+    public static final int DEFAULT_THUMBNAIL_SIZE = 128;
+
+    public static BufferedImage createThumbnail(BufferedImage image) {
+        return createThumbnail(image, DEFAULT_THUMBNAIL_SIZE, DEFAULT_THUMBNAIL_SIZE);
+    }
+
     public static BufferedImage createThumbnail(BufferedImage image, int thumbnailWidth, int thumbnailHeight) {
         double thumbnailScale = Math.max(1.0 * thumbnailWidth / image.getWidth(), 1.0 * thumbnailHeight / image.getHeight());
         Image scaledImage = image.getScaledInstance((int) (image.getWidth() * thumbnailScale), (int) (image.getHeight() * thumbnailScale), Image.SCALE_SMOOTH);
@@ -17,6 +24,10 @@ public class ImageUtils {
         graphics2D.drawImage(scaledImage, (thumbnailWidth / 2) - scaledImage.getWidth(null) / 2, (thumbnailHeight / 2) - scaledImage.getHeight(null) / 2, null);
         graphics2D.dispose();
         return thumbnail;
+    }
+
+    public static byte[] toPNGByteArrayThumbnail(BufferedImage image) {
+        return toPNGByteArray(createThumbnail(image));
     }
 
     public static byte[] toPNGByteArray(BufferedImage bufferedImage) {

@@ -5,7 +5,7 @@ import {
   Expose,
   instanceToPlain,
 } from 'class-transformer';
-import { api } from 'boot/axios';
+import {api} from 'boot/axios';
 
 export function plainToInstanceStrict<T, V>(
   cls: ClassConstructor<T>,
@@ -17,14 +17,44 @@ export function plainToInstanceStrict<T, V>(
   });
 }
 
+export function loadImageElementFromDataString(data: Blob | MediaSource): Promise<HTMLImageElement> {
+  return new Promise<HTMLImageElement>((resolve) => {
+    const backgroundImageURL = URL.createObjectURL(data);
+    const imageObj = new Image();
+    imageObj.src = backgroundImageURL;
+    imageObj.onload = () => {
+      resolve(imageObj)
+    };
+  })
+}
+
 /**
  * Message that contains basic infos about a project
  * Shared with the backend
  */
 export class ProjectMetadataPayload {
+  @Expose()
   id: number = -1;
+
+  @Expose()
   name: string = '';
+
+  @Expose()
   owner: string = '';
+}
+
+export class ImageAnnotationPayload {
+  @Expose()
+  id: number = -1;
+
+  @Expose()
+  imageId: number = -1;
+
+  @Expose()
+  projectId: number = -1;
+
+  @Expose()
+  annotationTypeId: string = '';
 }
 
 export enum AssayType {
@@ -40,20 +70,20 @@ export interface Badge {
   type: string
 }
 
-function createExperimentBadge(value :string) : Badge {
-  return { text: value, icon: "fa-solid fa-vial-virus", color: "#62a0ea", type: "Experiment" }
+function createExperimentBadge(value: string): Badge {
+  return {text: value, icon: "fa-solid fa-vial-virus", color: "#62a0ea", type: "Experiment"}
 }
 
-function createSampleBadge(value :string) : Badge {
-  return { text: value, icon: "fa-solid fa-flask", color: "#33d17a", type: "Sample" }
+function createSampleBadge(value: string): Badge {
+  return {text: value, icon: "fa-solid fa-flask", color: "#33d17a", type: "Sample"}
 }
 
-function createTimePointBadge(value :string) : Badge {
-  return { text: value, icon: "fa-solid fa-clock", color: "#e5a50a", type: "Time point" }
+function createTimePointBadge(value: string): Badge {
+  return {text: value, icon: "fa-solid fa-clock", color: "#e5a50a", type: "Time point"}
 }
 
-function createAssayTypeBadge(value :string) : Badge {
-  return { text: value, icon: "fa-solid fa-gear", color: "#9141ac", type: "Assay type" }
+function createAssayTypeBadge(value: string): Badge {
+  return {text: value, icon: "fa-solid fa-gear", color: "#9141ac", type: "Assay type"}
 }
 
 export class ImagePayload {
@@ -98,18 +128,18 @@ export class ImagePayload {
     return api.post(`/image/${this.id}/update`, instanceToPlain(this));
   }
 
-  getMetadataAsBadges() : Array<Badge> {
-    const result : Array<Badge> = []
-    if(this.experiment) {
+  getMetadataAsBadges(): Array<Badge> {
+    const result: Array<Badge> = []
+    if (this.experiment) {
       result.push(createExperimentBadge(this.experiment));
     }
-    if(this.sample) {
+    if (this.sample) {
       result.push(createSampleBadge(this.sample));
     }
-    if(this.timePoint) {
+    if (this.timePoint) {
       result.push(createTimePointBadge(this.timePoint));
     }
-    if(this.assayType && this.assayType != AssayType.Unknown) {
+    if (this.assayType && this.assayType != AssayType.Unknown) {
       result.push(createAssayTypeBadge(this.assayType));
     }
     return result
@@ -139,7 +169,7 @@ export class ProjectImagesPayloadRow {
   }
 
   removeDuplicates() {
-    const byId : Record<string, ImagePayload> = { }
+    const byId: Record<string, ImagePayload> = {}
     for (const image of this.images) {
       byId[image.id.toString()] = image
     }
@@ -147,38 +177,38 @@ export class ProjectImagesPayloadRow {
   }
 
   getRowMetadataAsBadges(): Array<Badge> {
-    const result : Array<Badge> = []
+    const result: Array<Badge> = []
     const allExperiments = new Set<string>
     const allSamples = new Set<string>
     const allAssayTypes = new Set<string>
-    for(const image of this.images) {
-      if(image.experiment) {
+    for (const image of this.images) {
+      if (image.experiment) {
         allExperiments.add(image.experiment)
       }
-      if(image.sample) {
+      if (image.sample) {
         allSamples.add(image.sample)
       }
-      if(image.assayType && image.assayType != AssayType.Unknown) {
+      if (image.assayType && image.assayType != AssayType.Unknown) {
         allAssayTypes.add(image.assayType)
       }
     }
-    for(const value of allExperiments) {
+    for (const value of allExperiments) {
       result.push(createExperimentBadge(value));
     }
-    for(const value of allSamples) {
+    for (const value of allSamples) {
       result.push(createSampleBadge(value));
     }
-    for(const value of allAssayTypes) {
+    for (const value of allAssayTypes) {
       result.push(createAssayTypeBadge(value));
     }
-    if(allExperiments.size == 0) {
-      result.push({ text: "N/A", icon: "fa-solid fa-vial-virus", color: "#c0bfbc", type: "NAExperiment" })
+    if (allExperiments.size == 0) {
+      result.push({text: "N/A", icon: "fa-solid fa-vial-virus", color: "#c0bfbc", type: "NAExperiment"})
     }
-    if(allSamples.size == 0) {
-      result.push({ text: "N/A", icon: "fa-solid fa-flask", color: "#c0bfbc", type: "NASample" })
+    if (allSamples.size == 0) {
+      result.push({text: "N/A", icon: "fa-solid fa-flask", color: "#c0bfbc", type: "NASample"})
     }
-    if(allAssayTypes.size == 0) {
-      result.push({ text: "N/A", icon: "fa-solid fa-gear", color: "#c0bfbc", type: "NAAssayType" })
+    if (allAssayTypes.size == 0) {
+      result.push({text: "N/A", icon: "fa-solid fa-gear", color: "#c0bfbc", type: "NAAssayType"})
     }
     return result
   }
@@ -399,21 +429,21 @@ export class ProjectImagesPayload {
     return false;
   }
 
-  getColumnMetadataAsBadges(column : number): Array<Badge> {
-    const result : Array<Badge> = []
+  getColumnMetadataAsBadges(column: number): Array<Badge> {
+    const result: Array<Badge> = []
     const allTimePoints = new Set<string>
-    for(const row of this.groupRows) {
-      for(const image of row.images) {
-        if(image.groupColumn == column && image.timePoint) {
+    for (const row of this.groupRows) {
+      for (const image of row.images) {
+        if (image.groupColumn == column && image.timePoint) {
           allTimePoints.add(image.timePoint)
         }
       }
     }
-    for(const value of allTimePoints) {
+    for (const value of allTimePoints) {
       result.push(createTimePointBadge(value));
     }
-    if(allTimePoints.size == 0) {
-      result.push({ text: "N/A", icon: "fa-solid fa-clock", color: "#c0bfbc", type: "NATimePoint" })
+    if (allTimePoints.size == 0) {
+      result.push({text: "N/A", icon: "fa-solid fa-clock", color: "#c0bfbc", type: "NATimePoint"})
     }
     return result
   }

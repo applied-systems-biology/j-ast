@@ -126,9 +126,9 @@ const $route = useRoute();
 const router = useRouter();
 const drawerLeft: Ref<boolean> = ref(false);
 const drawerUnsortedImages = ref(false);
-const projectName = computed(() => projectInfo.value?.name ?? undefined);
+const projectName = computed(() => projectPayload.value?.name ?? undefined);
 const projectId = $route.params.id;
-const projectInfo: Ref<ProjectMetadataPayload> = ref(
+const projectPayload: Ref<ProjectMetadataPayload> = ref(
   new ProjectMetadataPayload()
 );
 const projectImages = ref<ProjectImagesPayload>(new ProjectImagesPayload());
@@ -164,7 +164,7 @@ function editProjectName() {
         name: data,
       } as CreateEditProjectRequest)
       .then((response) => {
-        projectInfo.value = plainToInstance(
+        projectPayload.value = plainToInstance(
           ProjectMetadataPayload,
           response.data
         );
@@ -218,7 +218,7 @@ function deleteSelectedImages() {
 
 function reloadProjectInfo() {
   api.get<ProjectMetadataPayload>(`/project/${projectId}`).then((response) => {
-    projectInfo.value = plainToInstance(ProjectMetadataPayload, response.data);
+    projectPayload.value = plainToInstance(ProjectMetadataPayload, response.data);
   });
   api
     .get<ProjectImagesPayload>(`/project/${projectId}/images`)

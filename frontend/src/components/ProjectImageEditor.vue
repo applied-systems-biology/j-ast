@@ -30,7 +30,10 @@
     :options="['DDA', 'ETest', 'Unknown']"
     @update:model-value="onUpdateAssayType"
   />
-  <ProjectImageAnnotationButton v-model="model" annotation-type-id="stripOrDisk" annotation-type-name="ETest strip/DDA disk"/>
+  <ProjectImageAnnotationButton v-model="model" annotation-type-id="plate" annotation-type-name="Plate"/>
+  <ProjectImageAnnotationButton v-if="model?.assayType == 'DDA'" v-model="model" annotation-type-id="strip-disk" annotation-type-name="DDA disk"/>
+  <ProjectImageAnnotationButton v-if="model?.assayType == 'ETest'" v-model="model" annotation-type-id="strip-disk" annotation-type-name="ETest strip"/>
+  <ProjectImageAnnotationButton v-if="model?.assayType == 'ETest'" v-model="model" annotation-type-id="zoi-shape" annotation-type-name="ETest ZOI shape"/>
 </template>
 <script setup lang="ts">
 import { AssayType, ImagePayload } from 'src/types/common';
