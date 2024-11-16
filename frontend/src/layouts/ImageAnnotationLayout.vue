@@ -6,26 +6,19 @@
           <HeaderLogoButtonComponent />
           <div>/</div>
           <q-skeleton v-if="!projectPayload.name" type="text" style="width: 200px" />
-          <router-link style="text-decoration: none; color: inherit;" v-else :to="`/project/${imagePayload.projectId}`">{{ projectPayload.name }}</router-link>
+          <router-link style="text-decoration: underline; color: inherit;" v-else :to="`/project/${imagePayload.projectId}`">{{ projectPayload.name }}</router-link>
           <div>/</div>
           <q-skeleton v-if="!imagePayload.fileName" type="text" style="width: 200px" />
           <div v-else>{{ imagePayload.fileName }}</div>
           <div>/</div>
           <div>{{ annotationName }}</div>
-          <q-btn color="green" icon="save" size="lg" @click="saveAndUpload">Save annotation</q-btn>
-<!--          <q-btn-group flat>-->
-<!--            <q-btn flat @click="editProjectName">-->
-<!--              <q-icon name="edit" />-->
-<!--            </q-btn>-->
-<!--            <q-btn flat @click="deleteProject">-->
-<!--              <q-icon name="delete" />-->
-<!--            </q-btn>-->
-<!--          </q-btn-group>-->
+          <q-btn color="green" icon="upload" size="lg" @click="saveAndUpload">Save annotation</q-btn>
         </q-toolbar-title>
         <LoginButtonComponent/>
       </q-toolbar>
       <q-toolbar class="bg-primary text-white edit-toolbar">
-
+        <q-btn-toggle color="blue-grey" toggle-color="green" v-model="currentAnnotationToolId" :options="annotationTools"/>
+        <q-btn color="red-4" icon="undo" @click="resetAnnotation">Reset</q-btn>
       </q-toolbar>
     </q-header>
     <q-page-container>
@@ -45,15 +38,23 @@ import {api} from 'boot/axios';
 import {plainToInstance} from 'class-transformer';
 import {useRoute} from 'vue-router';
 import ProjectImageAnnotationEditor from 'components/ProjectImageAnnotationEditor.vue';
+import {useQuasar} from "quasar";
 
+const $q = useQuasar()
 const $route = useRoute()
 const imageId = $route.params.imageId
 const annotationTypeId = $route.params.annotationTypeId
 const editorComponent = useTemplateRef<typeof ProjectImageAnnotationEditor>("editorComponent")
 
 defineOptions({
-  name: 'DefaultLayout'
+  name: 'ImageAnnotationLayout'
 });
+
+const annotationTools = [
+  { label: "Draw", value: "draw", icon: "fa-solid fa-pencil" },
+  { label: "Erase", value: "erase", icon: "fa-solid fa-eraser" },
+]
+const currentAnnotationToolId = ref("draw");
 
 const imagePayload: Ref<ImagePayload> = ref(new ImagePayload());
 const projectPayload: Ref<ProjectMetadataPayload> = ref(
@@ -83,6 +84,23 @@ function saveAndUpload() {
   editorComponent.value?.saveImage()
 }
 
+function resetAnnotation() {
+  $q.dialog({
+    title: 'Restore from saved annotation',
+    message: 'Do you really want to reset the annotation from the saved state?',
+    cancel: {
+      label: 'No',
+    },
+    ok: {
+      label: 'Yes',
+      color: 'red',
+    },
+    persistent: true,
+  }).onOk(() => {
+    editorComponent.value?.queryFromBackend()
+  });
+}
+
 function queryFromBackend() {
   api.get(`/image-annotation/${imageId}/${annotationTypeId}`).then(response => {
     annotationPayload.value = plainToInstance(ImageAnnotationPayload, response.data)
@@ -104,3 +122,8 @@ onMounted(() => {
 });
 
 </script>
+<style scoped lang="scss">
+.edit-toolbar > * {
+  margin-right: 10px;
+}
+</style>

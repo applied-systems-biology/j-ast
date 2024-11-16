@@ -4,12 +4,18 @@
     :config="stageConfig"
     @mousedown="onStageMouseDown"
     @mousemove="onStageMouseMove"
-    @mouseup="onStageMouseUp">
+    @mouseup="onStageMouseUp"
+    @mouseenter="onStageMouseEnter"
+    @mouseleave="onStageMouseLeave">
     <konva-layer>
       <konva-image :config="backgroundImageConfig"/>
     </konva-layer>
     <konva-layer ref="foregroundLayer" :config="{ opacity: 0.5 }">
       <konva-image :config="foregroundImageConfig"/>
+    </konva-layer>
+    <konva-layer>
+      <konva-circle :config="brushPreviewConfig"
+      />
     </konva-layer>
   </konva-stage>
 </template>
@@ -18,6 +24,8 @@ import {onMounted, reactive, ref, useTemplateRef, watch} from 'vue';
 import {api} from "boot/axios";
 import {useQuasar} from "quasar";
 import {ImageAnnotationPayload, loadImageElementFromDataString} from "src/types/common";
+import {onBeforeRouteLeave} from "vue-router";
+import {useEventListener} from "@vueuse/core";
 
 const $q = useQuasar()
 const imageAnnotation = defineModel<ImageAnnotationPayload>()
@@ -27,6 +35,15 @@ const stageConfig = reactive({
   height: 16,
   draggable: false
 });
+
+const brushPreviewConfig = reactive({
+  x: 200,
+  y: 100,
+  radius: 50,
+  stroke: 'cyan',
+  dash: [1, 2],
+  visible: false
+})
 
 const backgroundImageConfig: { image: HTMLImageElement | null } = reactive({
   image: null
@@ -42,6 +59,7 @@ const stage = useTemplateRef<any>("stage")
 const foregroundLayer = useTemplateRef<any>("foregroundLayer")
 const foregroundCanvas = ref<HTMLCanvasElement | null>(null);
 const foregroundContext = ref<CanvasRenderingContext2D | null>(null);
+let isEdited = false
 let isMouseDown = false;
 let lastPosition : Position | null = null;
 const maskValueForeground = "#ff0000"
@@ -87,6 +105,27 @@ function drawMask(event: MouseEvent, size: number, maskValue: boolean) {
   lastPosition = pos as Position
   // context.fill();
   foregroundLayer.value.getNode().batchDraw()
+
+  isEdited = true
+}
+
+function updatePreview() {
+  if(!stage.value || !foregroundLayer.value) {
+    return
+  }
+
+  const pos = stage.value.getStage().getPointerPosition()
+  brushPreviewConfig.x = pos.x
+  brushPreviewConfig.y = pos.y
+  brushPreviewConfig.visible = true
+}
+
+function onStageMouseEnter() {
+  brushPreviewConfig.visible = true
+}
+
+function onStageMouseLeave() {
+  brushPreviewConfig.visible = false
 }
 
 function onStageMouseDown() {
@@ -94,6 +133,7 @@ function onStageMouseDown() {
 }
 
 function onStageMouseMove(event: MouseEvent) {
+  updatePreview()
   if(isMouseDown) {
     drawMask(event, 15, true)
   }
@@ -109,6 +149,10 @@ function saveImage() {
     console.log(foregroundLayer.value.getNode().toDataURL())
     // console.log(stage.value.toDataURL())
   }
+}
+
+function clear() {
+
 }
 
 function queryFromBackend() {
@@ -131,6 +175,7 @@ function queryFromBackend() {
         foregroundCanvas.value = canvas;
         foregroundContext.value = context;
         foregroundImageConfig.image = canvas;
+        isEdited = false
 
         $q.loading.hide();
       })
@@ -145,17 +190,29 @@ watch(imageAnnotation, () => {
   queryFromBackend()
 })
 defineExpose({
-  saveImage
+  saveImage,
+  queryFromBackend,
+  clear
 })
+// When the user leave the page in your Vue app
+onBeforeRouteLeave(() => {
+  if (isEdited && !confirm("You have unsaved changes. Are you sure you want to leave?")) {
+    return false;
+  }
+});
+
+// When the user refresh/leave the current tab
+useEventListener(window, "beforeunload", (event) => {
+  if (isEdited) {
+    event.preventDefault();
+  }
+});
 
 </script>
 <style lang="scss">
 .konvajs-content {
   border: 1px solid black;
+  cursor: crosshair;
 }
 </style>
-<style scoped lang="scss">
-.edit-toolbar > * {
-  margin-right: 10px;
-}
-</style>
+
