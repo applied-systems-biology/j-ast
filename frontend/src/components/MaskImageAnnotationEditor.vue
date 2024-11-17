@@ -1,5 +1,5 @@
 <template>
-  <q-card class="q-mb-lg">
+  <q-card class="q-mb-lg tool-control">
     <q-card-section class="row q-gutter-md">
       <div class="col-2">
         <q-badge color="primary" class="tool-control-badge">
@@ -22,6 +22,32 @@
         <q-slider v-model="brushSize" :min="1" :step="1" :max="100" snap label :markers="10" marker-labels
                   switch-label-side></q-slider>
       </div>
+      <div class="col-2" v-if="currentToolId=='polygon'">
+        <q-badge color="secondary" class="tool-control-badge">
+          <div class="label">
+            Polygon tool
+          </div>
+          <q-toggle
+            v-model="polygonToolDoFill"
+            label="Fill"
+            left-label
+          />
+        </q-badge>
+        <div class="text-caption q-gutter-sm q-pt-sm">
+          <q-badge color="cyan">
+            <q-icon name="fa-solid fa-computer-mouse"/>
+            Left: Add point
+          </q-badge>
+          <q-badge color="cyan">
+            <q-icon name="fa-solid fa-computer-mouse"/>
+            Right: Remove point
+          </q-badge>
+          <q-badge color="cyan">
+            <q-icon name="fa-solid fa-computer-mouse"/>
+            2xLeft: Confirm
+          </q-badge>
+        </div>
+      </div>
     </q-card-section>
   </q-card>
   <div class="full-width stage-container">
@@ -43,9 +69,10 @@
       <konva-layer ref="foregroundLayer" :config="{ opacity: 0.5 }">
         <konva-image :config="foregroundImageConfig"/>
       </konva-layer>
-      <konva-layer>
+      <konva-layer ref="previewLayer">
         <konva-circle :config="brushPreviewConfig"/>
         <konva-line :config="linePreviewConfig"/>
+        <konva-line :config="polygonPreviewConfig"/>
       </konva-layer>
     </konva-stage>
   </div>
@@ -65,6 +92,7 @@ const currentToolColor: Ref<string | undefined> = defineModel<string>("tool-colo
 const currentToolId: Ref<string | undefined> = defineModel<string>("tool-id")
 const brushSize = ref(20)
 const zoom = ref(1)
+const polygonToolDoFill = ref(true)
 const previewHighlighter = "#00ffffaa"
 
 const stageConfig = reactive({
@@ -77,7 +105,7 @@ const brushPreviewConfig = reactive({
   x: 0,
   y: 0,
   radius: 1,
-  stroke: 'cyan',
+  stroke: previewHighlighter,
   visible: false
 })
 
@@ -89,6 +117,16 @@ const linePreviewConfig = reactive({
   lineJoin: 'round',
   points: [0, 0, 100, 100],
   stroke: previewHighlighter,
+  visible: false
+})
+
+const polygonPreviewConfig = reactive({
+  x: 0,
+  y: 0,
+  points: new Array<number>(),
+  closed: true,
+  stroke: previewHighlighter,
+  fill: previewHighlighter,
   visible: false
 })
 
@@ -107,6 +145,7 @@ enum MouseEventType {
   LeftMouseDown,
   LeftMouseUp,
   LeftMouseClick,
+  RightMouseClick,
   MouseMove,
   MouseEnter,
   MouseLeave,
@@ -115,6 +154,7 @@ enum MouseEventType {
 
 const stage = useTemplateRef<any>("stage")
 const foregroundLayer = useTemplateRef<any>("foregroundLayer")
+const previewLayer = useTemplateRef<any>("previewLayer")
 const foregroundCanvas = ref<HTMLCanvasElement | null>(null);
 const maskDataContext = ref<CanvasRenderingContext2D | null>(null);
 const foregroundContext = ref<CanvasRenderingContext2D | null>(null);
@@ -172,6 +212,85 @@ function doToolDraw() {
 
   renderMaskToForeground()
   isEdited = true
+}
+
+function doToolPolygon(eventType: MouseEventType) {
+  if (!stage.value || !foregroundLayer.value) {
+    return
+  }
+  const pos = getStageMousePosition()
+  if (!pos) {
+    return;
+  }
+  polygonPreviewConfig.visible = true
+  if(eventType == MouseEventType.MouseMove) {
+    if(polygonPreviewConfig.points.length > 1) {
+      polygonPreviewConfig.points[polygonPreviewConfig.points.length - 2] = pos.x
+      polygonPreviewConfig.points[polygonPreviewConfig.points.length - 1] = pos.y
+      previewLayer.value.getNode().batchDraw()
+    }
+  }
+  else if(eventType == MouseEventType.LeftMouseClick) {
+    if(polygonPreviewConfig.points.length == 0) {
+      // Add also the starting point
+      polygonPreviewConfig.points.push(pos.x)
+      polygonPreviewConfig.points.push(pos.y)
+    }
+    polygonPreviewConfig.points.push(pos.x)
+    polygonPreviewConfig.points.push(pos.y)
+    previewLayer.value.getNode().batchDraw()
+
+  }
+  else if(eventType == MouseEventType.RightMouseClick) {
+    if(polygonPreviewConfig.points.length > 1 ) {
+      polygonPreviewConfig.points.splice(polygonPreviewConfig.points.length - 2, 2)
+
+      // Update the last pos
+      if(polygonPreviewConfig.points.length > 1) {
+        polygonPreviewConfig.points[polygonPreviewConfig.points.length - 2] = pos.x
+        polygonPreviewConfig.points[polygonPreviewConfig.points.length - 1] = pos.y
+      }
+
+      previewLayer.value.getNode().batchDraw()
+    }
+  }
+  else if(eventType == MouseEventType.LeftMouseDoubleClick) {
+    // Commit
+    if(polygonPreviewConfig.points.length >= 4) {
+
+      const context = maskDataContext.value
+      if (!context) {
+        return;
+      }
+
+      context.imageSmoothingEnabled = false
+      context.strokeStyle = currentToolColor.value!
+      context.fillStyle = currentToolColor.value!
+      context.globalCompositeOperation = "source-over"
+      context.lineCap = "round"
+      context.lineJoin = "round"
+      context.lineWidth = 1
+      context.beginPath();
+      context.moveTo(polygonPreviewConfig.points[0], polygonPreviewConfig.points[1])
+      for (let i = 2; i < polygonPreviewConfig.points.length; i+=2) {
+        context.lineTo(polygonPreviewConfig.points[i], polygonPreviewConfig.points[i + 1])
+      }
+      context.closePath();
+      if(polygonToolDoFill.value) {
+        context.fill()
+      }
+      else {
+        context.stroke()
+      }
+
+      renderMaskToForeground()
+      isEdited = true
+
+      // Reset
+      polygonPreviewConfig.points = []
+    }
+    previewLayer.value.getNode().batchDraw()
+  }
 }
 
 function doToolLine(eventType: MouseEventType) {
@@ -252,13 +371,18 @@ function updatePreview() {
     brushPreviewConfig.visible = false
     return;
   }
+
+  brushPreviewConfig.visible = false
+  linePreviewConfig.visible = false
+  polygonPreviewConfig.visible = false
+
   if (currentToolId.value === "draw" || currentToolId.value === "line") {
     brushPreviewConfig.x = pos.x
     brushPreviewConfig.y = pos.y
     brushPreviewConfig.visible = true
     brushPreviewConfig.radius = brushSize.value / 2
-  } else {
-    brushPreviewConfig.visible = false
+  } else if(currentToolId.value === "polygon") {
+    polygonPreviewConfig.visible = true;
   }
 }
 
@@ -271,18 +395,31 @@ function doTool(eventType: MouseEventType) {
         if (isMouseDown) {
           doToolDraw()
         }
+      } else if (eventType == MouseEventType.LeftMouseUp) {
+        lastPosition = null
       }
     }
       break
     case "line": {
       doToolLine(eventType)
     }
+    break;
+    case "polygon": {
+      doToolPolygon(eventType)
+    }
+    break;
     case "fill": {
       if (eventType == MouseEventType.LeftMouseClick) {
         doToolFill()
       }
     }
   }
+}
+
+function resetTool() {
+  stageConfig.draggable = currentToolId.value == "pan"
+  lastPosition = null
+  polygonPreviewConfig.points = []
 }
 
 /**
@@ -356,7 +493,7 @@ function onStageMouseLeave() {
 }
 
 function onStageMouseDown(event: KonvaEvent<MouseEvent>) {
-  if(event.evt.button == 0) {
+  if (event.evt.button == 0) {
     isMouseDown = true
     doTool(MouseEventType.LeftMouseDown)
   }
@@ -369,23 +506,29 @@ function onStageMouseMove() {
 
 function onStageMouseUp(event: KonvaEvent<MouseEvent>) {
   isMouseDown = false
-  if(event.evt.button == 0) {
+  if (event.evt.button == 0) {
     doTool(MouseEventType.LeftMouseUp)
   }
-  lastPosition = null
 }
 
-function onStageMouseClick(event: MouseEvent, clickCount: number) {
+function onStageMouseClick(event: KonvaEvent<MouseEvent>, clickCount: number) {
   if (clickCount == 1) {
-    doTool(MouseEventType.LeftMouseClick)
+    if (event.evt.button == 0) {
+      doTool(MouseEventType.LeftMouseClick)
+    }
+    else if (event.evt.button == 2) {
+      doTool(MouseEventType.RightMouseClick)
+    }
   } else if (clickCount == 2) {
-    doTool(MouseEventType.LeftMouseDoubleClick)
+    if (event.evt.button == 0) {
+      doTool(MouseEventType.LeftMouseDoubleClick)
+    }
   }
 }
 
 function onStageMouseWheel(event: KonvaEvent<WheelEvent>) {
   event.evt.preventDefault();
-  if(!stage.value) {
+  if (!stage.value) {
     return;
   }
   const node = stage.value.getNode();
@@ -407,7 +550,7 @@ function onStageMouseWheel(event: KonvaEvent<WheelEvent>) {
     y: (pointer.y - node.y()) / oldScale,
   };
 
-  node.scale({ x: newScale, y: newScale });
+  node.scale({x: newScale, y: newScale});
 
   const newPos = {
     x: pointer.x - mousePointTo.x * newScale,
@@ -499,8 +642,8 @@ function updateStageSize() {
 }
 
 function resetLocationAndZoom() {
-  if(stage.value) {
-    stage.value.getStage().position({ x: 0, y: 0 });
+  if (stage.value) {
+    stage.value.getStage().position({x: 0, y: 0});
   }
   zoom.value = 1
 }
@@ -508,7 +651,7 @@ function resetLocationAndZoom() {
 onMounted(() => {
   updateStageSize()
   queryFromBackend()
-  stageConfig.draggable = currentToolId.value == "pan"
+  resetTool()
 })
 window.addEventListener('resize', () => {
   updateStageSize()
@@ -517,7 +660,7 @@ watch(imageAnnotation, () => {
   queryFromBackend()
 })
 watch(currentToolId, () => {
-  stageConfig.draggable = currentToolId.value == "pan"
+  resetTool()
 })
 defineExpose({
   saveImage,
@@ -541,6 +684,10 @@ useEventListener(window, "beforeunload", (event) => {
 
 </script>
 <style scoped lang="scss">
+.tool-control {
+  height: 8em;
+}
+
 .tool-control-badge {
   display: flex;
   flex-direction: row;
@@ -557,7 +704,7 @@ useEventListener(window, "beforeunload", (event) => {
   flex-grow: 1;
   overflow: hidden;
   height: 0;
-  margin-left: 8px!important;
+  margin-left: 8px !important;
 }
 </style>
 <style lang="scss">
