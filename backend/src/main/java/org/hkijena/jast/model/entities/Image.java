@@ -4,10 +4,13 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import org.hkijena.jast.model.AssayType;
 import org.hkijena.jast.payloads.ImagePayload;
+import org.hkijena.jast.utils.StringUtils;
 
 import java.io.Serial;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * An image dataset
@@ -74,16 +77,26 @@ public class Image {
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true, mappedBy = "image")
     private List<MaskImageAnnotation> maskImageAnnotations = new ArrayList<>();
 
-    public List<MaskImageAnnotation> getImageAnnotations() {
+    public List<MaskImageAnnotation> getMaskImageAnnotations() {
         return maskImageAnnotations;
     }
 
-    public void addImageAnnotation(MaskImageAnnotation maskImageAnnotation) {
+    public List<MaskImageAnnotation> getFilteredMaskImageAnnotations() {
+        Map<String, MaskImageAnnotation> result = new HashMap<>();
+        for (MaskImageAnnotation annotation : maskImageAnnotations) {
+            if(!StringUtils.isNullOrEmpty(annotation.getType()) && !result.containsKey(annotation.getType())) {
+                result.put(annotation.getType(), annotation);
+            }
+        }
+        return new ArrayList<>(result.values());
+    }
+
+    public void addMaskImageAnnotation(MaskImageAnnotation maskImageAnnotation) {
         maskImageAnnotations.add(maskImageAnnotation);
         maskImageAnnotation.setImage(this);
     }
 
-    public void removeImageAnnotation(MaskImageAnnotation maskImageAnnotation) {
+    public void removeMaskImageAnnotation(MaskImageAnnotation maskImageAnnotation) {
         maskImageAnnotations.remove(maskImageAnnotation);
         maskImageAnnotation.setImage(null);
     }

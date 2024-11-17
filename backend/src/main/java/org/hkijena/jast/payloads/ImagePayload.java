@@ -3,8 +3,9 @@ package org.hkijena.jast.payloads;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hkijena.jast.model.AssayType;
 import org.hkijena.jast.model.entities.Image;
-import org.hkijena.jast.utils.ImageUtils;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class ImagePayload {
@@ -28,6 +29,8 @@ public class ImagePayload {
     private int groupColumn;
     @JsonProperty
     private AssayType assayType;
+    @JsonProperty
+    private List<MaskImageAnnotationPayload> maskImageAnnotations = new ArrayList<>();
 
     public ImagePayload() {
 
@@ -43,8 +46,8 @@ public class ImagePayload {
             String timePoint,
             int groupRow,
             int groupColumn,
-            AssayType assayType
-    ) {
+            AssayType assayType,
+            List<MaskImageAnnotationPayload> maskImageAnnotations) {
         this.id = id;
         this.projectId = projectId;
         this.fileName = fileName;
@@ -55,6 +58,7 @@ public class ImagePayload {
         this.groupRow = groupRow;
         this.groupColumn = groupColumn;
         this.assayType = assayType;
+        this.maskImageAnnotations = maskImageAnnotations;
     }
 
     public ImagePayload(Image image) {
@@ -67,7 +71,8 @@ public class ImagePayload {
                 image.getTimePoint(),
                 image.getGroupRow(),
                 image.getGroupColumn(),
-                image.getAssayType());
+                image.getAssayType(),
+               image.getFilteredMaskImageAnnotations().stream().map(MaskImageAnnotationPayload::create).toList());
     }
 
 

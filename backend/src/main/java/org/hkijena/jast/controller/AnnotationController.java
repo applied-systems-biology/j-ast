@@ -85,6 +85,14 @@ public class AnnotationController {
         RequestUtils.sendContent(response, maskImageAnnotation.getRawData(), MimeTypeUtils.MIME_TYPE_PNG);
     }
 
+    @GetMapping("/api/mask-image-annotation/{imageId}/{annotationType}/thumbnail")
+    public void getThumbnail(HttpServletResponse response, Authentication authentication, @PathVariable long imageId, @PathVariable String annotationType) throws IOException {
+        userService.validateAuthentication(authentication);
+        MaskImageAnnotation maskImageAnnotation = getOrCreateImageAnnotation(authentication, imageId, annotationType, false);
+
+        RequestUtils.sendContent(response, maskImageAnnotation.getThumbnailData(), MimeTypeUtils.MIME_TYPE_PNG);
+    }
+
     private MaskImageAnnotation getOrCreateImageAnnotation(Authentication authentication, long imageId, String annotationType, boolean edit) {
         Optional<Image> image_ = imageRepository.findById(imageId);
         if (image_.isEmpty()) {
@@ -110,7 +118,7 @@ public class AnnotationController {
             maskImageAnnotation.setType(annotationType);
             maskImageAnnotation.resetToMask(image);
 
-            image.addImageAnnotation(maskImageAnnotation);
+            image.addMaskImageAnnotation(maskImageAnnotation);
             maskImageAnnotationRepository.save(maskImageAnnotation);
         }
         else {

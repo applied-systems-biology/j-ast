@@ -1,11 +1,24 @@
-import {
-  Type,
-  plainToInstance,
-  ClassConstructor,
-  Expose,
-  instanceToPlain,
-} from 'class-transformer';
+import {ClassConstructor, Expose, instanceToPlain, plainToInstance, Type,} from 'class-transformer';
 import {api} from 'boot/axios';
+import {Ref} from "vue";
+
+export function renderMaskAnnotationId(image : ImagePayload, id : string) {
+  switch(id) {
+    case "strip-disk":
+      switch (image.assayType) {
+        case AssayType.DDA:
+          return "DDA disk"
+        case AssayType.ETest:
+          return "ETest strip"
+      }
+      break;
+    case "zoi-shape":
+      return "ETest ZOI shape"
+    case "plate":
+      return "Plate"
+  }
+  return id
+}
 
 export function plainToInstanceStrict<T, V>(
   cls: ClassConstructor<T>,
@@ -15,6 +28,20 @@ export function plainToInstanceStrict<T, V>(
     excludeExtraneousValues: true,
     exposeUnsetFields: false,
   });
+}
+
+export function loadPayloadInstanceFromApi<T>(url: string, type : ClassConstructor<T>, target : Ref<T>) {
+  api.get(url).then((response) => {
+    target.value = plainToInstance(type, response.data)
+  })
+}
+
+export function loadDataStringFromApi(url: string) {
+  return new Promise<string>(resolve => {
+    api.get(url, { responseType: "blob" }).then(response => {
+      resolve(URL.createObjectURL(response.data));
+    })
+  })
 }
 
 export function loadImageElementFromDataString(data: Blob | MediaSource): Promise<HTMLImageElement> {
