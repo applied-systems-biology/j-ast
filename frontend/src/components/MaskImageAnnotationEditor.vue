@@ -161,7 +161,8 @@ const foregroundContext = ref<CanvasRenderingContext2D | null>(null);
 let isEdited = false
 let isMouseDown = false;
 let lastPosition: Position | null = null;
-
+let isPanning: boolean = false
+let panMouseDxDy: Position | null = null;
 
 function getStageMousePosition(): Position | undefined {
   if (stage.value) {
@@ -387,6 +388,9 @@ function updatePreview() {
 }
 
 function doTool(eventType: MouseEventType) {
+  if(isPanning) {
+    return
+  }
   switch (currentToolId.value) {
     case "draw": {
       if (eventType == MouseEventType.LeftMouseDown) {
@@ -419,6 +423,8 @@ function doTool(eventType: MouseEventType) {
 function resetTool() {
   stageConfig.draggable = currentToolId.value == "pan"
   lastPosition = null
+  isPanning = false
+  panMouseDxDy = null
   polygonPreviewConfig.points = []
 }
 
@@ -497,15 +503,40 @@ function onStageMouseDown(event: KonvaEvent<MouseEvent>) {
     isMouseDown = true
     doTool(MouseEventType.LeftMouseDown)
   }
+  else if(event.evt.button == 1) {
+
+    // Init the panning
+    if(stage.value) {
+      isPanning = true
+      const stagePos = stage.value.getStage().getPosition() as Position
+      const mousePos = { x: event.evt.x, y: event.evt.y }
+      panMouseDxDy = {
+        x: stagePos.x - mousePos.x,
+        y: stagePos.y - mousePos.y
+      }
+    }
+
+  }
 }
 
-function onStageMouseMove() {
-  updatePreview()
-  doTool(MouseEventType.MouseMove)
+function onStageMouseMove(event: KonvaEvent<MouseEvent>) {
+  if(isPanning) {
+    if(stage.value && panMouseDxDy) {
+      stage.value.getStage().position({
+        x: event.evt.x + panMouseDxDy.x,
+        y: event.evt.y + panMouseDxDy.y
+      })
+    }
+  }
+  else {
+    updatePreview()
+    doTool(MouseEventType.MouseMove)
+  }
 }
 
 function onStageMouseUp(event: KonvaEvent<MouseEvent>) {
   isMouseDown = false
+  isPanning = false
   if (event.evt.button == 0) {
     doTool(MouseEventType.LeftMouseUp)
   }
