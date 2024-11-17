@@ -22,6 +22,10 @@
             <q-icon :name="badge.icon" />
             <span class="q-ml-sm">{{ badge.text}}</span>
           </q-badge>
+          <q-badge v-for="badge in annotationsAsBadges" :key="`${badge.type}-${badge.text}`" :style="{ backgroundColor: badge.color }">
+            <q-icon :name="badge.icon" />
+            <span class="q-ml-sm">{{ renderMaskAnnotationId(props.currentImage, badge.text)}}</span>
+          </q-badge>
         </div>
         <!-- TODO: will be needed for later -->
         <div class="progress text-indigo" v-if="false">
@@ -33,7 +37,7 @@
   </q-btn>
 </template>
 <script setup lang="ts">
-import { ImagePayload } from 'src/types/common';
+import {ImagePayload, renderMaskAnnotationId} from 'src/types/common';
 import { computed, onMounted, ref } from 'vue';
 import { useProjectImageThumbnailStore } from 'stores/project-image-thumbnail-store';
 import { plainToInstance } from 'class-transformer';
@@ -50,6 +54,7 @@ const emit = defineEmits<{
 }>();
 
 const metadataAsBadges = computed(() => plainToInstance(ImagePayload, props.currentImage).getMetadataAsBadges())
+const annotationsAsBadges = computed(() => plainToInstance(ImagePayload, props.currentImage).getAnnotationsAsBadges())
 const selectionColor = computed(() => {
   const index = props.selectedImageIds.indexOf(props.currentImage.id)
   if(index >= 0) {

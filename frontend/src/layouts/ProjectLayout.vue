@@ -98,6 +98,7 @@
           @click="selectedImageIds = []"
         />
       </div>
+      <ProjectMultiImageEditor v-if="selectedImageIds.length > 1" v-model="selectedImageIds" />
       <ProjectImageEditor v-model="selectedImage" />
     </q-drawer>
     <q-page-container>
@@ -130,6 +131,7 @@ import {
 import ProjectImageEditor from 'components/ProjectImageEditor.vue';
 import { plainToInstance } from 'class-transformer';
 import ImageArrangerComponent from 'components/ImageArrangerComponent.vue';
+import ProjectMultiImageEditor from "components/ProjectMultiImageEditor.vue";
 
 const $q = useQuasar();
 const $route = useRoute();

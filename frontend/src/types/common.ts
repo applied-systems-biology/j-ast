@@ -2,8 +2,8 @@ import {ClassConstructor, Expose, instanceToPlain, plainToInstance, Type,} from 
 import {api} from 'boot/axios';
 import {Ref} from "vue";
 
-export function renderMaskAnnotationId(image : ImagePayload, id : string) {
-  switch(id) {
+export function renderMaskAnnotationId(image: ImagePayload, id: string) {
+  switch (id) {
     case "strip-disk":
       switch (image.assayType) {
         case AssayType.DDA:
@@ -30,7 +30,7 @@ export function plainToInstanceStrict<T, V>(
   });
 }
 
-export function loadPayloadInstanceFromApi<T>(url: string, type : ClassConstructor<T>, target : Ref<T>) {
+export function loadPayloadInstanceFromApi<T>(url: string, type: ClassConstructor<T>, target: Ref<T>) {
   api.get(url).then((response) => {
     target.value = plainToInstance(type, response.data)
   })
@@ -38,7 +38,7 @@ export function loadPayloadInstanceFromApi<T>(url: string, type : ClassConstruct
 
 export function loadDataStringFromApi(url: string) {
   return new Promise<string>(resolve => {
-    api.get(url, { responseType: "blob" }).then(response => {
+    api.get(url, {responseType: "blob"}).then(response => {
       resolve(URL.createObjectURL(response.data));
     })
   })
@@ -55,14 +55,14 @@ export function loadImageElementFromDataString(data: Blob | MediaSource): Promis
   })
 }
 
-export function downloadDataString(dataString : string, fileName: string = "image.png") {
+export function downloadDataString(dataString: string, fileName: string = "image.png") {
   const aDownloadLink = document.createElement('a');
   aDownloadLink.download = fileName;
   aDownloadLink.href = dataString;
   aDownloadLink.click();
 }
 
-export function downloadFromApi(url: string, fileName: string = "image.png") : Promise<void> {
+export function downloadFromApi(url: string, fileName: string = "image.png"): Promise<void> {
   return api.get(url, {responseType: "blob"}).then(response => {
     const objectURL = URL.createObjectURL(response.data);
     downloadDataString(objectURL, fileName);
@@ -70,17 +70,17 @@ export function downloadFromApi(url: string, fileName: string = "image.png") : P
   })
 }
 
-export function removeExtensionIfPresent(fileName: string, extensions: string[] = [".png", ".jpg", ".jpeg", ".tif", ".tiff", ".zip", ".jip"]) : string {
-  for(const extension of extensions) {
-    if(fileName.toLowerCase().endsWith(extension.toLowerCase())) {
+export function removeExtensionIfPresent(fileName: string, extensions: string[] = [".png", ".jpg", ".jpeg", ".tif", ".tiff", ".zip", ".jip"]): string {
+  for (const extension of extensions) {
+    if (fileName.toLowerCase().endsWith(extension.toLowerCase())) {
       fileName = fileName.substring(fileName.length - extension.length - 1, extension.length);
     }
   }
   return fileName;
 }
 
-export function ensureExtension(fileName : string, extensions: string[] = [".png", ".jpg", ".jpeg", ".tif", ".tiff", ".zip", ".jip"]) {
-  for(const extension of extensions) {
+export function ensureExtension(fileName: string, extensions: string[] = [".png", ".jpg", ".jpeg", ".tif", ".tiff", ".zip", ".jip"]) {
+  for (const extension of extensions) {
     if (fileName.toLowerCase().endsWith(extension.toLowerCase())) {
       return fileName;
     }
@@ -99,7 +99,7 @@ export function uploadImage(url: string, dataUri: string): Promise<void> {
   }
 
   const byteArray = new Uint8Array(byteNumbers);
-  const blob = new Blob([byteArray], { type: 'image/png' });
+  const blob = new Blob([byteArray], {type: 'image/png'});
 
   // Create FormData and append the image
   const formData = new FormData();
@@ -206,6 +206,9 @@ export class ImagePayload {
   @Expose()
   groupColumn: number = -1;
 
+  @Expose()
+  maskImageAnnotations: MaskImageAnnotationPayload[] = [];
+
   /**
    * Returns true if this is a non-empty payload
    */
@@ -230,6 +233,21 @@ export class ImagePayload {
     }
     if (this.assayType && this.assayType != AssayType.Unknown) {
       result.push(createAssayTypeBadge(this.assayType));
+    }
+    return result
+  }
+
+  getAnnotationsAsBadges(): Array<Badge> {
+    const result: Array<Badge> = []
+    for (const annotation of this.maskImageAnnotations) {
+      if (annotation.version > 0) {
+        result.push({
+          text: annotation.annotationTypeId,
+          icon: "fa-solid fa-tag",
+          color: "#164089",
+          type: "mask-annotation/" + annotation.annotationTypeId
+        })
+      }
     }
     return result
   }

@@ -4,7 +4,8 @@
       <q-card-section class="col-grow">
         <div class="text-h6">Annotation</div>
         <div class="text-blue">{{ annotationTypeName }}</div>
-        <div class="text-caption">Version {{ annotation.version }}</div>
+        <div v-if="annotation.version > 0" class="text-caption">Version {{ annotation.version }}</div>
+        <div v-else class="text-caption text-red">Not set</div>
       </q-card-section>
       <q-skeleton class="thumbnail" type="rect" v-if="!thumbnailData"/>
       <q-img class="thumbnail" :src="thumbnailData" v-if="thumbnailData"/>
