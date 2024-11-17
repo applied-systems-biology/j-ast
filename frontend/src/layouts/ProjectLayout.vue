@@ -56,11 +56,21 @@
         </q-tooltip>
         </q-btn>
         <q-btn
+          icon="download"
+          color="blue"
+          v-if="selectedImageIds.length > 0"
+          @click="downloadSelectedImages"
+          >
+          <q-tooltip>
+            Downloads the selected image(s)
+          </q-tooltip>
+        </q-btn>
+        <q-btn
           icon="delete"
-          color="red-5"
+          color="red-4"
           v-if="selectedImageIds.length > 0"
           @click="deleteSelectedImages"
-          >
+        >
           <q-tooltip>
             Deletes the selected image(s)
           </q-tooltip>
@@ -113,7 +123,7 @@ import { useQuasar } from 'quasar';
 import { useRoute, useRouter } from 'vue-router';
 import { api } from 'boot/axios';
 import {
-  CreateEditProjectRequest,
+  CreateEditProjectRequest, downloadFromApi, ensureExtension,
   ProjectImagesPayload,
   ProjectMetadataPayload,
 } from 'src/types/common';
@@ -213,6 +223,12 @@ function deleteSelectedImages() {
         reloadProjectInfo();
       });
     });
+  }
+}
+
+function downloadSelectedImages() {
+  for (const id of selectedImageIds.value) {
+    downloadFromApi(`/image/${id}/raw`, ensureExtension(projectImages.value.getImageById(id).fileName, [".png"]))
   }
 }
 

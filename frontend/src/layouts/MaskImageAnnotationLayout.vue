@@ -89,7 +89,7 @@ import HeaderLogoButtonComponent from "components/HeaderLogoButtonComponent.vue"
 import {computed, onMounted, Ref, ref, useTemplateRef} from 'vue';
 import {
   AssayType, downloadDataString,
-  downloadFromApi,
+  downloadFromApi, ensureExtension,
   ImagePayload,
   MaskImageAnnotationPayload,
   ProjectMetadataPayload, removeExtensionIfPresent
@@ -157,7 +157,7 @@ function saveAndUpload() {
 
 function downloadRaw() {
   $q.loading.show({message: "Preparing ..."});
-  downloadFromApi(`/image/${imageId}/raw`, imagePayload.value.fileName)
+  downloadFromApi(`/image/${imageId}/raw`, ensureExtension(imagePayload.value.fileName, [".png"]))
     .finally(() => {
       $q.loading.hide();
     })

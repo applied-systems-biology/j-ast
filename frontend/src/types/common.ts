@@ -52,6 +52,15 @@ export function removeExtensionIfPresent(fileName: string, extensions: string[] 
   return fileName;
 }
 
+export function ensureExtension(fileName : string, extensions: string[] = [".png", ".jpg", ".jpeg", ".tif", ".tiff", ".zip", ".jip"]) {
+  for(const extension of extensions) {
+    if (fileName.toLowerCase().endsWith(extension.toLowerCase())) {
+      return fileName;
+    }
+  }
+  return fileName + extensions[0];
+}
+
 export function uploadImage(url: string, dataUri: string): Promise<void> {
   // Extract the base64 data from the data URI
   const base64Data = dataUri.split(",")[1];
