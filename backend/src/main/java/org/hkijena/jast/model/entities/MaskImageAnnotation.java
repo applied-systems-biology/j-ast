@@ -108,4 +108,8 @@ public class MaskImageAnnotation {
         this.rawData = ImageUtils.toPNGByteArray(img);
         this.thumbnailData = ImageUtils.toPNGByteArrayThumbnail(img);
     }
+
+    public void incrementVersion() {
+        this.setVersion(this.getVersion() + 1);
+    }
 }

@@ -62,6 +62,7 @@ public class AnnotationController {
 
             maskImageAnnotation.setRawData(ImageUtils.toPNGByteArray(bufferedImage));
             maskImageAnnotation.setThumbnailData(ImageUtils.toPNGByteArrayThumbnail(bufferedImage));
+            maskImageAnnotation.incrementVersion();
             maskImageAnnotationRepository.save(maskImageAnnotation);
 
         } catch (IOException e) {

@@ -565,6 +565,14 @@ function onStageContextMenu(event: KonvaEvent<MouseEvent>) {
   event.evt.preventDefault()
 }
 
+function getMaskAsDataString() : string | undefined{
+  if (maskDataContext.value) {
+    doThresholding()
+    return maskDataContext.value.canvas.toDataURL('image/png')
+  }
+  return undefined
+}
+
 function saveImage() {
   if (maskDataContext.value) {
     doThresholding()
@@ -688,7 +696,8 @@ defineExpose({
   saveImage,
   queryFromBackend,
   clear,
-  resetLocationAndZoom
+  resetLocationAndZoom,
+  getMaskAsDataString
 })
 // When the user leave the page in your Vue app
 onBeforeRouteLeave(() => {

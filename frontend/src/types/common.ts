@@ -35,6 +35,23 @@ export function downloadDataString(dataString : string, fileName: string = "imag
   aDownloadLink.click();
 }
 
+export function downloadFromApi(url: string, fileName: string = "image.png") : Promise<void> {
+  return api.get(url, {responseType: "blob"}).then(response => {
+    const objectURL = URL.createObjectURL(response.data);
+    downloadDataString(objectURL, fileName);
+    URL.revokeObjectURL(objectURL);
+  })
+}
+
+export function removeExtensionIfPresent(fileName: string, extensions: string[] = [".png", ".jpg", ".jpeg", ".tif", ".tiff", ".zip", ".jip"]) : string {
+  for(const extension of extensions) {
+    if(fileName.toLowerCase().endsWith(extension.toLowerCase())) {
+      fileName = fileName.substring(fileName.length - extension.length - 1, extension.length);
+    }
+  }
+  return fileName;
+}
+
 export function uploadImage(url: string, dataUri: string): Promise<void> {
   // Extract the base64 data from the data URI
   const base64Data = dataUri.split(",")[1];
