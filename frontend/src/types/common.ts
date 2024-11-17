@@ -28,6 +28,39 @@ export function loadImageElementFromDataString(data: Blob | MediaSource): Promis
   })
 }
 
+export function downloadDataString(dataString : string, fileName: string = "image.png") {
+  const aDownloadLink = document.createElement('a');
+  aDownloadLink.download = fileName;
+  aDownloadLink.href = dataString;
+  aDownloadLink.click();
+}
+
+export function uploadImage(url: string, dataUri: string): Promise<void> {
+  // Extract the base64 data from the data URI
+  const base64Data = dataUri.split(",")[1];
+  const byteCharacters = atob(base64Data);
+  const byteNumbers = new Array(byteCharacters.length);
+
+  for (let i = 0; i < byteCharacters.length; i++) {
+    byteNumbers[i] = byteCharacters.charCodeAt(i);
+  }
+
+  const byteArray = new Uint8Array(byteNumbers);
+  const blob = new Blob([byteArray], { type: 'image/png' });
+
+  // Create FormData and append the image
+  const formData = new FormData();
+  formData.append('file', blob, 'image.png');
+
+  // Perform the Axios POST request
+  return api.post(url, formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  })
+}
+
+
 /**
  * Message that contains basic infos about a project
  * Shared with the backend

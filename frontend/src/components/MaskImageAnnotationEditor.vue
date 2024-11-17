@@ -81,7 +81,7 @@
 import {onMounted, reactive, Ref, ref, useTemplateRef, watch} from 'vue';
 import {api} from "boot/axios";
 import {useQuasar} from "quasar";
-import {MaskImageAnnotationPayload, loadImageElementFromDataString} from "src/types/common";
+import {MaskImageAnnotationPayload, loadImageElementFromDataString, uploadImage} from "src/types/common";
 import {onBeforeRouteLeave} from "vue-router";
 import {useEventListener} from "@vueuse/core";
 import FloodFill from "q-floodfill";
@@ -569,7 +569,24 @@ function saveImage() {
   if (maskDataContext.value) {
     doThresholding()
     const pngData = maskDataContext.value.canvas.toDataURL('image/png')
-    console.log(pngData)
+    $q.loading.show({message: "Uploading image data ..."})
+    uploadImage(`/mask-image-annotation/${imageAnnotation.value?.imageId}/${imageAnnotation.value?.annotationTypeId}/raw`, pngData)
+      .then(() => {
+        $q.notify({
+          type: "positive",
+          message: "Annotation was successfully uploaded",
+        })
+        isEdited = false
+      })
+      .catch(() => {
+        $q.notify({
+          type: "negative",
+          message: "Error while uploading!",
+        })
+      })
+      .finally(() => {
+        $q.loading.hide();
+      })
   }
 }
 
@@ -599,7 +616,9 @@ function onZoomChanged() {
 watch(zoom, onZoomChanged)
 
 function queryFromBackend() {
-  $q.loading.show();
+  $q.loading.show({
+    message: "Preparing image editor ..."
+  });
   if (imageAnnotation.value && imageAnnotation.value.imageId >= 0) {
 
     api.get(`/image/${imageAnnotation.value.imageId}/raw`, {responseType: 'blob'}).then(backgroundResponse => {
@@ -621,16 +640,19 @@ function queryFromBackend() {
         renderCanvas.width = width;
         renderCanvas.height = height;
 
-
         foregroundCanvas.value = dataCanvas;
         maskDataContext.value = context;
         foregroundContext.value = renderCanvas.getContext('2d')!;
         foregroundImageConfig.image = renderCanvas;
 
-        clear() //TODO!
-        isEdited = false
-
-        $q.loading.hide();
+        api.get(`/mask-image-annotation/${imageAnnotation.value?.imageId}/${imageAnnotation.value?.annotationTypeId}/raw`, {responseType: 'blob'}).then(foregroundResponse => {
+          loadImageElementFromDataString(foregroundResponse.data).then((foregroundImage) => {
+            context.drawImage(foregroundImage, 0, 0, foregroundImage.width, foregroundImage.height);
+            isEdited = false
+            renderMaskToForeground()
+            $q.loading.hide();
+          })
+        })
       })
     })
   }

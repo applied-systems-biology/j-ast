@@ -8,6 +8,6 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface ImageAnnotationRepository extends CrudRepository<MaskImageAnnotation, Long> {
+public interface MaskImageAnnotationRepository extends CrudRepository<MaskImageAnnotation, Long> {
     public Optional<MaskImageAnnotation> findFirstByImageAndType(Image image, String type);
 }
