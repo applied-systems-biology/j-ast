@@ -104,6 +104,7 @@ $thumbnail-size: 6rem;
 .badges {
   flex-grow: 1;
   overflow: hidden;
+  line-height: 1em;
 
   .q-badge {
     margin: 2px;

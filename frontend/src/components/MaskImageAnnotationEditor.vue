@@ -48,6 +48,17 @@
           </q-badge>
         </div>
       </div>
+      <div v-if="isEdited" class="col-2">
+        <q-badge color="secondary" class="tool-control-badge">
+          <div class="label">
+           Unsaved changes
+          </div>
+          <q-btn size="xs" icon="upload" color="green" @click="saveImage"/>
+        </q-badge>
+        <div class="text-caption q-gutter-sm q-pa-sm q-pt-md ">
+         Please do not forget to save your changes. Otherwise they will be lost.
+        </div>
+      </div>
     </q-card-section>
   </q-card>
   <div class="full-width stage-container">
@@ -158,7 +169,7 @@ const previewLayer = useTemplateRef<any>("previewLayer")
 const foregroundCanvas = ref<HTMLCanvasElement | null>(null);
 const maskDataContext = ref<CanvasRenderingContext2D | null>(null);
 const foregroundContext = ref<CanvasRenderingContext2D | null>(null);
-let isEdited = false
+const isEdited = ref(false)
 let isMouseDown = false;
 let lastPosition: Position | null = null;
 let isPanning: boolean = false
@@ -212,7 +223,7 @@ function doToolDraw() {
   lastPosition = pos as Position
 
   renderMaskToForeground()
-  isEdited = true
+  isEdited.value = true
 }
 
 function doToolPolygon(eventType: MouseEventType) {
@@ -285,7 +296,7 @@ function doToolPolygon(eventType: MouseEventType) {
       }
 
       renderMaskToForeground()
-      isEdited = true
+      isEdited.value = true
 
       // Reset
       polygonPreviewConfig.points = []
@@ -330,7 +341,7 @@ function doToolLine(eventType: MouseEventType) {
       context.stroke()
 
       renderMaskToForeground()
-      isEdited = true
+      isEdited.value = true
     }
   }
 }
@@ -359,7 +370,7 @@ function doToolFill() {
   context.putImageData(floodFill.imageData, 0, 0)
 
   renderMaskToForeground()
-  isEdited = true
+  isEdited.value = true
 }
 
 function updatePreview() {
@@ -384,6 +395,10 @@ function updatePreview() {
     brushPreviewConfig.radius = brushSize.value / 2
   } else if(currentToolId.value === "polygon") {
     polygonPreviewConfig.visible = true;
+    brushPreviewConfig.x = pos.x
+    brushPreviewConfig.y = pos.y
+    brushPreviewConfig.visible = true
+    brushPreviewConfig.radius = 1
   }
 }
 
@@ -615,7 +630,7 @@ function saveImage() {
           type: "positive",
           message: "Annotation was successfully uploaded",
         })
-        isEdited = false
+        isEdited.value = false
       })
       .catch(() => {
         $q.notify({
@@ -641,7 +656,7 @@ function clear() {
   context.fillRect(0, 0, context.canvas.width, context.canvas.height)
   renderMaskToForeground()
 
-  isEdited = true
+  isEdited.value = true
 }
 
 function onZoomChanged() {
@@ -687,7 +702,7 @@ function queryFromBackend() {
         api.get(`/mask-image-annotation/${imageAnnotation.value?.imageId}/${imageAnnotation.value?.annotationTypeId}/raw`, {responseType: 'blob'}).then(foregroundResponse => {
           loadImageElementFromDataString(foregroundResponse.data).then((foregroundImage) => {
             context.drawImage(foregroundImage, 0, 0, foregroundImage.width, foregroundImage.height);
-            isEdited = false
+            isEdited.value = false
             renderMaskToForeground()
             $q.loading.hide();
           })
@@ -732,14 +747,14 @@ defineExpose({
 })
 // When the user leave the page in your Vue app
 onBeforeRouteLeave(() => {
-  if (isEdited && !confirm("You have unsaved changes. Are you sure you want to leave?")) {
+  if (isEdited.value && !confirm("You have unsaved changes. Are you sure you want to leave?")) {
     return false;
   }
 });
 
 // When the user refresh/leave the current tab
 useEventListener(window, "beforeunload", (event) => {
-  if (isEdited) {
+  if (isEdited.value) {
     event.preventDefault();
   }
 });
