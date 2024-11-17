@@ -17,13 +17,20 @@
         <LoginButtonComponent/>
       </q-toolbar>
       <q-toolbar class="bg-primary text-white edit-toolbar">
-        <q-btn-toggle color="blue-grey" toggle-color="green" v-model="currentAnnotationToolId" :options="annotationTools"/>
-        <q-btn color="red-4" icon="undo" @click="resetAnnotation">Reset</q-btn>
+        <q-btn-toggle color="blue-grey" toggle-color="green" v-model="currentAnnotationColorId" :options="annotationColors">
+          <q-tooltip>Determines whether the foreground or the background is drawn</q-tooltip>
+        </q-btn-toggle>
+        <q-btn-toggle color="blue-grey" toggle-color="green" v-model="currentAnnotationToolId" :options="annotationTools">
+          <q-tooltip>The tool to draw the foreground/background</q-tooltip>
+        </q-btn-toggle>
+        <q-btn color="red-4" icon="undo" @click="resetAnnotation">
+          Reset
+        </q-btn>
       </q-toolbar>
     </q-header>
     <q-page-container>
       <q-page padding>
-        <ProjectImageAnnotationEditor ref="editorComponent" v-model="annotationPayload"/>
+        <ProjectImageAnnotationEditor ref="editorComponent" v-model="annotationPayload" v-model:tool-color="currentAnnotationColorId" />
       </q-page>
     </q-page-container>
   </q-layout>
@@ -52,9 +59,15 @@ defineOptions({
 
 const annotationTools = [
   { label: "Draw", value: "draw", icon: "fa-solid fa-pencil" },
-  { label: "Erase", value: "erase", icon: "fa-solid fa-eraser" },
+  { label: "Polygon", value: "polygon", icon: "fa-solid fa-draw-polygon" },
+  { label: "Fill", value: "fill", icon: "fa-solid fa-fill-drip" },
+]
+const annotationColors = [
+  { label: "Foreground", value: "foreground", icon: "fa-solid fa-square" },
+  { label: "Background", value: "background", icon: "fa-solid fa-eraser" },
 ]
 const currentAnnotationToolId = ref("draw");
+const currentAnnotationColorId = ref("foreground");
 
 const imagePayload: Ref<ImagePayload> = ref(new ImagePayload());
 const projectPayload: Ref<ProjectMetadataPayload> = ref(

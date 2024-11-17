@@ -1,4 +1,21 @@
 <template>
+  <q-card class="q-mb-lg">
+    <q-card-section class="row q-gutter-md">
+      <div class="col-2">
+        <q-badge color="primary">
+          Zoom
+        </q-badge>
+        <q-slider :min="1" :step="1" :max="100" :model-value="100" snap label ></q-slider>
+      </div>
+      <div class="col-2">
+        <q-badge color="secondary">
+          Brush size
+        </q-badge>
+        <q-slider v-model="brushSize" :min="1" :step="1" :max="100" snap label ></q-slider>
+      </div>
+    </q-card-section>
+  </q-card>
+
   <konva-stage
     ref="stage"
     :config="stageConfig"
@@ -6,7 +23,9 @@
     @mousemove="onStageMouseMove"
     @mouseup="onStageMouseUp"
     @mouseenter="onStageMouseEnter"
-    @mouseleave="onStageMouseLeave">
+    @mouseleave="onStageMouseLeave"
+    @click="onStageMouseClick($event, 1)"
+    @dblclick="onStageMouseClick($event, 2)">
     <konva-layer>
       <konva-image :config="backgroundImageConfig"/>
     </konva-layer>
@@ -20,7 +39,7 @@
   </konva-stage>
 </template>
 <script setup lang="ts">
-import {onMounted, reactive, ref, useTemplateRef, watch} from 'vue';
+import {onMounted, reactive, Ref, ref, useTemplateRef, watch} from 'vue';
 import {api} from "boot/axios";
 import {useQuasar} from "quasar";
 import {ImageAnnotationPayload, loadImageElementFromDataString} from "src/types/common";
@@ -29,6 +48,8 @@ import {useEventListener} from "@vueuse/core";
 
 const $q = useQuasar()
 const imageAnnotation = defineModel<ImageAnnotationPayload>()
+const currentToolColor : Ref<string | undefined> = defineModel<string>("tool-color")
+const brushSize = ref(20)
 
 const stageConfig = reactive({
   width: 16,
@@ -37,11 +58,11 @@ const stageConfig = reactive({
 });
 
 const brushPreviewConfig = reactive({
-  x: 200,
-  y: 100,
-  radius: 50,
+  x: 0,
+  y: 0,
+  radius: 1,
   stroke: 'cyan',
-  dash: [1, 2],
+  // dash: [1, 2],
   visible: false
 })
 
@@ -63,9 +84,9 @@ let isEdited = false
 let isMouseDown = false;
 let lastPosition : Position | null = null;
 const maskValueForeground = "#ff0000"
-const maskValueBackground = "#00000000"
+const maskValueBackground = "#000000"
 
-function drawMask(event: MouseEvent, size: number, maskValue: boolean) {
+function drawMask() {
   if(!stage.value || !foregroundLayer.value) {
     return
   }
@@ -92,11 +113,11 @@ function drawMask(event: MouseEvent, size: number, maskValue: boolean) {
   // foregroundImageNode.getLayer().batchDraw();
   // console.log(foregroundImageNode)
 
-  context.strokeStyle = maskValue ? maskValueForeground : maskValueBackground
-  context.globalCompositeOperation = "source-over";
+  context.strokeStyle = currentToolColor.value == "foreground" ? maskValueForeground : maskValueBackground
+  context.globalCompositeOperation = currentToolColor.value == "foreground" ? "source-over" : "destination-out"
   context.lineCap = "round"
   context.lineJoin = "round"
-  context.lineWidth = size
+  context.lineWidth = brushSize.value
   context.beginPath();
   // context.arc(pos.x, pos.y, size, 0, Math.PI * 2);
   context.moveTo(lastPosition.x, lastPosition.y)
@@ -118,6 +139,7 @@ function updatePreview() {
   brushPreviewConfig.x = pos.x
   brushPreviewConfig.y = pos.y
   brushPreviewConfig.visible = true
+  brushPreviewConfig.radius = brushSize.value / 2
 }
 
 function onStageMouseEnter() {
@@ -130,18 +152,23 @@ function onStageMouseLeave() {
 
 function onStageMouseDown() {
   isMouseDown = true
+  drawMask()
 }
 
-function onStageMouseMove(event: MouseEvent) {
+function onStageMouseMove() {
   updatePreview()
   if(isMouseDown) {
-    drawMask(event, 15, true)
+    drawMask()
   }
 }
 
 function onStageMouseUp() {
   lastPosition = null
   isMouseDown = false
+}
+
+function onStageMouseClick(event: MouseEvent, clickCount: number) {
+  console.log("clicked", clickCount)
 }
 
 function saveImage() {
