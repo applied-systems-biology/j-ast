@@ -48,6 +48,9 @@ export class MaskImageAnnotationPayload {
   id: number = -1;
 
   @Expose()
+  version: number = -1;
+
+  @Expose()
   imageId: number = -1;
 
   @Expose()

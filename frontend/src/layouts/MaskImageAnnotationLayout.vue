@@ -23,13 +23,36 @@
         <q-btn-toggle color="blue-grey" toggle-color="green" v-model="currentAnnotationToolId" :options="annotationTools">
           <q-tooltip>The tool to draw the foreground/background</q-tooltip>
         </q-btn-toggle>
-        <q-btn color="red-4" icon="undo" @click="resetAnnotation">
-          Reset
+        <q-btn color="blue-grey" label="Tools" icon="fa-solid fa-gear">
+          <q-menu>
+            <q-list style="min-width: 100px">
+              <q-item clickable v-close-popup @click="resetView">
+                <q-item-section avatar>
+                  <q-icon name="fa-solid fa-expand"/>
+                </q-item-section>
+                <q-item-section>Reset view</q-item-section>
+              </q-item>
+              <q-separator />
+              <q-item clickable v-close-popup @click="clearAnnotation">
+                <q-item-section avatar>
+                  <q-icon name="fa-solid fa-eraser"/>
+                </q-item-section>
+                <q-item-section>Clear</q-item-section>
+              </q-item>
+              <q-item clickable v-close-popup @click="restoreSavedState">
+                <q-item-section avatar>
+                  <q-icon name="fa-solid fa-undo"/>
+                </q-item-section>
+                <q-item-section>Restore saved state</q-item-section>
+              </q-item>
+            </q-list>
+          </q-menu>
         </q-btn>
+
       </q-toolbar>
     </q-header>
     <q-page-container>
-      <q-page padding>
+      <q-page padding class="flex column q-gutter-sm">
         <ProjectImageAnnotationEditor ref="editorComponent" v-model="annotationPayload" v-model:tool-color="currentAnnotationColorId" v-model:tool-id="currentAnnotationToolId"/>
       </q-page>
     </q-page-container>
@@ -58,6 +81,7 @@ defineOptions({
 });
 
 const annotationTools = [
+  { label: "", value: "pan", icon: "fa-solid fa-hand" },
   { label: "", value: "draw", icon: "fa-solid fa-pencil" },
   { label: "", value: "polygon", icon: "fa-solid fa-draw-polygon" },
   { label: "", value: "line", icon: "fa-solid fa-slash" },
@@ -94,11 +118,15 @@ const annotationName = computed(() => {
   return annotationTypeId;
 })
 
+function resetView() {
+  editorComponent.value?.resetLocationAndZoom()
+}
+
 function saveAndUpload() {
   editorComponent.value?.saveImage()
 }
 
-function resetAnnotation() {
+function restoreSavedState() {
   $q.dialog({
     title: 'Restore from saved annotation',
     message: 'Do you really want to reset the annotation from the saved state?',
@@ -112,6 +140,23 @@ function resetAnnotation() {
     persistent: true,
   }).onOk(() => {
     editorComponent.value?.queryFromBackend()
+  });
+}
+
+function clearAnnotation() {
+  $q.dialog({
+    title: 'Clear annotation',
+    message: 'Do you really want to erase the annotation?',
+    cancel: {
+      label: 'No',
+    },
+    ok: {
+      label: 'Yes',
+      color: 'red',
+    },
+    persistent: true,
+  }).onOk(() => {
+    editorComponent.value?.clear()
   });
 }
 

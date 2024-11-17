@@ -21,6 +21,9 @@ public class MaskImageAnnotation {
     @Column(name = "id")
     private Long id;
 
+    @Column(name = "version")
+    private Integer version = 0;
+
     @ManyToOne(fetch = FetchType.LAZY)
     private Image image;
 
@@ -34,6 +37,14 @@ public class MaskImageAnnotation {
     @Lob
     @Column(name = "thumbnail_data", columnDefinition = "BLOB")
     private byte[] thumbnailData;
+
+    public int getVersion() {
+        return version == null ? 0 : version;
+    }
+
+    public void setVersion(int version) {
+        this.version = version;
+    }
 
     public String getType() {
         return type;

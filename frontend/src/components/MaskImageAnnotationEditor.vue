@@ -2,41 +2,53 @@
   <q-card class="q-mb-lg">
     <q-card-section class="row q-gutter-md">
       <div class="col-2">
-        <q-badge color="primary">
-          Zoom
+        <q-badge color="primary" class="tool-control-badge">
+          <div class="label">
+            Zoom
+          </div>
+          <q-btn size="xs" icon="fa-solid fa-undo" @click="zoom = 1">
+            <q-tooltip>Reset zoom</q-tooltip>
+          </q-btn>
         </q-badge>
-        <q-slider :min="1" :step="1" :max="100" :model-value="100" snap label></q-slider>
+        <q-slider v-model="zoom" :min="0.25" :max="3" :markers="0.25" :step="0" label marker-labels
+                  switch-label-side></q-slider>
       </div>
       <div class="col-2" v-if="currentToolId=='draw' || currentToolId == 'line'">
-        <q-badge color="secondary">
-          Brush size
+        <q-badge color="secondary" class="tool-control-badge">
+          <div class="label">
+            Brush size
+          </div>
         </q-badge>
-        <q-slider v-model="brushSize" :min="1" :step="1" :max="100" snap label></q-slider>
+        <q-slider v-model="brushSize" :min="1" :step="1" :max="100" snap label :markers="10" marker-labels
+                  switch-label-side></q-slider>
       </div>
     </q-card-section>
   </q-card>
-
-  <konva-stage
-    ref="stage"
-    :config="stageConfig"
-    @mousedown="onStageMouseDown"
-    @mousemove="onStageMouseMove"
-    @mouseup="onStageMouseUp"
-    @mouseenter="onStageMouseEnter"
-    @mouseleave="onStageMouseLeave"
-    @click="onStageMouseClick($event, 1)"
-    @dblclick="onStageMouseClick($event, 2)">
-    <konva-layer>
-      <konva-image :config="backgroundImageConfig"/>
-    </konva-layer>
-    <konva-layer ref="foregroundLayer" :config="{ opacity: 0.5 }">
-      <konva-image :config="foregroundImageConfig"/>
-    </konva-layer>
-    <konva-layer>
-      <konva-circle :config="brushPreviewConfig"/>
-      <konva-line :config="linePreviewConfig"/>
-    </konva-layer>
-  </konva-stage>
+  <div class="full-width stage-container">
+    <konva-stage
+      ref="stage"
+      :config="stageConfig"
+      @mousedown="onStageMouseDown"
+      @mousemove="onStageMouseMove"
+      @mouseup="onStageMouseUp"
+      @mouseenter="onStageMouseEnter"
+      @mouseleave="onStageMouseLeave"
+      @click="onStageMouseClick($event, 1)"
+      @dblclick="onStageMouseClick($event, 2)"
+      @contextmenu="onStageContextMenu"
+      @wheel="onStageMouseWheel">
+      <konva-layer>
+        <konva-image :config="backgroundImageConfig"/>
+      </konva-layer>
+      <konva-layer ref="foregroundLayer" :config="{ opacity: 0.5 }">
+        <konva-image :config="foregroundImageConfig"/>
+      </konva-layer>
+      <konva-layer>
+        <konva-circle :config="brushPreviewConfig"/>
+        <konva-line :config="linePreviewConfig"/>
+      </konva-layer>
+    </konva-stage>
+  </div>
 </template>
 <script setup lang="ts">
 import {onMounted, reactive, Ref, ref, useTemplateRef, watch} from 'vue';
@@ -52,6 +64,7 @@ const imageAnnotation = defineModel<MaskImageAnnotationPayload>()
 const currentToolColor: Ref<string | undefined> = defineModel<string>("tool-color")
 const currentToolId: Ref<string | undefined> = defineModel<string>("tool-id")
 const brushSize = ref(20)
+const zoom = ref(1)
 const previewHighlighter = "#00ffffaa"
 
 const stageConfig = reactive({
@@ -87,16 +100,17 @@ const foregroundImageConfig: { image: HTMLCanvasElement | null } = reactive({
   image: null
 })
 
+type KonvaEvent<T> = { evt: T }
 type Position = { x: number; y: number }
 
 enum MouseEventType {
-  MouseDown,
-  MouseUp,
-  MouseClick,
+  LeftMouseDown,
+  LeftMouseUp,
+  LeftMouseClick,
   MouseMove,
   MouseEnter,
   MouseLeave,
-  MouseDoubleClick
+  LeftMouseDoubleClick
 }
 
 const stage = useTemplateRef<any>("stage")
@@ -109,6 +123,24 @@ let isMouseDown = false;
 let lastPosition: Position | null = null;
 
 
+function getStageMousePosition(): Position | undefined {
+  if (stage.value) {
+    const pointer = stage.value.getStage().getPointerPosition();
+    const node = stage.value.getNode();
+    if (!pointer) return undefined;
+
+    const scale = node.scaleX();
+    const position = node.position();
+
+    return {
+      x: (pointer.x - position.x) / scale,
+      y: (pointer.y - position.y) / scale,
+    };
+  } else {
+    return undefined
+  }
+}
+
 function doToolDraw() {
 
   const context = maskDataContext.value
@@ -117,7 +149,7 @@ function doToolDraw() {
     return
   }
 
-  const pos = stage.value.getStage().getPointerPosition()
+  const pos = getStageMousePosition()
 
   if (!pos) {
     return
@@ -146,11 +178,11 @@ function doToolLine(eventType: MouseEventType) {
   if (!stage.value || !foregroundLayer.value) {
     return
   }
-  const pos = stage.value.getStage().getPointerPosition()
+  const pos = getStageMousePosition()
   if (!pos) {
     return;
   }
-  if (eventType == MouseEventType.MouseDown) {
+  if (eventType == MouseEventType.LeftMouseDown) {
     lastPosition = pos as Position
     linePreviewConfig.strokeWidth = brushSize.value
   } else if (eventType == MouseEventType.MouseMove) {
@@ -158,7 +190,7 @@ function doToolLine(eventType: MouseEventType) {
       linePreviewConfig.visible = true
       linePreviewConfig.points = [lastPosition.x, lastPosition.y, pos.x, pos.y]
     }
-  } else if (eventType == MouseEventType.MouseUp) {
+  } else if (eventType == MouseEventType.LeftMouseUp) {
     linePreviewConfig.visible = false
     if (lastPosition) {
       const context = maskDataContext.value
@@ -187,7 +219,7 @@ function doToolFill() {
   if (!stage.value || !foregroundLayer.value) {
     return
   }
-  const pos = stage.value.getStage().getPointerPosition()
+  const pos = getStageMousePosition()
   if (!pos) {
     return;
   }
@@ -203,7 +235,7 @@ function doToolFill() {
   const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
 
   const floodFill = new FloodFill(imageData)
-  floodFill.fill( currentToolColor.value!, Math.floor(pos.x), Math.floor(pos.y), 0)
+  floodFill.fill(currentToolColor.value!, Math.floor(pos.x), Math.floor(pos.y), 0)
   context.putImageData(floodFill.imageData, 0, 0)
 
   renderMaskToForeground()
@@ -215,9 +247,10 @@ function updatePreview() {
     return
   }
 
-  const pos = stage.value.getStage().getPointerPosition()
+  const pos = getStageMousePosition()
   if (!pos) {
     brushPreviewConfig.visible = false
+    return;
   }
   if (currentToolId.value === "draw" || currentToolId.value === "line") {
     brushPreviewConfig.x = pos.x
@@ -232,7 +265,7 @@ function updatePreview() {
 function doTool(eventType: MouseEventType) {
   switch (currentToolId.value) {
     case "draw": {
-      if (eventType == MouseEventType.MouseDown) {
+      if (eventType == MouseEventType.LeftMouseDown) {
         doToolDraw()
       } else if (eventType == MouseEventType.MouseMove) {
         if (isMouseDown) {
@@ -245,7 +278,7 @@ function doTool(eventType: MouseEventType) {
       doToolLine(eventType)
     }
     case "fill": {
-      if (eventType == MouseEventType.MouseClick) {
+      if (eventType == MouseEventType.LeftMouseClick) {
         doToolFill()
       }
     }
@@ -259,10 +292,10 @@ function doTool(eventType: MouseEventType) {
  */
 function doThresholding() {
   const context = maskDataContext.value
-  if(!context) {
+  if (!context) {
     return;
   }
-  const imageData = context.getImageData(0,0,context.canvas.width,context.canvas.height)
+  const imageData = context.getImageData(0, 0, context.canvas.width, context.canvas.height)
   const data = imageData.data;
 
   for (let i = 0; i < data.length; i += 4) {
@@ -287,10 +320,10 @@ function doThresholding() {
 function renderMaskToForeground() {
   const srcContext = maskDataContext.value
   const targetContext = foregroundContext.value
-  if(!srcContext || !targetContext) {
+  if (!srcContext || !targetContext) {
     return
   }
-  const imageData = srcContext.getImageData(0,0,srcContext.canvas.width,srcContext.canvas.height)
+  const imageData = srcContext.getImageData(0, 0, srcContext.canvas.width, srcContext.canvas.height)
   const data = imageData.data;
 
   for (let i = 0; i < data.length; i += 4) {
@@ -322,9 +355,11 @@ function onStageMouseLeave() {
   doTool(MouseEventType.MouseLeave)
 }
 
-function onStageMouseDown() {
-  isMouseDown = true
-  doTool(MouseEventType.MouseDown)
+function onStageMouseDown(event: KonvaEvent<MouseEvent>) {
+  if(event.evt.button == 0) {
+    isMouseDown = true
+    doTool(MouseEventType.LeftMouseDown)
+  }
 }
 
 function onStageMouseMove() {
@@ -332,24 +367,66 @@ function onStageMouseMove() {
   doTool(MouseEventType.MouseMove)
 }
 
-function onStageMouseUp() {
+function onStageMouseUp(event: KonvaEvent<MouseEvent>) {
   isMouseDown = false
-  doTool(MouseEventType.MouseUp)
+  if(event.evt.button == 0) {
+    doTool(MouseEventType.LeftMouseUp)
+  }
   lastPosition = null
 }
 
 function onStageMouseClick(event: MouseEvent, clickCount: number) {
   if (clickCount == 1) {
-    doTool(MouseEventType.MouseClick)
+    doTool(MouseEventType.LeftMouseClick)
   } else if (clickCount == 2) {
-    doTool(MouseEventType.MouseDoubleClick)
+    doTool(MouseEventType.LeftMouseDoubleClick)
   }
 }
 
+function onStageMouseWheel(event: KonvaEvent<WheelEvent>) {
+  event.evt.preventDefault();
+  if(!stage.value) {
+    return;
+  }
+  const node = stage.value.getNode();
+  const oldScale = node.scaleX();
+  const pointer = node.getPointerPosition();
+  if (!pointer) return;
+
+  // Determine the new scale based on wheel delta
+  const scaleBy = 1.1;
+  const direction = event.evt.deltaY > 0 ? 1 : -1;
+  const newScale = direction > 0 ? oldScale / scaleBy : oldScale * scaleBy;
+
+  // Limit the zoom level
+  zoom.value = Math.min(3, Math.max(0.25, newScale));
+
+  // Calculate the new position to zoom into the pointer location
+  const mousePointTo = {
+    x: (pointer.x - node.x()) / oldScale,
+    y: (pointer.y - node.y()) / oldScale,
+  };
+
+  node.scale({ x: newScale, y: newScale });
+
+  const newPos = {
+    x: pointer.x - mousePointTo.x * newScale,
+    y: pointer.y - mousePointTo.y * newScale,
+  };
+
+  node.position(newPos);
+  node.batchDraw();
+}
+
+function onStageContextMenu(event: KonvaEvent<MouseEvent>) {
+  event.evt.preventDefault()
+}
+
 function saveImage() {
-  if (foregroundLayer.value) {
-    console.log(foregroundLayer.value.getNode().toDataURL())
-    // console.log(stage.value.toDataURL())
+  if (maskDataContext.value) {
+    doThresholding()
+    const pngData = maskDataContext.value.canvas.toDataURL('image/png')
+    console.log(pngData)
   }
 }
 
@@ -368,27 +445,38 @@ function clear() {
   isEdited = true
 }
 
+function onZoomChanged() {
+  if (stage.value) {
+    const node = stage.value.getNode();
+    node.scale({x: zoom.value, y: zoom.value});
+    node.batchDraw();
+  }
+}
+
+watch(zoom, onZoomChanged)
+
 function queryFromBackend() {
   $q.loading.show();
   if (imageAnnotation.value && imageAnnotation.value.imageId >= 0) {
 
     api.get(`/image/${imageAnnotation.value.imageId}/raw`, {responseType: 'blob'}).then(backgroundResponse => {
       loadImageElementFromDataString(backgroundResponse.data).then((backgroundImage) => {
-        stageConfig.width = backgroundImage.width;
-        stageConfig.height = backgroundImage.height;
         backgroundImageConfig.image = backgroundImage;
+
+        const width = backgroundImage.width;
+        const height = backgroundImage.height;
 
         // Create a canvas that only holds the mask data
         const dataCanvas = document.createElement('canvas');
-        dataCanvas.width = stageConfig.width;
-        dataCanvas.height = stageConfig.height;
+        dataCanvas.width = width;
+        dataCanvas.height = height;
         const context = dataCanvas.getContext('2d')!;
         // context.drawImage(fgImg, 0, 0, stageConfig.width, stageConfig.height);
 
         // Create another canvas that contains the rendered mask (false-coloring)
         const renderCanvas = document.createElement('canvas');
-        renderCanvas.width = stageConfig.width;
-        renderCanvas.height = stageConfig.height;
+        renderCanvas.width = width;
+        renderCanvas.height = height;
 
 
         foregroundCanvas.value = dataCanvas;
@@ -405,16 +493,37 @@ function queryFromBackend() {
   }
 }
 
+function updateStageSize() {
+  stageConfig.width = window.innerWidth;
+  stageConfig.height = window.innerHeight;
+}
+
+function resetLocationAndZoom() {
+  if(stage.value) {
+    stage.value.getStage().position({ x: 0, y: 0 });
+  }
+  zoom.value = 1
+}
+
 onMounted(() => {
+  updateStageSize()
   queryFromBackend()
+  stageConfig.draggable = currentToolId.value == "pan"
+})
+window.addEventListener('resize', () => {
+  updateStageSize()
 })
 watch(imageAnnotation, () => {
   queryFromBackend()
 })
+watch(currentToolId, () => {
+  stageConfig.draggable = currentToolId.value == "pan"
+})
 defineExpose({
   saveImage,
   queryFromBackend,
-  clear
+  clear,
+  resetLocationAndZoom
 })
 // When the user leave the page in your Vue app
 onBeforeRouteLeave(() => {
@@ -431,9 +540,28 @@ useEventListener(window, "beforeunload", (event) => {
 });
 
 </script>
+<style scoped lang="scss">
+.tool-control-badge {
+  display: flex;
+  flex-direction: row;
+  gap: 3px;
+  height: 3em;
+
+  .label {
+    flex-grow: 1;
+  }
+}
+
+.stage-container {
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.2), 0 2px 2px rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.12);
+  flex-grow: 1;
+  overflow: hidden;
+  height: 0;
+  margin-left: 8px!important;
+}
+</style>
 <style lang="scss">
 .konvajs-content {
-  border: 1px solid black;
   cursor: crosshair;
 }
 </style>
