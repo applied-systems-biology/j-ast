@@ -43,7 +43,7 @@ export class ProjectMetadataPayload {
   owner: string = '';
 }
 
-export class ImageAnnotationPayload {
+export class MaskImageAnnotationPayload {
   @Expose()
   id: number = -1;
 

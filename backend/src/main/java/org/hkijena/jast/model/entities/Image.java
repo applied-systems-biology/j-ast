@@ -72,20 +72,20 @@ public class Image {
     private byte[] thumbnailData;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true, mappedBy = "image")
-    private List<ImageAnnotation> imageAnnotations = new ArrayList<>();
+    private List<MaskImageAnnotation> maskImageAnnotations = new ArrayList<>();
 
-    public List<ImageAnnotation> getImageAnnotations() {
-        return imageAnnotations;
+    public List<MaskImageAnnotation> getImageAnnotations() {
+        return maskImageAnnotations;
     }
 
-    public void addImageAnnotation(ImageAnnotation imageAnnotation) {
-        imageAnnotations.add(imageAnnotation);
-        imageAnnotation.setImage(this);
+    public void addImageAnnotation(MaskImageAnnotation maskImageAnnotation) {
+        maskImageAnnotations.add(maskImageAnnotation);
+        maskImageAnnotation.setImage(this);
     }
 
-    public void removeImageAnnotation(ImageAnnotation imageAnnotation) {
-        imageAnnotations.remove(imageAnnotation);
-        imageAnnotation.setImage(null);
+    public void removeImageAnnotation(MaskImageAnnotation maskImageAnnotation) {
+        maskImageAnnotations.remove(maskImageAnnotation);
+        maskImageAnnotation.setImage(null);
     }
 
     @NotNull

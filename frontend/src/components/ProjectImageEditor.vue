@@ -30,16 +30,16 @@
     :options="['DDA', 'ETest', 'Unknown']"
     @update:model-value="onUpdateAssayType"
   />
-  <ProjectImageAnnotationButton v-model="model" annotation-type-id="plate" annotation-type-name="Plate"/>
-  <ProjectImageAnnotationButton v-if="model?.assayType == 'DDA'" v-model="model" annotation-type-id="strip-disk" annotation-type-name="DDA disk"/>
-  <ProjectImageAnnotationButton v-if="model?.assayType == 'ETest'" v-model="model" annotation-type-id="strip-disk" annotation-type-name="ETest strip"/>
-  <ProjectImageAnnotationButton v-if="model?.assayType == 'ETest'" v-model="model" annotation-type-id="zoi-shape" annotation-type-name="ETest ZOI shape"/>
+  <MaskImageAnnotationButton v-model="model" annotation-type-id="plate" annotation-type-name="Plate"/>
+  <MaskImageAnnotationButton v-if="model?.assayType == 'DDA'" v-model="model" annotation-type-id="strip-disk" annotation-type-name="DDA disk"/>
+  <MaskImageAnnotationButton v-if="model?.assayType == 'ETest'" v-model="model" annotation-type-id="strip-disk" annotation-type-name="ETest strip"/>
+  <MaskImageAnnotationButton v-if="model?.assayType == 'ETest'" v-model="model" annotation-type-id="zoi-shape" annotation-type-name="ETest ZOI shape"/>
 </template>
 <script setup lang="ts">
 import { AssayType, ImagePayload } from 'src/types/common';
 import { debounce, useQuasar } from 'quasar';
 import { plainToInstance } from 'class-transformer';
-import ProjectImageAnnotationButton from 'components/ProjectImageAnnotationButton.vue';
+import MaskImageAnnotationButton from 'components/MaskImageAnnotationButton.vue';
 
 const $q = useQuasar()
 type SelectValue = string | number | null;

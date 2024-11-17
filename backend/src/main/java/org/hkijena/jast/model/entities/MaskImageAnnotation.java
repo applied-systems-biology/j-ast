@@ -5,16 +5,14 @@ import org.hkijena.jast.utils.ImageUtils;
 
 import java.awt.image.BufferedImage;
 import java.io.Serial;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * An annotation associated to an image
  * Contains another image
  */
 @Entity
-@Table(name = "image_annotations")
-public class ImageAnnotation {
+@Table(name = "mask_image_annotations")
+public class MaskImageAnnotation {
     @Serial
     private static final long serialVersionUID = 1L;
 

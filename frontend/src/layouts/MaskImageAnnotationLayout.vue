@@ -30,7 +30,7 @@
     </q-header>
     <q-page-container>
       <q-page padding>
-        <ProjectImageAnnotationEditor ref="editorComponent" v-model="annotationPayload" v-model:tool-color="currentAnnotationColorId" />
+        <ProjectImageAnnotationEditor ref="editorComponent" v-model="annotationPayload" v-model:tool-color="currentAnnotationColorId" v-model:tool-id="currentAnnotationToolId"/>
       </q-page>
     </q-page-container>
   </q-layout>
@@ -40,11 +40,11 @@
 import LoginButtonComponent from "components/AuthManagerComponent.vue";
 import HeaderLogoButtonComponent from "components/HeaderLogoButtonComponent.vue";
 import {computed, onMounted, Ref, ref, useTemplateRef} from 'vue';
-import {AssayType, ImagePayload, ImageAnnotationPayload, ProjectMetadataPayload} from 'src/types/common';
+import {AssayType, ImagePayload, MaskImageAnnotationPayload, ProjectMetadataPayload} from 'src/types/common';
 import {api} from 'boot/axios';
 import {plainToInstance} from 'class-transformer';
 import {useRoute} from 'vue-router';
-import ProjectImageAnnotationEditor from 'components/ProjectImageAnnotationEditor.vue';
+import ProjectImageAnnotationEditor from 'components/MaskImageAnnotationEditor.vue';
 import {useQuasar} from "quasar";
 
 const $q = useQuasar()
@@ -58,22 +58,23 @@ defineOptions({
 });
 
 const annotationTools = [
-  { label: "Draw", value: "draw", icon: "fa-solid fa-pencil" },
-  { label: "Polygon", value: "polygon", icon: "fa-solid fa-draw-polygon" },
-  { label: "Fill", value: "fill", icon: "fa-solid fa-fill-drip" },
+  { label: "", value: "draw", icon: "fa-solid fa-pencil" },
+  { label: "", value: "polygon", icon: "fa-solid fa-draw-polygon" },
+  { label: "", value: "line", icon: "fa-solid fa-slash" },
+  { label: "", value: "fill", icon: "fa-solid fa-fill-drip" },
 ]
 const annotationColors = [
-  { label: "Foreground", value: "foreground", icon: "fa-solid fa-square" },
-  { label: "Background", value: "background", icon: "fa-solid fa-eraser" },
+  { label: "Foreground", value: "#FFFFFF", icon: "fa-solid fa-square" },
+  { label: "Background", value: "#000000", icon: "fa-solid fa-eraser" },
 ]
 const currentAnnotationToolId = ref("draw");
-const currentAnnotationColorId = ref("foreground");
+const currentAnnotationColorId = ref("#FFFFFF");
 
 const imagePayload: Ref<ImagePayload> = ref(new ImagePayload());
 const projectPayload: Ref<ProjectMetadataPayload> = ref(
   new ProjectMetadataPayload()
 );
-const annotationPayload : Ref<ImageAnnotationPayload> = ref(new ImageAnnotationPayload());
+const annotationPayload : Ref<MaskImageAnnotationPayload> = ref(new MaskImageAnnotationPayload());
 
 const annotationName = computed(() => {
   switch (annotationTypeId) {
@@ -115,8 +116,8 @@ function resetAnnotation() {
 }
 
 function queryFromBackend() {
-  api.get(`/image-annotation/${imageId}/${annotationTypeId}`).then(response => {
-    annotationPayload.value = plainToInstance(ImageAnnotationPayload, response.data)
+  api.get(`/mask-image-annotation/${imageId}/${annotationTypeId}`).then(response => {
+    annotationPayload.value = plainToInstance(MaskImageAnnotationPayload, response.data)
 
     // Load info about the image and the
 

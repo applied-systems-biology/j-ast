@@ -14,7 +14,7 @@ const props = defineProps<{
 }>()
 
 function openEditor() {
-  router.push(`/image-annotation/${model.value?.id}/${props.annotationTypeId}`)
+  router.push(`/mask-image-annotation/${model.value?.id}/${props.annotationTypeId}`)
 }
 
 </script>

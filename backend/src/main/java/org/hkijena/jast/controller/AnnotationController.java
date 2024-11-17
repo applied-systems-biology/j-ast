@@ -2,8 +2,8 @@ package org.hkijena.jast.controller;
 
 import jakarta.servlet.http.HttpServletResponse;
 import org.hkijena.jast.model.entities.Image;
-import org.hkijena.jast.model.entities.ImageAnnotation;
-import org.hkijena.jast.payloads.ProjectImageAnnotationPayload;
+import org.hkijena.jast.model.entities.MaskImageAnnotation;
+import org.hkijena.jast.payloads.MaskImageAnnotationPayload;
 import org.hkijena.jast.repositories.ImageAnnotationRepository;
 import org.hkijena.jast.repositories.ImageRepository;
 import org.hkijena.jast.repositories.ProjectRepository;
@@ -41,27 +41,27 @@ public class AnnotationController {
         this.userService = userService;
     }
 
-    @GetMapping("/api/image-annotation/{imageId}/{annotationType}")
-    public ResponseEntity<ProjectImageAnnotationPayload> getPayload(Authentication authentication, @PathVariable long imageId, @PathVariable String annotationType) {
+    @GetMapping("/api/mask-image-annotation/{imageId}/{annotationType}")
+    public ResponseEntity<MaskImageAnnotationPayload> getPayload(Authentication authentication, @PathVariable long imageId, @PathVariable String annotationType) {
         userService.validateAuthentication(authentication);
-        ImageAnnotation imageAnnotation = getOrCreateImageAnnotation(authentication, imageId, annotationType);
-        return ResponseEntity.ok(ProjectImageAnnotationPayload.create(imageAnnotation));
+        MaskImageAnnotation maskImageAnnotation = getOrCreateImageAnnotation(authentication, imageId, annotationType);
+        return ResponseEntity.ok(MaskImageAnnotationPayload.create(maskImageAnnotation));
     }
 
-    @GetMapping("/api/image-annotation/{imageId}/{annotationType}/raw")
+    @GetMapping("/api/mask-image-annotation/{imageId}/{annotationType}/raw")
     public void getRaw(HttpServletResponse response, Authentication authentication, @PathVariable long imageId, @PathVariable String annotationType) throws IOException {
         userService.validateAuthentication(authentication);
-        ImageAnnotation imageAnnotation = getOrCreateImageAnnotation(authentication, imageId, annotationType);
+        MaskImageAnnotation maskImageAnnotation = getOrCreateImageAnnotation(authentication, imageId, annotationType);
 
-        RequestUtils.sendContent(response, imageAnnotation.getRawData(), MimeTypeUtils.MIME_TYPE_PNG);
+        RequestUtils.sendContent(response, maskImageAnnotation.getRawData(), MimeTypeUtils.MIME_TYPE_PNG);
     }
 
-    private ImageAnnotation getOrCreateImageAnnotation(Authentication authentication, long imageId, String annotationType) {
+    private MaskImageAnnotation getOrCreateImageAnnotation(Authentication authentication, long imageId, String annotationType) {
         Optional<Image> image_ = imageRepository.findById(imageId);
         if (image_.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
-        if(!ImageAnnotation.isValidType(annotationType)) {
+        if(!MaskImageAnnotation.isValidType(annotationType)) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
         Image image = image_.get();
@@ -69,21 +69,21 @@ public class AnnotationController {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN);
         }
 
-        Optional<ImageAnnotation> imageAnnotation_ = imageAnnotationRepository.findFirstByImageAndType(image, annotationType);
-        ImageAnnotation imageAnnotation;
+        Optional<MaskImageAnnotation> imageAnnotation_ = imageAnnotationRepository.findFirstByImageAndType(image, annotationType);
+        MaskImageAnnotation maskImageAnnotation;
         if(imageAnnotation_.isEmpty()) {
             // Create a new annotation
-            imageAnnotation = new ImageAnnotation();
-            imageAnnotation.setImage(image);
-            imageAnnotation.setType(annotationType);
-            imageAnnotation.resetToMask(image);
+            maskImageAnnotation = new MaskImageAnnotation();
+            maskImageAnnotation.setImage(image);
+            maskImageAnnotation.setType(annotationType);
+            maskImageAnnotation.resetToMask(image);
 
-            image.addImageAnnotation(imageAnnotation);
-            imageAnnotationRepository.save(imageAnnotation);
+            image.addImageAnnotation(maskImageAnnotation);
+            imageAnnotationRepository.save(maskImageAnnotation);
         }
         else {
-            imageAnnotation = imageAnnotation_.get();
+            maskImageAnnotation = imageAnnotation_.get();
         }
-        return imageAnnotation;
+        return maskImageAnnotation;
     }
 }
