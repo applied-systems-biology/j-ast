@@ -23,11 +23,12 @@
           not-selected-icon="upload"
           selected-icon="close"
           class="bg-secondary"
-          v-model="drawerLeft">
+          v-model="drawerLeft"
+        >
           Upload
           <q-tooltip>
-            Allows you to upload raw image files.
-            Please note that all new images will be put into the "Unsorted images" list.
+            Allows you to upload raw image files. Please note that all new
+            images will be put into the "Unsorted images" list.
           </q-tooltip>
         </ToggleButton>
         <ToggleButton
@@ -44,26 +45,43 @@
             }})</span
           >
           <span v-else class="text-bold flex flex-center">Unsorted images</span>
-          <q-tooltip>All images that have not yet been organized are stored here.</q-tooltip>
+          <q-tooltip
+            >All images that have not yet been organized are stored
+            here.</q-tooltip
+          >
         </ToggleButton>
         <q-btn
           icon="deselect"
           color="blue"
           v-if="selectedImageIds.length > 0"
           @click="selectedImageIds = []"
-          ><q-tooltip>
-          Clears the current selection
-        </q-tooltip>
+          ><q-tooltip> Clears the current selection </q-tooltip>
         </q-btn>
         <q-btn
           icon="download"
           color="blue"
           v-if="selectedImageIds.length > 0"
           @click="downloadSelectedImages"
-          >
-          <q-tooltip>
-            Downloads the selected image(s)
-          </q-tooltip>
+        >
+          <q-tooltip> Downloads the selected image(s) </q-tooltip>
+        </q-btn>
+        <q-btn color="blue" label="Tools" icon="fa-solid fa-gear"  v-if="selectedImageIds.length > 0">
+          <q-menu>
+            <q-list style="min-width: 100px">
+              <q-item
+                v-for="tool in frontEndProcessors"
+                :key="tool.label"
+                clickable
+                v-close-popup
+                @click="tool.fn(selectedImageIds)"
+              >
+                <q-item-section avatar>
+                  <q-icon name="fa-solid fa-expand" />
+                </q-item-section>
+                <q-item-section>{{ tool.label }}</q-item-section>
+              </q-item>
+            </q-list>
+          </q-menu>
         </q-btn>
         <q-btn
           icon="delete"
@@ -71,9 +89,7 @@
           v-if="selectedImageIds.length > 0"
           @click="deleteSelectedImages"
         >
-          <q-tooltip>
-            Deletes the selected image(s)
-          </q-tooltip>
+          <q-tooltip> Deletes the selected image(s) </q-tooltip>
         </q-btn>
       </q-toolbar>
     </q-header>
@@ -98,7 +114,10 @@
           @click="selectedImageIds = []"
         />
       </div>
-      <ProjectMultiImageEditor v-if="selectedImageIds.length > 1" v-model="selectedImageIds" />
+      <ProjectMultiImageEditor
+        v-if="selectedImageIds.length > 1"
+        v-model="selectedImageIds"
+      />
       <ProjectImageEditor v-model="selectedImage" />
     </q-drawer>
     <q-page-container>
@@ -124,14 +143,17 @@ import { useQuasar } from 'quasar';
 import { useRoute, useRouter } from 'vue-router';
 import { api } from 'boot/axios';
 import {
-  CreateEditProjectRequest, downloadFromApi, ensureExtension,
+  CreateEditProjectRequest,
+  downloadFromApi,
+  ensureExtension,
   ProjectImagesPayload,
   ProjectMetadataPayload,
 } from 'src/types/common';
 import ProjectImageEditor from 'components/ProjectImageEditor.vue';
 import { plainToInstance } from 'class-transformer';
 import ImageArrangerComponent from 'components/ImageArrangerComponent.vue';
-import ProjectMultiImageEditor from "components/ProjectMultiImageEditor.vue";
+import ProjectMultiImageEditor from 'components/ProjectMultiImageEditor.vue';
+import { frontEndProcessors } from 'src/types/algorithms';
 
 const $q = useQuasar();
 const $route = useRoute();
@@ -230,13 +252,19 @@ function deleteSelectedImages() {
 
 function downloadSelectedImages() {
   for (const id of selectedImageIds.value) {
-    downloadFromApi(`/image/${id}/raw`, ensureExtension(projectImages.value.getImageById(id).fileName, [".png"]))
+    downloadFromApi(
+      `/image/${id}/raw`,
+      ensureExtension(projectImages.value.getImageById(id).fileName, ['.png'])
+    );
   }
 }
 
 function reloadProjectInfo() {
   api.get<ProjectMetadataPayload>(`/project/${projectId}`).then((response) => {
-    projectPayload.value = plainToInstance(ProjectMetadataPayload, response.data);
+    projectPayload.value = plainToInstance(
+      ProjectMetadataPayload,
+      response.data
+    );
   });
   api
     .get<ProjectImagesPayload>(`/project/${projectId}/images`)
