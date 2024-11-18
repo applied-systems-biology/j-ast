@@ -1,5 +1,5 @@
 <template>
-  <q-layout view="lHh Lpr lFf">
+  <q-layout view="hHh lpR fFf">
     <q-header>
       <q-toolbar>
         <q-toolbar-title class="row items-center q-gutter-sm">
@@ -14,7 +14,7 @@
           <div v-else>{{ imagePayload.fileName }}</div>
           <div>/</div>
           <div>{{ annotationName }}</div>
-          <q-btn color="green" icon="upload" size="lg" @click="saveAndUpload">Save annotation</q-btn>
+          <q-btn color="green" icon="upload" size="lg" @click="postToBackend">Save annotation</q-btn>
         </q-toolbar-title>
         <LoginButtonComponent/>
       </q-toolbar>
@@ -30,20 +30,20 @@
         <q-btn color="blue-grey" label="Tools" icon="fa-solid fa-gear">
           <q-menu>
             <q-list style="min-width: 100px">
-              <q-item clickable v-close-popup @click="resetView">
+              <q-item clickable v-close-popup @click="resetLocationAndZoom">
                 <q-item-section avatar>
                   <q-icon name="fa-solid fa-expand"/>
                 </q-item-section>
                 <q-item-section>Reset view</q-item-section>
               </q-item>
               <q-separator/>
-              <q-item clickable v-close-popup @click="clearAnnotation">
+              <q-item clickable v-close-popup @click="onUserRequestClearAnnotation">
                 <q-item-section avatar>
                   <q-icon name="fa-solid fa-eraser"/>
                 </q-item-section>
                 <q-item-section>Clear</q-item-section>
               </q-item>
-              <q-item clickable v-close-popup @click="restoreSavedState">
+              <q-item clickable v-close-popup @click="onUserRequestRestoreSavedState">
                 <q-item-section avatar>
                   <q-icon name="fa-solid fa-undo"/>
                 </q-item-section>
@@ -73,11 +73,94 @@
         </q-btn>
       </q-toolbar>
     </q-header>
+    <q-drawer side="left" :model-value="true" elevated class="q-pa-lg tool-control-container">
+      <div class="tool-control">
+        <q-badge color="primary" class="tool-control-badge">
+          <div class="label">
+            Zoom
+          </div>
+          <q-btn size="xs" icon="fa-solid fa-undo" @click="zoom = 1">
+            <q-tooltip>Reset zoom</q-tooltip>
+          </q-btn>
+        </q-badge>
+        <q-slider v-model="zoom" :min="0.25" :max="3" :markers="0.25" :step="0" label marker-labels
+                  switch-label-side></q-slider>
+      </div>
+      <div class="tool-control" v-if="currentAnnotationToolId=='draw' || currentAnnotationToolId == 'line'">
+        <q-badge color="secondary" class="tool-control-badge">
+          <div class="label">
+            Brush size
+          </div>
+        </q-badge>
+        <q-slider v-model="brushSize" :min="1" :step="1" :max="100" snap label :markers="10" marker-labels
+                  switch-label-side></q-slider>
+      </div>
+      <div class="tool-control" v-if="currentAnnotationToolId=='polygon'">
+        <q-badge color="secondary" class="tool-control-badge">
+          <div class="label">
+            Polygon tool
+          </div>
+          <q-toggle
+            v-model="polygonToolDoFill"
+            label="Fill"
+            left-label
+          />
+        </q-badge>
+        <div class="text-caption q-gutter-sm q-pt-sm">
+          <q-badge color="cyan">
+            <q-icon name="fa-solid fa-computer-mouse"/>
+            Left: Add point
+          </q-badge>
+          <q-badge color="cyan">
+            <q-icon name="fa-solid fa-computer-mouse"/>
+            Right: Remove point
+          </q-badge>
+          <q-badge color="cyan">
+            <q-icon name="fa-solid fa-computer-mouse"/>
+            2xLeft: Confirm
+          </q-badge>
+        </div>
+      </div>
+      <div v-if="isEdited">
+        <q-badge color="secondary" class="tool-control-badge">
+          <div class="label">
+            Unsaved changes
+          </div>
+          <q-btn size="xs" icon="upload" color="green" @click="postToBackend"/>
+        </q-badge>
+        <div class="text-caption q-gutter-sm q-pa-sm q-pt-md ">
+          Please do not forget to save your changes. Otherwise they will be lost.
+        </div>
+      </div>
+    </q-drawer>
     <q-page-container>
       <q-page padding class="flex column q-gutter-sm">
-        <ProjectImageAnnotationEditor ref="editorComponent" v-model="annotationPayload"
-                                      v-model:tool-color="currentAnnotationColorId"
-                                      v-model:tool-id="currentAnnotationToolId"/>
+        <div class="full-width stage-container">
+          <konva-stage
+            ref="stage"
+            :config="stageConfig"
+            @mousedown="onStageMouseDown"
+            @mousemove="onStageMouseMove"
+            @mouseup="onStageMouseUp"
+            @mouseenter="onStageMouseEnter"
+            @mouseleave="onStageMouseLeave"
+            @click="onStageMouseClick($event, 1)"
+            @dblclick="onStageMouseClick($event, 2)"
+            @contextmenu="onStageContextMenu"
+            @wheel="onStageMouseWheel">
+            <konva-layer>
+              <konva-image :config="backgroundImageConfig"/>
+            </konva-layer>
+            <konva-layer ref="foregroundLayer" :config="{ opacity: 0.5 }">
+              <konva-image :config="foregroundImageConfig"/>
+            </konva-layer>
+            <konva-layer ref="previewLayer">
+              <konva-circle :config="brushPreviewConfig"/>
+              <konva-line :config="linePreviewConfig"/>
+              <konva-line :config="polygonPreviewConfig"/>
+            </konva-layer>
+          </konva-stage>
+        </div>
       </q-page>
     </q-page-container>
   </q-layout>
@@ -86,28 +169,105 @@
 <script setup lang="ts">
 import LoginButtonComponent from "components/AuthManagerComponent.vue";
 import HeaderLogoButtonComponent from "components/HeaderLogoButtonComponent.vue";
-import {computed, onMounted, Ref, ref, useTemplateRef} from 'vue';
+import { computed, onMounted, reactive, Ref, ref, useTemplateRef, watch } from 'vue';
 import {
   AssayType, downloadDataString,
   downloadFromApi, ensureExtension,
-  ImagePayload,
+  ImagePayload, loadImageElementFromDataString,
   MaskImageAnnotationPayload,
-  ProjectMetadataPayload, removeExtensionIfPresent
+  ProjectMetadataPayload, removeExtensionIfPresent, uploadImage
 } from 'src/types/common';
 import {api} from 'boot/axios';
 import {plainToInstance} from 'class-transformer';
-import {useRoute} from 'vue-router';
-import ProjectImageAnnotationEditor from 'components/MaskImageAnnotationEditor.vue';
+import { onBeforeRouteLeave, useRoute } from 'vue-router';
 import {useQuasar} from "quasar";
+import FloodFill from 'q-floodfill';
+import { useEventListener } from '@vueuse/core';
 
 const $q = useQuasar()
 const $route = useRoute()
 const imageId = $route.params.imageId
 const annotationTypeId = $route.params.annotationTypeId
-const editorComponent = useTemplateRef<typeof ProjectImageAnnotationEditor>("editorComponent")
+const brushSize = ref(20)
+const zoom = ref(1)
+const polygonToolDoFill = ref(true)
+const previewHighlighter = "#00ffffaa"
+
+
+const stageConfig = reactive({
+  width: 16,
+  height: 16,
+  draggable: false
+});
+
+const brushPreviewConfig = reactive({
+  x: 0,
+  y: 0,
+  radius: 1,
+  stroke: previewHighlighter,
+  visible: false
+})
+
+const linePreviewConfig = reactive({
+  x: 0,
+  y: 0,
+  strokeWidth: 1,
+  lineCap: 'round',
+  lineJoin: 'round',
+  points: [0, 0, 100, 100],
+  stroke: previewHighlighter,
+  visible: false
+})
+
+const polygonPreviewConfig = reactive({
+  x: 0,
+  y: 0,
+  points: new Array<number>(),
+  closed: true,
+  stroke: previewHighlighter,
+  fill: previewHighlighter,
+  visible: false
+})
+
+const backgroundImageConfig: { image: HTMLImageElement | null } = reactive({
+  image: null
+})
+
+const foregroundImageConfig: { image: HTMLCanvasElement | null } = reactive({
+  image: null
+})
+
+type KonvaEvent<T> = { evt: T }
+type Position = { x: number; y: number }
+
+enum MouseEventType {
+  LeftMouseDown,
+  LeftMouseUp,
+  LeftMouseClick,
+  RightMouseClick,
+  MouseMove,
+  MouseEnter,
+  MouseLeave,
+  LeftMouseDoubleClick
+}
+
+
+
+const stage = useTemplateRef<any>("stage")
+const foregroundLayer = useTemplateRef<any>("foregroundLayer")
+const previewLayer = useTemplateRef<any>("previewLayer")
+const foregroundCanvas = ref<HTMLCanvasElement | null>(null);
+const maskDataContext = ref<CanvasRenderingContext2D | null>(null);
+const foregroundContext = ref<CanvasRenderingContext2D | null>(null);
+const isEdited = ref(false)
+let isMouseDown = false;
+let lastPosition: Position | null = null;
+let isPanning: boolean = false
+let panMouseDxDy: Position | null = null;
+
 
 defineOptions({
-  name: 'ImageAnnotationLayout'
+  name: 'MaskImageAnnotationLayout'
 });
 
 const annotationTools = [
@@ -147,12 +307,496 @@ const annotationName = computed(() => {
   return annotationTypeId;
 })
 
-function resetView() {
-  editorComponent.value?.resetLocationAndZoom()
+function getStageMousePosition(): Position | undefined {
+  if (stage.value) {
+    const pointer = stage.value.getStage().getPointerPosition();
+    const node = stage.value.getNode();
+    if (!pointer) return undefined;
+
+    const scale = node.scaleX();
+    const position = node.position();
+
+    return {
+      x: (pointer.x - position.x) / scale,
+      y: (pointer.y - position.y) / scale,
+    };
+  } else {
+    return undefined
+  }
 }
 
-function saveAndUpload() {
-  editorComponent.value?.saveImage()
+function doToolDraw() {
+
+  const context = maskDataContext.value
+
+  if (!stage.value || !foregroundLayer.value || !context) {
+    return
+  }
+
+  const pos = getStageMousePosition()
+
+  if (!pos) {
+    return
+  }
+  if (!lastPosition) {
+    lastPosition = pos as Position
+  }
+
+  context.imageSmoothingEnabled = false
+  context.strokeStyle = currentAnnotationColorId.value!
+  context.globalCompositeOperation = "source-over"
+  context.lineCap = "round"
+  context.lineJoin = "round"
+  context.lineWidth = brushSize.value
+  context.beginPath();
+  context.moveTo(lastPosition.x, lastPosition.y)
+  context.lineTo(pos.x, pos.y)
+  context.stroke()
+  lastPosition = pos as Position
+
+  renderMaskToForeground()
+  isEdited.value = true
+}
+
+function doToolPolygon(eventType: MouseEventType) {
+  if (!stage.value || !foregroundLayer.value) {
+    return
+  }
+  const pos = getStageMousePosition()
+  if (!pos) {
+    return;
+  }
+  polygonPreviewConfig.visible = true
+  if(eventType == MouseEventType.MouseMove) {
+    if(polygonPreviewConfig.points.length > 1) {
+      polygonPreviewConfig.points[polygonPreviewConfig.points.length - 2] = pos.x
+      polygonPreviewConfig.points[polygonPreviewConfig.points.length - 1] = pos.y
+      previewLayer.value.getNode().batchDraw()
+    }
+  }
+  else if(eventType == MouseEventType.LeftMouseClick) {
+    if(polygonPreviewConfig.points.length == 0) {
+      // Add also the starting point
+      polygonPreviewConfig.points.push(pos.x)
+      polygonPreviewConfig.points.push(pos.y)
+    }
+    polygonPreviewConfig.points.push(pos.x)
+    polygonPreviewConfig.points.push(pos.y)
+    previewLayer.value.getNode().batchDraw()
+
+  }
+  else if(eventType == MouseEventType.RightMouseClick) {
+    if(polygonPreviewConfig.points.length > 1 ) {
+      polygonPreviewConfig.points.splice(polygonPreviewConfig.points.length - 2, 2)
+
+      // Update the last pos
+      if(polygonPreviewConfig.points.length > 1) {
+        polygonPreviewConfig.points[polygonPreviewConfig.points.length - 2] = pos.x
+        polygonPreviewConfig.points[polygonPreviewConfig.points.length - 1] = pos.y
+      }
+
+      previewLayer.value.getNode().batchDraw()
+    }
+  }
+  else if(eventType == MouseEventType.LeftMouseDoubleClick) {
+    // Commit
+    if(polygonPreviewConfig.points.length >= 4) {
+
+      const context = maskDataContext.value
+      if (!context) {
+        return;
+      }
+
+      context.imageSmoothingEnabled = false
+      context.strokeStyle = currentAnnotationColorId.value!
+      context.fillStyle = currentAnnotationColorId.value!
+      context.globalCompositeOperation = "source-over"
+      context.lineCap = "round"
+      context.lineJoin = "round"
+      context.lineWidth = 1
+      context.beginPath();
+      context.moveTo(polygonPreviewConfig.points[0], polygonPreviewConfig.points[1])
+      for (let i = 2; i < polygonPreviewConfig.points.length; i+=2) {
+        context.lineTo(polygonPreviewConfig.points[i], polygonPreviewConfig.points[i + 1])
+      }
+      context.closePath();
+      if(polygonToolDoFill.value) {
+        context.fill()
+      }
+      else {
+        context.stroke()
+      }
+
+      renderMaskToForeground()
+      isEdited.value = true
+
+      // Reset
+      polygonPreviewConfig.points = []
+    }
+    previewLayer.value.getNode().batchDraw()
+  }
+}
+
+function doToolLine(eventType: MouseEventType) {
+  if (!stage.value || !foregroundLayer.value) {
+    return
+  }
+  const pos = getStageMousePosition()
+  if (!pos) {
+    return;
+  }
+  if (eventType == MouseEventType.LeftMouseDown) {
+    lastPosition = pos as Position
+    linePreviewConfig.strokeWidth = brushSize.value
+  } else if (eventType == MouseEventType.MouseMove) {
+    if (isMouseDown && lastPosition) {
+      linePreviewConfig.visible = true
+      linePreviewConfig.points = [lastPosition.x, lastPosition.y, pos.x, pos.y]
+    }
+  } else if (eventType == MouseEventType.LeftMouseUp) {
+    linePreviewConfig.visible = false
+    if (lastPosition) {
+      const context = maskDataContext.value
+      if (!context) {
+        return;
+      }
+
+      context.imageSmoothingEnabled = false
+      context.strokeStyle = currentAnnotationColorId.value!
+      context.globalCompositeOperation = "source-over"
+      context.lineCap = "round"
+      context.lineJoin = "round"
+      context.lineWidth = brushSize.value
+      context.beginPath();
+      context.moveTo(lastPosition.x, lastPosition.y)
+      context.lineTo(pos.x, pos.y)
+      context.stroke()
+
+      renderMaskToForeground()
+      isEdited.value = true
+    }
+  }
+}
+
+function doToolFill() {
+  if (!stage.value || !foregroundLayer.value) {
+    return
+  }
+  const pos = getStageMousePosition()
+  if (!pos) {
+    return;
+  }
+  const context = maskDataContext.value
+  if (!context) {
+    return;
+  }
+
+  // Needed to handle antialiasing
+  doThresholding()
+
+  const canvas = context.canvas;
+  const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
+
+  const floodFill = new FloodFill(imageData)
+  floodFill.fill(currentAnnotationColorId.value!, Math.floor(pos.x), Math.floor(pos.y), 0)
+  context.putImageData(floodFill.imageData, 0, 0)
+
+  renderMaskToForeground()
+  isEdited.value = true
+}
+
+function updatePreview() {
+  if (!stage.value || !foregroundLayer.value) {
+    return
+  }
+
+  const pos = getStageMousePosition()
+  if (!pos) {
+    brushPreviewConfig.visible = false
+    return;
+  }
+
+  brushPreviewConfig.visible = false
+  linePreviewConfig.visible = false
+  polygonPreviewConfig.visible = false
+
+  if (currentAnnotationToolId.value === "draw" || currentAnnotationToolId.value === "line") {
+    brushPreviewConfig.x = pos.x
+    brushPreviewConfig.y = pos.y
+    brushPreviewConfig.visible = true
+    brushPreviewConfig.radius = brushSize.value / 2
+  } else if(currentAnnotationToolId.value === "polygon") {
+    polygonPreviewConfig.visible = true;
+    brushPreviewConfig.x = pos.x
+    brushPreviewConfig.y = pos.y
+    brushPreviewConfig.visible = true
+    brushPreviewConfig.radius = 1
+  }
+}
+
+function doTool(eventType: MouseEventType) {
+  if(isPanning) {
+    return
+  }
+  switch (currentAnnotationToolId.value) {
+    case "draw": {
+      if (eventType == MouseEventType.LeftMouseDown) {
+        doToolDraw()
+      } else if (eventType == MouseEventType.MouseMove) {
+        if (isMouseDown) {
+          doToolDraw()
+        }
+      } else if (eventType == MouseEventType.LeftMouseUp) {
+        lastPosition = null
+      }
+    }
+      break
+    case "line": {
+      doToolLine(eventType)
+    }
+      break;
+    case "polygon": {
+      doToolPolygon(eventType)
+    }
+      break;
+    case "fill": {
+      if (eventType == MouseEventType.LeftMouseClick) {
+        doToolFill()
+      }
+    }
+  }
+}
+
+function resetTool() {
+  stageConfig.draggable = currentAnnotationToolId.value == "pan"
+  lastPosition = null
+  isPanning = false
+  panMouseDxDy = null
+  polygonPreviewConfig.points = []
+}
+
+/**
+ * Applies internal thresholding on the mask data, which may be needed for some operations
+ * Also done before uploading
+ * No need to render afterwards, as the renderer uses the same algorithm
+ */
+function doThresholding() {
+  const context = maskDataContext.value
+  if (!context) {
+    return;
+  }
+  const imageData = context.getImageData(0, 0, context.canvas.width, context.canvas.height)
+  const data = imageData.data;
+
+  for (let i = 0; i < data.length; i += 4) {
+    const r = data[i];
+
+    if (r <= 0) {
+      data[i] = 0; // Red
+      data[i + 1] = 0; // Green
+      data[i + 2] = 0; // Blue
+      data[i + 3] = 255; // Fully opaque
+    } else {
+      data[i] = 255; // Red
+      data[i + 1] = 255; // Green
+      data[i + 2] = 255; // Blue
+      data[i + 3] = 255; // Fully opaque
+    }
+  }
+
+  context.putImageData(imageData, 0, 0)
+}
+
+function renderMaskToForeground() {
+  const srcContext = maskDataContext.value
+  const targetContext = foregroundContext.value
+  if (!srcContext || !targetContext) {
+    return
+  }
+  const imageData = srcContext.getImageData(0, 0, srcContext.canvas.width, srcContext.canvas.height)
+  const data = imageData.data;
+
+  for (let i = 0; i < data.length; i += 4) {
+    const r = data[i];
+
+    if (r <= 0) {
+      // Map black to fully transparent
+      data[i + 3] = 0;
+    } else {
+      // Map white to red
+      data[i] = 255; // Red
+      data[i + 1] = 0; // Green
+      data[i + 2] = 0; // Blue
+      data[i + 3] = 255; // Fully opaque
+    }
+  }
+
+  targetContext.putImageData(imageData, 0, 0)
+  foregroundLayer.value.getNode().batchDraw()
+}
+
+function onStageMouseEnter() {
+  updatePreview()
+  doTool(MouseEventType.MouseEnter)
+}
+
+function onStageMouseLeave() {
+  updatePreview()
+  doTool(MouseEventType.MouseLeave)
+}
+
+function onStageMouseDown(event: KonvaEvent<MouseEvent>) {
+  if (event.evt.button == 0) {
+    isMouseDown = true
+    doTool(MouseEventType.LeftMouseDown)
+  }
+  else if(event.evt.button == 1) {
+
+    // Init the panning
+    if(stage.value) {
+      isPanning = true
+      const stagePos = stage.value.getStage().getPosition() as Position
+      const mousePos = { x: event.evt.x, y: event.evt.y }
+      panMouseDxDy = {
+        x: stagePos.x - mousePos.x,
+        y: stagePos.y - mousePos.y
+      }
+    }
+
+  }
+}
+
+function onStageMouseMove(event: KonvaEvent<MouseEvent>) {
+  if(isPanning) {
+    if(stage.value && panMouseDxDy) {
+      stage.value.getStage().position({
+        x: event.evt.x + panMouseDxDy.x,
+        y: event.evt.y + panMouseDxDy.y
+      })
+    }
+  }
+  else {
+    updatePreview()
+    doTool(MouseEventType.MouseMove)
+  }
+}
+
+function onStageMouseUp(event: KonvaEvent<MouseEvent>) {
+  isMouseDown = false
+  isPanning = false
+  if (event.evt.button == 0) {
+    doTool(MouseEventType.LeftMouseUp)
+  }
+}
+
+function onStageMouseClick(event: KonvaEvent<MouseEvent>, clickCount: number) {
+  if (clickCount == 1) {
+    if (event.evt.button == 0) {
+      doTool(MouseEventType.LeftMouseClick)
+    }
+    else if (event.evt.button == 2) {
+      doTool(MouseEventType.RightMouseClick)
+    }
+  } else if (clickCount == 2) {
+    if (event.evt.button == 0) {
+      doTool(MouseEventType.LeftMouseDoubleClick)
+    }
+  }
+}
+
+function onStageMouseWheel(event: KonvaEvent<WheelEvent>) {
+  event.evt.preventDefault();
+  if (!stage.value) {
+    return;
+  }
+  const node = stage.value.getNode();
+  const oldScale = node.scaleX();
+  const pointer = node.getPointerPosition();
+  if (!pointer) return;
+
+  // Determine the new scale based on wheel delta
+  const scaleBy = 1.1;
+  const direction = event.evt.deltaY > 0 ? 1 : -1;
+  const newScale = direction > 0 ? oldScale / scaleBy : oldScale * scaleBy;
+
+  // Limit the zoom level
+  zoom.value = Math.min(3, Math.max(0.25, newScale));
+
+  // Calculate the new position to zoom into the pointer location
+  const mousePointTo = {
+    x: (pointer.x - node.x()) / oldScale,
+    y: (pointer.y - node.y()) / oldScale,
+  };
+
+  node.scale({x: newScale, y: newScale});
+
+  const newPos = {
+    x: pointer.x - mousePointTo.x * newScale,
+    y: pointer.y - mousePointTo.y * newScale,
+  };
+
+  node.position(newPos);
+  node.batchDraw();
+}
+
+function onStageContextMenu(event: KonvaEvent<MouseEvent>) {
+  event.evt.preventDefault()
+}
+
+function getMaskAsDataString() : string | undefined{
+  if (maskDataContext.value) {
+    doThresholding()
+    return maskDataContext.value.canvas.toDataURL('image/png')
+  }
+  return undefined
+}
+
+function postToBackend() {
+  if (maskDataContext.value) {
+    doThresholding()
+    const pngData = maskDataContext.value.canvas.toDataURL('image/png')
+    $q.loading.show({message: "Uploading image data ..."})
+    uploadImage(`/mask-image-annotation/${annotationPayload.value?.imageId}/${annotationPayload.value?.annotationTypeId}/raw`, pngData)
+      .then(() => {
+        $q.notify({
+          type: "positive",
+          message: "Annotation was successfully uploaded",
+        })
+        isEdited.value = false
+      })
+      .catch(() => {
+        $q.notify({
+          type: "negative",
+          message: "Error while uploading!",
+        })
+      })
+      .finally(() => {
+        $q.loading.hide();
+      })
+  }
+}
+
+function clear() {
+  const context = maskDataContext.value
+  if (!stage.value || !foregroundLayer.value || !context) {
+    return
+  }
+
+  context.imageSmoothingEnabled = false
+  context.fillStyle = "black"
+  context.globalCompositeOperation = "source-over"
+  context.fillRect(0, 0, context.canvas.width, context.canvas.height)
+  renderMaskToForeground()
+
+  isEdited.value = true
+}
+
+function onZoomChanged() {
+  if (stage.value) {
+    const node = stage.value.getNode();
+    node.scale({x: zoom.value, y: zoom.value});
+    node.batchDraw();
+  }
 }
 
 function downloadRaw() {
@@ -165,10 +809,10 @@ function downloadRaw() {
 }
 
 function downloadMask() {
-    downloadDataString(editorComponent.value?.getMaskAsDataString(), removeExtensionIfPresent(imagePayload.value.fileName) + "_" + annotationPayload.value.annotationTypeId + ".png")
+    downloadDataString(getMaskAsDataString()!, removeExtensionIfPresent(imagePayload.value.fileName) + "_" + annotationPayload.value.annotationTypeId + ".png")
 }
 
-function restoreSavedState() {
+function onUserRequestRestoreSavedState() {
   $q.dialog({
     title: 'Restore from saved annotation',
     message: 'Do you really want to reset the annotation from the saved state?',
@@ -181,11 +825,11 @@ function restoreSavedState() {
     },
     persistent: true,
   }).onOk(() => {
-    editorComponent.value?.queryFromBackend()
+    queryFromBackend()
   });
 }
 
-function clearAnnotation() {
+function onUserRequestClearAnnotation() {
   $q.dialog({
     title: 'Clear annotation',
     message: 'Do you really want to erase the annotation?',
@@ -198,33 +842,132 @@ function clearAnnotation() {
     },
     persistent: true,
   }).onOk(() => {
-    editorComponent.value?.clear()
+    clear()
   });
 }
 
 function queryFromBackend() {
-  api.get(`/mask-image-annotation/${imageId}/${annotationTypeId}`).then(response => {
-    annotationPayload.value = plainToInstance(MaskImageAnnotationPayload, response.data)
+  $q.loading.show({
+    message: "Preparing image editor ..."
+  });
 
-    // Load info about the image and the
-
-  })
   api.get(`/image/${imageId}`).then((response) => {
     imagePayload.value = plainToInstance(ImagePayload, response.data);
     api.get<ProjectMetadataPayload>(`/project/${imagePayload.value.projectId}`).then((response) => {
       projectPayload.value = plainToInstance(ProjectMetadataPayload, response.data);
     });
+    api.get(`/mask-image-annotation/${imageId}/${annotationTypeId}`).then(response => {
+      annotationPayload.value = plainToInstance(MaskImageAnnotationPayload, response.data)
+
+      // Load the image
+      if (annotationPayload.value && annotationPayload.value.imageId >= 0) {
+
+        api.get(`/image/${annotationPayload.value.imageId}/raw`, {responseType: 'blob'}).then(backgroundResponse => {
+          loadImageElementFromDataString(backgroundResponse.data).then((backgroundImage) => {
+            backgroundImageConfig.image = backgroundImage;
+
+            const width = backgroundImage.width;
+            const height = backgroundImage.height;
+
+            // Create a canvas that only holds the mask data
+            const dataCanvas = document.createElement('canvas');
+            dataCanvas.width = width;
+            dataCanvas.height = height;
+            const context = dataCanvas.getContext('2d')!;
+            // context.drawImage(fgImg, 0, 0, stageConfig.width, stageConfig.height);
+
+            // Create another canvas that contains the rendered mask (false-coloring)
+            const renderCanvas = document.createElement('canvas');
+            renderCanvas.width = width;
+            renderCanvas.height = height;
+
+            foregroundCanvas.value = dataCanvas;
+            maskDataContext.value = context;
+            foregroundContext.value = renderCanvas.getContext('2d')!;
+            foregroundImageConfig.image = renderCanvas;
+
+            api.get(`/mask-image-annotation/${annotationPayload.value?.imageId}/${annotationPayload.value?.annotationTypeId}/raw`, {responseType: 'blob'}).then(foregroundResponse => {
+              loadImageElementFromDataString(foregroundResponse.data).then((foregroundImage) => {
+                context.drawImage(foregroundImage, 0, 0, foregroundImage.width, foregroundImage.height);
+                isEdited.value = false
+                renderMaskToForeground()
+                $q.loading.hide();
+              })
+            })
+          })
+        })
+      }
+    })
   })
 }
 
+function updateStageSize() {
+  stageConfig.width = window.innerWidth;
+  stageConfig.height = window.innerHeight;
+}
+
+function resetLocationAndZoom() {
+  if (stage.value) {
+    stage.value.getStage().position({x: 0, y: 0});
+  }
+  zoom.value = 1
+}
 
 onMounted(() => {
-  queryFromBackend();
+  updateStageSize()
+  queryFromBackend()
+  resetTool()
+})
+window.addEventListener('resize', updateStageSize)
+watch(currentAnnotationToolId, resetTool)
+watch(zoom, onZoomChanged)
+
+// When the user leave the page in your Vue app
+onBeforeRouteLeave(() => {
+  if (isEdited.value && !confirm("You have unsaved changes. Are you sure you want to leave?")) {
+    return false;
+  }
 });
+
+// When the user refresh/leave the current tab
+useEventListener(window, "beforeunload", (event) => {
+  if (isEdited.value) {
+    event.preventDefault();
+  }
+});
+
 
 </script>
 <style scoped lang="scss">
 .edit-toolbar > * {
   margin-right: 10px;
+}
+
+.tool-control {
+  margin-bottom: 2em;
+}
+
+.tool-control-badge {
+  display: flex;
+  flex-direction: row;
+  gap: 3px;
+  height: 3em;
+
+  .label {
+    flex-grow: 1;
+  }
+}
+
+.stage-container {
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.2), 0 2px 2px rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.12);
+  flex-grow: 1;
+  overflow: hidden;
+  height: 0;
+  margin-left: 8px !important;
+}
+</style>
+<style lang="scss">
+.konvajs-content {
+  cursor: crosshair;
 }
 </style>
