@@ -46,16 +46,16 @@
           >
           <span v-else class="text-bold flex flex-center">Unsorted images</span>
           <q-tooltip
-            >All images that have not yet been organized are stored
-            here.</q-tooltip
-          >
+            >All images that have not yet been organized are stored here.
+          </q-tooltip>
         </ToggleButton>
         <q-btn
           icon="deselect"
           color="blue"
           v-if="selectedImageIds.length > 0"
           @click="selectedImageIds = []"
-          ><q-tooltip> Clears the current selection </q-tooltip>
+        >
+          <q-tooltip> Clears the current selection</q-tooltip>
         </q-btn>
         <q-btn
           icon="download"
@@ -63,9 +63,14 @@
           v-if="selectedImageIds.length > 0"
           @click="downloadSelectedImages"
         >
-          <q-tooltip> Downloads the selected image(s) </q-tooltip>
+          <q-tooltip> Downloads the selected image(s)</q-tooltip>
         </q-btn>
-        <q-btn color="blue" label="Tools" icon="fa-solid fa-gear"  v-if="selectedImageIds.length > 0">
+        <q-btn
+          color="blue"
+          label="Tools"
+          icon="fa-solid fa-gear"
+          v-if="selectedImageIds.length > 0"
+        >
           <q-menu>
             <q-list style="min-width: 100px">
               <q-item
@@ -73,7 +78,7 @@
                 :key="tool.label"
                 clickable
                 v-close-popup
-                @click="tool.fn(selectedImageIds)"
+                @click="doFrontEndProcessor(tool)"
               >
                 <q-item-section avatar>
                   <q-icon name="fa-solid fa-expand" />
@@ -89,14 +94,14 @@
           v-if="selectedImageIds.length > 0"
           @click="deleteSelectedImages"
         >
-          <q-tooltip> Deletes the selected image(s) </q-tooltip>
+          <q-tooltip> Deletes the selected image(s)</q-tooltip>
         </q-btn>
       </q-toolbar>
     </q-header>
     <q-drawer elevated side="left" bordered v-model="drawerLeft">
       <ImageUploaderComponent
         :project-id="projectId[0]"
-        @finished="reloadProjectInfo"
+        @finished="queryBackend"
       />
     </q-drawer>
     <q-drawer
@@ -153,7 +158,10 @@ import ProjectImageEditor from 'components/ProjectImageEditor.vue';
 import { plainToInstance } from 'class-transformer';
 import ImageArrangerComponent from 'components/ImageArrangerComponent.vue';
 import ProjectMultiImageEditor from 'components/ProjectMultiImageEditor.vue';
-import { frontEndProcessors } from 'src/types/algorithms';
+import {
+  FrontEndImageProcessor,
+  frontEndProcessors,
+} from 'src/types/algorithms';
 
 const $q = useQuasar();
 const $route = useRoute();
@@ -244,7 +252,7 @@ function deleteSelectedImages() {
         promises.push(api.post(`/image/${id}/delete`));
       }
       Promise.all(promises).then(() => {
-        reloadProjectInfo();
+        queryBackend();
       });
     });
   }
@@ -259,7 +267,27 @@ function downloadSelectedImages() {
   }
 }
 
-function reloadProjectInfo() {
+function doFrontEndProcessor(tool: FrontEndImageProcessor) {
+  if (selectedImageIds.value) {
+    tool
+      .fn(selectedImageIds.value)
+      .then(() => {
+        $q.notify({
+          type: 'positive',
+          message: `Successfully applied "${tool.label}"`
+        })
+      })
+      .catch(() => {})
+      .finally(() => {
+        $q.notify({
+          type: 'negative',
+          message: `Error while applying "${tool.label}"`
+        })
+      });
+  }
+}
+
+function queryBackend() {
   api.get<ProjectMetadataPayload>(`/project/${projectId}`).then((response) => {
     projectPayload.value = plainToInstance(
       ProjectMetadataPayload,
@@ -285,7 +313,7 @@ function reloadProjectInfo() {
 }
 
 onMounted(() => {
-  reloadProjectInfo();
+  queryBackend();
 });
 </script>
 <style scoped lang="scss">
