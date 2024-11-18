@@ -24,13 +24,13 @@
 
 </template>
 <script setup lang="ts">
-import {QUploader, useQuasar} from "quasar";
+import {QUploader} from "quasar";
 import {useAuthStore} from "stores/auth-store";
 import {useTemplateRef} from "vue";
+import {sendFailureNotification} from "src/types/notification";
 
 type ValidationError = Array<{ failedPropValidation: string, file: File }>
 type UploadError ={ files: readonly any[]; xhr: any; }
-const $q = useQuasar()
 const authStore = useAuthStore();
 const props = defineProps<{
   projectId?: string
@@ -49,10 +49,7 @@ function onUpload() {
 }
 
 function onRejected(rejectedEntries : ValidationError) {
-  $q.notify({
-    type: 'negative',
-    message: `${rejectedEntries.length} file(s) did not pass validation constraints`
-  })
+  sendFailureNotification(`${rejectedEntries.length} file(s) did not pass validation constraints`)
 }
 
 function onFinished() {
@@ -65,10 +62,7 @@ function uploadNow() {
     uploader.value?.upload()
   }
   else {
-    $q.notify({
-      type: 'negative',
-      message: "Nothing to upload"
-    })
+    sendFailureNotification("Nothing to upload")
   }
 
 }

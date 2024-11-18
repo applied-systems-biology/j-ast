@@ -3,20 +3,20 @@
     <q-header>
       <q-toolbar>
         <q-toolbar-title class="row items-center q-gutter-sm">
-          <HeaderLogoButtonComponent />
+          <HeaderLogoButtonComponent/>
           <div>/</div>
-          <q-skeleton v-if="!projectName" type="text" style="width: 200px" />
+          <q-skeleton v-if="!projectName" type="text" style="width: 200px"/>
           <div v-else>{{ projectName }}</div>
           <q-btn-group flat>
             <q-btn flat @click="editProjectName">
-              <q-icon name="edit" />
+              <q-icon name="edit"/>
             </q-btn>
             <q-btn flat @click="deleteProject">
-              <q-icon name="delete" />
+              <q-icon name="delete"/>
             </q-btn>
           </q-btn-group>
         </q-toolbar-title>
-        <LoginButtonComponent />
+        <LoginButtonComponent/>
       </q-toolbar>
       <q-toolbar class="bg-primary text-white edit-toolbar">
         <ToggleButton
@@ -40,13 +40,13 @@
           <span
             v-if="projectImages?.unsortedRow.images.length"
             class="text-bold flex flex-center"
-            >Unsorted images ({{
+          >Unsorted images ({{
               projectImages?.unsortedRow.images.length || 0
             }})</span
           >
           <span v-else class="text-bold flex flex-center">Unsorted images</span>
           <q-tooltip
-            >All images that have not yet been organized are stored here.
+          >All images that have not yet been organized are stored here.
           </q-tooltip>
         </ToggleButton>
         <q-btn
@@ -81,7 +81,7 @@
                 @click="doFrontEndProcessor(tool)"
               >
                 <q-item-section avatar>
-                  <q-icon name="fa-solid fa-expand" />
+                  <q-icon name="fa-solid fa-expand"/>
                 </q-item-section>
                 <q-item-section>{{ tool.label }}</q-item-section>
               </q-item>
@@ -123,7 +123,7 @@
         v-if="selectedImageIds.length > 1"
         v-model="selectedImageIds"
       />
-      <ProjectImageEditor v-model="selectedImage" />
+      <ProjectImageEditor v-model="lastSelectedImage"/>
     </q-drawer>
     <q-page-container>
       <q-page class="flex column q-gutter-sm">
@@ -140,13 +140,13 @@
 <script setup lang="ts">
 import LoginButtonComponent from 'components/AuthManagerComponent.vue';
 import HeaderLogoButtonComponent from 'components/HeaderLogoButtonComponent.vue';
-import { onMounted, Ref, ref, computed } from 'vue';
+import {onMounted, Ref, ref, computed} from 'vue';
 import ToggleButton from 'components/ToggleButton.vue';
 import ImageUploaderComponent from 'components/ImageUploaderComponent.vue';
-import { useQuasar } from 'quasar';
+import {useQuasar} from 'quasar';
 // import { VueDraggableNext as draggable } from 'vue-draggable-next';
-import { useRoute, useRouter } from 'vue-router';
-import { api } from 'boot/axios';
+import {useRoute, useRouter} from 'vue-router';
+import {api} from 'boot/axios';
 import {
   CreateEditProjectRequest,
   downloadFromApi,
@@ -155,13 +155,15 @@ import {
   ProjectMetadataPayload,
 } from 'src/types/common';
 import ProjectImageEditor from 'components/ProjectImageEditor.vue';
-import { plainToInstance } from 'class-transformer';
+import {plainToInstance} from 'class-transformer';
 import ImageArrangerComponent from 'components/ImageArrangerComponent.vue';
 import ProjectMultiImageEditor from 'components/ProjectMultiImageEditor.vue';
 import {
   FrontEndImageProcessor,
   frontEndProcessors,
 } from 'src/types/algorithms';
+import {onDialogYes} from "src/types/dialog";
+import {sendFailureNotification, sendSuccessNotification} from "src/types/notification";
 
 const $q = useQuasar();
 const $route = useRoute();
@@ -178,13 +180,14 @@ const selectedImageIds = ref<Array<number>>([]);
 
 // Computed values
 const drawerRight = computed(() => selectedImageIds.value.length > 0);
-const selectedImage = computed(() =>
+const lastSelectedImage = computed(() =>
   projectImages.value.getImageById(
     selectedImageIds.value.length > 0
       ? selectedImageIds.value[selectedImageIds.value.length - 1]
       : -1
   )
 );
+const selectedImages = computed(() => selectedImageIds.value.map(id => projectImages.value.getImageById(id)));
 
 defineOptions({
   name: 'ProjectLayout',
@@ -215,38 +218,17 @@ function editProjectName() {
 }
 
 function deleteProject() {
-  $q.dialog({
-    title: 'Delete project',
-    message: 'Do your really want to delete the current project?',
-    cancel: {
-      label: 'No',
-    },
-    ok: {
-      label: 'Yes',
-      color: 'red',
-    },
-    persistent: true,
-  }).onOk(() => {
+  onDialogYes("Delete project",
+    'Do your really want to delete the current project?').then(() => {
     api.post(`/project/${projectId}/delete`, {}).then(() => {
       router.push('/');
     });
-  });
+  })
 }
 
 function deleteSelectedImages() {
   if (selectedImageIds.value.length > 0) {
-    $q.dialog({
-      title: 'Delete images',
-      message: `Do your really want to delete the selected images?`,
-      cancel: {
-        label: 'No',
-      },
-      ok: {
-        label: 'Yes',
-        color: 'red',
-      },
-      persistent: true,
-    }).onOk(() => {
+    onDialogYes("Delete images", "Do your really want to delete the selected images?").then(() => {
       const promises = [];
       for (const id of selectedImageIds.value) {
         promises.push(api.post(`/image/${id}/delete`));
@@ -254,7 +236,7 @@ function deleteSelectedImages() {
       Promise.all(promises).then(() => {
         queryBackend();
       });
-    });
+    })
   }
 }
 
@@ -270,19 +252,23 @@ function downloadSelectedImages() {
 function doFrontEndProcessor(tool: FrontEndImageProcessor) {
   if (selectedImageIds.value) {
     tool
-      .fn(selectedImageIds.value)
-      .then(() => {
-        $q.notify({
-          type: 'positive',
-          message: `Successfully applied "${tool.label}"`
-        })
+      .fn(selectedImages.value)
+      .then((response) => {
+        sendSuccessNotification(`Successfully applied "${tool.label}"`)
+        if(response.needsUpload) {
+          projectImages.value.uploadToBackend()
+            .then(queryBackend)
+            .catch(() => sendFailureNotification(`Failed to update selected images`));
+        }
+        else if(response.needsFullReload) {
+          queryBackend()
+        }
       })
-      .catch(() => {})
+      .catch(() => {
+        sendFailureNotification(`Error while applying "${tool.label}"`)
+      })
       .finally(() => {
-        $q.notify({
-          type: 'negative',
-          message: `Error while applying "${tool.label}"`
-        })
+
       });
   }
 }

@@ -36,11 +36,11 @@
 </template>
 <script setup lang="ts">
 import { AssayType, ImagePayload } from 'src/types/common';
-import { debounce, useQuasar } from 'quasar';
+import { debounce } from 'quasar';
 import { plainToInstance } from 'class-transformer';
 import MaskImageAnnotationButton from 'components/MaskImageAnnotationButton.vue';
+import {sendFailureNotification} from "src/types/notification";
 
-const $q = useQuasar()
 type SelectValue = string | number | null;
 const model = defineModel<ImagePayload>();
 const uploadToBackend = debounce(uploadToBackend_, 300);
@@ -49,10 +49,7 @@ function uploadToBackend_() {
   if(model.value) {
     const payload = plainToInstance(ImagePayload, model.value);
     payload.uploadToBackend().catch(() => {
-      $q.notify({
-        type: 'error',
-        message: 'Error while updating',
-      });
+      sendFailureNotification('Error while updating')
     });
   }
 }

@@ -169,7 +169,7 @@
 <script setup lang="ts">
 import LoginButtonComponent from "components/AuthManagerComponent.vue";
 import HeaderLogoButtonComponent from "components/HeaderLogoButtonComponent.vue";
-import { computed, onMounted, reactive, Ref, ref, useTemplateRef, watch } from 'vue';
+import {computed, onMounted, reactive, Ref, ref, useTemplateRef, watch} from 'vue';
 import {
   AssayType, downloadDataString,
   downloadFromApi, ensureExtension,
@@ -179,10 +179,12 @@ import {
 } from 'src/types/common';
 import {api} from 'boot/axios';
 import {plainToInstance} from 'class-transformer';
-import { onBeforeRouteLeave, useRoute } from 'vue-router';
+import {onBeforeRouteLeave, useRoute} from 'vue-router';
 import {useQuasar} from "quasar";
 import FloodFill from 'q-floodfill';
-import { useEventListener } from '@vueuse/core';
+import {useEventListener} from '@vueuse/core';
+import {sendFailureNotification, sendSuccessNotification} from "src/types/notification";
+import {onDialogYes} from "src/types/dialog";
 
 const $q = useQuasar()
 const $route = useRoute()
@@ -250,7 +252,6 @@ enum MouseEventType {
   MouseLeave,
   LeftMouseDoubleClick
 }
-
 
 
 const stage = useTemplateRef<any>("stage")
@@ -367,15 +368,14 @@ function doToolPolygon(eventType: MouseEventType) {
     return;
   }
   polygonPreviewConfig.visible = true
-  if(eventType == MouseEventType.MouseMove) {
-    if(polygonPreviewConfig.points.length > 1) {
+  if (eventType == MouseEventType.MouseMove) {
+    if (polygonPreviewConfig.points.length > 1) {
       polygonPreviewConfig.points[polygonPreviewConfig.points.length - 2] = pos.x
       polygonPreviewConfig.points[polygonPreviewConfig.points.length - 1] = pos.y
       previewLayer.value.getNode().batchDraw()
     }
-  }
-  else if(eventType == MouseEventType.LeftMouseClick) {
-    if(polygonPreviewConfig.points.length == 0) {
+  } else if (eventType == MouseEventType.LeftMouseClick) {
+    if (polygonPreviewConfig.points.length == 0) {
       // Add also the starting point
       polygonPreviewConfig.points.push(pos.x)
       polygonPreviewConfig.points.push(pos.y)
@@ -384,23 +384,21 @@ function doToolPolygon(eventType: MouseEventType) {
     polygonPreviewConfig.points.push(pos.y)
     previewLayer.value.getNode().batchDraw()
 
-  }
-  else if(eventType == MouseEventType.RightMouseClick) {
-    if(polygonPreviewConfig.points.length > 1 ) {
+  } else if (eventType == MouseEventType.RightMouseClick) {
+    if (polygonPreviewConfig.points.length > 1) {
       polygonPreviewConfig.points.splice(polygonPreviewConfig.points.length - 2, 2)
 
       // Update the last pos
-      if(polygonPreviewConfig.points.length > 1) {
+      if (polygonPreviewConfig.points.length > 1) {
         polygonPreviewConfig.points[polygonPreviewConfig.points.length - 2] = pos.x
         polygonPreviewConfig.points[polygonPreviewConfig.points.length - 1] = pos.y
       }
 
       previewLayer.value.getNode().batchDraw()
     }
-  }
-  else if(eventType == MouseEventType.LeftMouseDoubleClick) {
+  } else if (eventType == MouseEventType.LeftMouseDoubleClick) {
     // Commit
-    if(polygonPreviewConfig.points.length >= 4) {
+    if (polygonPreviewConfig.points.length >= 4) {
 
       const context = maskDataContext.value
       if (!context) {
@@ -416,14 +414,13 @@ function doToolPolygon(eventType: MouseEventType) {
       context.lineWidth = 1
       context.beginPath();
       context.moveTo(polygonPreviewConfig.points[0], polygonPreviewConfig.points[1])
-      for (let i = 2; i < polygonPreviewConfig.points.length; i+=2) {
+      for (let i = 2; i < polygonPreviewConfig.points.length; i += 2) {
         context.lineTo(polygonPreviewConfig.points[i], polygonPreviewConfig.points[i + 1])
       }
       context.closePath();
-      if(polygonToolDoFill.value) {
+      if (polygonToolDoFill.value) {
         context.fill()
-      }
-      else {
+      } else {
         context.stroke()
       }
 
@@ -525,7 +522,7 @@ function updatePreview() {
     brushPreviewConfig.y = pos.y
     brushPreviewConfig.visible = true
     brushPreviewConfig.radius = brushSize.value / 2
-  } else if(currentAnnotationToolId.value === "polygon") {
+  } else if (currentAnnotationToolId.value === "polygon") {
     polygonPreviewConfig.visible = true;
     brushPreviewConfig.x = pos.x
     brushPreviewConfig.y = pos.y
@@ -535,7 +532,7 @@ function updatePreview() {
 }
 
 function doTool(eventType: MouseEventType) {
-  if(isPanning) {
+  if (isPanning) {
     return
   }
   switch (currentAnnotationToolId.value) {
@@ -649,14 +646,13 @@ function onStageMouseDown(event: KonvaEvent<MouseEvent>) {
   if (event.evt.button == 0) {
     isMouseDown = true
     doTool(MouseEventType.LeftMouseDown)
-  }
-  else if(event.evt.button == 1) {
+  } else if (event.evt.button == 1) {
 
     // Init the panning
-    if(stage.value) {
+    if (stage.value) {
       isPanning = true
       const stagePos = stage.value.getStage().getPosition() as Position
-      const mousePos = { x: event.evt.x, y: event.evt.y }
+      const mousePos = {x: event.evt.x, y: event.evt.y}
       panMouseDxDy = {
         x: stagePos.x - mousePos.x,
         y: stagePos.y - mousePos.y
@@ -667,15 +663,14 @@ function onStageMouseDown(event: KonvaEvent<MouseEvent>) {
 }
 
 function onStageMouseMove(event: KonvaEvent<MouseEvent>) {
-  if(isPanning) {
-    if(stage.value && panMouseDxDy) {
+  if (isPanning) {
+    if (stage.value && panMouseDxDy) {
       stage.value.getStage().position({
         x: event.evt.x + panMouseDxDy.x,
         y: event.evt.y + panMouseDxDy.y
       })
     }
-  }
-  else {
+  } else {
     updatePreview()
     doTool(MouseEventType.MouseMove)
   }
@@ -693,8 +688,7 @@ function onStageMouseClick(event: KonvaEvent<MouseEvent>, clickCount: number) {
   if (clickCount == 1) {
     if (event.evt.button == 0) {
       doTool(MouseEventType.LeftMouseClick)
-    }
-    else if (event.evt.button == 2) {
+    } else if (event.evt.button == 2) {
       doTool(MouseEventType.RightMouseClick)
     }
   } else if (clickCount == 2) {
@@ -743,7 +737,7 @@ function onStageContextMenu(event: KonvaEvent<MouseEvent>) {
   event.evt.preventDefault()
 }
 
-function getMaskAsDataString() : string | undefined{
+function getMaskAsDataString(): string | undefined {
   if (maskDataContext.value) {
     doThresholding()
     return maskDataContext.value.canvas.toDataURL('image/png')
@@ -758,17 +752,11 @@ function postToBackend() {
     $q.loading.show({message: "Uploading image data ..."})
     uploadImage(`/mask-image-annotation/${annotationPayload.value?.imageId}/${annotationPayload.value?.annotationTypeId}/raw`, pngData)
       .then(() => {
-        $q.notify({
-          type: "positive",
-          message: "Annotation was successfully uploaded",
-        })
+        sendSuccessNotification("Annotation was successfully uploaded")
         isEdited.value = false
       })
       .catch(() => {
-        $q.notify({
-          type: "negative",
-          message: "Error while uploading!",
-        })
+        sendFailureNotification("Error while uploading!")
       })
       .finally(() => {
         $q.loading.hide();
@@ -809,41 +797,19 @@ function downloadRaw() {
 }
 
 function downloadMask() {
-    downloadDataString(getMaskAsDataString()!, removeExtensionIfPresent(imagePayload.value.fileName) + "_" + annotationPayload.value.annotationTypeId + ".png")
+  downloadDataString(getMaskAsDataString()!, removeExtensionIfPresent(imagePayload.value.fileName) + "_" + annotationPayload.value.annotationTypeId + ".png")
 }
 
 function onUserRequestRestoreSavedState() {
-  $q.dialog({
-    title: 'Restore from saved annotation',
-    message: 'Do you really want to reset the annotation from the saved state?',
-    cancel: {
-      label: 'No',
-    },
-    ok: {
-      label: 'Yes',
-      color: 'red',
-    },
-    persistent: true,
-  }).onOk(() => {
-    queryFromBackend()
-  });
+  onDialogYes('Restore from saved annotation',
+    'Do you really want to reset the annotation from the saved state?')
+    .then(queryFromBackend)
 }
 
 function onUserRequestClearAnnotation() {
-  $q.dialog({
-    title: 'Clear annotation',
-    message: 'Do you really want to erase the annotation?',
-    cancel: {
-      label: 'No',
-    },
-    ok: {
-      label: 'Yes',
-      color: 'red',
-    },
-    persistent: true,
-  }).onOk(() => {
-    clear()
-  });
+  onDialogYes("Clear annotation",
+    "Do you really want to erase the annotation?")
+    .then(clear)
 }
 
 function queryFromBackend() {

@@ -1,27 +1,35 @@
 import { Dialog } from 'quasar';
 import ImageAutofillMetadataDialog from 'components/algorithms/ImageAutofillMetadataDialog.vue';
+import {ImagePayload} from "src/types/common";
+
+export interface FrontEndImageProcessorResponse {
+  images : ImagePayload[];
+  needsUpload: boolean;
+  needsFullReload: boolean;
+}
 
 export interface FrontEndImageProcessor {
   label: string;
   tooltip: string;
-  fn: (imageIds : number[]) => Promise<void>;
+  fn: (images : ImagePayload[]) => Promise<FrontEndImageProcessorResponse>;
 }
 
-export function doImageAutofillMetadata() : Promise<void> {
-  return new Promise<void>((resolve, reject) => {
+export function doImageAutofillMetadata(images: ImagePayload[]) : Promise<FrontEndImageProcessorResponse> {
+  return new Promise<FrontEndImageProcessorResponse>((resolve, reject) => {
     Dialog.create({
       component: ImageAutofillMetadataDialog,
-
-      // props forwarded to your custom component
       componentProps: {
         text: 'something',
         persistent: true,
-        // ...more..props...
       }
     }).onOk(() => {
 
       // TODO: Do something
-      resolve()
+      for(const image of images) {
+        image.experiment = "Test 123"
+      }
+
+      resolve({ needsUpload: true, needsFullReload: false, images: images });
     }).onCancel(() => {
       reject()
     }).onDismiss(() => {

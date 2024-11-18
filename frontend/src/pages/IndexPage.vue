@@ -9,7 +9,7 @@
         <q-card-section>
         </q-card-section>
 
-        <q-separator dark />
+        <q-separator dark/>
 
         <q-card-actions>
           <q-btn :disable="!authStore.isLoggedIn" icon="add" flat @click="newProject">Start a new project</q-btn>
@@ -22,12 +22,13 @@
     </div>
     <div class="row q-gutter-md" v-if="authStore.isLoggedIn">
       <q-skeleton v-if="projectList == null" class="project-item" type="rect"/>
-      <q-btn v-for="project in projectList" :key="project.id" color="blue-grey-2" class="project-item" size="lg" outline no-caps @click="openProject(project.id)" push>
+      <q-btn v-for="project in projectList" :key="project.id" color="blue-grey-2" class="project-item" size="lg" outline
+             no-caps @click="openProject(project.id)" push>
         <div class="row items-start no-wrap full-width text-blue-grey">
-          <q-icon left name="folder" />
+          <q-icon left name="folder"/>
         </div>
         <div class="row items-start no-wrap full-width text-blue-grey">
-          <div class="text-center ellipsis" >
+          <div class="text-center ellipsis">
             {{ project.name }}
           </div>
         </div>
@@ -42,7 +43,8 @@
           </div>
         </div>
       </q-btn>
-      <q-btn class="project-item" size="lg" icon="add" color="green" outline no-caps @click="newProject">New project</q-btn>
+      <q-btn class="project-item" size="lg" icon="add" color="green" outline no-caps @click="newProject">New project
+      </q-btn>
     </div>
   </q-page>
 </template>
@@ -56,12 +58,13 @@ import {api} from "boot/axios";
 import {useWatchInterval} from "../composables/UseWatchInterval";
 import {CreateEditProjectRequest, ProjectMetadataPayload} from "src/types/common";
 import {useRouter} from "vue-router";
-import { plainToInstance } from 'class-transformer';
+import {plainToInstance} from 'class-transformer';
+import {sendFailureNotification, sendSuccessNotification} from "src/types/notification";
 
 const $q = useQuasar()
 const authStore = useAuthStore()
 const router = useRouter()
-const { isLoggedIn } = storeToRefs(authStore)
+const {isLoggedIn} = storeToRefs(authStore)
 const projectList = ref<ProjectMetadataPayload[] | null>()
 
 /**
@@ -77,22 +80,16 @@ function newProject() {
     },
     cancel: true,
     persistent: true
-  }).onOk((data : string) => {
-    api.post("/new-project", { name: data } as CreateEditProjectRequest)
+  }).onOk((data: string) => {
+    api.post("/new-project", {name: data} as CreateEditProjectRequest)
       .then((result) => {
         const info = plainToInstance(ProjectMetadataPayload, result.data)
-        $q.notify({
-          type: 'positive',
-          message: `Created new project "${info.name}"`
-        })
+        sendSuccessNotification(`Created new project "${info.name}"`)
         router.push(`/project/${info.id}`)
       })
       .catch((reason) => {
         console.log(reason);
-        $q.notify({
-          type: 'negative',
-          message: "Unable to create project!"
-        })
+        sendFailureNotification("Unable to create project!")
       })
   }).onCancel(() => {
   }).onDismiss(() => {
@@ -104,18 +101,17 @@ function newProject() {
  */
 function refreshProjectList() {
   projectList.value = null
-  if(isLoggedIn.value) {
+  if (isLoggedIn.value) {
     api.get<ProjectMetadataPayload[]>("/list-projects")
       .then((result) => {
         projectList.value = result.data
       })
-  }
-  else {
+  } else {
     projectList.value = null
   }
 }
 
-function openProject(id : number) {
+function openProject(id: number) {
   router.push(`/project/${id}`)
 }
 
@@ -123,7 +119,7 @@ function openProject(id : number) {
  * Watch for auto-updating the project list
  */
 useWatchInterval(isLoggedIn, () => {
- refreshProjectList()
+  refreshProjectList()
 })
 
 </script>

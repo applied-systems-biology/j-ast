@@ -102,7 +102,7 @@
 import { computed, ref } from 'vue';
 import { Badge, ProjectImagesPayload, ProjectImagesPayloadRow } from 'src/types/common';
 import ProjectImageButton from 'components/ProjectImageButton.vue';
-import { useQuasar } from 'quasar';
+import {sendFailureNotification} from "src/types/notification";
 
 defineProps<{
   showUnsorted: boolean;
@@ -126,7 +126,6 @@ class SlotIndex {
   }
 }
 
-const $q = useQuasar();
 const selectedImageIds = defineModel<Array<number>>('selectedImageIds', {
   required: true,
 });
@@ -207,10 +206,7 @@ function onDrop(targetSlot: SlotIndex) {
   onDragEnd();
   if (success) {
     projectImages.value?.uploadToBackend().catch(() => {
-      $q.notify({
-        type: 'error',
-        message: 'Error while updating',
-      });
+      sendFailureNotification('Error while updating')
     });
   }
 }
