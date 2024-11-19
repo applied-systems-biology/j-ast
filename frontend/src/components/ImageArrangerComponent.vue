@@ -37,8 +37,7 @@
       <q-separator />
 
       <q-card-actions>
-        <q-btn flat>Action 1</q-btn>
-        <q-btn flat>Action 2</q-btn>
+        <q-btn flat @click="selectAllUnsorted">Select all unsorted</q-btn>
       </q-card-actions>
 
       <q-separator />
@@ -232,6 +231,13 @@ function onImageSelected(imageId: number, exclusive: boolean) {
     }
   }
 }
+
+function selectAllUnsorted() {
+  if(projectImages.value) {
+    selectedImageIds.value = projectImages.value?.unsortedRow.images.filter(img => img.groupRow < 0).map(img => img.id)
+  }
+}
+
 </script>
 <style scoped lang="scss">
 $grid-item-width: 18rem;

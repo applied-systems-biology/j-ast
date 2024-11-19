@@ -490,7 +490,6 @@ export class ProjectImagesPayload {
         targetRow.images.push(sourceImage);
 
         targetRow.removeDuplicates()
-        console.log(targetRow)
 
         return true;
       }

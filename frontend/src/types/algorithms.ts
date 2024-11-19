@@ -60,8 +60,6 @@ export function doImageAutofillMetadata(
             }
           }
         }
-        console.log(payload);
-
         resolve({ needsUpload: true, needsFullReload: false, images: images });
       })
       .onCancel(() => {
