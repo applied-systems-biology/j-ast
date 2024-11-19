@@ -74,8 +74,8 @@
           <q-tooltip> Downloads the selected image(s)</q-tooltip>
         </q-btn>
         <q-btn
-          color="blue"
-          label="Tools"
+          color="accent"
+          label="Process"
           icon="fa-solid fa-gear"
           v-if="selectedImageIds.length > 0"
         >
@@ -268,9 +268,9 @@ function selectAll() {
 }
 
 function doFrontEndProcessor(tool: FrontEndImageProcessor) {
-  if (selectedImageIds.value) {
+  if (selectedImageIds.value && projectImages.value) {
     tool
-      .fn(selectedImages.value)
+      .fn(selectedImages.value, projectImages.value)
       .then((response) => {
         sendSuccessNotification(`Successfully applied "${tool.label}"`)
         if(response.needsUpload) {

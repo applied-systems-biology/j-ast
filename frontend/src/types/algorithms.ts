@@ -1,9 +1,12 @@
-import { Dialog } from 'quasar';
+import {Dialog} from 'quasar';
 import ImageAutofillMetadataDialog, {
   ImageAutofillMetadataDialogPayload
 } from 'components/algorithms/ImageAutofillMetadataDialog.vue';
-import { ImagePayload, parseAssayType, removeExtensionIfPresent } from 'src/types/common';
-import { onDialogYes } from 'src/types/dialog';
+import {ImagePayload, parseAssayType, ProjectImagesPayload, removeExtensionIfPresent} from 'src/types/common';
+import {onDialogYes} from 'src/types/dialog';
+import ImageAutoSortByMetadataDialog from 'src/components/algorithms/ImageAutoSortByMetadataDialog.vue';
+import {ImageAutoSortByMetadataDialogPayload} from "components/algorithms/ImageAutoSortByMetadataDialog.vue";
+import {sendFailureNotification, sendSuccessNotification} from "src/types/notification";
 
 export interface FrontEndImageProcessorResponse {
   images: ImagePayload[];
@@ -15,7 +18,7 @@ export interface FrontEndImageProcessor {
   label: string;
   icon: string;
   tooltip: string;
-  fn: (images: ImagePayload[]) => Promise<FrontEndImageProcessorResponse>;
+  fn: (images: ImagePayload[], state: ProjectImagesPayload) => Promise<FrontEndImageProcessorResponse>;
 }
 
 export function doImageAutofillMetadata(
@@ -25,31 +28,30 @@ export function doImageAutofillMetadata(
     Dialog.create({
       component: ImageAutofillMetadataDialog,
       componentProps: {
-        text: 'something',
         persistent: true,
       },
     })
-      .onOk((payload : ImageAutofillMetadataDialogPayload) => {
-        if(!payload.delimiter) {
+      .onOk((payload: ImageAutofillMetadataDialogPayload) => {
+        if (!payload.delimiter) {
           return reject(new Error('No delimiter was provided'));
         }
         for (const image of images) {
-          if(image.fileName) {
+          if (image.fileName) {
             let fileName = image.fileName;
-            if(payload.removeFileExtension) {
+            if (payload.removeFileExtension) {
               fileName = removeExtensionIfPresent(fileName);
             }
-            if(fileName) {
+            if (fileName) {
               const elements = fileName.split(payload.delimiter);
-              for(const fieldPayload of payload.fields) {
-                if(fieldPayload.enabled && fieldPayload.index >= 0 && fieldPayload.index < elements.length) {
+              for (const fieldPayload of payload.fields) {
+                if (fieldPayload.enabled && fieldPayload.index >= 0 && fieldPayload.index < elements.length) {
                   const currentValue = (image as any)[fieldPayload.fieldName];
-                  if(payload.overrideExisting || !currentValue) {
+                  if (payload.overrideExisting || !currentValue) {
                     // Read out the current value
                     let newValue = elements[fieldPayload.index]
 
                     // Special case for assay Type
-                    if(fieldPayload.fieldName == "assayType") {
+                    if (fieldPayload.fieldName == "assayType") {
                       newValue = parseAssayType(newValue)
                     }
 
@@ -60,7 +62,126 @@ export function doImageAutofillMetadata(
             }
           }
         }
-        resolve({ needsUpload: true, needsFullReload: false, images: images });
+        resolve({needsUpload: true, needsFullReload: false, images: images});
+      })
+      .onCancel(() => {
+        reject();
+      })
+      .onDismiss(() => {
+        reject();
+      });
+  });
+}
+
+export function doImageAutoSortByMetadata(
+  images: ImagePayload[],
+  projectImages: ProjectImagesPayload,
+): Promise<FrontEndImageProcessorResponse> {
+  return new Promise<FrontEndImageProcessorResponse>((resolve, reject) => {
+    Dialog.create({
+      component: ImageAutoSortByMetadataDialog,
+      componentProps: {
+        image: images,
+        projectImages: projectImages,
+        persistent: true,
+      },
+    })
+      .onOk((payload: ImageAutoSortByMetadataDialogPayload) => {
+        if (payload.timePointOrder.length > 0) {
+          // Find the column indices (assign timePoint to an index)
+          const columnIndicesPlus1 : Record<string, number> = {}
+          let maxColumn = projectImages.maxColumn()
+          let minSearchColumnIndex = 0;
+          for(const requestedTimePoint of payload.timePointOrder) {
+
+            let newColumnIndex = maxColumn + 1
+
+            // Starting from the minimum search column we look for a column that only contains the requested time point
+            for (let columnIndex = minSearchColumnIndex; columnIndex <= maxColumn; columnIndex++) {
+              const uniqueMetadata = projectImages.getUniqueColumnMetadata(columnIndex)
+              if(uniqueMetadata["timePoint"]) {
+                const columnTimePoint = uniqueMetadata["timePoint"];
+                if(columnTimePoint == requestedTimePoint) {
+                  newColumnIndex = columnIndex
+                  break
+                }
+              }
+            }
+
+            // We have a new column index -> assign in map + block (min search)
+            columnIndicesPlus1[requestedTimePoint] = newColumnIndex + 1;
+            minSearchColumnIndex = newColumnIndex + 1
+            maxColumn = Math.max(maxColumn, newColumnIndex)
+          }
+
+          if(Object.keys(columnIndicesPlus1).length == 0) {
+            sendFailureNotification("Unable to find time point columns!")
+            reject()
+            return
+          }
+
+          let numSuccess = 0
+          let numFailed = 0
+
+          // Assign rows
+          for(const image of images) {
+            if(image.groupRow < 0) {
+              // We find a row where everything fits
+              let newRow = projectImages.groupRows.length // Default to next row
+              const columnIndex = (columnIndicesPlus1[image.timePoint || ""] || 0) - 1 // We correct for the column index
+
+
+              if(columnIndex < 0) {
+                numFailed++
+                continue
+              }
+
+              for (let rowIndex = 0; rowIndex < projectImages.groupRows.length; rowIndex++) {
+                const rowPayload = projectImages.groupRows[rowIndex]
+                const uniqueMetadata = rowPayload.getUniqueRowMetadata()
+
+                // Check if the row metadata matches
+                if((image.experiment || "") == (uniqueMetadata["experiment"] || "") &&
+                  (image.sample || "") == (uniqueMetadata["sample"] || "") &&
+                  (image.assayType || "") == (uniqueMetadata["assayType"] || "")) {
+
+                  // Check if the column is empty -> if not, we refuse to sort
+
+                  if(columnIndex >= 0) {
+                    const existingImage = rowPayload.getImageByColumn(columnIndex)
+                    if(!existingImage) {
+                      // Success!
+                      newRow = rowIndex
+                      break
+                    }
+                  }
+                }
+              }
+
+              const indexInUnsorted = projectImages.unsortedRow.images.indexOf(image)
+              if(indexInUnsorted >= 0) {
+                // Assign the row
+                if(projectImages.swapOrMove({ row: image.groupRow, column: indexInUnsorted }, { row: newRow, column: columnIndex})) {
+                  numSuccess++
+                }
+                else {
+                  // console.log("r:", image.fileName, " -> ", { row: image.groupRow, indexInUnsorted }, " -> ", { row: newRow, column: columnIndex})
+                  numFailed++
+                }
+              }
+              else {
+                numFailed++
+              }
+            }
+          }
+
+          sendSuccessNotification(`Successfully sorted ${numSuccess} images (${numFailed} rejected)`)
+          resolve({needsUpload: true, needsFullReload: false, images: images});
+        } else {
+          sendFailureNotification("No time point order provided. Unable to sort!")
+          reject()
+        }
+
       })
       .onCancel(() => {
         reject();
@@ -80,10 +201,10 @@ export function doImageRemoveFileNameExtension(
       "This will remove known image extensions (png/bmp/jpg/jpeg/tif/tiff) from the 'File name' metadata."
     )
       .then(() => {
-        for(const image of images) {
+        for (const image of images) {
           image.fileName = removeExtensionIfPresent(image.fileName)
         }
-        resolve({ needsUpload: true, needsFullReload: false, images: images });
+        resolve({needsUpload: true, needsFullReload: false, images: images});
       })
       .catch(reject);
   });
@@ -101,5 +222,11 @@ export const frontEndImageProcessors: Array<FrontEndImageProcessor> = [
     icon: 'fa-solid fa-pen-to-square',
     tooltip: 'Auto-fills metadata from the file name',
     fn: doImageAutofillMetadata,
+  },
+  {
+    label: 'Auto-sort by metadata',
+    icon: 'fa-solid fa-shuffle',
+    tooltip: 'Moves unsorted images into a slot that fits best',
+    fn: doImageAutoSortByMetadata,
   },
 ];

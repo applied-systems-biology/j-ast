@@ -367,6 +367,45 @@ export class ProjectImagesPayloadRow {
     this.images = Array.from(Object.values(byId));
   }
 
+  getImageByColumn(columnIndex: number): ImagePayload | null {
+    return this.images.find((img) => img.groupColumn == columnIndex) || null
+  }
+
+  /**
+   * Row metadata (experiment, sample, assay type) as record.
+   * Only contains a k-v pair if it is unique
+   */
+  getUniqueRowMetadata() : Record<string, string> {
+    const result : Record<string, string> = {};
+    const allExperiments = new Set<string>();
+    const allSamples = new Set<string>();
+    const allAssayTypes = new Set<string>();
+    for (const image of this.images) {
+      if (image.experiment) {
+        allExperiments.add(image.experiment);
+      }
+      if (image.sample) {
+        allSamples.add(image.sample);
+      }
+      if (image.assayType && image.assayType != AssayType.Unknown) {
+        allAssayTypes.add(image.assayType);
+      }
+    }
+    if(allExperiments.size == 1) {
+      result["experiment"] = [...allExperiments][0]
+    }
+    if(allSamples.size == 1) {
+      result["sample"] = [...allSamples][0]
+    }
+    if(allAssayTypes.size == 1) {
+      result["assayType"] = [...allAssayTypes][0]
+    }
+    return result;
+  }
+
+  /**
+   * Row metadata (experiment, sample, assay type) as badges
+   */
   getRowMetadataAsBadges(): Array<Badge> {
     const result: Array<Badge> = [];
     const allExperiments = new Set<string>();
@@ -508,6 +547,7 @@ export class ProjectImagesPayload {
     if (!sourceImage) {
       return false;
     }
+    console.log(sourceIsUnsorted, targetIsUnsorted);
     if (!targetImage) {
       // Move to a different slot
 
@@ -632,6 +672,25 @@ export class ProjectImagesPayload {
     }
 
     return false;
+  }
+
+  getUniqueColumnMetadata(column: number) {
+    const result : Record<string, string> = {}
+
+    const allTimePoints = new Set<string>();
+    for (const row of this.groupRows) {
+      for (const image of row.images) {
+        if (image.groupColumn == column && image.timePoint) {
+          allTimePoints.add(image.timePoint);
+        }
+      }
+    }
+
+    if(allTimePoints.size == 1) {
+      result["timePoint"] = [...allTimePoints][0]
+    }
+
+    return result;
   }
 
   getColumnMetadataAsBadges(column: number): Array<Badge> {
