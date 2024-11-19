@@ -160,6 +160,9 @@ public class ImageController {
             images.add(image);
         }
         imageRepository.saveAll(images);
+
+        images = project.fixImageTableConsistency();
+        imageRepository.saveAll(images);
     }
 
     @PostMapping("/api/image/{id}/update")
@@ -175,5 +178,7 @@ public class ImageController {
         }
         image.updateFromPayload(imagePayload);
         imageRepository.save(image);
+
+        imageRepository.saveAll(image.getProject().fixImageTableConsistency());
     }
 }

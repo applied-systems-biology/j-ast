@@ -5,18 +5,23 @@ import jakarta.validation.constraints.NotNull;
 import org.hkijena.jast.model.AdminPrincipal;
 import org.hkijena.jast.model.Privileges;
 import org.hkijena.jast.model.UserPrincipal;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
 
+import java.awt.*;
 import java.io.Serial;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
+import java.util.*;
 import java.util.List;
-import java.util.Objects;
 
 @Entity
 @Table(name = "projects")
 public class Project {
+
+    public static final Logger LOGGER = LoggerFactory.getLogger(Project.class);
+
     @Serial
     private static final long serialVersionUID = 1L;
 
@@ -108,5 +113,26 @@ public class Project {
         } else {
             return authentication.getAuthorities().contains(Privileges.PRIVILEGE_VIEW_ALL_TASKS);
         }
+    }
+
+    public List<Image> fixImageTableConsistency() {
+        Set<Image> result = new HashSet<>();
+        Map<Point, Image> locationMap = new HashMap<>();
+        for (Image image : getImages()) {
+            Point location = new Point(image.getGroupColumn(), Math.max(-1, image.getGroupRow()));
+            if(locationMap.containsKey(location)) {
+                // For unsorted rows, we don't care - the frontend will handle this
+                // For sorted rows we kick duplicates back into unsorted
+                if(image.getGroupRow() >= 0) {
+                    LOGGER.info("Fixing duplicate assigment of image {} to {} by moving back to unsorted array", image.getId(), location);
+                    image.setGroupRow(-1);
+                    result.add(image);
+                }
+            }
+            else {
+                locationMap.put(location, image);
+            }
+        }
+        return new ArrayList<>(result);
     }
 }
