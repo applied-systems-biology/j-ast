@@ -1,6 +1,8 @@
 import { Dialog } from 'quasar';
-import ImageAutofillMetadataDialog from 'components/algorithms/ImageAutofillMetadataDialog.vue';
-import { ImagePayload, removeExtensionIfPresent } from 'src/types/common';
+import ImageAutofillMetadataDialog, {
+  ImageAutofillMetadataDialogPayload
+} from 'components/algorithms/ImageAutofillMetadataDialog.vue';
+import { ImagePayload, parseAssayType, removeExtensionIfPresent } from 'src/types/common';
 import { onDialogYes } from 'src/types/dialog';
 
 export interface FrontEndImageProcessorResponse {
@@ -27,11 +29,38 @@ export function doImageAutofillMetadata(
         persistent: true,
       },
     })
-      .onOk(() => {
-        // TODO: Do something
-        for (const image of images) {
-          image.experiment = 'Test 123';
+      .onOk((payload : ImageAutofillMetadataDialogPayload) => {
+        if(!payload.delimiter) {
+          return reject(new Error('No delimiter was provided'));
         }
+        for (const image of images) {
+          if(image.fileName) {
+            let fileName = image.fileName;
+            if(payload.removeFileExtension) {
+              fileName = removeExtensionIfPresent(fileName);
+            }
+            if(fileName) {
+              const elements = fileName.split(payload.delimiter);
+              for(const fieldPayload of payload.fields) {
+                if(fieldPayload.index >= 0 && fieldPayload.index < elements.length) {
+                  const currentValue = (image as any)[fieldPayload.fieldName];
+                  if(payload.overrideExisting || !currentValue) {
+                    // Read out the current value
+                    let newValue = elements[fieldPayload.index]
+
+                    // Special case for assay Type
+                    if(fieldPayload.fieldName == "assayType") {
+                      newValue = parseAssayType(newValue)
+                    }
+
+                    (image as any)[fieldPayload.fieldName] = newValue;
+                  }
+                }
+              }
+            }
+          }
+        }
+        console.log(payload);
 
         resolve({ needsUpload: true, needsFullReload: false, images: images });
       })
@@ -64,15 +93,15 @@ export function doImageRemoveFileNameExtension(
 
 export const frontEndImageProcessors: Array<FrontEndImageProcessor> = [
   {
+    label: 'Remove file name extensions',
+    icon: 'fa-solid fa-gear',
+    tooltip: 'Removes extensions from the file name metadata',
+    fn: doImageRemoveFileNameExtension,
+  },
+  {
     label: 'Auto-fill metadata',
     icon: 'fa-solid fa-pen-to-square',
     tooltip: 'Auto-fills metadata from the file name',
     fn: doImageAutofillMetadata,
-  },
-  {
-    label: 'Remove file name extensions',
-    icon: 'fa-solid fa-pen-to-square',
-    tooltip: 'Removes extensions from the file name metadata',
-    fn: doImageRemoveFileNameExtension,
   },
 ];
