@@ -85,7 +85,8 @@ public class WebSecurityConfig {
                 .requestMatchers(AntPathRequestMatcher.antMatcher("/api/auth/**")).permitAll()
                 .requestMatchers(AntPathRequestMatcher.antMatcher("/api/test")).permitAll()
                 .requestMatchers(AntPathRequestMatcher.antMatcher("/api/admin/**")).hasRole("ADMIN")
-                .anyRequest().authenticated());
+                .requestMatchers(AntPathRequestMatcher.antMatcher("/api/**")).authenticated()
+                .anyRequest().permitAll());
 
         // Add JWT token filter
         http.addFilterBefore(

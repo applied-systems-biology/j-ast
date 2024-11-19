@@ -12,7 +12,7 @@
     <artifactId>pom-j-ast</artifactId>
     <version>1.0.0-SNAPSHOT</version>
     <name>J-AST</name>
-    <description>JIPipe Growth Assay Analyzer WebApp</description>
+    <description>JIPipe Antibiotic Susceptibility Test</description>
     <properties>
         <java.version>21</java.version>
     </properties>
@@ -25,8 +25,8 @@
         </plugins>
     </build>
     <modules>
-        <module>backend</module>
         <module>frontend</module>
+        <module>backend</module>
     </modules>
 
 </project>
