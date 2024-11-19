@@ -42,7 +42,7 @@ export function doImageAutofillMetadata(
             if(fileName) {
               const elements = fileName.split(payload.delimiter);
               for(const fieldPayload of payload.fields) {
-                if(fieldPayload.index >= 0 && fieldPayload.index < elements.length) {
+                if(fieldPayload.enabled && fieldPayload.index >= 0 && fieldPayload.index < elements.length) {
                   const currentValue = (image as any)[fieldPayload.fieldName];
                   if(payload.overrideExisting || !currentValue) {
                     // Read out the current value
