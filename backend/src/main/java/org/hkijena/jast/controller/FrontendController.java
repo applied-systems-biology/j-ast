@@ -9,7 +9,7 @@ public class FrontendController {
     /**
      * Forwards all routes to FrontEnd except: '/', '/index.html', '/api', '/api/**'
      * Required because of 'mode: history' usage in frontend routing
-     * @return thhe model and view
+     * @return the model and view
      */
     @RequestMapping(value = "{_:^(?!index\\.html|api).$}")
     public String redirectApi() {
