@@ -81,7 +81,7 @@ export function doImageAutoSortByMetadata(
     Dialog.create({
       component: ImageAutoSortByMetadataDialog,
       componentProps: {
-        image: images,
+        images: images,
         projectImages: projectImages,
         persistent: true,
       },
