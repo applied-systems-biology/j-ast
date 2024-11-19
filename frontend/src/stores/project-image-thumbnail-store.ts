@@ -8,7 +8,7 @@ export const useProjectImageThumbnailStore = defineStore('projectImageThumbnailS
   actions: {
     fetchImage(id: number): Promise<string | undefined> {
       // Check if the image is already cached
-      if (this.cache[id]) {
+      if (this.cache[id.toString()]) {
         return Promise.resolve(this.cache[id.toString()]);
       }
 

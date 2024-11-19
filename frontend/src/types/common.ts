@@ -1,23 +1,29 @@
-import {ClassConstructor, Expose, instanceToPlain, plainToInstance, Type,} from 'class-transformer';
-import {api} from 'boot/axios';
-import {Ref} from "vue";
+import {
+  ClassConstructor,
+  Expose,
+  instanceToPlain,
+  plainToInstance,
+  Type,
+} from 'class-transformer';
+import { api } from 'boot/axios';
+import { Ref } from 'vue';
 
 export function renderMaskAnnotationId(image: ImagePayload, id: string) {
   switch (id) {
-    case "strip-disk":
+    case 'strip-disk':
       switch (image.assayType) {
         case AssayType.DDA:
-          return "DDA disk"
+          return 'DDA disk';
         case AssayType.ETest:
-          return "ETest strip"
+          return 'ETest strip';
       }
       break;
-    case "zoi-shape":
-      return "ETest ZOI shape"
-    case "plate":
-      return "Plate"
+    case 'zoi-shape':
+      return 'ETest ZOI shape';
+    case 'plate':
+      return 'Plate';
   }
-  return id
+  return id;
 }
 
 export function plainToInstanceStrict<T, V>(
@@ -30,47 +36,77 @@ export function plainToInstanceStrict<T, V>(
   });
 }
 
-export function loadPayloadInstanceFromApi<T>(url: string, type: ClassConstructor<T>, target: Ref<T>) {
-  api.get(url).then((response) => {
-    target.value = plainToInstance(type, response.data)
-  })
+export function loadPayloadInstanceFromApi<T>(
+  url: string,
+  type: ClassConstructor<T>,
+  target: Ref<T>
+): Promise<T> {
+  return new Promise<T>(async (resolve, reject) => {
+    api
+      .get(url)
+      .then((response) => {
+        target.value = plainToInstance(type, response.data);
+        resolve(target.value);
+      })
+      .catch(reject);
+  });
 }
 
 export function loadDataStringFromApi(url: string) {
-  return new Promise<string>(resolve => {
-    api.get(url, {responseType: "blob"}).then(response => {
+  return new Promise<string>((resolve) => {
+    api.get(url, { responseType: 'blob' }).then((response) => {
       resolve(URL.createObjectURL(response.data));
-    })
-  })
+    });
+  });
 }
 
-export function loadImageElementFromDataString(data: Blob | MediaSource): Promise<HTMLImageElement> {
+export function loadImageElementFromDataString(
+  data: Blob | MediaSource
+): Promise<HTMLImageElement> {
   return new Promise<HTMLImageElement>((resolve) => {
     const backgroundImageURL = URL.createObjectURL(data);
     const imageObj = new Image();
     imageObj.src = backgroundImageURL;
     imageObj.onload = () => {
-      resolve(imageObj)
+      resolve(imageObj);
     };
-  })
+  });
 }
 
-export function downloadDataString(dataString: string, fileName: string = "image.png") {
+export function downloadDataString(
+  dataString: string,
+  fileName: string = 'image.png'
+) {
   const aDownloadLink = document.createElement('a');
   aDownloadLink.download = fileName;
   aDownloadLink.href = dataString;
   aDownloadLink.click();
 }
 
-export function downloadFromApi(url: string, fileName: string = "image.png"): Promise<void> {
-  return api.get(url, {responseType: "blob"}).then(response => {
+export function downloadFromApi(
+  url: string,
+  fileName: string = 'image.png'
+): Promise<void> {
+  return api.get(url, { responseType: 'blob' }).then((response) => {
     const objectURL = URL.createObjectURL(response.data);
     downloadDataString(objectURL, fileName);
     URL.revokeObjectURL(objectURL);
-  })
+  });
 }
 
-export function removeExtensionIfPresent(fileName: string, extensions: string[] = [".png", ".bmp", ".jpg", ".jpeg", ".tif", ".tiff", ".zip", ".jip"]): string {
+export function removeExtensionIfPresent(
+  fileName: string,
+  extensions: string[] = [
+    '.png',
+    '.bmp',
+    '.jpg',
+    '.jpeg',
+    '.tif',
+    '.tiff',
+    '.zip',
+    '.jip',
+  ]
+): string {
   for (const extension of extensions) {
     if (fileName.toLowerCase().endsWith(extension.toLowerCase())) {
       fileName = fileName.substring(0, fileName.length - extension.length);
@@ -79,7 +115,19 @@ export function removeExtensionIfPresent(fileName: string, extensions: string[] 
   return fileName;
 }
 
-export function ensureExtension(fileName: string, extensions: string[] = [".png", ".bmp", ".jpg", ".jpeg", ".tif", ".tiff", ".zip", ".jip"]) {
+export function ensureExtension(
+  fileName: string,
+  extensions: string[] = [
+    '.png',
+    '.bmp',
+    '.jpg',
+    '.jpeg',
+    '.tif',
+    '.tiff',
+    '.zip',
+    '.jip',
+  ]
+) {
   for (const extension of extensions) {
     if (fileName.toLowerCase().endsWith(extension.toLowerCase())) {
       return fileName;
@@ -90,7 +138,7 @@ export function ensureExtension(fileName: string, extensions: string[] = [".png"
 
 export function uploadImage(url: string, dataUri: string): Promise<void> {
   // Extract the base64 data from the data URI
-  const base64Data = dataUri.split(",")[1];
+  const base64Data = dataUri.split(',')[1];
   const byteCharacters = atob(base64Data);
   const byteNumbers = new Array(byteCharacters.length);
 
@@ -99,7 +147,7 @@ export function uploadImage(url: string, dataUri: string): Promise<void> {
   }
 
   const byteArray = new Uint8Array(byteNumbers);
-  const blob = new Blob([byteArray], {type: 'image/png'});
+  const blob = new Blob([byteArray], { type: 'image/png' });
 
   // Create FormData and append the image
   const formData = new FormData();
@@ -110,9 +158,8 @@ export function uploadImage(url: string, dataUri: string): Promise<void> {
     headers: {
       'Content-Type': 'multipart/form-data',
     },
-  })
+  });
 }
-
 
 /**
  * Message that contains basic infos about a project
@@ -152,48 +199,64 @@ export enum AssayType {
   Unknown = 'Unknown',
 }
 
-export function parseAssayType(str : string) : AssayType {
-  if(str) {
-    str = str.toLowerCase()
-    if(str == "dda") {
+export function parseAssayType(str: string): AssayType {
+  if (str) {
+    str = str.toLowerCase();
+    if (str == 'dda') {
       return AssayType.DDA;
-    }
-    else if(str == "etest") {
+    } else if (str == 'etest') {
       return AssayType.ETest;
-    }
-    else if(str.startsWith("e") && str.endsWith("test")) {
+    } else if (str.startsWith('e') && str.endsWith('test')) {
       return AssayType.ETest;
+    } else {
+      return AssayType.Unknown;
     }
-    else {
-      return AssayType.Unknown
-    }
-  }
-  else {
-    return AssayType.Unknown
+  } else {
+    return AssayType.Unknown;
   }
 }
 
 export interface Badge {
-  text: string,
-  color: string,
-  icon: string,
-  type: string
+  text: string;
+  color: string;
+  icon: string;
+  type: string;
 }
 
 function createExperimentBadge(value: string): Badge {
-  return {text: value, icon: "fa-solid fa-vial-virus", color: "#62a0ea", type: "Experiment"}
+  return {
+    text: value,
+    icon: 'fa-solid fa-vial-virus',
+    color: '#62a0ea',
+    type: 'Experiment',
+  };
 }
 
 function createSampleBadge(value: string): Badge {
-  return {text: value, icon: "fa-solid fa-flask", color: "#33d17a", type: "Sample"}
+  return {
+    text: value,
+    icon: 'fa-solid fa-flask',
+    color: '#33d17a',
+    type: 'Sample',
+  };
 }
 
 function createTimePointBadge(value: string): Badge {
-  return {text: value, icon: "fa-solid fa-clock", color: "#e5a50a", type: "Time point"}
+  return {
+    text: value,
+    icon: 'fa-solid fa-clock',
+    color: '#e5a50a',
+    type: 'Time point',
+  };
 }
 
 function createAssayTypeBadge(value: string): Badge {
-  return {text: value, icon: "fa-solid fa-gear", color: "#9141ac", type: "Assay type"}
+  return {
+    text: value,
+    icon: 'fa-solid fa-gear',
+    color: '#9141ac',
+    type: 'Assay type',
+  };
 }
 
 export class ImagePayload {
@@ -242,7 +305,7 @@ export class ImagePayload {
   }
 
   getMetadataAsBadges(): Array<Badge> {
-    const result: Array<Badge> = []
+    const result: Array<Badge> = [];
     if (this.experiment) {
       result.push(createExperimentBadge(this.experiment));
     }
@@ -255,22 +318,22 @@ export class ImagePayload {
     if (this.assayType && this.assayType != AssayType.Unknown) {
       result.push(createAssayTypeBadge(this.assayType));
     }
-    return result
+    return result;
   }
 
   getAnnotationsAsBadges(): Array<Badge> {
-    const result: Array<Badge> = []
+    const result: Array<Badge> = [];
     for (const annotation of this.maskImageAnnotations) {
       if (annotation.version > 0) {
         result.push({
           text: annotation.annotationTypeId,
-          icon: "fa-solid fa-tag",
-          color: "#164089",
-          type: "mask-annotation/" + annotation.annotationTypeId
-        })
+          icon: 'fa-solid fa-tag',
+          color: '#164089',
+          type: 'mask-annotation/' + annotation.annotationTypeId,
+        });
       }
     }
-    return result
+    return result;
   }
 }
 
@@ -297,27 +360,27 @@ export class ProjectImagesPayloadRow {
   }
 
   removeDuplicates() {
-    const byId: Record<string, ImagePayload> = {}
+    const byId: Record<string, ImagePayload> = {};
     for (const image of this.images) {
-      byId[image.id.toString()] = image
+      byId[image.id.toString()] = image;
     }
-    this.images = Array.from(Object.values(byId))
+    this.images = Array.from(Object.values(byId));
   }
 
   getRowMetadataAsBadges(): Array<Badge> {
-    const result: Array<Badge> = []
-    const allExperiments = new Set<string>
-    const allSamples = new Set<string>
-    const allAssayTypes = new Set<string>
+    const result: Array<Badge> = [];
+    const allExperiments = new Set<string>();
+    const allSamples = new Set<string>();
+    const allAssayTypes = new Set<string>();
     for (const image of this.images) {
       if (image.experiment) {
-        allExperiments.add(image.experiment)
+        allExperiments.add(image.experiment);
       }
       if (image.sample) {
-        allSamples.add(image.sample)
+        allSamples.add(image.sample);
       }
       if (image.assayType && image.assayType != AssayType.Unknown) {
-        allAssayTypes.add(image.assayType)
+        allAssayTypes.add(image.assayType);
       }
     }
     for (const value of allExperiments) {
@@ -330,15 +393,30 @@ export class ProjectImagesPayloadRow {
       result.push(createAssayTypeBadge(value));
     }
     if (allExperiments.size == 0) {
-      result.push({text: "N/A", icon: "fa-solid fa-vial-virus", color: "#c0bfbc", type: "NAExperiment"})
+      result.push({
+        text: 'N/A',
+        icon: 'fa-solid fa-vial-virus',
+        color: '#c0bfbc',
+        type: 'NAExperiment',
+      });
     }
     if (allSamples.size == 0) {
-      result.push({text: "N/A", icon: "fa-solid fa-flask", color: "#c0bfbc", type: "NASample"})
+      result.push({
+        text: 'N/A',
+        icon: 'fa-solid fa-flask',
+        color: '#c0bfbc',
+        type: 'NASample',
+      });
     }
     if (allAssayTypes.size == 0) {
-      result.push({text: "N/A", icon: "fa-solid fa-gear", color: "#c0bfbc", type: "NAAssayType"})
+      result.push({
+        text: 'N/A',
+        icon: 'fa-solid fa-gear',
+        color: '#c0bfbc',
+        type: 'NAAssayType',
+      });
     }
-    return result
+    return result;
   }
 }
 
@@ -438,7 +516,7 @@ export class ProjectImagesPayload {
 
         const targetRow = this.unsortedRow;
 
-        targetRow.removeById(sourceImage.id)
+        targetRow.removeById(sourceImage.id);
         targetRow.images.push(sourceImage);
         sourceImage.groupColumn = targetRow.images.length;
 
@@ -489,7 +567,7 @@ export class ProjectImagesPayload {
         sourceImage.groupRow = targetSlot.row;
         targetRow.images.push(sourceImage);
 
-        targetRow.removeDuplicates()
+        targetRow.removeDuplicates();
 
         return true;
       }
@@ -557,12 +635,12 @@ export class ProjectImagesPayload {
   }
 
   getColumnMetadataAsBadges(column: number): Array<Badge> {
-    const result: Array<Badge> = []
-    const allTimePoints = new Set<string>
+    const result: Array<Badge> = [];
+    const allTimePoints = new Set<string>();
     for (const row of this.groupRows) {
       for (const image of row.images) {
         if (image.groupColumn == column && image.timePoint) {
-          allTimePoints.add(image.timePoint)
+          allTimePoints.add(image.timePoint);
         }
       }
     }
@@ -570,9 +648,14 @@ export class ProjectImagesPayload {
       result.push(createTimePointBadge(value));
     }
     if (allTimePoints.size == 0) {
-      result.push({text: "N/A", icon: "fa-solid fa-clock", color: "#c0bfbc", type: "NATimePoint"})
+      result.push({
+        text: 'N/A',
+        icon: 'fa-solid fa-clock',
+        color: '#c0bfbc',
+        type: 'NATimePoint',
+      });
     }
-    return result
+    return result;
   }
 
   /**

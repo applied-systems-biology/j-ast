@@ -28,6 +28,7 @@ import {
 } from 'src/types/common';
 import {computed, onMounted, ref, watch} from "vue";
 import {useQuasar} from "quasar";
+import { useMaskImageAnnotationThumbnailStore } from 'stores/mask-image-annotation-thumbnail-store';
 
 const $q = useQuasar()
 const router = useRouter()
@@ -35,6 +36,7 @@ const image = defineModel<ImagePayload>();
 const annotation = ref<MaskImageAnnotationPayload>(new MaskImageAnnotationPayload());
 const thumbnailData = ref<string>()
 const annotationTypeName = computed(() => image.value ? renderMaskAnnotationId(image.value!, props.annotationTypeId) : props.annotationTypeId)
+const thumbnailStore = useMaskImageAnnotationThumbnailStore()
 
 const props = defineProps<{
   annotationTypeId: string
@@ -54,10 +56,15 @@ function downloadMask() {
 
 function queryBackend() {
   if(image.value && image.value.id >= 0) {
+
     loadDataStringFromApi(`/mask-image-annotation/${image.value?.id}/${props.annotationTypeId}/thumbnail`).then((data) => {
       thumbnailData.value = data;
     })
-    loadPayloadInstanceFromApi(`/mask-image-annotation/${image.value?.id}/${props.annotationTypeId}`, MaskImageAnnotationPayload, annotation)
+    loadPayloadInstanceFromApi(`/mask-image-annotation/${image.value?.id}/${props.annotationTypeId}`, MaskImageAnnotationPayload, annotation).then(payload => {
+      thumbnailStore.fetchImage(payload.imageId, payload.annotationTypeId, payload.version).then(dataUrl => {
+        thumbnailData.value = dataUrl;
+      })
+    })
   }
 }
 
