@@ -50,6 +50,14 @@
           </q-tooltip>
         </ToggleButton>
         <q-btn
+          icon="select_all"
+          color="blue"
+          v-if="selectedImageIds.length == 0"
+          @click="selectAll"
+        >
+          <q-tooltip>Selects all visible images. To select unsorted images, open the "Unsorted images" view</q-tooltip>
+        </q-btn>
+        <q-btn
           icon="deselect"
           color="blue"
           v-if="selectedImageIds.length > 0"
@@ -74,16 +82,17 @@
           <q-menu>
             <q-list style="min-width: 100px">
               <q-item
-                v-for="tool in frontEndProcessors"
+                v-for="tool in frontEndImageProcessors"
                 :key="tool.label"
                 clickable
                 v-close-popup
                 @click="doFrontEndProcessor(tool)"
               >
                 <q-item-section avatar>
-                  <q-icon name="fa-solid fa-expand"/>
+                  <q-icon :name="tool.icon"/>
                 </q-item-section>
                 <q-item-section>{{ tool.label }}</q-item-section>
+                <q-tooltip>{{ tool.tooltip }}</q-tooltip>
               </q-item>
             </q-list>
           </q-menu>
@@ -160,7 +169,7 @@ import ImageArrangerComponent from 'components/ImageArrangerComponent.vue';
 import ProjectMultiImageEditor from 'components/ProjectMultiImageEditor.vue';
 import {
   FrontEndImageProcessor,
-  frontEndProcessors,
+  frontEndImageProcessors,
 } from 'src/types/algorithms';
 import {onDialogYes} from "src/types/dialog";
 import {sendFailureNotification, sendSuccessNotification} from "src/types/notification";
@@ -246,6 +255,15 @@ function downloadSelectedImages() {
       `/image/${id}/raw`,
       ensureExtension(projectImages.value.getImageById(id).fileName, ['.png'])
     );
+  }
+}
+
+function selectAll() {
+  if(drawerUnsortedImages.value) {
+    selectedImageIds.value = [...projectImages.value.imageIds]
+  }
+  else {
+    selectedImageIds.value = [...projectImages.value.imageIds.filter(id => projectImages.value.getImageById(id).groupColumn >= 0)]
   }
 }
 

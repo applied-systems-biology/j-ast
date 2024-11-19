@@ -70,16 +70,16 @@ export function downloadFromApi(url: string, fileName: string = "image.png"): Pr
   })
 }
 
-export function removeExtensionIfPresent(fileName: string, extensions: string[] = [".png", ".jpg", ".jpeg", ".tif", ".tiff", ".zip", ".jip"]): string {
+export function removeExtensionIfPresent(fileName: string, extensions: string[] = [".png", ".bmp", ".jpg", ".jpeg", ".tif", ".tiff", ".zip", ".jip"]): string {
   for (const extension of extensions) {
     if (fileName.toLowerCase().endsWith(extension.toLowerCase())) {
-      fileName = fileName.substring(fileName.length - extension.length - 1, extension.length);
+      fileName = fileName.substring(0, fileName.length - extension.length);
     }
   }
   return fileName;
 }
 
-export function ensureExtension(fileName: string, extensions: string[] = [".png", ".jpg", ".jpeg", ".tif", ".tiff", ".zip", ".jip"]) {
+export function ensureExtension(fileName: string, extensions: string[] = [".png", ".bmp", ".jpg", ".jpeg", ".tif", ".tiff", ".zip", ".jip"]) {
   for (const extension of extensions) {
     if (fileName.toLowerCase().endsWith(extension.toLowerCase())) {
       return fileName;
