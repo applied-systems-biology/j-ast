@@ -20,6 +20,7 @@
               @drop="onDrop(new SlotIndex(-1, columnIndex))"
             >
               <ProjectImageButton
+                v-model:project-backend-tasks="projectBackendTasks"
                 v-if="getUnsortedImage(columnIndex)"
                 :current-image="getUnsortedImage(columnIndex)!"
                 :selected-image-ids="selectedImageIds"
@@ -86,6 +87,7 @@
             v-if="getImageBySlot(rowIndex, columnIndex)"
             :current-image="getImageBySlot(rowIndex, columnIndex)!"
             :selected-image-ids="selectedImageIds"
+            v-model:project-backend-tasks="projectBackendTasks"
             class="draggable-item"
             draggable="true"
             @dragstart="onDragStart(new SlotIndex(rowIndex, columnIndex))"
@@ -103,6 +105,7 @@ import ProjectImageButton from 'components/ProjectImageButton.vue';
 import {sendFailureNotification} from "src/types/notification";
 import { Badge } from 'src/types/badge';
 import { ProjectImagesPayload, ProjectImagesPayloadRow } from 'src/types/projectImages';
+import { BackendTaskPayload } from 'src/types/backendTasks';
 
 defineProps<{
   showUnsorted: boolean;
@@ -129,6 +132,8 @@ class SlotIndex {
 const selectedImageIds = defineModel<Array<number>>('selectedImageIds', {
   required: true,
 });
+const projectBackendTasks = defineModel<BackendTaskPayload[]>("backendTasks")
+
 const projectImages = defineModel<ProjectImagesPayload>();
 const numCols = computed(() =>
   projectImages.value ? projectImages.value.maxColumn() + 1 : 0

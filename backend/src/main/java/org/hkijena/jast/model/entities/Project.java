@@ -41,8 +41,15 @@ public class Project {
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true, mappedBy = "project")
     private List<Image> images = new ArrayList<>();
 
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true, mappedBy = "project")
+    private List<BackendTask> tasks = new ArrayList<>();
+
     public Long getId() {
         return id;
+    }
+
+    public List<BackendTask> getTasks() {
+        return tasks;
     }
 
     public List<Image> getImages() {
@@ -65,6 +72,16 @@ public class Project {
     public void removeImage(Image image) {
         images.remove(image);
         image.setProject(null);
+    }
+
+    public void addTask(BackendTask task) {
+        tasks.add(task);
+        task.setProject(this);
+    }
+
+    public void removeTask(BackendTask task) {
+        tasks.remove(task);
+        task.setProject(null);
     }
 
     public User getOwner() {

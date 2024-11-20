@@ -1,7 +1,7 @@
 package org.hkijena.jast.tasks;
 
 @BackendTaskType(typeId = "image-segment-plate")
-public class SegmentPlateBackendTask implements BackendTask {
+public class SegmentPlateBackendTaskWorkload implements BackendTaskWorkload {
     @Override
     public String getName() {
         return "Auto-detect plate";

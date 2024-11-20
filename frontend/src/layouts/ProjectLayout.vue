@@ -57,8 +57,8 @@
         >
           <q-tooltip
             >Selects all visible images. To select unsorted images, open the
-            "Unsorted images" view</q-tooltip
-          >
+            "Unsorted images" view
+          </q-tooltip>
         </q-btn>
         <q-btn
           icon="deselect"
@@ -100,9 +100,12 @@
               </q-item>
               <q-separator />
               <q-item
-              v-for="tool in availableBackendTasks"
-              :key="tool.taskId"
-              clickable v-close-popup>
+                v-for="tool in availableBackendTasks"
+                :key="tool.taskId"
+                clickable
+                v-close-popup
+                @click="doBackendTask(tool)"
+              >
                 <q-item-section avatar>
                   <q-icon name="fa-solid fa-wand-magic-sparkles" />
                 </q-item-section>
@@ -153,7 +156,8 @@
       <q-page class="flex column q-gutter-sm">
         <ImageArrangerComponent
           v-model="projectImages"
-          v-model:selectedImageIds="selectedImageIds"
+          v-model:selected-image-ids="selectedImageIds"
+          v-model:backend-tasks="projectBackendTasks"
           :show-unsorted="drawerUnsortedImages"
         />
       </q-page>
@@ -173,7 +177,7 @@ import { useRoute, useRouter } from 'vue-router';
 import { api } from 'boot/axios';
 import { downloadFromApi, ensureExtension } from 'src/types/common';
 import ProjectImageEditor from 'components/ProjectImageEditor.vue';
-import { plainToInstance } from 'class-transformer';
+import { instanceToPlain, plainToInstance } from 'class-transformer';
 import ImageArrangerComponent from 'components/ImageArrangerComponent.vue';
 import ProjectMultiImageEditor from 'components/ProjectMultiImageEditor.vue';
 import {
@@ -190,7 +194,11 @@ import {
   ProjectMetadataPayload,
 } from 'src/types/project';
 import { ProjectImagesPayload } from 'src/types/projectImages';
-import { BackendTaskInfoPayload } from 'src/types/backendTasks';
+import {
+  BackendTaskTypePayload,
+  BackendTaskPayload,
+} from 'src/types/backendTasks';
+import { useIntervalFn } from '@vueuse/core';
 
 const $q = useQuasar();
 const $route = useRoute();
@@ -204,7 +212,8 @@ const projectPayload: Ref<ProjectMetadataPayload> = ref(
 );
 const projectImages = ref<ProjectImagesPayload>(new ProjectImagesPayload());
 const selectedImageIds = ref<Array<number>>([]);
-const availableBackendTasks = ref<Array<BackendTaskInfoPayload>>([]);
+const availableBackendTasks = ref<Array<BackendTaskTypePayload>>([]);
+const projectBackendTasks = ref<Array<BackendTaskPayload>>([])
 
 // Computed values
 const drawerRight = computed(() => selectedImageIds.value.length > 0);
@@ -320,6 +329,24 @@ function doFrontEndProcessor(tool: FrontEndImageProcessor) {
   }
 }
 
+function doBackendTask(tool: BackendTaskTypePayload) {
+  if (selectedImageIds.value && projectImages.value) {
+    const payload = new BackendTaskPayload();
+    payload.taskId = tool.taskId
+    payload.projectId = projectPayload.value.id
+    payload.imageIds = selectedImageIds.value
+    api
+      .post(`/task/new`, instanceToPlain(payload))
+      .then((response) => {
+        console.log(response.data);
+        queryBackend();
+      })
+      .catch(() => {
+        sendFailureNotification('Unable to start task');
+      });
+  }
+}
+
 function queryBackend() {
   api.get<ProjectMetadataPayload>(`/project/${projectId}`).then((response) => {
     projectPayload.value = plainToInstance(
@@ -341,17 +368,27 @@ function queryBackend() {
       drawerUnsortedImages.value =
         projectImages.value.unsortedRow.images.length > 0;
     });
-  api.get<BackendTaskInfoPayload[]>(`/task/list-types`).then((response) => {
+  api.get<BackendTaskTypePayload[]>(`/task/list-types`).then((response) => {
     availableBackendTasks.value = plainToInstance(
-      BackendTaskInfoPayload,
+      BackendTaskTypePayload,
       response.data
     );
   });
 }
 
+function queryTaskBackend() {
+  api.get<BackendTaskPayload[]>(`/project/${projectId}/tasks`).then((response) => {
+    projectBackendTasks.value = plainToInstance(BackendTaskPayload, response.data);
+  })
+}
+
 onMounted(() => {
   queryBackend();
+  queryTaskBackend();
 });
+
+useIntervalFn(queryTaskBackend, 5000);
+
 </script>
 <style scoped lang="scss">
 .edit-toolbar > * {

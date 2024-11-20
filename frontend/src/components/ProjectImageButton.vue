@@ -27,8 +27,7 @@
             <span class="q-ml-sm">{{ renderMaskAnnotationId(props.currentImage, badge.text)}}</span>
           </q-badge>
         </div>
-        <!-- TODO: will be needed for later -->
-        <div class="progress text-indigo" v-if="false">
+        <div v-if="hasTaskRunning" class="progress text-indigo" >
           <q-spinner-hourglass size="xs"/>
           <span class="text-caption">Working ...</span>
         </div>
@@ -42,7 +41,9 @@ import { computed, onMounted, ref } from 'vue';
 import { useProjectImageThumbnailStore } from 'stores/project-image-thumbnail-store';
 import { plainToInstance } from 'class-transformer';
 import { ImagePayload } from 'src/types/image';
+import { BackendTaskPayload } from 'src/types/backendTasks';
 
+const projectBackendTasks = defineModel<BackendTaskPayload[]>("projectBackendTasks");
 const thumbnail = ref<string>('');
 const thumbnailStore = useProjectImageThumbnailStore();
 
@@ -69,6 +70,16 @@ const selectionColor = computed(() => {
   else {
     return"blue-grey-2";
   }
+})
+const hasTaskRunning = computed(() => {
+  if(projectBackendTasks.value) {
+    for (const task of projectBackendTasks.value) {
+      if(task.imageIds.includes(props.currentImage.id)) {
+        return true
+      }
+    }
+  }
+  return false
 })
 
 function clicked(event : Event) {

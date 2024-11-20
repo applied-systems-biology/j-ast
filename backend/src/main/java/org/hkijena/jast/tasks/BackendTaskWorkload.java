@@ -1,6 +1,6 @@
 package org.hkijena.jast.tasks;
 
-public interface BackendTask {
+public interface BackendTaskWorkload {
     String getName();
     String getDescription();
 }

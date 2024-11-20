@@ -1,20 +1,21 @@
 import { Expose } from 'class-transformer';
 
-export class BackendTaskInfoPayload {
+export enum TaskStatus {
+  Ready= "Ready",
+  Running = "Running",
+  Successful = "Successful",
+  Failed = "Failed"
+}
+
+export class BackendTaskTypePayload {
   @Expose()
-  taskId: string;
+  taskId: string = "";
 
   @Expose()
-  name: string;
+  name: string = "";
 
   @Expose()
-  description: string;
-
-  constructor(taskId: string, name: string, description: string) {
-    this.taskId = taskId;
-    this.name = name;
-    this.description = description;
-  }
+  description: string = "";
 }
 
 export class BackendTaskPayload {
@@ -25,15 +26,11 @@ export class BackendTaskPayload {
   imageIds: number[] = [];
 
   @Expose()
-  taskId: string;
+  taskId: string = "";
 
   @Expose()
-  projectId: number;
+  projectId: number = -1;
 
-  constructor(id: number = -1, imageIds: number[] = [], taskId: string, projectId: number) {
-    this.id = id;
-    this.imageIds = imageIds;
-    this.taskId = taskId;
-    this.projectId = projectId;
-  }
+  @Expose()
+  status: TaskStatus = TaskStatus.Ready;
 }

@@ -2,7 +2,7 @@ package org.hkijena.jast.payloads.task;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class BackendTaskInfoPayload {
+public class BackendTaskTypePayload {
     @JsonProperty
     private String taskId;
     @JsonProperty
