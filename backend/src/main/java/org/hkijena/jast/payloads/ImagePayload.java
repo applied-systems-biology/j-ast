@@ -30,6 +30,8 @@ public class ImagePayload {
     @JsonProperty
     private AssayType assayType;
     @JsonProperty
+    private int version;
+    @JsonProperty
     private List<MaskImageAnnotationPayload> maskImageAnnotations = new ArrayList<>();
 
     public ImagePayload() {
@@ -47,6 +49,7 @@ public class ImagePayload {
             int groupRow,
             int groupColumn,
             AssayType assayType,
+            int version,
             List<MaskImageAnnotationPayload> maskImageAnnotations) {
         this.id = id;
         this.projectId = projectId;
@@ -58,6 +61,7 @@ public class ImagePayload {
         this.groupRow = groupRow;
         this.groupColumn = groupColumn;
         this.assayType = assayType;
+        this.version = version;
         this.maskImageAnnotations = maskImageAnnotations;
     }
 
@@ -72,10 +76,9 @@ public class ImagePayload {
                 image.getGroupRow(),
                 image.getGroupColumn(),
                 image.getAssayType(),
+               image.getVersion(),
                image.getFilteredMaskImageAnnotations().stream().map(MaskImageAnnotationPayload::create).toList());
     }
-
-
 
     public long getId() {
         return id;
@@ -157,41 +160,19 @@ public class ImagePayload {
         this.assayType = assayType;
     }
 
-    @Override
-    public boolean equals(Object obj) {
-        if (obj == this) return true;
-        if (obj == null || obj.getClass() != this.getClass()) return false;
-        var that = (ImagePayload) obj;
-        return this.id == that.id &&
-                this.projectId == that.projectId &&
-                Objects.equals(this.fileName, that.fileName) &&
-                Objects.equals(this.owner, that.owner) &&
-                Objects.equals(this.experiment, that.experiment) &&
-                Objects.equals(this.sample, that.sample) &&
-                Objects.equals(this.timePoint, that.timePoint) &&
-                this.groupRow == that.groupRow &&
-                this.groupColumn == that.groupColumn &&
-                Objects.equals(this.assayType, that.assayType);
+    public int getVersion() {
+        return version;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, projectId, fileName, owner, experiment, sample, timePoint, groupRow, groupColumn, assayType);
+    public void setVersion(int version) {
+        this.version = version;
     }
 
-    @Override
-    public String toString() {
-        return "ImagePayload[" +
-                "id=" + id + ", " +
-                "projectId=" + projectId + ", " +
-                "fileName=" + fileName + ", " +
-                "owner=" + owner + ", " +
-                "experiment=" + experiment + ", " +
-                "sample=" + sample + ", " +
-                "timePoint=" + timePoint + ", " +
-                "groupRow=" + groupRow + ", " +
-                "groupColumn=" + groupColumn + ", " +
-                "assayType=" + assayType + ']';
+    public List<MaskImageAnnotationPayload> getMaskImageAnnotations() {
+        return maskImageAnnotations;
     }
 
+    public void setMaskImageAnnotations(List<MaskImageAnnotationPayload> maskImageAnnotations) {
+        this.maskImageAnnotations = maskImageAnnotations;
+    }
 }

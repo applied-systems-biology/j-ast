@@ -1,15 +1,19 @@
 import { defineStore } from 'pinia';
 import { api } from 'boot/axios';
 
+function toCacheId(imageId: number, version: number) : string {
+  return `${imageId}_${version}`;
+}
+
 export const useProjectImageThumbnailStore = defineStore('projectImageThumbnailStore', {
   state: () => ({
     cache: {} as Record<string, string>, // Stores image URLs by image ID
   }),
   actions: {
-    fetchImage(id: number): Promise<string | undefined> {
+    fetchImage(id: number, version: number): Promise<string | undefined> {
       // Check if the image is already cached
-      if (this.cache[id.toString()]) {
-        return Promise.resolve(this.cache[id.toString()]);
+      if (this.cache[toCacheId(id, version)]) {
+        return Promise.resolve(this.cache[toCacheId(id, version)]);
       }
 
       // Fetch the image from the backend using .then
@@ -20,7 +24,7 @@ export const useProjectImageThumbnailStore = defineStore('projectImageThumbnailS
           const objectUrl = URL.createObjectURL(imageBlob);
 
           // Store the image URL in the cache
-          this.cache[id.toString()] = objectUrl;
+          this.cache[toCacheId(id, version)] = objectUrl;
           return objectUrl;
         })
         .catch((error) => {
@@ -28,10 +32,10 @@ export const useProjectImageThumbnailStore = defineStore('projectImageThumbnailS
           return undefined;
         });
     },
-    revokeImage(id: number) {
-      if (this.cache[id.toString()]) {
-        URL.revokeObjectURL(this.cache[id.toString()]);
-        delete this.cache[id.toString()];
+    revokeImage(id: number, version: number) {
+      if (this.cache[toCacheId(id, version)]) {
+        URL.revokeObjectURL(this.cache[toCacheId(id, version)]);
+        delete this.cache[toCacheId(id, version)];
       }
     },
   },

@@ -291,6 +291,9 @@ export class ImagePayload {
   groupColumn: number = -1;
 
   @Expose()
+  version: number = -1;
+
+  @Expose()
   maskImageAnnotations: MaskImageAnnotationPayload[] = [];
 
   /**

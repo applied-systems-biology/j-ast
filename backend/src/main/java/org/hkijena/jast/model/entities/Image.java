@@ -4,8 +4,11 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import org.hkijena.jast.model.AssayType;
 import org.hkijena.jast.payloads.ImagePayload;
+import org.hkijena.jast.utils.ColorUtils;
+import org.hkijena.jast.utils.ImageUtils;
 import org.hkijena.jast.utils.StringUtils;
 
+import java.awt.image.BufferedImage;
 import java.io.Serial;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -74,8 +77,23 @@ public class Image {
     @Column(name = "thumbnail_data", columnDefinition = "BLOB")
     private byte[] thumbnailData;
 
+    @Column(name = "version")
+    private Integer version = 1;
+
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true, mappedBy = "image")
     private List<MaskImageAnnotation> maskImageAnnotations = new ArrayList<>();
+
+    public int getVersion() {
+        return version != null ? version : 1;
+    }
+
+    public void setVersion(int version) {
+        this.version = version;
+    }
+
+    public void incrementVersion() {
+        setVersion(getVersion() + 1);
+    }
 
     public List<MaskImageAnnotation> getMaskImageAnnotations() {
         return maskImageAnnotations;
@@ -215,5 +233,25 @@ public class Image {
         setTimePoint(payload.getTimePoint());
         setGroupColumn(payload.getGroupColumn());
         setGroupRow(payload.getGroupRow());
+    }
+
+    public void rebuildThumbnail() {
+        BufferedImage raw = ImageUtils.fromPNGBytes(this.rawData);
+        if(raw == null) {
+            return;
+        }
+        rebuildThumbnail(raw);
+    }
+
+    public void rebuildThumbnail(BufferedImage originalImage) {
+        BufferedImage thumbnail = ImageUtils.createThumbnail(originalImage);
+        for (MaskImageAnnotation annotation : getFilteredMaskImageAnnotations()) {
+            BufferedImage annotationThumbnail = ImageUtils.fromPNGBytes(annotation.getThumbnailData());
+            if(annotationThumbnail != null) {
+                BufferedImage gradient = ImageUtils.calculateGradient(annotationThumbnail);
+                ImageUtils.overlayMask(thumbnail, gradient, ColorUtils.paletteColorFromString(annotation.getType()), 0.8);
+            }
+        }
+        setThumbnailData(ImageUtils.toPNGByteArray(thumbnail));
     }
 }

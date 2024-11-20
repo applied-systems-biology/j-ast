@@ -119,7 +119,7 @@ public class ProjectController {
             image.setImageWidth(bufferedImage.getWidth());
             image.setImageHeight(bufferedImage.getHeight());
             image.setRawData(ImageUtils.toPNGByteArray(bufferedImage));
-            image.setThumbnailData(ImageUtils.toPNGByteArray(ImageUtils.createThumbnail(bufferedImage, 128, 128)));
+            image.rebuildThumbnail(bufferedImage);
 
             project.addImage(image);
         } catch (IOException e) {

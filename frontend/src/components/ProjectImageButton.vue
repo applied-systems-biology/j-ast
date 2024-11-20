@@ -81,7 +81,7 @@ function clicked(event : Event) {
 }
 
 onMounted(() => {
-  thumbnailStore.fetchImage(props.currentImage.id).then(data => {
+  thumbnailStore.fetchImage(props.currentImage.id, props.currentImage.version).then(data => {
     thumbnail.value = data || ""
   })
 });

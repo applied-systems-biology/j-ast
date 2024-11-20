@@ -65,6 +65,11 @@ public class AnnotationController {
             maskImageAnnotation.incrementVersion();
             maskImageAnnotationRepository.save(maskImageAnnotation);
 
+            // Update the image thumbnail
+            maskImageAnnotation.getImage().rebuildThumbnail();
+            maskImageAnnotation.getImage().incrementVersion();
+            imageRepository.save(maskImageAnnotation.getImage());
+
         } catch (IOException e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid image data");
         }
