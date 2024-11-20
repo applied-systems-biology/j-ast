@@ -61,6 +61,17 @@ public class TaskController {
         return ResponseEntity.ok(project.getTasks().stream().map(BackendTaskPayload::new).toList());
     }
 
+
+    @PostMapping("/api/project/{id}/clear-tasks")
+    public void clearProjectTasks(@PathVariable long id, Authentication authentication) {
+        Project project = projectService.getProjectByIdOrError(id);
+        if(!project.canEdit(authentication)) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
+        }
+        project.clearTasks();
+        projectRepository.save(project);
+    }
+
     @PostMapping("/api/task/new")
     public ResponseEntity<BackendTaskPayload> startNewTask(@RequestBody BackendTaskPayload payload, Authentication authentication) {
         Project project = projectService.getProjectByIdOrError(payload.getProjectId());

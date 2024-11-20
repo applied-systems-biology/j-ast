@@ -16,7 +16,7 @@
             </q-btn>
           </q-btn-group>
         </q-toolbar-title>
-        <LoginButtonComponent />
+        <AuthManagerComponent />
       </q-toolbar>
       <q-toolbar class="bg-primary text-white edit-toolbar">
         <ToggleButton
@@ -123,6 +123,8 @@
         >
           <q-tooltip> Deletes the selected image(s)</q-tooltip>
         </q-btn>
+        <div class="col-grow" />
+        <ProjectBackendTaskButton :project-id="projectId[0]" v-model="projectBackendTasks" />
       </q-toolbar>
     </q-header>
     <q-drawer elevated side="left" bordered v-model="drawerLeft">
@@ -166,7 +168,7 @@
 </template>
 
 <script setup lang="ts">
-import LoginButtonComponent from 'components/AuthManagerComponent.vue';
+import AuthManagerComponent from 'components/AuthManagerComponent.vue';
 import HeaderLogoButtonComponent from 'components/HeaderLogoButtonComponent.vue';
 import { computed, onMounted, ref, Ref } from 'vue';
 import ToggleButton from 'components/ToggleButton.vue';
@@ -199,6 +201,7 @@ import {
   BackendTaskPayload,
 } from 'src/types/backendTasks';
 import { useIntervalFn } from '@vueuse/core';
+import ProjectBackendTaskButton from "components/ProjectBackendTaskButton.vue";
 
 const $q = useQuasar();
 const $route = useRoute();

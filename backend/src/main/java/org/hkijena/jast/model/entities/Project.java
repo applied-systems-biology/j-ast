@@ -1,5 +1,6 @@
 package org.hkijena.jast.model.entities;
 
+import com.google.common.collect.ImmutableList;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import org.hkijena.jast.model.AdminPrincipal;
@@ -151,5 +152,11 @@ public class Project {
             }
         }
         return new ArrayList<>(result);
+    }
+
+    public void clearTasks() {
+        for (BackendTask task : ImmutableList.copyOf(tasks)) {
+            removeTask(task);
+        }
     }
 }
