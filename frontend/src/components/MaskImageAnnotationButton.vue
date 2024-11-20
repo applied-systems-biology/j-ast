@@ -21,14 +21,14 @@
 import { useRouter } from 'vue-router';
 import {
   downloadFromApi,
-  ImagePayload,
   loadDataStringFromApi,
   loadPayloadInstanceFromApi,
-  MaskImageAnnotationPayload, renderMaskAnnotationId
+  renderMaskAnnotationId
 } from 'src/types/common';
 import {computed, onMounted, ref, watch} from "vue";
 import {useQuasar} from "quasar";
 import { useMaskImageAnnotationThumbnailStore } from 'stores/mask-image-annotation-thumbnail-store';
+import { ImagePayload, MaskImageAnnotationPayload } from 'src/types/image';
 
 const $q = useQuasar()
 const router = useRouter()

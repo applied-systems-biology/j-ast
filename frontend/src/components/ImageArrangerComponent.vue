@@ -99,9 +99,10 @@
 </template>
 <script setup lang="ts">
 import { computed, ref } from 'vue';
-import { Badge, ProjectImagesPayload, ProjectImagesPayloadRow } from 'src/types/common';
 import ProjectImageButton from 'components/ProjectImageButton.vue';
 import {sendFailureNotification} from "src/types/notification";
+import { Badge } from 'src/types/badge';
+import { ProjectImagesPayload, ProjectImagesPayloadRow } from 'src/types/projectImages';
 
 defineProps<{
   showUnsorted: boolean;

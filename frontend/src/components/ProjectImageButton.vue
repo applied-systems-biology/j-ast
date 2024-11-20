@@ -37,10 +37,11 @@
   </q-btn>
 </template>
 <script setup lang="ts">
-import {ImagePayload, renderMaskAnnotationId} from 'src/types/common';
+import {renderMaskAnnotationId} from 'src/types/common';
 import { computed, onMounted, ref } from 'vue';
 import { useProjectImageThumbnailStore } from 'stores/project-image-thumbnail-store';
 import { plainToInstance } from 'class-transformer';
+import { ImagePayload } from 'src/types/image';
 
 const thumbnail = ref<string>('');
 const thumbnailStore = useProjectImageThumbnailStore();

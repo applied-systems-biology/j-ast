@@ -35,11 +35,12 @@
   <MaskImageAnnotationButton v-if="model?.assayType == 'ETest'" v-model="model" annotation-type-id="zoi-shape"/>
 </template>
 <script setup lang="ts">
-import { AssayType, ImagePayload } from 'src/types/common';
 import { debounce } from 'quasar';
 import { plainToInstance } from 'class-transformer';
 import MaskImageAnnotationButton from 'components/MaskImageAnnotationButton.vue';
 import {sendFailureNotification} from "src/types/notification";
+import { AssayType } from 'src/types/assayType';
+import { ImagePayload } from 'src/types/image';
 
 type SelectValue = string | number | null;
 const model = defineModel<ImagePayload>();

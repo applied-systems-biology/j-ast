@@ -3,20 +3,20 @@
     <q-header>
       <q-toolbar>
         <q-toolbar-title class="row items-center q-gutter-sm">
-          <HeaderLogoButtonComponent/>
+          <HeaderLogoButtonComponent />
           <div>/</div>
-          <q-skeleton v-if="!projectName" type="text" style="width: 200px"/>
+          <q-skeleton v-if="!projectName" type="text" style="width: 200px" />
           <div v-else>{{ projectName }}</div>
           <q-btn-group flat>
             <q-btn flat @click="editProjectName">
-              <q-icon name="edit"/>
+              <q-icon name="edit" />
             </q-btn>
             <q-btn flat @click="deleteProject">
-              <q-icon name="delete"/>
+              <q-icon name="delete" />
             </q-btn>
           </q-btn-group>
         </q-toolbar-title>
-        <LoginButtonComponent/>
+        <LoginButtonComponent />
       </q-toolbar>
       <q-toolbar class="bg-primary text-white edit-toolbar">
         <ToggleButton
@@ -40,13 +40,13 @@
           <span
             v-if="projectImages?.unsortedRow.images.length"
             class="text-bold flex flex-center"
-          >Unsorted images ({{
+            >Unsorted images ({{
               projectImages?.unsortedRow.images.length || 0
             }})</span
           >
           <span v-else class="text-bold flex flex-center">Unsorted images</span>
           <q-tooltip
-          >All images that have not yet been organized are stored here.
+            >All images that have not yet been organized are stored here.
           </q-tooltip>
         </ToggleButton>
         <q-btn
@@ -55,7 +55,10 @@
           v-if="selectedImageIds.length == 0"
           @click="selectAll"
         >
-          <q-tooltip>Selects all visible images. To select unsorted images, open the "Unsorted images" view</q-tooltip>
+          <q-tooltip
+            >Selects all visible images. To select unsorted images, open the
+            "Unsorted images" view</q-tooltip
+          >
         </q-btn>
         <q-btn
           icon="deselect"
@@ -81,6 +84,7 @@
         >
           <q-menu>
             <q-list style="min-width: 100px">
+              <!-- Front-end processors -->
               <q-item
                 v-for="tool in frontEndImageProcessors"
                 :key="tool.label"
@@ -89,10 +93,21 @@
                 @click="doFrontEndProcessor(tool)"
               >
                 <q-item-section avatar>
-                  <q-icon :name="tool.icon"/>
+                  <q-icon :name="tool.icon" />
                 </q-item-section>
                 <q-item-section>{{ tool.label }}</q-item-section>
                 <q-tooltip>{{ tool.tooltip }}</q-tooltip>
+              </q-item>
+              <q-separator />
+              <q-item
+              v-for="tool in availableBackendTasks"
+              :key="tool.taskId"
+              clickable v-close-popup>
+                <q-item-section avatar>
+                  <q-icon name="fa-solid fa-wand-magic-sparkles" />
+                </q-item-section>
+                <q-item-section>{{ tool.name }}</q-item-section>
+                <q-tooltip>{{ tool.description }}</q-tooltip>
               </q-item>
             </q-list>
           </q-menu>
@@ -132,7 +147,7 @@
         v-if="selectedImageIds.length > 1"
         v-model="selectedImageIds"
       />
-      <ProjectImageEditor v-model="lastSelectedImage"/>
+      <ProjectImageEditor v-model="lastSelectedImage" />
     </q-drawer>
     <q-page-container>
       <q-page class="flex column q-gutter-sm">
@@ -149,30 +164,33 @@
 <script setup lang="ts">
 import LoginButtonComponent from 'components/AuthManagerComponent.vue';
 import HeaderLogoButtonComponent from 'components/HeaderLogoButtonComponent.vue';
-import {onMounted, Ref, ref, computed} from 'vue';
+import { computed, onMounted, ref, Ref } from 'vue';
 import ToggleButton from 'components/ToggleButton.vue';
 import ImageUploaderComponent from 'components/ImageUploaderComponent.vue';
-import {useQuasar} from 'quasar';
+import { useQuasar } from 'quasar';
 // import { VueDraggableNext as draggable } from 'vue-draggable-next';
-import {useRoute, useRouter} from 'vue-router';
-import {api} from 'boot/axios';
-import {
-  CreateEditProjectRequest,
-  downloadFromApi,
-  ensureExtension,
-  ProjectImagesPayload,
-  ProjectMetadataPayload,
-} from 'src/types/common';
+import { useRoute, useRouter } from 'vue-router';
+import { api } from 'boot/axios';
+import { downloadFromApi, ensureExtension } from 'src/types/common';
 import ProjectImageEditor from 'components/ProjectImageEditor.vue';
-import {plainToInstance} from 'class-transformer';
+import { plainToInstance } from 'class-transformer';
 import ImageArrangerComponent from 'components/ImageArrangerComponent.vue';
 import ProjectMultiImageEditor from 'components/ProjectMultiImageEditor.vue';
 import {
   FrontEndImageProcessor,
   frontEndImageProcessors,
-} from 'src/types/algorithms';
-import {onDialogYes} from "src/types/dialog";
-import {sendFailureNotification, sendSuccessNotification} from "src/types/notification";
+} from 'src/types/frontendTasks';
+import { onDialogYes } from 'src/types/dialog';
+import {
+  sendFailureNotification,
+  sendSuccessNotification,
+} from 'src/types/notification';
+import {
+  CreateEditProjectRequest,
+  ProjectMetadataPayload,
+} from 'src/types/project';
+import { ProjectImagesPayload } from 'src/types/projectImages';
+import { BackendTaskInfoPayload } from 'src/types/backendTasks';
 
 const $q = useQuasar();
 const $route = useRoute();
@@ -186,6 +204,7 @@ const projectPayload: Ref<ProjectMetadataPayload> = ref(
 );
 const projectImages = ref<ProjectImagesPayload>(new ProjectImagesPayload());
 const selectedImageIds = ref<Array<number>>([]);
+const availableBackendTasks = ref<Array<BackendTaskInfoPayload>>([]);
 
 // Computed values
 const drawerRight = computed(() => selectedImageIds.value.length > 0);
@@ -196,7 +215,9 @@ const lastSelectedImage = computed(() =>
       : -1
   )
 );
-const selectedImages = computed(() => selectedImageIds.value.map(id => projectImages.value.getImageById(id)));
+const selectedImages = computed(() =>
+  selectedImageIds.value.map((id) => projectImages.value.getImageById(id))
+);
 
 defineOptions({
   name: 'ProjectLayout',
@@ -227,17 +248,22 @@ function editProjectName() {
 }
 
 function deleteProject() {
-  onDialogYes("Delete project",
-    'Do your really want to delete the current project?').then(() => {
+  onDialogYes(
+    'Delete project',
+    'Do your really want to delete the current project?'
+  ).then(() => {
     api.post(`/project/${projectId}/delete`, {}).then(() => {
       router.push('/');
     });
-  })
+  });
 }
 
 function deleteSelectedImages() {
   if (selectedImageIds.value.length > 0) {
-    onDialogYes("Delete images", "Do your really want to delete the selected images?").then(() => {
+    onDialogYes(
+      'Delete images',
+      'Do your really want to delete the selected images?'
+    ).then(() => {
       const promises = [];
       for (const id of selectedImageIds.value) {
         promises.push(api.post(`/image/${id}/delete`));
@@ -245,7 +271,7 @@ function deleteSelectedImages() {
       Promise.all(promises).then(() => {
         queryBackend();
       });
-    })
+    });
   }
 }
 
@@ -259,11 +285,14 @@ function downloadSelectedImages() {
 }
 
 function selectAll() {
-  if(drawerUnsortedImages.value) {
-    selectedImageIds.value = [...projectImages.value.imageIds]
-  }
-  else {
-    selectedImageIds.value = [...projectImages.value.imageIds.filter(id => projectImages.value.getImageById(id).groupColumn >= 0)]
+  if (drawerUnsortedImages.value) {
+    selectedImageIds.value = [...projectImages.value.imageIds];
+  } else {
+    selectedImageIds.value = [
+      ...projectImages.value.imageIds.filter(
+        (id) => projectImages.value.getImageById(id).groupColumn >= 0
+      ),
+    ];
   }
 }
 
@@ -272,22 +301,22 @@ function doFrontEndProcessor(tool: FrontEndImageProcessor) {
     tool
       .fn(selectedImages.value, projectImages.value)
       .then((response) => {
-        sendSuccessNotification(`Successfully applied "${tool.label}"`)
-        if(response.needsUpload) {
-          projectImages.value.uploadToBackend()
+        sendSuccessNotification(`Successfully applied "${tool.label}"`);
+        if (response.needsUpload) {
+          projectImages.value
+            .uploadToBackend()
             .then(queryBackend)
-            .catch(() => sendFailureNotification(`Failed to update selected images`));
-        }
-        else if(response.needsFullReload) {
-          queryBackend()
+            .catch(() =>
+              sendFailureNotification(`Failed to update selected images`)
+            );
+        } else if (response.needsFullReload) {
+          queryBackend();
         }
       })
       .catch(() => {
-        sendFailureNotification(`Error while applying "${tool.label}"`)
+        sendFailureNotification(`Error while applying "${tool.label}"`);
       })
-      .finally(() => {
-
-      });
+      .finally(() => {});
   }
 }
 
@@ -302,8 +331,6 @@ function queryBackend() {
     .get<ProjectImagesPayload>(`/project/${projectId}/images`)
     .then((response) => {
       let payload = plainToInstance(ProjectImagesPayload, response.data);
-      // console.log(response.data);
-      // console.log(payload);
       payload.fixRowReferences();
       projectImages.value = payload;
 
@@ -314,6 +341,12 @@ function queryBackend() {
       drawerUnsortedImages.value =
         projectImages.value.unsortedRow.images.length > 0;
     });
+  api.get<BackendTaskInfoPayload[]>(`/task/list-types`).then((response) => {
+    availableBackendTasks.value = plainToInstance(
+      BackendTaskInfoPayload,
+      response.data
+    );
+  });
 }
 
 onMounted(() => {

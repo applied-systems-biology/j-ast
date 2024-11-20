@@ -171,11 +171,10 @@ import LoginButtonComponent from "components/AuthManagerComponent.vue";
 import HeaderLogoButtonComponent from "components/HeaderLogoButtonComponent.vue";
 import {computed, onMounted, reactive, Ref, ref, useTemplateRef, watch} from 'vue';
 import {
-  AssayType, downloadDataString,
+  downloadDataString,
   downloadFromApi, ensureExtension,
-  ImagePayload, loadImageElementFromDataString,
-  MaskImageAnnotationPayload,
-  ProjectMetadataPayload, removeExtensionIfPresent, uploadImage
+  loadImageElementFromDataString,
+  removeExtensionIfPresent, uploadImage
 } from 'src/types/common';
 import {api} from 'boot/axios';
 import {plainToInstance} from 'class-transformer';
@@ -185,6 +184,9 @@ import FloodFill from 'q-floodfill';
 import {useEventListener} from '@vueuse/core';
 import {sendFailureNotification, sendSuccessNotification} from "src/types/notification";
 import {onDialogYes} from "src/types/dialog";
+import { ProjectMetadataPayload } from 'src/types/project';
+import { AssayType } from 'src/types/assayType';
+import { ImagePayload, MaskImageAnnotationPayload } from 'src/types/image';
 
 const $q = useQuasar()
 const $route = useRoute()

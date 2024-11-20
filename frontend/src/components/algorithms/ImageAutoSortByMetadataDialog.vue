@@ -52,7 +52,8 @@ export interface ImageAutoSortByMetadataDialogPayload {
 <script setup lang="ts">
 import { useDialogPluginComponent } from 'quasar';
 import {computed, onMounted, ref} from 'vue';
-import {ImagePayload, ProjectImagesPayload} from "src/types/common";
+import { ImagePayload } from 'src/types/image';
+import { ProjectImagesPayload } from 'src/types/projectImages';
 
 const payload = ref<ImageAutoSortByMetadataDialogPayload>({
   timePointOrder: []

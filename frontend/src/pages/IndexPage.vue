@@ -56,10 +56,10 @@ import {ref} from "vue";
 import {storeToRefs} from "pinia";
 import {api} from "boot/axios";
 import {useWatchInterval} from "../composables/UseWatchInterval";
-import {CreateEditProjectRequest, ProjectMetadataPayload} from "src/types/common";
 import {useRouter} from "vue-router";
 import {plainToInstance} from 'class-transformer';
 import {sendFailureNotification, sendSuccessNotification} from "src/types/notification";
+import { CreateEditProjectRequest, ProjectMetadataPayload } from 'src/types/project';
 
 const $q = useQuasar()
 const authStore = useAuthStore()

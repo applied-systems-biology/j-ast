@@ -44,5 +44,5 @@ security:
 #server:
 #  servlet:
 #    context-path: '/abc'
-debug: on
+debug: off
 
