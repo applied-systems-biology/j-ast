@@ -12,8 +12,8 @@
     </q-card-section>
     <q-separator />
     <q-card-actions>
-      <q-btn flat icon="edit" @click="openEditor">Edit</q-btn>
-      <q-btn flat icon="download" @click="downloadMask">Download</q-btn>
+      <q-btn :disable="props.disable" flat icon="edit" @click="openEditor">Edit</q-btn>
+      <q-btn :disable="props.disable" flat icon="download" @click="downloadMask">Download</q-btn>
     </q-card-actions>
   </q-card>
 </template>
@@ -39,7 +39,8 @@ const annotationTypeName = computed(() => image.value ? renderMaskAnnotationId(i
 const thumbnailStore = useMaskImageAnnotationThumbnailStore()
 
 const props = defineProps<{
-  annotationTypeId: string
+  annotationTypeId: string,
+  disable: boolean,
 }>()
 
 function openEditor() {

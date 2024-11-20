@@ -150,7 +150,7 @@
         v-if="selectedImageIds.length > 1"
         v-model="selectedImageIds"
       />
-      <ProjectImageEditor v-model="lastSelectedImage" />
+      <ProjectImageEditor v-model="lastSelectedImage" v-model:project-backend-tasks="projectBackendTasks" />
     </q-drawer>
     <q-page-container>
       <q-page class="flex column q-gutter-sm">
@@ -335,11 +335,11 @@ function doBackendTask(tool: BackendTaskTypePayload) {
     payload.taskId = tool.taskId
     payload.projectId = projectPayload.value.id
     payload.imageIds = selectedImageIds.value
+    $q.loading.show()
     api
       .post(`/task/new`, instanceToPlain(payload))
-      .then((response) => {
-        console.log(response.data);
-        queryBackend();
+      .then(() => {
+        queryTaskBackend(true);
       })
       .catch(() => {
         sendFailureNotification('Unable to start task');
@@ -376,9 +376,15 @@ function queryBackend() {
   });
 }
 
-function queryTaskBackend() {
+function queryTaskBackend(withLoading : boolean = false) {
+  if(withLoading) {
+    $q.loading.show();
+  }
   api.get<BackendTaskPayload[]>(`/project/${projectId}/tasks`).then((response) => {
     projectBackendTasks.value = plainToInstance(BackendTaskPayload, response.data);
+    if(withLoading) {
+      $q.loading.hide();
+    }
   })
 }
 

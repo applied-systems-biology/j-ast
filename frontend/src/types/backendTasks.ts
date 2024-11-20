@@ -33,4 +33,30 @@ export class BackendTaskPayload {
 
   @Expose()
   status: TaskStatus = TaskStatus.Ready;
+
+  isRunning() : boolean {
+    switch (this.status) {
+      case TaskStatus.Ready:
+      case TaskStatus.Running:
+        return true;
+    }
+    return false;
+  }
+}
+
+export function imageHasRunningTask(imageId: number | undefined, tasks : BackendTaskPayload[] | undefined) {
+  if(!imageId) return false;
+  if(tasks) {
+    for (const task of tasks) {
+      if(task.isRunning()) {
+        if(task.imageIds.includes(imageId)) {
+          return true
+        }
+      }
+    }
+    return false
+  }
+  else {
+    return false
+  }
 }

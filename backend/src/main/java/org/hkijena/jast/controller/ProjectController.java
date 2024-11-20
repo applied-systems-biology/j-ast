@@ -8,16 +8,13 @@ import org.hkijena.jast.payloads.CreateEditProjectRequest;
 import org.hkijena.jast.payloads.ProjectMetadataPayload;
 import org.hkijena.jast.repositories.ProjectRepository;
 import org.hkijena.jast.repositories.ImageRepository;
-import org.hkijena.jast.services.AnalysisService;
+import org.hkijena.jast.services.BackendTaskService;
 import org.hkijena.jast.services.ProjectService;
 import org.hkijena.jast.services.UserService;
 import org.hkijena.jast.utils.ImageUtils;
 import org.hkijena.jast.utils.StringUtils;
-import org.jobrunr.jobs.context.JobContext;
 import org.jobrunr.scheduling.JobScheduler;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.event.ApplicationReadyEvent;
-import org.springframework.context.event.EventListener;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -38,18 +35,16 @@ public class ProjectController {
     private final AccountConfig accountConfig;
     private final ProjectRepository projectRepository;
     private final ImageRepository imageRepository;
-    private final JobScheduler jobScheduler;
-    private final AnalysisService analysisService;
+    private final BackendTaskService backendTaskService;
     private final ProjectService projectService;
     private final UserService userService;
 
     @Autowired
-    public ProjectController(AccountConfig accountConfig, ProjectRepository projectRepository, ImageRepository imageRepository, JobScheduler jobScheduler, AnalysisService analysisService, ProjectService projectService, UserService userService) {
+    public ProjectController(AccountConfig accountConfig, ProjectRepository projectRepository, ImageRepository imageRepository, BackendTaskService backendTaskService, ProjectService projectService, UserService userService) {
         this.accountConfig = accountConfig;
         this.projectRepository = projectRepository;
         this.imageRepository = imageRepository;
-        this.jobScheduler = jobScheduler;
-        this.analysisService = analysisService;
+        this.backendTaskService = backendTaskService;
         this.projectService = projectService;
         this.userService = userService;
     }
@@ -137,11 +132,5 @@ public class ProjectController {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN);
         }
         projectRepository.delete(project);
-    }
-
-    @EventListener(ApplicationReadyEvent.class)
-    public void onApplicationStarting(ApplicationReadyEvent event) {
-        // Schedule full cleanup/invalidation of all running tasks
-        jobScheduler.enqueue(() -> analysisService.cleanupAllOrphanedRunningTasks(JobContext.Null));
     }
 }

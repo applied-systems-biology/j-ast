@@ -1,28 +1,111 @@
 package org.hkijena.jast.services;
 
+import com.google.common.collect.ImmutableList;
+import jakarta.annotation.PostConstruct;
+import jakarta.transaction.Transactional;
 import org.hkijena.jast.config.RuntimeConfig;
+import org.hkijena.jast.model.TaskStatus;
+import org.hkijena.jast.model.entities.BackendTask;
+import org.hkijena.jast.payloads.task.BackendTaskPayload;
+import org.hkijena.jast.repositories.BackendTaskRepository;
 import org.hkijena.jast.repositories.ImageRepository;
 import org.hkijena.jast.repositories.ProjectRepository;
+import org.hkijena.jast.tasks.BackendTaskWorkload;
+import org.jobrunr.jobs.annotations.Job;
+import org.jobrunr.jobs.annotations.Recurring;
 import org.jobrunr.jobs.context.JobContext;
+import org.jobrunr.scheduling.JobScheduler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.config.Task;
 import org.springframework.stereotype.Service;
 
-@Service
-public class AnalysisService {
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
+@Service
+public class BackendTaskService {
+
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
     private final RuntimeConfig runtimeConfig;
     private final ImageRepository imageRepository;
     private final ProjectRepository projectRepository;
+    private final BackendTaskRegistry backendTaskRegistry;
+    private final BackendTaskRepository backendTaskRepository;
+    private final JobScheduler jobScheduler;
 
     @Autowired
-    public AnalysisService(RuntimeConfig runtimeConfig, ImageRepository imageRepository, ProjectRepository projectRepository) {
+    public BackendTaskService(RuntimeConfig runtimeConfig, ImageRepository imageRepository, ProjectRepository projectRepository, BackendTaskRegistry backendTaskRegistry, BackendTaskRepository backendTaskRepository, JobScheduler jobScheduler) {
         this.runtimeConfig = runtimeConfig;
         this.projectRepository = projectRepository;
         this.imageRepository = imageRepository;
+        this.backendTaskRegistry = backendTaskRegistry;
+        this.backendTaskRepository = backendTaskRepository;
+        this.jobScheduler = jobScheduler;
     }
 
-    public void cleanupAllOrphanedRunningTasks(JobContext context) {
+    @Recurring(id = "start-scheduled-tasks", cron = "*/5 * * * * *")
+    @Job(name = "Start scheduled backend tasks")
+    @Transactional(Transactional.TxType.REQUIRES_NEW)
+    public void startTasks() {
+        List<BackendTask> newTasks = backendTaskRepository.findAllByStatus(TaskStatus.Ready);
+        int numFailures = 0;
+        for (BackendTask newTask : newTasks) {
+            BackendTaskWorkload workload = backendTaskRegistry.getTask(newTask.getTaskTypeId());
+            if(workload != null) {
+                BackendTaskPayload payload = newTask.toPayload();
+                newTask.setStatus(TaskStatus.Running);
+                jobScheduler.enqueue(() -> startBackendTask(payload, JobContext.Null));
+            }
+            else {
+                ++numFailures;
+            }
+        }
+        if(!newTasks.isEmpty()) {
+            logger.info("Started {} backend tasks, {} failures", newTasks.size(), numFailures);
+            backendTaskRepository.saveAll(newTasks);
+        }
+    }
 
+    @Transactional(Transactional.TxType.REQUIRES_NEW)
+    public void startBackendTask(BackendTaskPayload payload, JobContext jobContext) {
+        long taskId = payload.getId();
+        BackendTaskWorkload workload = backendTaskRegistry.getTask(payload.getTaskId());
+        try {
+            workload.execute(payload);
+
+            // Mark as successful
+            Optional<BackendTask> task_ = backendTaskRepository.findById(taskId);
+            if(task_.isPresent()) {
+                BackendTask task = task_.get();
+                task.setStatus(TaskStatus.Successful);
+                backendTaskRepository.save(task);
+            }
+        }
+        catch (Throwable e) {
+            // Mark as failed
+            Optional<BackendTask> task_ = backendTaskRepository.findById(taskId);
+            if(task_.isPresent()) {
+                BackendTask task = task_.get();
+                task.setStatus(TaskStatus.Failed);
+                backendTaskRepository.save(task);
+            }
+        }
+    }
+
+    @PostConstruct
+    public void setAllTasksToFailed() {
+        List<BackendTask> changedTasks = new ArrayList<>();
+        for (BackendTask task : backendTaskRepository.findAll()) {
+            if(task.isRunning()) {
+                task.setStatus(TaskStatus.Failed);
+                changedTasks.add(task);
+            }
+        }
+        backendTaskRepository.saveAll(changedTasks);
+        logger.info("Cleaned up {} tasks", changedTasks.size());
     }
 
 //    public void cleanupAllOrphanedRunningTasks(JobContext context) {

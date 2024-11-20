@@ -3,6 +3,7 @@ package org.hkijena.jast.model.entities;
 import jakarta.persistence.*;
 import org.hkijena.jast.model.TaskStatus;
 import org.hkijena.jast.payloads.task.BackendTaskPayload;
+import org.hkijena.jast.utils.JsonUtils;
 
 import java.io.Serial;
 
@@ -68,5 +69,16 @@ public class BackendTask {
 
     public void setPayload(String payload) {
         this.payload = payload;
+    }
+
+    public boolean isRunning() {
+        return status == TaskStatus.Running || status == TaskStatus.Ready;
+    }
+
+    public BackendTaskPayload toPayload() {
+        BackendTaskPayload instance = JsonUtils.readFromString(payload, BackendTaskPayload.class);
+        instance.setId(id);
+        instance.setStatus(status);
+        return instance;
     }
 }

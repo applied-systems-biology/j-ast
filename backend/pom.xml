@@ -53,8 +53,8 @@
         </dependency>
         <dependency>
             <groupId>org.jobrunr</groupId>
-            <artifactId>jobrunr-spring-boot-starter</artifactId>
-            <version>5.3.3</version>
+            <artifactId>jobrunr-spring-boot-3-starter</artifactId>
+            <version>7.3.1</version>
         </dependency>
         <dependency>
             <groupId>com.google.guava</groupId>

@@ -15,6 +15,7 @@
       <q-skeleton v-else type="rect" class="thumbnail" />
       <div class="label text-left">
         <div class="filename text-caption ellipsis">
+          <q-icon name="lock" v-if="hasTaskRunning"/>
           {{ currentImage.fileName }}
         </div>
         <div class="badges">
@@ -41,7 +42,7 @@ import { computed, onMounted, ref } from 'vue';
 import { useProjectImageThumbnailStore } from 'stores/project-image-thumbnail-store';
 import { plainToInstance } from 'class-transformer';
 import { ImagePayload } from 'src/types/image';
-import { BackendTaskPayload } from 'src/types/backendTasks';
+import {BackendTaskPayload, imageHasRunningTask} from 'src/types/backendTasks';
 
 const projectBackendTasks = defineModel<BackendTaskPayload[]>("projectBackendTasks");
 const thumbnail = ref<string>('');
@@ -72,14 +73,7 @@ const selectionColor = computed(() => {
   }
 })
 const hasTaskRunning = computed(() => {
-  if(projectBackendTasks.value) {
-    for (const task of projectBackendTasks.value) {
-      if(task.imageIds.includes(props.currentImage.id)) {
-        return true
-      }
-    }
-  }
-  return false
+  return imageHasRunningTask(props.currentImage.id, projectBackendTasks.value);
 })
 
 function clicked(event : Event) {
