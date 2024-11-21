@@ -36,10 +36,12 @@ build/
 /bin/
 /share/raw
 /share/results
-/database.mv.db
+*.db
 /storage/*
 /windows/app/
 /windows/jre/
 /docker/*.zip
 /windows/*.zip
 /*.zip
+*/JIPipe.tmp.dir/*
+/frontend/node
