@@ -104,6 +104,7 @@ public class TaskController {
 
         // We queue the payload into the system and let it be picked up by the task service automatically
         BackendTask task = new BackendTask();
+        task.setName(taskWorkload.getName());
         task.setPayload(JsonUtils.toJsonString(payload));
         task.setProject(project);
         task.setTaskTypeId(payload.getTaskId());

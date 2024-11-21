@@ -1,11 +1,13 @@
 package org.hkijena.jast.model.entities;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.CreationTimestamp;
 import org.hkijena.jast.model.TaskStatus;
 import org.hkijena.jast.payloads.task.BackendTaskPayload;
 import org.hkijena.jast.utils.JsonUtils;
 
 import java.io.Serial;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "backend_tasks")
@@ -30,6 +32,28 @@ public class BackendTask {
     @Column(name = "status")
     @Enumerated(EnumType.STRING)
     private TaskStatus status = TaskStatus.Ready;
+
+    @Column(name = "name")
+    private String name = "Unnamed";
+
+    @CreationTimestamp
+    private LocalDateTime createdAt;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
 
     public TaskStatus getStatus() {
         return status;
@@ -79,6 +103,8 @@ public class BackendTask {
         BackendTaskPayload instance = JsonUtils.readFromString(payload, BackendTaskPayload.class);
         instance.setId(id);
         instance.setStatus(status);
+        instance.setCreatedAt(getCreatedAt());
+        instance.setName(name);
         return instance;
     }
 }

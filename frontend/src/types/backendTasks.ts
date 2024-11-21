@@ -32,6 +32,12 @@ export class BackendTaskPayload {
   projectId: number = -1;
 
   @Expose()
+  createdAt: string = "";
+
+  @Expose()
+  name: string = "";
+
+  @Expose()
   status: TaskStatus = TaskStatus.Ready;
 
   isRunning() : boolean {

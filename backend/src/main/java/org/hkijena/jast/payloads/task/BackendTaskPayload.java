@@ -6,6 +6,7 @@ import org.hkijena.jast.model.TaskStatus;
 import org.hkijena.jast.model.entities.BackendTask;
 import org.hkijena.jast.utils.JsonUtils;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,10 +21,16 @@ public class BackendTaskPayload {
     private String taskId;
 
     @JsonProperty
+    private String name;
+
+    @JsonProperty
     private long projectId;
 
     @JsonProperty
     private TaskStatus status = TaskStatus.Ready;
+
+    @JsonProperty
+    private LocalDateTime createdAt = LocalDateTime.now();
 
     public BackendTaskPayload() {
 
@@ -40,6 +47,24 @@ public class BackendTaskPayload {
         // Take ID and status from the DB
         this.id = backendTask.getId();
         this.status = backendTask.getStatus();
+        this.createdAt = backendTask.getCreatedAt();
+        this.name = backendTask.getName();
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
     }
 
     public TaskStatus getStatus() {

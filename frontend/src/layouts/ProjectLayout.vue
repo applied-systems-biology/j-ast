@@ -34,7 +34,7 @@
         <ToggleButton
           selected-icon="close"
           not-selected-icon="sort"
-          class="bg-secondary"
+          :class="projectImages?.unsortedRow.images.length ? 'bg-secondary' : 'bg-blue'"
           v-model="drawerUnsortedImages"
         >
           <span
@@ -342,7 +342,7 @@ function doBackendTask(tool: BackendTaskTypePayload) {
     api
       .post(`/task/new`, instanceToPlain(payload))
       .then(() => {
-        queryTaskBackend(true);
+        queryTaskBackend();
       })
       .catch(() => {
         sendFailureNotification('Unable to start task');
@@ -379,15 +379,9 @@ function queryBackend() {
   });
 }
 
-function queryTaskBackend(withLoading : boolean = false) {
-  if(withLoading) {
-    $q.loading.show();
-  }
+function queryTaskBackend() {
   api.get<BackendTaskPayload[]>(`/project/${projectId}/tasks`).then((response) => {
     projectBackendTasks.value = plainToInstance(BackendTaskPayload, response.data);
-    if(withLoading) {
-      $q.loading.hide();
-    }
   })
 }
 
