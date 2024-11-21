@@ -8,15 +8,20 @@ import java.util.List;
 public class RuntimeConfig {
     private String customTempDirectory;
     private String fijiPath;
-
     private String fijiExecutablePath;
-
     private String fijiWrapper;
-
     private boolean fijiWrapperEnabled;
     private List<String> fijiArgs;
-
     private List<String> fijiWrapperArgs;
+    private String sharedResourcesDirectory;
+
+    public String getSharedResourcesDirectory() {
+        return sharedResourcesDirectory;
+    }
+
+    public void setSharedResourcesDirectory(String sharedResourcesDirectory) {
+        this.sharedResourcesDirectory = sharedResourcesDirectory;
+    }
 
     public boolean isFijiWrapperEnabled() {
         return fijiWrapperEnabled;

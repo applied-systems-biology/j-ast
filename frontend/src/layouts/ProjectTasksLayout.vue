@@ -36,35 +36,32 @@
       side="left"
       :model-value="true"
       elevated
-      class="q-pa-sm q-gutter-sm flex column"
+      class="q-pa-sm q-gutter-sm"
     >
-      <q-card v-if="projectBackendTasks.length === 0" bordered>
-        <q-card-section> There are currently no tasks. </q-card-section>
+      <q-card class="item" v-if="projectBackendTasks.length === 0" bordered>
+        <q-card-section> There are currently no tasks.</q-card-section>
       </q-card>
-      <q-btn
-        v-for="task in projectBackendTasks"
-        :key="task.id"
-        no-caps
-        align="left"
-        class="flex row task-button"
-      >
-        <div class="q-mr-md">
-          <q-icon name="check" v-if="task.status == TaskStatus.Successful" />
-          <q-icon name="cancel" v-if="task.status == TaskStatus.Failed" />
-          <q-spinner
-            v-if="
+      <q-list>
+        <q-item clickable v-ripple v-for="task in projectBackendTasks"
+                :key="task.id">
+          <q-item-section avatar>
+            <q-icon name="check" v-if="task.status == TaskStatus.Successful" />
+            <q-icon name="cancel" v-if="task.status == TaskStatus.Failed" />
+            <q-spinner
+              v-if="
               task.status == TaskStatus.Running ||
               task.status == TaskStatus.Ready
             "
-          />
-        </div>
-        <div class="ellipsis label col">
-          <div>{{ task.name || 'Unnamed' }}</div>
-          <div class="text-caption">
-            {{ task.createdAt || 'Unknown creation date' }}
-          </div>
-        </div>
-      </q-btn>
+            />
+          </q-item-section>
+          <q-item-section>
+            <div>{{ task.name || 'Unnamed' }}</div>
+            <div class="text-caption">
+              {{ task.createdAt || 'Unknown creation date' }}
+            </div>
+          </q-item-section>
+        </q-item>
+      </q-list>
     </q-drawer>
     <q-page-container>
       <q-page padding class="flex column q-gutter-sm"></q-page>
@@ -106,19 +103,16 @@ function clearAll() {
     });
 }
 
-function queryTaskBackend(): Promise<void> {
-  return new Promise((resolve, reject) => {
-    api
-      .get<BackendTaskPayload[]>(`/project/${projectId}/tasks`)
-      .then((response) => {
-        projectBackendTasks.value = plainToInstance(
-          BackendTaskPayload,
-          response.data
-        );
-      })
-      .catch(reject)
-      .then(resolve);
-  });
+function queryTaskBackend() {
+  api
+    .get<BackendTaskPayload[]>(`/project/${projectId}/tasks`)
+    .then((response) => {
+      // console.log(response.data)
+      projectBackendTasks.value = plainToInstance(
+        BackendTaskPayload,
+        response.data
+      );
+    });
 }
 
 onMounted(() => {
@@ -129,12 +123,5 @@ onMounted(() => {
   );
   queryTaskBackend();
 });
-useIntervalFn(queryTaskBackend, 5000);
+useIntervalFn(queryTaskBackend, 2500);
 </script>
-<style scoped lang="scss">
-.task-button {
-  .label {
-    text-align: left;
-  }
-}
-</style>

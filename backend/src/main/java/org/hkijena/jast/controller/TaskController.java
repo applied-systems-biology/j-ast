@@ -1,5 +1,6 @@
 package org.hkijena.jast.controller;
 
+import org.hkijena.jast.config.RuntimeConfig;
 import org.hkijena.jast.model.entities.BackendTask;
 import org.hkijena.jast.model.entities.Image;
 import org.hkijena.jast.model.entities.Project;
@@ -9,9 +10,11 @@ import org.hkijena.jast.repositories.BackendTaskRepository;
 import org.hkijena.jast.repositories.ImageRepository;
 import org.hkijena.jast.repositories.ProjectRepository;
 import org.hkijena.jast.services.BackendTaskRegistry;
+import org.hkijena.jast.services.BackendTaskService;
 import org.hkijena.jast.services.ProjectService;
 import org.hkijena.jast.tasks.BackendTaskWorkload;
 import org.hkijena.jast.utils.JsonUtils;
+import org.hkijena.jast.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,14 +34,18 @@ public class TaskController {
     private final BackendTaskRegistry backendTaskRegistry;
     private final ProjectRepository projectRepository;
     private final BackendTaskRepository backendTaskRepository;
+    private final BackendTaskService backendTaskService;
+    private final RuntimeConfig runtimeConfig;
 
     @Autowired
-    public TaskController(ProjectService projectService, ImageRepository imageRepository, BackendTaskRegistry backendTaskRegistry, ProjectRepository projectRepository, BackendTaskRepository backendTaskRepository) {
+    public TaskController(ProjectService projectService, ImageRepository imageRepository, BackendTaskRegistry backendTaskRegistry, ProjectRepository projectRepository, BackendTaskRepository backendTaskRepository, BackendTaskService backendTaskService, RuntimeConfig runtimeConfig) {
         this.projectService = projectService;
         this.imageRepository = imageRepository;
         this.backendTaskRegistry = backendTaskRegistry;
         this.projectRepository = projectRepository;
         this.backendTaskRepository = backendTaskRepository;
+        this.backendTaskService = backendTaskService;
+        this.runtimeConfig = runtimeConfig;
     }
 
     @GetMapping("/api/task/list-types")
@@ -108,6 +115,7 @@ public class TaskController {
         task.setPayload(JsonUtils.toJsonString(payload));
         task.setProject(project);
         task.setTaskTypeId(payload.getTaskId());
+        task.setTmpPath(backendTaskService.createTmpPath().toAbsolutePath().normalize().toString());
         task = backendTaskRepository.save(task);
 
         project.addTask(task);

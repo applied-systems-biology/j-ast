@@ -7,6 +7,13 @@ export function sendSuccessNotification(message: string) {
   })
 }
 
+export function sendInfoNotification(message: string) {
+  Notify.create({
+    type: "info",
+    message: message
+  })
+}
+
 export function sendFailureNotification(message: string) {
   Notify.create({
     type: "negative",

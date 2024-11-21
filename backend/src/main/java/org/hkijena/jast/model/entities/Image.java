@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * An image dataset
@@ -253,5 +254,23 @@ public class Image {
             }
         }
         setThumbnailData(ImageUtils.toPNGByteArray(thumbnail));
+    }
+
+    public MaskImageAnnotation getOrCreateMaskAnnotation(String annotationTypeId, AtomicBoolean responseShouldSave) {
+        for (MaskImageAnnotation annotation : getFilteredMaskImageAnnotations()) {
+            if(annotation.getType().equals(annotationTypeId)) {
+                return annotation;
+            }
+        }
+
+        // Create new one
+        MaskImageAnnotation annotation = new MaskImageAnnotation();
+        annotation.setType(annotationTypeId);
+        addMaskImageAnnotation(annotation);
+        if(responseShouldSave != null) {
+            responseShouldSave.set(true);
+        }
+
+        return annotation;
     }
 }

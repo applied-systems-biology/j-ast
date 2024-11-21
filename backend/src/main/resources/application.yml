@@ -28,13 +28,14 @@ org:
     dashboard:
       enabled: true
 runtime:
-  fiji-path: 'fiji-bin/linux'
-  fiji-executable-path: 'fiji-bin/linux/ImageJ-linux64'
+  fiji-path: 'bin/jipipe-linux'
+  fiji-executable-path: 'bin/jipipe-linux/ImageJ-linux64'
   fiji-args: ['--memory', '8G']
   fiji-wrapper-enabled: true
   fiji-wrapper: '/usr/bin/xvfb-run'
   fiji-wrapper-args: [ '-a' ]
   custom-temp-directory: "./storage/data"
+  shared-resources-directory: "./share"
 accounts:
   admin-username: 'admin@localhost'
   admin-password: 'Ckw55ryzy1mXGxb8'

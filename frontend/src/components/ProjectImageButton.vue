@@ -38,7 +38,7 @@
 </template>
 <script setup lang="ts">
 import {renderMaskAnnotationId} from 'src/types/common';
-import { computed, onMounted, ref } from 'vue';
+import { computed, onMounted, ref, watch } from 'vue';
 import { useProjectImageThumbnailStore } from 'stores/project-image-thumbnail-store';
 import { plainToInstance } from 'class-transformer';
 import { ImagePayload } from 'src/types/image';
@@ -86,11 +86,22 @@ function clicked(event : Event) {
   }
 }
 
-onMounted(() => {
+function queryBackend() {
+  // console.log(props.currentImage.fileName, "thumbnail lookup v", props.currentImage.version)
   thumbnailStore.fetchImage(props.currentImage.id, props.currentImage.version).then(data => {
     thumbnail.value = data || ""
   })
+}
+
+onMounted(() => {
+  queryBackend()
 });
+watch(
+  () => [props.currentImage.id, props.currentImage.version],
+  () => {
+    queryBackend();
+  }
+);
 </script>
 <style scoped lang="scss">
 $thumbnail-size: 6rem;

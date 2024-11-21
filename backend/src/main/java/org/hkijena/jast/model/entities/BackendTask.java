@@ -39,6 +39,17 @@ public class BackendTask {
     @CreationTimestamp
     private LocalDateTime createdAt;
 
+    @Column(name = "tmp_path")
+    private String tmpPath;
+
+    public String getTmpPath() {
+        return tmpPath;
+    }
+
+    public void setTmpPath(String tmpPath) {
+        this.tmpPath = tmpPath;
+    }
+
     public String getName() {
         return name;
     }

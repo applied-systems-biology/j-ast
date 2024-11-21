@@ -1,8 +1,9 @@
 package org.hkijena.jast.services;
 
-import com.google.common.collect.ImmutableList;
+import com.google.common.eventbus.Subscribe;
 import jakarta.annotation.PostConstruct;
 import jakarta.transaction.Transactional;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.hkijena.jast.config.RuntimeConfig;
 import org.hkijena.jast.model.TaskStatus;
 import org.hkijena.jast.model.entities.BackendTask;
@@ -11,6 +12,10 @@ import org.hkijena.jast.repositories.BackendTaskRepository;
 import org.hkijena.jast.repositories.ImageRepository;
 import org.hkijena.jast.repositories.ProjectRepository;
 import org.hkijena.jast.tasks.BackendTaskWorkload;
+import org.hkijena.jast.tasks.BackendTaskWorkloadParams;
+import org.hkijena.jast.utils.PathUtils;
+import org.hkijena.jast.utils.ProgressInfo;
+import org.hkijena.jast.utils.StringUtils;
 import org.jobrunr.jobs.annotations.Job;
 import org.jobrunr.jobs.annotations.Recurring;
 import org.jobrunr.jobs.context.JobContext;
@@ -18,9 +23,14 @@ import org.jobrunr.scheduling.JobScheduler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.config.Task;
 import org.springframework.stereotype.Service;
+import org.springframework.util.FileSystemUtils;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -54,40 +64,62 @@ public class BackendTaskService {
         int numFailures = 0;
         for (BackendTask newTask : newTasks) {
             BackendTaskWorkload workload = backendTaskRegistry.getTask(newTask.getTaskTypeId());
-            if(workload != null) {
+            if (workload != null) {
                 BackendTaskPayload payload = newTask.toPayload();
                 newTask.setStatus(TaskStatus.Running);
-                jobScheduler.enqueue(() -> startBackendTask(payload, JobContext.Null));
-            }
-            else {
+
+                BackendTaskWorkloadParams params = new BackendTaskWorkloadParams();
+                params.setPayload(payload);
+                params.setTmpPath(Paths.get(newTask.getTmpPath()));
+                params.setRuntimeConfig(runtimeConfig);
+                params.setLockFilePath(params.getTmpPath().resolve("lockfile"));
+                PathUtils.createFileIfNotExists(params.getLockFilePath());
+
+                jobScheduler.enqueue(() -> startBackendTask(params, JobContext.Null));
+            } else {
                 ++numFailures;
             }
         }
-        if(!newTasks.isEmpty()) {
+        if (!newTasks.isEmpty()) {
             logger.info("Started {} backend tasks, {} failures", newTasks.size(), numFailures);
             backendTaskRepository.saveAll(newTasks);
         }
     }
 
     @Transactional(Transactional.TxType.REQUIRES_NEW)
-    public void startBackendTask(BackendTaskPayload payload, JobContext jobContext) {
+    public void startBackendTask(BackendTaskWorkloadParams params, JobContext jobContext) {
+        BackendTaskPayload payload = params.getPayload();
         long taskId = payload.getId();
         BackendTaskWorkload workload = backendTaskRegistry.getTask(payload.getTaskId());
+
+        Path logFilePath = params.getTmpPath().resolve("log.txt");
+        ProgressInfo progressInfo = new ProgressInfo();
+        progressInfo.setLogToStdOut(true);
+        progressInfo.getEventBus().register(new Object() {
+            @Subscribe
+            public void onStatusUpdated(ProgressInfo.StatusUpdatedEvent event) {
+                logInfo(event.render(), logFilePath, jobContext);
+            }
+        });
+
         try {
-            workload.execute(payload);
+            workload.execute(params, progressInfo);
+            progressInfo.log("Task execution successful");
 
             // Mark as successful
             Optional<BackendTask> task_ = backendTaskRepository.findById(taskId);
-            if(task_.isPresent()) {
+            if (task_.isPresent()) {
                 BackendTask task = task_.get();
                 task.setStatus(TaskStatus.Successful);
                 backendTaskRepository.save(task);
             }
-        }
-        catch (Throwable e) {
+        } catch (Throwable e) {
+            logger.error("Error during task execution", e);
+            logError(ExceptionUtils.getStackTrace(e), logFilePath, jobContext);
+
             // Mark as failed
             Optional<BackendTask> task_ = backendTaskRepository.findById(taskId);
-            if(task_.isPresent()) {
+            if (task_.isPresent()) {
                 BackendTask task = task_.get();
                 task.setStatus(TaskStatus.Failed);
                 backendTaskRepository.save(task);
@@ -99,52 +131,70 @@ public class BackendTaskService {
     public void setAllTasksToFailed() {
         List<BackendTask> changedTasks = new ArrayList<>();
         for (BackendTask task : backendTaskRepository.findAll()) {
-            if(task.isRunning()) {
+            if (task.isRunning()) {
                 task.setStatus(TaskStatus.Failed);
                 changedTasks.add(task);
+                deleteTaskTmpPath(task);
+            } else if (task.getStatus() == TaskStatus.Failed) {
+                deleteTaskTmpPath(task);
             }
         }
         backendTaskRepository.saveAll(changedTasks);
         logger.info("Cleaned up {} tasks", changedTasks.size());
     }
 
-//    public void cleanupAllOrphanedRunningTasks(JobContext context) {
-//        timeSeriesRepository.findAll().forEach(dataset -> {
-//            if(dataset.getStatus() == TimeSeries.Status.Running) {
-//                dataset.setStatus(TimeSeries.Status.RunInterrupted);
-//                timeSeriesRepository.save(dataset);
-//
-//                Path workDirectory = Paths.get(dataset.getStoragePath()).resolve("project");
-//                if(Files.isDirectory(workDirectory)) {
-//                    try {
-//                        FileSystemUtils.deleteRecursively(workDirectory);
-//                    } catch (IOException e) {
-//                        context.logger().error(e.toString());
-//                    }
-//                }
-//            }
-//        });
-//    }
-//
-//    public void logInfo(String message, JobContext context, TimeSeries timeSeries) {
-//        context.logger().info(message);
-//        Path logFilePath = Paths.get(timeSeries.getStoragePath()).resolve("log.txt");
-//        try {
-//            Files.writeString(logFilePath, "[INFO] " + message + "\n", StandardOpenOption.APPEND, StandardOpenOption.CREATE);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//    }
-//
-//    public void logError(String message, JobContext context, TimeSeries timeSeries) {
-//        context.logger().error(message);
-//        Path logFilePath = Paths.get(timeSeries.getStoragePath()).resolve("log.txt");
-//        try {
-//            Files.writeString(logFilePath, "[ERROR] " + message + "\n", StandardOpenOption.APPEND, StandardOpenOption.CREATE);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//    }
+    public void deleteTaskTmpPath(BackendTask task) {
+        // Delete tmp path
+        if (!StringUtils.isNullOrEmpty(task.getTmpPath())) {
+            Path tmpPath = Paths.get(task.getTmpPath());
+            if (Files.isDirectory(tmpPath)) {
+                logger.warn("Deleting temporary directory {}", tmpPath);
+                try {
+                    FileSystemUtils.deleteRecursively(tmpPath.toFile());
+                } catch (Exception e) {
+                    logger.error("Failed to delete temporary directory {}", tmpPath, e);
+                }
+            }
+        }
+    }
+
+    public Path createTmpPath() {
+        Path result;
+        if (!StringUtils.isNullOrEmpty(runtimeConfig.getCustomTempDirectory())) {
+            try {
+                Files.createDirectories(Paths.get(runtimeConfig.getCustomTempDirectory()));
+                result = Files.createTempDirectory(Paths.get(runtimeConfig.getCustomTempDirectory()), "j-ast");
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        } else {
+            try {
+                result = Files.createTempDirectory("j-ast");
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        return PathUtils.createDirectories(result);
+    }
+
+
+    public void logInfo(String message, Path logFilePath, JobContext context) {
+        context.logger().info(message);
+        try {
+            Files.writeString(logFilePath, "[INFO] " + message + "\n", StandardOpenOption.APPEND, StandardOpenOption.CREATE);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void logError(String message, Path logFilePath, JobContext context) {
+        context.logger().error(message);
+        try {
+            Files.writeString(logFilePath, "[ERROR] " + message + "\n", StandardOpenOption.APPEND, StandardOpenOption.CREATE);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 //
 //    @Transactional(Transactional.TxType.REQUIRES_NEW)
 //    public void runAnalysis(long datasetId, JobContext context) {

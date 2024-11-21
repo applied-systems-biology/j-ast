@@ -34,7 +34,11 @@
         <ToggleButton
           selected-icon="close"
           not-selected-icon="sort"
-          :class="projectImages?.unsortedRow.images.length ? 'bg-secondary' : 'bg-blue'"
+          :class="
+            projectImages?.unsortedRow.images.length
+              ? 'bg-secondary'
+              : 'bg-blue'
+          "
           v-model="drawerUnsortedImages"
         >
           <span
@@ -124,7 +128,11 @@
           <q-tooltip> Deletes the selected image(s)</q-tooltip>
         </q-btn>
         <div class="col-grow" />
-        <ProjectBackendTaskButton :project-id="projectId[0]" v-model="projectBackendTasks" />
+        <ProjectBackendTaskButton
+          :project-id="projectId[0]"
+          v-model="projectBackendTasks"
+          @on-task-finished="onTaskFinished"
+        />
       </q-toolbar>
     </q-header>
     <q-drawer elevated side="left" bordered v-model="drawerLeft">
@@ -152,7 +160,10 @@
         v-if="selectedImageIds.length > 1"
         v-model="selectedImageIds"
       />
-      <ProjectImageEditor v-model="lastSelectedImage" v-model:project-backend-tasks="projectBackendTasks" />
+      <ProjectImageEditor
+        v-model="lastSelectedImage"
+        v-model:project-backend-tasks="projectBackendTasks"
+      />
     </q-drawer>
     <q-page-container>
       <q-page class="flex column q-gutter-sm">
@@ -188,8 +199,8 @@ import {
 } from 'src/types/frontendTasks';
 import { onDialogYes } from 'src/types/dialog';
 import {
-  sendFailureNotification,
-  sendSuccessNotification,
+  sendFailureNotification, sendInfoNotification,
+  sendSuccessNotification
 } from 'src/types/notification';
 import {
   CreateEditProjectRequest,
@@ -201,7 +212,7 @@ import {
   BackendTaskPayload,
 } from 'src/types/backendTasks';
 import { useIntervalFn } from '@vueuse/core';
-import ProjectBackendTaskButton from "components/ProjectBackendTaskButton.vue";
+import ProjectBackendTaskButton from 'components/ProjectBackendTaskButton.vue';
 
 const $q = useQuasar();
 const $route = useRoute();
@@ -216,7 +227,7 @@ const projectPayload: Ref<ProjectMetadataPayload> = ref(
 const projectImages = ref<ProjectImagesPayload>(new ProjectImagesPayload());
 const selectedImageIds = ref<Array<number>>([]);
 const availableBackendTasks = ref<Array<BackendTaskTypePayload>>([]);
-const projectBackendTasks = ref<Array<BackendTaskPayload>>([])
+const projectBackendTasks = ref<Array<BackendTaskPayload>>([]);
 
 // Computed values
 const drawerRight = computed(() => selectedImageIds.value.length > 0);
@@ -335,19 +346,24 @@ function doFrontEndProcessor(tool: FrontEndImageProcessor) {
 function doBackendTask(tool: BackendTaskTypePayload) {
   if (selectedImageIds.value && projectImages.value) {
     const payload = new BackendTaskPayload();
-    payload.taskId = tool.taskId
-    payload.projectId = projectPayload.value.id
-    payload.imageIds = selectedImageIds.value
-    $q.loading.show()
+    payload.taskId = tool.taskId;
+    payload.projectId = projectPayload.value.id;
+    payload.imageIds = selectedImageIds.value;
     api
       .post(`/task/new`, instanceToPlain(payload))
       .then(() => {
-        queryTaskBackend();
+        sendInfoNotification("Sent task request to the server")
       })
       .catch(() => {
         sendFailureNotification('Unable to start task');
+        $q.loading.hide();
       });
   }
+}
+
+function onTaskFinished() {
+  // For now just query the backend again
+  queryBackend();
 }
 
 function queryBackend() {
@@ -365,7 +381,7 @@ function queryBackend() {
       projectImages.value = payload;
 
       // Un-select the images
-      selectedImageIds.value = [];
+      // selectedImageIds.value = [];
 
       // Set up the unsorted images drawer
       drawerUnsortedImages.value =
@@ -380,9 +396,16 @@ function queryBackend() {
 }
 
 function queryTaskBackend() {
-  api.get<BackendTaskPayload[]>(`/project/${projectId}/tasks`).then((response) => {
-    projectBackendTasks.value = plainToInstance(BackendTaskPayload, response.data);
-  })
+  api
+    .get<BackendTaskPayload[]>(`/project/${projectId}/tasks`)
+    .then((response) => {
+      // console.log(response.data)
+      // console.log(Date())
+      projectBackendTasks.value = plainToInstance(
+        BackendTaskPayload,
+        response.data
+      );
+    });
 }
 
 onMounted(() => {
@@ -390,8 +413,7 @@ onMounted(() => {
   queryTaskBackend();
 });
 
-useIntervalFn(queryTaskBackend, 5000);
-
+useIntervalFn(queryTaskBackend, 2500);
 </script>
 <style scoped lang="scss">
 .edit-toolbar > * {

@@ -33,7 +33,9 @@ build/
 .vscode/
 
 ### Other ###
-/fiji-bin/
+/bin/
+/share/raw
+/share/results
 /database.mv.db
 /storage/*
 /windows/app/
