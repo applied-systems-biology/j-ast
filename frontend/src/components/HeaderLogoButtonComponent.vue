@@ -1,14 +1,15 @@
-<script setup lang="ts">
-
-</script>
-
 <template>
   <q-btn to="/" size="lg" flat>
-    <q-icon left size="3em" name="fa-solid fa-chart-simple" />
-    <div>J-AST</div>
+    <img :src="logo" class="logo"/>
+<!--    <q-icon left size="3em" name="fa-solid fa-chart-simple" />-->
+<!--    <div>J-AST</div>-->
   </q-btn>
 </template>
-
-<style scoped>
-
+<script setup lang="ts">
+import logo from "assets/logo-j-ast-full-dark.svg"
+</script>
+<style scoped lang="scss">
+.logo {
+  height: 3em;
+}
 </style>
