@@ -1,6 +1,11 @@
 package org.hkijena.jast.payloads.task;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.hkijena.jast.tasks.BackendTaskWorkloadDataSlot;
+import org.hkijena.jast.tasks.BackendTaskWorkloadMode;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class BackendTaskTypePayload {
     @JsonProperty
@@ -9,6 +14,36 @@ public class BackendTaskTypePayload {
     private String name;
     @JsonProperty
     private String description;
+    @JsonProperty
+    private BackendTaskWorkloadMode workloadMode = BackendTaskWorkloadMode.Single;
+    @JsonProperty
+    private List<BackendTaskWorkloadDataSlot> inputs = new ArrayList<>();
+    @JsonProperty
+    private List<BackendTaskWorkloadDataSlot> outputs = new ArrayList<>();
+
+    public BackendTaskWorkloadMode getWorkloadMode() {
+        return workloadMode;
+    }
+
+    public void setWorkloadMode(BackendTaskWorkloadMode workloadMode) {
+        this.workloadMode = workloadMode;
+    }
+
+    public List<BackendTaskWorkloadDataSlot> getInputs() {
+        return inputs;
+    }
+
+    public void setInputs(List<BackendTaskWorkloadDataSlot> inputs) {
+        this.inputs = inputs;
+    }
+
+    public List<BackendTaskWorkloadDataSlot> getOutputs() {
+        return outputs;
+    }
+
+    public void setOutputs(List<BackendTaskWorkloadDataSlot> outputs) {
+        this.outputs = outputs;
+    }
 
     public String getTaskId() {
         return taskId;

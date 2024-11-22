@@ -1,20 +1,22 @@
-package org.hkijena.jast.tasks;
+package org.hkijena.jast.tasks.workloads;
 
 import jakarta.transaction.Transactional;
 import org.hkijena.jast.repositories.ImageRepository;
+import org.hkijena.jast.tasks.*;
 import org.hkijena.jast.utils.ProgressInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.nio.file.Path;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 @Component
 @BackendTaskType(typeId = "image-segment-plate")
 public class SegmentPlateBackendTaskWorkload implements BackendTaskWorkload {
 
     private final ImageRepository imageRepository;
+    private static final List<BackendTaskWorkloadDataSlot> INPUTS = Collections.emptyList();
+    private static final List<BackendTaskWorkloadDataSlot> OUTPUTS = Collections.singletonList(new BackendTaskWorkloadDataSlot("plate", BackendTaskWorkloadDataSlotType.ImageMaskAnnotation));
 
     @Autowired
     public SegmentPlateBackendTaskWorkload(ImageRepository imageRepository) {
@@ -29,6 +31,21 @@ public class SegmentPlateBackendTaskWorkload implements BackendTaskWorkload {
     @Override
     public String getDescription() {
         return "Automatically detects the plate for the selected images";
+    }
+
+    @Override
+    public BackendTaskWorkloadMode getMode() {
+        return BackendTaskWorkloadMode.Single;
+    }
+
+    @Override
+    public List<BackendTaskWorkloadDataSlot> getInputs() {
+        return INPUTS;
+    }
+
+    @Override
+    public List<BackendTaskWorkloadDataSlot> getOutputs() {
+        return OUTPUTS;
     }
 
     @Override

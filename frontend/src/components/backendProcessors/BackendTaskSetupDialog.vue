@@ -1,0 +1,199 @@
+<template>
+  <q-dialog ref="dialogRef" @hide="onDialogHide">
+    <q-card class="q-dialog-plugin">
+      <q-card-section>
+        <div class="text-h6">{{ props.taskType.name }}</div>
+      </q-card-section>
+      <q-separator/>
+      <q-card-section>
+        <div class="text-bold">
+          <q-icon name="help"/>
+          Info
+        </div>
+        <div>{{ props.taskType.description }}</div>
+        <div>
+          Depending on the task and the number of images, this will take a few minutes.
+        </div>
+        <div v-if="props.taskType.workloadMode == BackendTaskWorkloadMode.Single">
+          This operation is applied for each image
+        </div>
+        <div v-if="props.taskType.workloadMode == BackendTaskWorkloadMode.FullRow">
+          This operation is applied for the whole row. Your selection was updated accordingly.
+        </div>
+        <div v-if="props.taskType.workloadMode == BackendTaskWorkloadMode.FullColumn">
+          This operation is applied for the whole column. Your selection was updated accordingly.
+        </div>
+        <div v-if="issuesDetected" class="text-red">
+          <q-icon name="warning"/>
+          There were some issues (e.g., missing inputs, wrong parameters) detected. Please review the parameters and the
+          list if processed images below.
+        </div>
+      </q-card-section>
+      <q-separator/>
+      <q-card-section class="q-gutter-sm">
+        <div class="text-h6">Parameters</div>
+        <div><q-icon name="fa-solid fa-check"/> This task has no parameters</div>
+      </q-card-section>
+      <q-separator/>
+      <q-card-section>
+        <div class="text-h6">The following images will be processed</div>
+        <div class="text-bold q-mb-lg">
+          <q-icon name="warning"/>
+          During the processing, you will not be able to edit the images
+        </div>
+        <q-table :rows="previewRows">
+          <template v-slot:body-cell-image="props">
+            <q-td :props="props">
+              <div>
+                <ProjectImageButton class="image-button" :current-image="props.value" :selected-image-ids="[]" />
+              </div>
+            </q-td>
+          </template>
+          <template v-slot:body-cell-inputs="props">
+            <q-td :props="props">
+              <template v-for="slot in props.value" :key="slot.slot.name">
+                <div v-if="slot.present" class="text-green">
+                  <q-icon name="fa-solid fa-save"/>
+                  {{ renderMaskAnnotationId2(slot.slot.name) }}
+                </div>
+                <div v-else class="red">
+                  <q-icon name="fa-solid fa-xmark"/>
+                  {{ renderMaskAnnotationId2(slot.slot.name) }}
+                </div>
+              </template>
+              <div class="text-green" v-if="props.value.length == 0">
+                <q-icon name="fa-solid fa-check"/>
+                No inputs
+              </div>
+            </q-td>
+          </template>
+          <template v-slot:body-cell-outputs="props">
+            <q-td :props="props">
+              <div v-for="slot in props.value" :key="slot.slot.name">
+                <q-icon name="fa-solid fa-save"/>
+                {{ renderMaskAnnotationId2(slot.slot.name) }}
+              </div>
+            </q-td>
+          </template>
+        </q-table>
+      </q-card-section>
+      <q-card-actions align="right">
+        <q-btn color="blue-grey" label="Cancel" @click="onDialogCancel"/>
+        <q-btn color="red" label="OK" @click="onOKClick"/>
+      </q-card-actions>
+    </q-card>
+  </q-dialog>
+</template>
+<script setup lang="ts">
+import {useDialogPluginComponent} from 'quasar';
+import {computed, onMounted, ref} from 'vue';
+import {ImagePayload} from 'src/types/image';
+import {
+  BackendTaskPayload,
+  BackendTaskTypePayload,
+  BackendTaskWorkloadDataSlot,
+  BackendTaskWorkloadDataSlotType,
+  BackendTaskWorkloadMode
+} from "src/types/backendTasks";
+import ProjectImageButton from "components/ProjectImageButton.vue";
+import {renderMaskAnnotationId2} from "src/types/common";
+
+const payload = ref<BackendTaskPayload>(new BackendTaskPayload());
+
+const props = defineProps<{
+  taskType: BackendTaskTypePayload;
+  images: ImagePayload[];
+  projectId: number;
+}>()
+
+defineEmits([
+  // REQUIRED; need to specify some events that your
+  // component will emit through useDialogPluginComponent()
+  ...useDialogPluginComponent.emits,
+]);
+
+const {dialogRef, onDialogHide, onDialogOK, onDialogCancel} =
+  useDialogPluginComponent();
+
+function onOKClick() {
+  onDialogOK(payload.value);
+}
+
+const previewRows = computed(() => {
+  const result = []
+  for(const image of props.images) {
+    const row : Record<string, any> = {}
+    const inputReport: Array< { slot: BackendTaskWorkloadDataSlot, present: boolean } > = []
+    const outputReport: Array< { slot: BackendTaskWorkloadDataSlot } > = []
+
+    // Check if inputs are present
+    for(const slot of props.taskType.inputs) {
+      inputReport.push({
+        slot: slot,
+        present: imageHas(image, slot),
+      })
+    }
+
+    // Add outputs
+    for(const slot of props.taskType.outputs) {
+      outputReport.push({
+        slot: slot
+      })
+    }
+
+    row["image"] = image;
+    row["inputs"] = inputReport;
+    row["outputs"] = outputReport;
+    result.push(row)
+  }
+  return result
+})
+
+const issuesDetected = computed(() => {
+  for(const image of props.images) {
+    for(const slot of props.taskType.inputs) {
+      if(!imageHas(image, slot)) {
+        return true
+      }
+    }
+  }
+  return false
+})
+
+function imageHas(image: ImagePayload, slot: BackendTaskWorkloadDataSlot) : boolean{
+  if(slot.type == BackendTaskWorkloadDataSlotType.ImageMaskAnnotation) {
+    for(const annotation of image.maskImageAnnotations) {
+      if(annotation.annotationTypeId == slot.name) {
+        return annotation.version > 0
+      }
+    }
+    return false
+  }
+  else {
+    return false
+  }
+}
+
+onMounted(() => {
+  payload.value.taskId = props.taskType.taskId
+  payload.value.imageIds = props.images.map(image => image.id)
+  payload.value.projectId = props.projectId
+
+  // TODO: Handle parameters
+})
+
+</script>
+<style scoped lang="scss">
+$grid-item-width: 18rem;
+$grid-item-height: 8rem;
+
+.q-dialog-plugin {
+  width: 1024px;
+  max-width: 80vw;
+}
+
+.image-button {
+  width: $grid-item-width;
+  height: $grid-item-height;
+}
+</style>

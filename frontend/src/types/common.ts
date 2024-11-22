@@ -22,6 +22,18 @@ export function renderMaskAnnotationId(image: ImagePayload, id: string) {
   return id;
 }
 
+export function renderMaskAnnotationId2(id: string) {
+  switch (id) {
+    case 'strip-disk':
+      return "DDA disk / ETest strip"
+    case 'zoi-shape':
+      return 'ETest ZOI shape';
+    case 'plate':
+      return 'Plate';
+  }
+  return id;
+}
+
 export function plainToInstanceStrict<T, V>(
   cls: ClassConstructor<T>,
   plain: V

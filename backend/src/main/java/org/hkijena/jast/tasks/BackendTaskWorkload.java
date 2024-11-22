@@ -17,6 +17,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -28,6 +29,12 @@ public interface BackendTaskWorkload {
     String getName();
 
     String getDescription();
+
+    BackendTaskWorkloadMode getMode();
+
+    List<BackendTaskWorkloadDataSlot> getInputs();
+
+    List<BackendTaskWorkloadDataSlot> getOutputs();
 
     void execute(BackendTaskWorkloadParams params, ProgressInfo progressInfo) throws Throwable;
 

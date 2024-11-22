@@ -1,11 +1,11 @@
 import {Dialog} from 'quasar';
 import ImageAutofillMetadataDialog, {
   ImageAutofillMetadataDialogPayload
-} from 'components/algorithms/ImageAutofillMetadataDialog.vue';
+} from 'components/frontendProcessors/ImageAutofillMetadataDialog.vue';
 import {removeExtensionIfPresent} from 'src/types/common';
 import {onDialogYes} from 'src/types/dialog';
-import ImageAutoSortByMetadataDialog from 'src/components/algorithms/ImageAutoSortByMetadataDialog.vue';
-import {ImageAutoSortByMetadataDialogPayload} from "components/algorithms/ImageAutoSortByMetadataDialog.vue";
+import ImageAutoSortByMetadataDialog from 'components/frontendProcessors/ImageAutoSortByMetadataDialog.vue';
+import {ImageAutoSortByMetadataDialogPayload} from "components/frontendProcessors/ImageAutoSortByMetadataDialog.vue";
 import {sendFailureNotification, sendSuccessNotification} from "src/types/notification";
 import { parseAssayType } from 'src/types/assayType';
 import { ImagePayload } from 'src/types/image';

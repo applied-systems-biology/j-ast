@@ -122,6 +122,10 @@ $thumbnail-size: 6rem;
   flex-grow: 1;
   overflow: hidden;
   line-height: 1em;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  align-content: flex-start;
 
   .q-badge {
     margin: 2px;

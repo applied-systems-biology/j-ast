@@ -108,7 +108,7 @@
                 :key="tool.taskId"
                 clickable
                 v-close-popup
-                @click="doBackendTask(tool)"
+                @click="doBackendTaskClicked(tool)"
               >
                 <q-item-section avatar>
                   <q-icon name="fa-solid fa-wand-magic-sparkles" />
@@ -190,7 +190,7 @@ import { useRoute, useRouter } from 'vue-router';
 import { api } from 'boot/axios';
 import { downloadFromApi, ensureExtension } from 'src/types/common';
 import ProjectImageEditor from 'components/ProjectImageEditor.vue';
-import { instanceToPlain, plainToInstance } from 'class-transformer';
+import { plainToInstance } from 'class-transformer';
 import ImageArrangerComponent from 'components/ImageArrangerComponent.vue';
 import ProjectMultiImageEditor from 'components/ProjectMultiImageEditor.vue';
 import {
@@ -199,8 +199,7 @@ import {
 } from 'src/types/frontendTasks';
 import { onDialogYes } from 'src/types/dialog';
 import {
-  sendFailureNotification, sendInfoNotification,
-  sendSuccessNotification
+  sendFailureNotification, sendSuccessNotification
 } from 'src/types/notification';
 import {
   CreateEditProjectRequest,
@@ -209,7 +208,7 @@ import {
 import { ProjectImagesPayload } from 'src/types/projectImages';
 import {
   BackendTaskTypePayload,
-  BackendTaskPayload,
+  BackendTaskPayload, doBackendTask,
 } from 'src/types/backendTasks';
 import { useIntervalFn } from '@vueuse/core';
 import ProjectBackendTaskButton from 'components/ProjectBackendTaskButton.vue';
@@ -343,21 +342,9 @@ function doFrontEndProcessor(tool: FrontEndImageProcessor) {
   }
 }
 
-function doBackendTask(tool: BackendTaskTypePayload) {
+function doBackendTaskClicked(tool: BackendTaskTypePayload) {
   if (selectedImageIds.value && projectImages.value) {
-    const payload = new BackendTaskPayload();
-    payload.taskId = tool.taskId;
-    payload.projectId = projectPayload.value.id;
-    payload.imageIds = selectedImageIds.value;
-    api
-      .post(`/task/new`, instanceToPlain(payload))
-      .then(() => {
-        sendInfoNotification("Sent task request to the server")
-      })
-      .catch(() => {
-        sendFailureNotification('Unable to start task');
-        $q.loading.hide();
-      });
+    doBackendTask([...selectedImages.value], Number(projectId), tool, projectImages.value)
   }
 }
 
