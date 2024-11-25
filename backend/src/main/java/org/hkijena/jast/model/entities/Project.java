@@ -45,6 +45,9 @@ public class Project {
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true, mappedBy = "project")
     private List<BackendTask> tasks = new ArrayList<>();
 
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true, mappedBy = "project")
+    private List<Result> results = new ArrayList<>();
+
     public Long getId() {
         return id;
     }
@@ -83,6 +86,20 @@ public class Project {
     public void removeTask(BackendTask task) {
         tasks.remove(task);
         task.setProject(null);
+    }
+
+    public void addResult(Result result) {
+        results.add(result);
+        result.setProject(this);
+    }
+
+    public void removeResult(Result result) {
+        results.remove(result);
+        result.setProject(null);
+    }
+
+    public List<Result> getResults() {
+        return results;
     }
 
     public User getOwner() {
