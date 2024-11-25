@@ -1,0 +1,93 @@
+package org.hkijena.jast.tasks.workloads;
+
+import jakarta.transaction.Transactional;
+import org.hkijena.jast.model.AssayType;
+import org.hkijena.jast.payloads.task.BackendTaskParameterPayload;
+import org.hkijena.jast.repositories.ImageRepository;
+import org.hkijena.jast.tasks.*;
+import org.hkijena.jast.utils.ProgressInfo;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import java.nio.file.Path;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+@Component
+@BackendTaskType(typeId = "image-segment-etest-strip")
+public class SegmentETestStripBackendTaskWorkload implements BackendTaskWorkload {
+
+    private final ImageRepository imageRepository;
+    private static final List<BackendTaskWorkloadDataSlot> INPUTS = Collections.singletonList(new BackendTaskWorkloadDataSlot("plate", BackendTaskWorkloadDataSlotType.ImageMaskAnnotation));
+    private static final List<BackendTaskWorkloadDataSlot> OUTPUTS = Collections.singletonList(new BackendTaskWorkloadDataSlot("strip-disk", BackendTaskWorkloadDataSlotType.ImageMaskAnnotation));
+    private static final List<BackendTaskWorkloadParameterSlot> PARAMETERS = List.of(
+            new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotType.Number, "expectedAR", "Strip aspect ratio", "The expected aspect ratio of the strip", 11)
+    );
+    private static final Map<String, String> PARAMETER_OVERRIDES = new HashMap<>();
+
+    static {
+        PARAMETER_OVERRIDES.put("expectedAR", "961ff2c5-c955-4600-97fe-f7e09b6e515a/jipipe:algorithm:custom-expression-variables/expectedAR");
+    }
+
+    @Autowired
+    public SegmentETestStripBackendTaskWorkload(ImageRepository imageRepository) {
+        this.imageRepository = imageRepository;
+    }
+
+    @Override
+    public String getName() {
+        return "Auto-detect ETest strip (v1)";
+    }
+
+    @Override
+    public String getDescription() {
+        return "Automatically detects the strip in E-tests";
+    }
+
+    @Override
+    public BackendTaskWorkloadMode getMode() {
+        return BackendTaskWorkloadMode.Single;
+    }
+
+    @Override
+    public List<BackendTaskWorkloadDataSlot> getInputs() {
+        return INPUTS;
+    }
+
+    @Override
+    public List<BackendTaskWorkloadDataSlot> getOutputs() {
+        return OUTPUTS;
+    }
+
+    @Override
+    public List<BackendTaskWorkloadParameterSlot> getParameters() {
+        return PARAMETERS;
+    }
+
+    @Override
+    public AssayType getAssayTypeRestriction() {
+        return AssayType.ETest;
+    }
+
+    @Override
+    @Transactional(Transactional.TxType.REQUIRES_NEW)
+    public void execute(BackendTaskWorkloadParams params, ProgressInfo progressInfo) throws Throwable {
+        writeRawImages(params, params.getPayload().getImageIds(), imageRepository, progressInfo);
+        writeMaskAnnotations(params, params.getPayload().getImageIds(), "plate", imageRepository, progressInfo);
+
+        Map<String, Object> parameterOverrides = new HashMap<>();
+        for (BackendTaskParameterPayload parameter : params.getPayload().getParameters()) {
+            parameterOverrides.put(PARAMETER_OVERRIDES.get(parameter.getId()), parameter.getValue());
+        }
+
+        Path projectFilePath = writeSharedFile(params, "image-segment-etest-strip.jip");
+        progressInfo.log("Project file is " + projectFilePath);
+        runJIPipe(params, projectFilePath, parameterOverrides, "", progressInfo);
+
+        Map<String, Path> maskAnnotationsConfig = new HashMap<>();
+        maskAnnotationsConfig.put("strip-disk", params.getTmpPath().resolve("strip-disk"));
+        readMaskAnnotations(params.getPayload().getImageIds(), maskAnnotationsConfig, imageRepository, progressInfo);
+    }
+}
