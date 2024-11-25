@@ -31,8 +31,19 @@ public class Result {
     @CreationTimestamp
     private LocalDateTime createdAt;
 
+    @Column(name = "viewed")
+    private boolean viewed = false;
+
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true, mappedBy = "result")
     private List<ResultItem> resultItems = new ArrayList<>();
+
+    public boolean isViewed() {
+        return viewed;
+    }
+
+    public void setViewed(boolean viewed) {
+        this.viewed = viewed;
+    }
 
     public void addResultItem(ResultItem resultItem) {
         this.resultItems.add(resultItem);

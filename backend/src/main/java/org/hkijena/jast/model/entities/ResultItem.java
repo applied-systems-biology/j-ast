@@ -59,6 +59,14 @@ public class ResultItem {
         this.visualizationData = visualizationData;
     }
 
+    public ResultItemType getVisualizationType() {
+        return visualizationType;
+    }
+
+    public void setVisualizationType(ResultItemType visualizationType) {
+        this.visualizationType = visualizationType;
+    }
+
     public Long getId() {
         return id;
     }
