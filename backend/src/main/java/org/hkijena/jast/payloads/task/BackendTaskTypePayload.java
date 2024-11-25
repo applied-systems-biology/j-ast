@@ -9,6 +9,7 @@ import org.hkijena.jast.tasks.BackendTaskWorkloadMode;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class BackendTaskTypePayload {
     @JsonProperty
@@ -25,6 +26,8 @@ public class BackendTaskTypePayload {
     private List<BackendTaskWorkloadDataSlot> inputs = new ArrayList<>();
     @JsonProperty
     private List<BackendTaskWorkloadDataSlot> outputs = new ArrayList<>();
+    @JsonProperty
+    private List<BackendTaskParameterPayload> parameters = new ArrayList<>();
 
     public BackendTaskTypePayload() {
     }
@@ -37,6 +40,7 @@ public class BackendTaskTypePayload {
         setInputs(workload.getInputs());
         setOutputs(workload.getOutputs());
         setAssayTypeRestriction(workload.getAssayTypeRestriction());
+        setParameters(workload.getParameters().stream().map(BackendTaskParameterPayload::new).collect(Collectors.toList()));
     }
 
     public AssayType getAssayTypeRestriction() {
@@ -93,5 +97,13 @@ public class BackendTaskTypePayload {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public List<BackendTaskParameterPayload> getParameters() {
+        return parameters;
+    }
+
+    public void setParameters(List<BackendTaskParameterPayload> parameters) {
+        this.parameters = parameters;
     }
 }

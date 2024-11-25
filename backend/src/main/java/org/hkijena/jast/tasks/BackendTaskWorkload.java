@@ -38,6 +38,8 @@ public interface BackendTaskWorkload {
 
     List<BackendTaskWorkloadDataSlot> getOutputs();
 
+    List<BackendTaskWorkloadParameterSlot> getParameters();
+
     AssayType getAssayTypeRestriction();
 
     void execute(BackendTaskWorkloadParams params, ProgressInfo progressInfo) throws Throwable;
@@ -134,7 +136,7 @@ public interface BackendTaskWorkload {
         imageRepository.saveAll(images);
     }
 
-    default void runJIPipe(BackendTaskWorkloadParams params, Path projectFile, Object parameterOverrides, String prefix, ProgressInfo progressInfo) {
+    default void runJIPipe(BackendTaskWorkloadParams params, Path projectFile, Map<String, Object> parameterOverrides, String prefix, ProgressInfo progressInfo) {
         RuntimeConfig runtimeConfig = params.getRuntimeConfig();
         Path tmpPath = params.getTmpPath().toAbsolutePath().normalize();
 
@@ -150,7 +152,7 @@ public interface BackendTaskWorkload {
         // Save parameter config
         Path parameterOverridesConfigJsonPath = null;
         if(parameterOverrides != null) {
-            parameterOverridesConfigJsonPath = userDirectoryConfigJsonPath;
+            parameterOverridesConfigJsonPath =  params.getTmpPath().resolve(prefix + "jip-parameter-config.json");
             JsonUtils.saveToFile(parameterOverrides, parameterOverridesConfigJsonPath);
         }
 

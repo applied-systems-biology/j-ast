@@ -32,7 +32,22 @@
       <q-separator/>
       <q-card-section class="q-gutter-sm">
         <div class="text-h6">Parameters</div>
-        <div><q-icon name="fa-solid fa-check"/> This task has no parameters</div>
+        <div v-if="!payload.parameters"><q-icon name="fa-solid fa-check"/> This task has no parameters</div>
+        <template v-for="parameter in payload.parameters" :key="parameter.id">
+          <q-input v-if="parameter.type == BackendTaskWorkloadParameterSlotType.String" type="text" v-model="parameter.value" filled :label="parameter.label">
+            <q-tooltip>{{ parameter.description }}</q-tooltip>
+          </q-input>
+          <q-input v-else-if="parameter.type == BackendTaskWorkloadParameterSlotType.Number" type="number" v-model="parameter.value" filled :label="parameter.label">
+            <q-tooltip>{{ parameter.description }}</q-tooltip>
+          </q-input>
+          <q-checkbox v-else-if="parameter.type == BackendTaskWorkloadParameterSlotType.Boolean" type="number" v-model="parameter.value" :label="parameter.label">
+            <q-tooltip>{{ parameter.description }}</q-tooltip>
+          </q-checkbox>
+          <div v-else class="text-red" >
+            <q-icon name="warning"/>
+            Unable to render parameter {{ parameter.id }} with type {{ parameter.type }}
+          </div>
+        </template>
       </q-card-section>
       <q-separator/>
       <q-card-section>
@@ -93,8 +108,8 @@ import {
   BackendTaskTypePayload,
   BackendTaskWorkloadDataSlot,
   BackendTaskWorkloadDataSlotType,
-  BackendTaskWorkloadMode
-} from "src/types/backendTasks";
+  BackendTaskWorkloadMode, BackendTaskWorkloadParameterSlotType
+} from 'src/types/backendTasks';
 import ProjectImageButton from "components/ProjectImageButton.vue";
 import {renderMaskAnnotationId2} from "src/types/common";
 
@@ -179,7 +194,10 @@ onMounted(() => {
   payload.value.imageIds = props.images.map(image => image.id)
   payload.value.projectId = props.projectId
 
-  // TODO: Handle parameters
+  //Copy over parameters
+  for(const parameter of props.taskType.parameters) {
+    payload.value.parameters.push(parameter)
+  }
 })
 
 </script>

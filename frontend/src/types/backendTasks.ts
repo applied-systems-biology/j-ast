@@ -28,12 +28,35 @@ export enum BackendTaskWorkloadDataSlotType {
   Metadata = "Metadata",
 }
 
+export  enum BackendTaskWorkloadParameterSlotType {
+  String = "String",
+  Number = "Number",
+  Boolean = "Boolean",
+}
+
 export class BackendTaskWorkloadDataSlot {
   @Expose()
   type: BackendTaskWorkloadDataSlotType = BackendTaskWorkloadDataSlotType.ImageMaskAnnotation;
 
   @Expose()
   name: string = "";
+}
+
+export class BackendTaskParameterPayload {
+  @Expose()
+  type: BackendTaskWorkloadParameterSlotType = BackendTaskWorkloadParameterSlotType.String;
+
+  @Expose()
+  id: string = "";
+
+  @Expose()
+  label: string = "";
+
+  @Expose()
+  description: string = "";
+
+  @Expose()
+  value: any = null
 }
 
 export class BackendTaskTypePayload {
@@ -57,6 +80,9 @@ export class BackendTaskTypePayload {
 
   @Expose()
   assayTypeRestriction: AssayType = AssayType.Unknown;
+
+  @Expose()
+  parameters: BackendTaskParameterPayload[] = [];
 }
 
 export class BackendTaskPayload {
@@ -77,6 +103,9 @@ export class BackendTaskPayload {
 
   @Expose()
   name: string = "";
+
+  @Expose()
+  parameters: BackendTaskParameterPayload[] = [];
 
   @Expose()
   status: TaskStatus = TaskStatus.Ready;

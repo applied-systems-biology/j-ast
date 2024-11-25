@@ -8,6 +8,7 @@ import org.hkijena.jast.utils.JsonUtils;
 
 import java.io.Serial;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 
 @Entity
 @Table(name = "backend_tasks")
@@ -116,6 +117,7 @@ public class BackendTask {
         instance.setStatus(status);
         instance.setCreatedAt(getCreatedAt());
         instance.setName(name);
+        instance.setParameters(new ArrayList<>(instance.getParameters()));
         return instance;
     }
 }

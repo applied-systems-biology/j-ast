@@ -32,6 +32,9 @@ public class BackendTaskPayload {
     @JsonProperty
     private LocalDateTime createdAt = LocalDateTime.now();
 
+    @JsonProperty
+    private List<BackendTaskParameterPayload> parameters = new ArrayList<>();
+
     public BackendTaskPayload() {
 
     }
@@ -105,5 +108,13 @@ public class BackendTaskPayload {
 
     public void setProjectId(long projectId) {
         this.projectId = projectId;
+    }
+
+    public List<BackendTaskParameterPayload> getParameters() {
+        return parameters;
+    }
+
+    public void setParameters(List<BackendTaskParameterPayload> parameters) {
+        this.parameters = parameters;
     }
 }

@@ -2,6 +2,7 @@ package org.hkijena.jast.tasks.workloads;
 
 import jakarta.transaction.Transactional;
 import org.hkijena.jast.model.AssayType;
+import org.hkijena.jast.payloads.task.BackendTaskParameterPayload;
 import org.hkijena.jast.repositories.ImageRepository;
 import org.hkijena.jast.tasks.*;
 import org.hkijena.jast.utils.ProgressInfo;
@@ -21,6 +22,18 @@ public class SegmentDDADiskBackendTaskWorkload implements BackendTaskWorkload {
     private final ImageRepository imageRepository;
     private static final List<BackendTaskWorkloadDataSlot> INPUTS = Collections.singletonList(new BackendTaskWorkloadDataSlot("plate", BackendTaskWorkloadDataSlotType.ImageMaskAnnotation));
     private static final List<BackendTaskWorkloadDataSlot> OUTPUTS = Collections.singletonList(new BackendTaskWorkloadDataSlot("strip-disk", BackendTaskWorkloadDataSlotType.ImageMaskAnnotation));
+    private static final List<BackendTaskWorkloadParameterSlot> PARAMETERS = List.of(
+            new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotType.Number, "minCirc", "Minimum circularity (0-1)", "Minimum circularity of the disk", 0.5),
+            new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotType.Number, "minFeret", "Minimum diameter (mm)", "Minimum diameter in millimeters. A lower than expected value is better.", 2),
+            new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotType.Number, "maxFeret", "Maximum diameter (mm)", "Maximum diameter in millimeters. A higher than expected value is better.", 12)
+    );
+    private static final Map<String, String> PARAMETER_OVERRIDES = new HashMap<>();
+
+    static {
+        PARAMETER_OVERRIDES.put("minCirc", "dc2e186c-881c-42d1-a9b6-78a8f24579ec/exported/circle filter/minCirc");
+        PARAMETER_OVERRIDES.put("minFeret", "dc2e186c-881c-42d1-a9b6-78a8f24579ec/exported/circle filter/minFeret");
+        PARAMETER_OVERRIDES.put("maxFeret", "dc2e186c-881c-42d1-a9b6-78a8f24579ec/exported/circle filter/maxFeret");
+    }
 
     @Autowired
     public SegmentDDADiskBackendTaskWorkload(ImageRepository imageRepository) {
@@ -53,6 +66,11 @@ public class SegmentDDADiskBackendTaskWorkload implements BackendTaskWorkload {
     }
 
     @Override
+    public List<BackendTaskWorkloadParameterSlot> getParameters() {
+        return PARAMETERS;
+    }
+
+    @Override
     public AssayType getAssayTypeRestriction() {
         return AssayType.DDA;
     }
@@ -63,9 +81,14 @@ public class SegmentDDADiskBackendTaskWorkload implements BackendTaskWorkload {
         writeRawImages(params, params.getPayload().getImageIds(), imageRepository, progressInfo);
         writeMaskAnnotations(params, params.getPayload().getImageIds(), "plate", imageRepository, progressInfo);
 
+        Map<String, Object> parameterOverrides = new HashMap<>();
+        for (BackendTaskParameterPayload parameter : params.getPayload().getParameters()) {
+            parameterOverrides.put(PARAMETER_OVERRIDES.get(parameter.getId()), parameter.getValue());
+        }
+
         Path projectFilePath = writeSharedFile(params, "image-segment-dda-disk.jip");
         progressInfo.log("Project file is " + projectFilePath);
-        runJIPipe(params, projectFilePath, null, "", progressInfo);
+        runJIPipe(params, projectFilePath, parameterOverrides, "", progressInfo);
 
         Map<String, Path> maskAnnotationsConfig = new HashMap<>();
         maskAnnotationsConfig.put("strip-disk", params.getTmpPath().resolve("strip-disk"));

@@ -50,6 +50,11 @@ public class SegmentPlateBackendTaskWorkload implements BackendTaskWorkload {
     }
 
     @Override
+    public List<BackendTaskWorkloadParameterSlot> getParameters() {
+        return List.of();
+    }
+
+    @Override
     public AssayType getAssayTypeRestriction() {
         return AssayType.Unknown;
     }
