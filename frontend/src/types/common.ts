@@ -3,6 +3,7 @@ import { api } from 'boot/axios';
 import { Ref } from 'vue';
 import { AssayType } from 'src/types/assayType';
 import { ImagePayload } from 'src/types/image';
+import {Loading} from "quasar";
 
 export function renderMaskAnnotationId(image: ImagePayload, id: string) {
   switch (id) {
@@ -32,6 +33,13 @@ export function renderMaskAnnotationId2(id: string) {
       return 'Plate';
   }
   return id;
+}
+
+export function showLoadingWithTimeout(timeout: number, message: string) {
+  Loading.show({ message: message });
+  setTimeout(() => {
+    Loading.hide();
+  }, timeout);
 }
 
 export function plainToInstanceStrict<T, V>(

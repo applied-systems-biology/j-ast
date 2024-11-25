@@ -6,9 +6,10 @@ import { ProjectImagesPayload } from 'src/types/projectImages';
 import { api } from 'boot/axios';
 import {
   sendFailureNotification,
-  sendInfoNotification,
+  sendInfoNotification, sendSuccessNotification,
 } from 'src/types/notification';
 import { AssayType } from 'src/types/assayType';
+import {showLoadingWithTimeout} from "src/types/common";
 
 export enum TaskStatus {
   Ready = 'Ready',
@@ -196,10 +197,11 @@ export function doBackendTask(
     },
   })
     .onOk((payload: BackendTaskPayload) => {
+      showLoadingWithTimeout(3000, "Sending request to the server ...")
       api
         .post(`/task/new`, instanceToPlain(payload))
         .then(() => {
-          sendInfoNotification("Sent task request to the server")
+          sendSuccessNotification("Successfully sent task to the server")
         })
         .catch(() => {
           sendFailureNotification('Unable to start task');
