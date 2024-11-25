@@ -44,6 +44,14 @@
     :options="['DDA', 'ETest', 'Unknown']"
     @update:model-value="onUpdateAssayType"
   />
+  <q-input
+    :model-value="model?.pixelSizeMillimeter"
+    :disable="hasTaskRunning"
+    filled
+    label="Pixel size (mm)"
+    type="number"
+    @update:model-value="onUpdatePixelSize"
+  />
   <MaskImageAnnotationButton :disable="hasTaskRunning" v-model="model" annotation-type-id="plate"/>
   <MaskImageAnnotationButton :disable="hasTaskRunning" v-if="model?.assayType != 'Unknown'" v-model="model" annotation-type-id="strip-disk"/>
   <MaskImageAnnotationButton :disable="hasTaskRunning" v-if="model?.assayType == 'ETest'" v-model="model" annotation-type-id="zoi-shape"/>
@@ -106,6 +114,13 @@ function onUpdateTimePoint(newValue: SelectValue) {
 function onUpdateAssayType(newValue: SelectValue) {
   if (model.value) {
     model.value.assayType = ('' + newValue) as AssayType;
+    uploadToBackend();
+  }
+}
+
+function onUpdatePixelSize(newValue: SelectValue) {
+  if(model.value) {
+    model.value.pixelSizeMillimeter = Number(newValue);
     uploadToBackend();
   }
 }

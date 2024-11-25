@@ -1,6 +1,9 @@
 package org.hkijena.jast.payloads.task;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.hkijena.jast.model.AssayType;
+import org.hkijena.jast.tasks.BackendTaskType;
+import org.hkijena.jast.tasks.BackendTaskWorkload;
 import org.hkijena.jast.tasks.BackendTaskWorkloadDataSlot;
 import org.hkijena.jast.tasks.BackendTaskWorkloadMode;
 
@@ -17,9 +20,32 @@ public class BackendTaskTypePayload {
     @JsonProperty
     private BackendTaskWorkloadMode workloadMode = BackendTaskWorkloadMode.Single;
     @JsonProperty
+    private AssayType assayTypeRestriction = AssayType.Unknown;
+    @JsonProperty
     private List<BackendTaskWorkloadDataSlot> inputs = new ArrayList<>();
     @JsonProperty
     private List<BackendTaskWorkloadDataSlot> outputs = new ArrayList<>();
+
+    public BackendTaskTypePayload() {
+    }
+
+    public BackendTaskTypePayload(BackendTaskWorkload workload, String taskId) {
+        setTaskId(taskId);
+        setName(workload.getName());
+        setDescription(workload.getDescription());
+        setWorkloadMode(workload.getMode());
+        setInputs(workload.getInputs());
+        setOutputs(workload.getOutputs());
+        setAssayTypeRestriction(workload.getAssayTypeRestriction());
+    }
+
+    public AssayType getAssayTypeRestriction() {
+        return assayTypeRestriction;
+    }
+
+    public void setAssayTypeRestriction(AssayType assayTypeRestriction) {
+        this.assayTypeRestriction = assayTypeRestriction;
+    }
 
     public BackendTaskWorkloadMode getWorkloadMode() {
         return workloadMode;

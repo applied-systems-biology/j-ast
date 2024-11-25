@@ -52,14 +52,7 @@ public class TaskController {
     public ResponseEntity<List<BackendTaskTypePayload>> listAvailableTasks() {
         return ResponseEntity.ok(backendTaskRegistry.getRegisteredTasks().entrySet().stream().map(entry -> {
             BackendTaskWorkload workload = entry.getValue();
-            BackendTaskTypePayload payload = new BackendTaskTypePayload();
-            payload.setTaskId(entry.getKey());
-            payload.setName(workload.getName());
-            payload.setDescription(workload.getDescription());
-            payload.setWorkloadMode(workload.getMode());
-            payload.setInputs(workload.getInputs());
-            payload.setOutputs(workload.getOutputs());
-            return payload;
+            return new BackendTaskTypePayload(workload, entry.getKey());
         }).toList());
     }
 

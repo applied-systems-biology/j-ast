@@ -81,6 +81,9 @@ public class Image {
     @Column(name = "version")
     private Integer version = 1;
 
+    @Column(name = "pixel_size_mm")
+    private Double pixelSizeMillimeter = 0.144;
+
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true, mappedBy = "image")
     private List<MaskImageAnnotation> maskImageAnnotations = new ArrayList<>();
 
@@ -118,6 +121,14 @@ public class Image {
     public void removeMaskImageAnnotation(MaskImageAnnotation maskImageAnnotation) {
         maskImageAnnotations.remove(maskImageAnnotation);
         maskImageAnnotation.setImage(null);
+    }
+
+    public double getPixelSizeMillimeter() {
+        return pixelSizeMillimeter != null ? pixelSizeMillimeter : 0.144;
+    }
+
+    public void setPixelSizeMillimeter(double pixelSizeMillimeter) {
+        this.pixelSizeMillimeter = pixelSizeMillimeter;
     }
 
     @NotNull
@@ -272,5 +283,15 @@ public class Image {
         }
 
         return annotation;
+    }
+
+    public MaskImageAnnotation getMaskImageAnnotation(String annotationTypeId) {
+        for (MaskImageAnnotation annotation : getFilteredMaskImageAnnotations()) {
+            if(annotation.getType().equals(annotationTypeId)) {
+                return annotation;
+            }
+        }
+
+        return null;
     }
 }

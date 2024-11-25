@@ -1,8 +1,11 @@
 package org.hkijena.jast.tasks;
 
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVPrinter;
 import org.apache.commons.exec.CommandLine;
 import org.apache.commons.exec.ExecuteWatchdog;
 import org.hkijena.jast.config.RuntimeConfig;
+import org.hkijena.jast.model.AssayType;
 import org.hkijena.jast.model.entities.Image;
 import org.hkijena.jast.model.entities.MaskImageAnnotation;
 import org.hkijena.jast.repositories.ImageRepository;
@@ -12,6 +15,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -19,8 +23,6 @@ import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 public interface BackendTaskWorkload {
 
@@ -36,33 +38,59 @@ public interface BackendTaskWorkload {
 
     List<BackendTaskWorkloadDataSlot> getOutputs();
 
+    AssayType getAssayTypeRestriction();
+
     void execute(BackendTaskWorkloadParams params, ProgressInfo progressInfo) throws Throwable;
 
-    default Path extractSharedFile(BackendTaskWorkloadParams params, Path sourcePath, Path targetPath) throws IOException {
+    default Path writeSharedFile(BackendTaskWorkloadParams params, Path sourcePath, Path targetPath) throws IOException {
         Path fullPath = Paths.get(params.getRuntimeConfig().getSharedResourcesDirectory()).resolve(sourcePath);
         Files.copy(fullPath, params.getTmpPath().resolve(targetPath));
         return params.getTmpPath().resolve(targetPath);
     }
 
-    default Path extractSharedFile(BackendTaskWorkloadParams params, String sourcePath, String targetPath) throws IOException {
-        return extractSharedFile(params, Paths.get(sourcePath), Paths.get(targetPath));
+    default Path writeSharedFile(BackendTaskWorkloadParams params, String sourcePath, String targetPath) throws IOException {
+        return writeSharedFile(params, Paths.get(sourcePath), Paths.get(targetPath));
     }
 
-    default Path extractSharedFile(BackendTaskWorkloadParams params, String sourcePath) throws IOException {
-        return extractSharedFile(params, sourcePath, sourcePath);
+    default Path writeSharedFile(BackendTaskWorkloadParams params, String sourcePath) throws IOException {
+        return writeSharedFile(params, sourcePath, sourcePath);
     }
 
-    default void extractRawImages(BackendTaskWorkloadParams params, Iterable<Long> imageIds, ImageRepository repository, ProgressInfo progressInfo) throws IOException {
+    default void writeRawImages(BackendTaskWorkloadParams params, Iterable<Long> imageIds, ImageRepository repository, ProgressInfo progressInfo) throws IOException {
         Path rawPath = PathUtils.resolveAndMakeSubDirectory(params.getTmpPath(), "raw");
-        for (Image image : repository.findAllById(imageIds)) {
-            progressInfo.log("Writing raw image data " + image.getId());
-            Path pngPath = rawPath.resolve(image.getId() + ".png");
-            Files.write(pngPath, image.getRawData());
+        Path csvPath = params.getTmpPath().resolve("metadata.csv");
+        final String[] csvHeader = new String[] { "#ImageId", "#Experiment", "#Sample", "#TimePoint", "#AssayType", "PixelSize" };
+        try(FileWriter csvFileWriter = new FileWriter(csvPath.toFile())) {
+            CSVPrinter csvPrinter = new CSVPrinter(csvFileWriter, CSVFormat.Builder.create().setDelimiter(',').setHeader(csvHeader).build());
+            for (Image image : repository.findAllById(imageIds)) {
+                progressInfo.log("Writing raw image data " + image.getId());
+                Path pngPath = rawPath.resolve(image.getId() + ".png");
+                Files.write(pngPath, image.getRawData());
+
+                // Write metadata
+                csvPrinter.printRecord(image.getId(), image.getExperiment(), image.getSample(), image.getTimePoint(), image.getAssayType(), image.getPixelSizeMillimeter());
+            }
         }
     }
 
-    default void extractMaskAnnotations(Iterable<Long> imageIds, Map<String, Path> annotationTypeIdDirectories,
-                                        ImageRepository imageRepository, ProgressInfo progressInfo) throws IOException {
+    default void writeMaskAnnotations(BackendTaskWorkloadParams params, Iterable<Long> imageIds, String annotationTypeId, ImageRepository repository, ProgressInfo progressInfo) throws IOException {
+        Path rawPath = PathUtils.resolveAndMakeSubDirectory(params.getTmpPath(), annotationTypeId);
+        for (Image image : repository.findAllById(imageIds)) {
+            progressInfo.log("Writing mask annotation " + annotationTypeId + " image data " + image.getId());
+            MaskImageAnnotation annotation = image.getMaskImageAnnotation(annotationTypeId);
+            Path pngPath = rawPath.resolve(image.getId() + ".png");
+            if(annotation != null) {
+                Files.write(pngPath, annotation.getRawData());
+            }
+            else {
+                BufferedImage dummy= new BufferedImage(image.getImageWidth(), image.getImageHeight(), BufferedImage.TYPE_BYTE_GRAY);
+                ImageIO.write(dummy, "PNG", pngPath.toFile());
+            }
+        }
+    }
+
+    default void readMaskAnnotations(Iterable<Long> imageIds, Map<String, Path> annotationTypeIdDirectories,
+                                     ImageRepository imageRepository, ProgressInfo progressInfo) throws IOException {
         Iterable<Image> images = imageRepository.findAllById(imageIds);
         for (Image image : images) {
             boolean changed = false;

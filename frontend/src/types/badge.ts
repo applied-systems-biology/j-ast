@@ -40,3 +40,12 @@ export function createAssayTypeBadge(value: string): Badge {
     type: 'Assay type'
   };
 }
+
+export function createPixelSizeBadge(value: string): Badge {
+  return {
+    text: value,
+    icon: 'fa-solid fa-ruler',
+    color: '#41acac',
+    type: 'Assay type'
+  };
+}

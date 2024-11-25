@@ -53,10 +53,10 @@
             <q-td :props="props">
               <template v-for="slot in props.value" :key="slot.slot.name">
                 <div v-if="slot.present" class="text-green">
-                  <q-icon name="fa-solid fa-save"/>
+                  <q-icon name="fa-solid fa-check"/>
                   {{ renderMaskAnnotationId2(slot.slot.name) }}
                 </div>
-                <div v-else class="red">
+                <div v-else class="text-red">
                   <q-icon name="fa-solid fa-xmark"/>
                   {{ renderMaskAnnotationId2(slot.slot.name) }}
                 </div>

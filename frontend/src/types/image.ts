@@ -4,7 +4,7 @@ import { api } from 'boot/axios';
 import {
   Badge,
   createAssayTypeBadge,
-  createExperimentBadge,
+  createExperimentBadge, createPixelSizeBadge,
   createSampleBadge,
   createTimePointBadge
 } from 'src/types/badge';
@@ -61,6 +61,9 @@ export class ImagePayload {
   version: number = -1;
 
   @Expose()
+  pixelSizeMillimeter : number = -1;
+
+  @Expose()
   maskImageAnnotations: MaskImageAnnotationPayload[] = [];
 
   /**
@@ -84,6 +87,9 @@ export class ImagePayload {
     }
     if (this.timePoint) {
       result.push(createTimePointBadge(this.timePoint));
+    }
+    if (this.pixelSizeMillimeter && this.pixelSizeMillimeter > 0) {
+      result.push(createPixelSizeBadge(`${this.pixelSizeMillimeter} mm`));
     }
     if (this.assayType && this.assayType != AssayType.Unknown) {
       result.push(createAssayTypeBadge(this.assayType));

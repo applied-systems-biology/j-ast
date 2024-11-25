@@ -1,16 +1,20 @@
-import {Expose, instanceToPlain} from 'class-transformer';
-import {ImagePayload} from "src/types/image";
-import {Dialog} from "quasar";
-import BackendTaskSetupDialog from "components/backendProcessors/BackendTaskSetupDialog.vue";
-import {ProjectImagesPayload} from "src/types/projectImages";
-import {api} from "boot/axios";
-import {sendFailureNotification, sendInfoNotification} from "src/types/notification";
+import { Expose, instanceToPlain } from 'class-transformer';
+import { ImagePayload } from 'src/types/image';
+import { Dialog } from 'quasar';
+import BackendTaskSetupDialog from 'components/backendProcessors/BackendTaskSetupDialog.vue';
+import { ProjectImagesPayload } from 'src/types/projectImages';
+import { api } from 'boot/axios';
+import {
+  sendFailureNotification,
+  sendInfoNotification,
+} from 'src/types/notification';
+import { AssayType } from 'src/types/assayType';
 
 export enum TaskStatus {
-  Ready = "Ready",
-  Running = "Running",
-  Successful = "Successful",
-  Failed = "Failed"
+  Ready = 'Ready',
+  Running = 'Running',
+  Successful = 'Successful',
+  Failed = 'Failed',
 }
 
 export enum BackendTaskWorkloadMode {
@@ -21,6 +25,7 @@ export enum BackendTaskWorkloadMode {
 
 export enum BackendTaskWorkloadDataSlotType {
   ImageMaskAnnotation= "ImageMaskAnnotation",
+  Metadata = "Metadata",
 }
 
 export class BackendTaskWorkloadDataSlot {
@@ -49,6 +54,9 @@ export class BackendTaskTypePayload {
 
   @Expose()
   outputs: Array<BackendTaskWorkloadDataSlot> = [];
+
+  @Expose()
+  assayTypeRestriction: AssayType = AssayType.Unknown;
 }
 
 export class BackendTaskPayload {
@@ -136,6 +144,17 @@ export function doBackendTask(
         }
       }
     }
+  }
+
+  // Filter out by assay type
+  if(tool.assayTypeRestriction != AssayType.Unknown) {
+    images = images.filter(img => img.assayType == tool.assayTypeRestriction)
+    sendInfoNotification(`This tool only works for ${tool.assayTypeRestriction}.`)
+  }
+
+  if(images.length == 0) {
+    sendFailureNotification("Tool not applicable to any of the selected images.")
+    return
   }
 
   Dialog.create({

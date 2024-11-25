@@ -3,7 +3,7 @@ import { ImagePayload } from 'src/types/image';
 import {
   Badge,
   createAssayTypeBadge,
-  createExperimentBadge,
+  createExperimentBadge, createPixelSizeBadge,
   createSampleBadge,
   createTimePointBadge
 } from 'src/types/badge';
@@ -84,6 +84,7 @@ export class ProjectImagesPayloadRow {
     const allExperiments = new Set<string>();
     const allSamples = new Set<string>();
     const allAssayTypes = new Set<string>();
+    const allPixelSizes = new Set<string>();
     for (const image of this.images) {
       if (image.experiment) {
         allExperiments.add(image.experiment);
@@ -94,6 +95,9 @@ export class ProjectImagesPayloadRow {
       if (image.assayType && image.assayType != AssayType.Unknown) {
         allAssayTypes.add(image.assayType);
       }
+      if (image.pixelSizeMillimeter && image.pixelSizeMillimeter > 0) {
+        allPixelSizes.add(image.pixelSizeMillimeter + " mm");
+      }
     }
     for (const value of allExperiments) {
       result.push(createExperimentBadge(value));
@@ -103,6 +107,9 @@ export class ProjectImagesPayloadRow {
     }
     for (const value of allAssayTypes) {
       result.push(createAssayTypeBadge(value));
+    }
+    for (const value of allPixelSizes) {
+      result.push(createPixelSizeBadge(value));
     }
     if (allExperiments.size == 0) {
       result.push({
@@ -126,6 +133,14 @@ export class ProjectImagesPayloadRow {
         icon: 'fa-solid fa-gear',
         color: '#c0bfbc',
         type: 'NAAssayType'
+      });
+    }
+    if (allPixelSizes.size == 0) {
+      result.push({
+        text: 'N/A',
+        icon: 'fa-solid fa-ruler',
+        color: '#c0bfbc',
+        type: 'NAPixelSize'
       });
     }
     return result;

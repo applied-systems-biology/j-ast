@@ -9,13 +9,13 @@ export function renderMaskAnnotationId(image: ImagePayload, id: string) {
     case 'strip-disk':
       switch (image.assayType) {
         case AssayType.DDA:
-          return 'DDA disk';
+          return 'Disk';
         case AssayType.ETest:
-          return 'ETest strip';
+          return 'Strip';
       }
       break;
     case 'zoi-shape':
-      return 'ETest ZOI shape';
+      return 'ZOI shape';
     case 'plate':
       return 'Plate';
   }
