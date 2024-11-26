@@ -2,7 +2,7 @@ import {RouteLocationNormalized} from "vue-router";
 import {useAuthStore} from "stores/auth-store";
 
 const beforeEach = (to: RouteLocationNormalized) => {
-  if (to.path.startsWith("/account") || to.path.startsWith("/project") || to.path.startsWith("/tasks") || to.path.startsWith("/mask-image-annotation")) {
+  if (to.path.startsWith("/account") || to.path.startsWith("/project") || to.path.startsWith("/tasks") || to.path.startsWith("/results") || to.path.startsWith("/mask-image-annotation")) {
     const authStore = useAuthStore()
 
     if (!authStore.isLoggedIn) {

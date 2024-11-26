@@ -22,6 +22,16 @@ const routes: RouteRecordRaw[] = [
     children: [],
   },
   {
+    path: "/results/list/:id",
+    component: () => import('layouts/ResultsIndexLayout.vue'),
+    children: [],
+  },
+  {
+    path: "/results/view/:id",
+    component: () => import('layouts/ResultsViewLayout.vue'),
+    children: [],
+  },
+  {
     path: "/mask-image-annotation/:imageId/:annotationTypeId",
     component: () => import('layouts/MaskImageAnnotationLayout.vue'),
     children: [],

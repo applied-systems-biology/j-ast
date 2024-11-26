@@ -28,6 +28,9 @@ public class ResultItem {
     @NotNull
     private String name;
 
+    @Column(name = "path", columnDefinition = "TEXT")
+    private String path = "";
+
     @ManyToOne(fetch = FetchType.LAZY)
     private Result result;
 
@@ -50,6 +53,14 @@ public class ResultItem {
     @Column(name = "visualization_type")
     @Enumerated(EnumType.STRING)
     private ResultItemType visualizationType = ResultItemType.Unknown;
+
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
+    }
 
     public byte[] getVisualizationData() {
         return visualizationData;

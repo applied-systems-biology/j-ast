@@ -21,11 +21,12 @@
         </q-toolbar-title>
         <AuthManagerComponent />
       </q-toolbar>
-      <q-toolbar class="bg-primary text-white">
+      <q-toolbar class="bg-primary text-white edit-toolbar">
         <q-btn color="secondary" icon="clear_all" @click="clearAll"
           >Clear
         </q-btn>
         <div class="col-grow" />
+        <ProjectResultsButton :project-id="projectId[0]" v-model="resultList"/>
         <ProjectBackendTaskButton
           :project-id="projectId[0]"
           v-model="projectBackendTasks"
@@ -78,10 +79,11 @@ import { ProjectMetadataPayload } from 'src/types/project';
 import { BackendTaskPayload, TaskStatus } from 'src/types/backendTasks';
 import { useIntervalFn } from '@vueuse/core';
 import { api } from 'boot/axios';
-import { plainToInstance } from 'class-transformer';
 import { useQuasar } from 'quasar';
 import ProjectBackendTaskButton from 'components/ProjectBackendTaskButton.vue';
 import AuthManagerComponent from 'components/AuthManagerComponent.vue';
+import ProjectResultsButton from 'components/ProjectResultsButton.vue';
+import { ResultPayload } from 'src/types/results';
 
 const $route = useRoute();
 const $q = useQuasar();
@@ -90,6 +92,7 @@ const projectPayload: Ref<ProjectMetadataPayload> = ref(
   new ProjectMetadataPayload()
 );
 const projectBackendTasks = ref<Array<BackendTaskPayload>>([]);
+const resultList = ref<ResultPayload[]>();
 
 function clearAll() {
   $q.loading.show();
@@ -104,15 +107,19 @@ function clearAll() {
 }
 
 function queryTaskBackend() {
-  api
-    .get<BackendTaskPayload[]>(`/project/${projectId}/tasks`)
-    .then((response) => {
-      // console.log(response.data)
-      projectBackendTasks.value = plainToInstance(
-        BackendTaskPayload,
-        response.data
-      );
-    });
+  loadPayloadInstanceFromApi(
+    `/project/${projectId}/tasks`,
+    BackendTaskPayload,
+    projectBackendTasks
+  );
+}
+
+function queryResultListBackend() {
+  loadPayloadInstanceFromApi(
+    `/project/${projectId}/list-results`,
+    ResultPayload,
+    resultList
+  );
 }
 
 onMounted(() => {
@@ -122,6 +129,15 @@ onMounted(() => {
     projectPayload
   );
   queryTaskBackend();
+  queryResultListBackend();
 });
+
 useIntervalFn(queryTaskBackend, 2500);
+useIntervalFn(queryResultListBackend, 4000);
 </script>
+<style scoped lang="scss">
+.edit-toolbar > * {
+  margin-right: 10px;
+}
+</style>
+

@@ -18,6 +18,9 @@ public class ResultItemPayload {
     private String name;
 
     @JsonProperty
+    private String path;
+
+    @JsonProperty
     private ResultItemType type;
 
     @JsonProperty
@@ -31,8 +34,17 @@ public class ResultItemPayload {
         this.resultId = resultItem.getResult().getId();
         this.projectId = resultItem.getResult().getProject().getId();
         this.name = resultItem.getName();
+        this.path = resultItem.getPath();
         this.type = resultItem.getType();
         this.visualizationType = resultItem.getVisualizationType();
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
     }
 
     public long getId() {

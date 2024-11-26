@@ -158,6 +158,9 @@
           <q-tooltip> Deletes the selected image(s)</q-tooltip>
         </q-btn>
         <div class="col-grow" />
+        <ProjectResultsButton
+          :project-id="projectId[0]"
+          v-model="resultList"/>
         <ProjectBackendTaskButton
           :project-id="projectId[0]"
           v-model="projectBackendTasks"
@@ -218,7 +221,7 @@ import { useQuasar } from 'quasar';
 // import { VueDraggableNext as draggable } from 'vue-draggable-next';
 import { useRoute, useRouter } from 'vue-router';
 import { api } from 'boot/axios';
-import { downloadFromApi, ensureExtension } from 'src/types/common';
+import { downloadFromApi, ensureExtension, loadPayloadInstanceFromApi } from 'src/types/common';
 import ProjectImageEditor from 'components/ProjectImageEditor.vue';
 import { plainToInstance } from 'class-transformer';
 import ImageArrangerComponent from 'components/ImageArrangerComponent.vue';
@@ -244,6 +247,8 @@ import {
 } from 'src/types/backendTasks';
 import { useIntervalFn } from '@vueuse/core';
 import ProjectBackendTaskButton from 'components/ProjectBackendTaskButton.vue';
+import ProjectResultsButton from 'components/ProjectResultsButton.vue';
+import { ResultPayload } from 'src/types/results';
 
 const $q = useQuasar();
 const $route = useRoute();
@@ -259,6 +264,7 @@ const projectImages = ref<ProjectImagesPayload>(new ProjectImagesPayload());
 const selectedImageIds = ref<Array<number>>([]);
 const availableBackendTasks = ref<Array<BackendTaskTypePayload>>([]);
 const projectBackendTasks = ref<Array<BackendTaskPayload>>([]);
+const resultList = ref<ResultPayload[]>();
 const availableBackendTasksCategories = computed(() => {
   const result = new Set<string>();
   for (const taskType of availableBackendTasks.value) {
@@ -427,24 +433,29 @@ function queryBackend() {
 }
 
 function queryTaskBackend() {
-  api
-    .get<BackendTaskPayload[]>(`/project/${projectId}/tasks`)
-    .then((response) => {
-      // console.log(response.data)
-      // console.log(Date())
-      projectBackendTasks.value = plainToInstance(
-        BackendTaskPayload,
-        response.data
-      );
-    });
+  loadPayloadInstanceFromApi(
+    `/project/${projectId}/tasks`,
+    BackendTaskPayload,
+    projectBackendTasks
+  );
+}
+
+function queryResultListBackend() {
+  loadPayloadInstanceFromApi(
+    `/project/${projectId}/list-results`,
+    Array<ResultPayload>,
+    resultList
+  );
 }
 
 onMounted(() => {
   queryBackend();
   queryTaskBackend();
+  queryResultListBackend();
 });
 
 useIntervalFn(queryTaskBackend, 2500);
+useIntervalFn(queryResultListBackend, 4000);
 </script>
 <style scoped lang="scss">
 .edit-toolbar > * {

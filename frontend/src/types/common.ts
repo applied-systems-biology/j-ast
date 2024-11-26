@@ -55,14 +55,15 @@ export function plainToInstanceStrict<T, V>(
 export function loadPayloadInstanceFromApi<T>(
   url: string,
   type: ClassConstructor<T>,
-  target: Ref<T>
+  target: Ref<T | T[]>
 ): Promise<T> {
   return new Promise<T>(async (resolve, reject) => {
     api
       .get(url)
       .then((response) => {
-        target.value = plainToInstance(type, response.data);
-        resolve(target.value);
+        const value = plainToInstance(type, response.data);
+        target.value = value;
+        resolve(value);
       })
       .catch(reject);
   });
