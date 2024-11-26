@@ -47,6 +47,11 @@ public class SegmentETestStripBackendTaskWorkload implements BackendTaskWorkload
     }
 
     @Override
+    public String getCategory() {
+        return "E-Test";
+    }
+
+    @Override
     public BackendTaskWorkloadMode getMode() {
         return BackendTaskWorkloadMode.Single;
     }

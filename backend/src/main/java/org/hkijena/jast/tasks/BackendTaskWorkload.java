@@ -32,6 +32,8 @@ public interface BackendTaskWorkload {
 
     String getDescription();
 
+    String getCategory();
+
     BackendTaskWorkloadMode getMode();
 
     List<BackendTaskWorkloadDataSlot> getInputs();

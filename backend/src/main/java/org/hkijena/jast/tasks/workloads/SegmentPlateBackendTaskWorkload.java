@@ -35,6 +35,11 @@ public class SegmentPlateBackendTaskWorkload implements BackendTaskWorkload {
     }
 
     @Override
+    public String getCategory() {
+        return "Plate";
+    }
+
+    @Override
     public BackendTaskWorkloadMode getMode() {
         return BackendTaskWorkloadMode.Single;
     }

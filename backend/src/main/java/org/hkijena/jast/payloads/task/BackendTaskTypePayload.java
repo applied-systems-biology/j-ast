@@ -19,6 +19,8 @@ public class BackendTaskTypePayload {
     @JsonProperty
     private String description;
     @JsonProperty
+    private String category;
+    @JsonProperty
     private BackendTaskWorkloadMode workloadMode = BackendTaskWorkloadMode.Single;
     @JsonProperty
     private AssayType assayTypeRestriction = AssayType.Unknown;
@@ -39,8 +41,17 @@ public class BackendTaskTypePayload {
         setWorkloadMode(workload.getMode());
         setInputs(workload.getInputs());
         setOutputs(workload.getOutputs());
+        setCategory(workload.getCategory());
         setAssayTypeRestriction(workload.getAssayTypeRestriction());
         setParameters(workload.getParameters().stream().map(BackendTaskParameterPayload::new).collect(Collectors.toList()));
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
     }
 
     public AssayType getAssayTypeRestriction() {

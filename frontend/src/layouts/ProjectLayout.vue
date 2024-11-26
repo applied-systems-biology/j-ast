@@ -104,7 +104,37 @@
               </q-item>
               <q-separator />
               <q-item
-                v-for="tool in availableBackendTasks"
+                v-for="category in availableBackendTasksCategories"
+                :key="category"
+                clickable
+              >
+                <q-item-section>{{ category }}</q-item-section>
+                <q-item-section side>
+                  <q-icon name="keyboard_arrow_right" />
+                </q-item-section>
+
+                <q-menu anchor="top end" self="top start">
+                  <q-item
+                    v-for="tool in availableBackendTasks.filter(
+                      (task) => task.category == category
+                    )"
+                    :key="tool.taskId"
+                    clickable
+                    v-close-popup
+                    @click="doBackendTaskClicked(tool)"
+                  >
+                    <q-item-section avatar>
+                      <q-icon name="fa-solid fa-wand-magic-sparkles" />
+                    </q-item-section>
+                    <q-item-section>{{ tool.name }}</q-item-section>
+                    <q-tooltip>{{ tool.description }}</q-tooltip>
+                  </q-item>
+                </q-menu>
+              </q-item>
+              <q-item
+                v-for="tool in availableBackendTasks.filter(
+                  (task) => !task.category
+                )"
                 :key="tool.taskId"
                 clickable
                 v-close-popup
@@ -199,7 +229,8 @@ import {
 } from 'src/types/frontendTasks';
 import { onDialogYes } from 'src/types/dialog';
 import {
-  sendFailureNotification, sendSuccessNotification
+  sendFailureNotification,
+  sendSuccessNotification,
 } from 'src/types/notification';
 import {
   CreateEditProjectRequest,
@@ -208,7 +239,8 @@ import {
 import { ProjectImagesPayload } from 'src/types/projectImages';
 import {
   BackendTaskTypePayload,
-  BackendTaskPayload, doBackendTask,
+  BackendTaskPayload,
+  doBackendTask,
 } from 'src/types/backendTasks';
 import { useIntervalFn } from '@vueuse/core';
 import ProjectBackendTaskButton from 'components/ProjectBackendTaskButton.vue';
@@ -227,6 +259,13 @@ const projectImages = ref<ProjectImagesPayload>(new ProjectImagesPayload());
 const selectedImageIds = ref<Array<number>>([]);
 const availableBackendTasks = ref<Array<BackendTaskTypePayload>>([]);
 const projectBackendTasks = ref<Array<BackendTaskPayload>>([]);
+const availableBackendTasksCategories = computed(() => {
+  const result = new Set<string>();
+  for (const taskType of availableBackendTasks.value) {
+    result.add(taskType.category || '');
+  }
+  return result;
+});
 
 // Computed values
 const drawerRight = computed(() => selectedImageIds.value.length > 0);
@@ -344,7 +383,12 @@ function doFrontEndProcessor(tool: FrontEndImageProcessor) {
 
 function doBackendTaskClicked(tool: BackendTaskTypePayload) {
   if (selectedImageIds.value && projectImages.value) {
-    doBackendTask([...selectedImages.value], Number(projectId), tool, projectImages.value)
+    doBackendTask(
+      [...selectedImages.value],
+      Number(projectId),
+      tool,
+      projectImages.value
+    );
   }
 }
 

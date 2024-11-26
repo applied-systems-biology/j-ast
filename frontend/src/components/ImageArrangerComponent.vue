@@ -59,6 +59,9 @@
               <span class="q-ml-sm">{{ badge.text}}</span>
             </q-badge>
           </q-scroll-area>
+          <q-btn flat size="xs" icon="fa-solid fa-chevron-down" @click="selectColumn(columnIndex, $event)">
+            <q-tooltip>Select the whole column</q-tooltip>
+          </q-btn>
         </div>
       </div>
       <div
@@ -73,6 +76,9 @@
               <span class="q-ml-sm">{{ badge.text}}</span>
             </q-badge>
           </q-scroll-area>
+          <q-btn flat size="xs" icon="fa-solid fa-chevron-right" class="select-all-button" @click="selectRow(rowIndex, $event)">
+            <q-tooltip>Select the whole row</q-tooltip>
+          </q-btn>
         </div>
         <div
           v-for="(j, columnIndex) in numCols + 1"
@@ -244,6 +250,46 @@ function selectAllUnsorted() {
   }
 }
 
+function selectColumn(columnIndex : number, event : Event) {
+  const mouseEvent = event as MouseEvent;
+  if(projectImages.value) {
+    const indices = new Set<number>();
+    if(mouseEvent.shiftKey) {
+      for(const id of selectedImageIds.value) {
+        indices.add(id)
+      }
+    }
+    for(const row of projectImages.value.groupRows) {
+      for(const image of row.images) {
+        if(image.groupColumn == columnIndex) {
+          indices.add(image.id)
+        }
+      }
+    }
+    selectedImageIds.value = [...indices]
+  }
+}
+
+function selectRow(rowIndex : number, event : Event) {
+  const mouseEvent = event as MouseEvent;
+  if(projectImages.value) {
+    const indices = new Set<number>();
+    if(mouseEvent.shiftKey) {
+      for(const id of selectedImageIds.value) {
+        indices.add(id)
+      }
+    }
+    for(const row of projectImages.value.groupRows) {
+      for(const image of row.images) {
+        if(image.groupRow == rowIndex) {
+          indices.add(image.id)
+        }
+      }
+    }
+    selectedImageIds.value = [...indices]
+  }
+}
+
 </script>
 <style scoped lang="scss">
 $grid-item-width: 18rem;
@@ -251,11 +297,17 @@ $grid-item-height: 8rem;
 $grid-row-label-width: 10rem;
 $grid-column-label-height: 5rem;
 
+.select-all-button {
+  padding: 4px;
+}
+
 .grid-row-label {
   width: $grid-row-label-width;
   border-right: 1px solid #ccc;
   height: 100%;
   padding: 4px;
+  display: flex;
+  flex-direction: row;
   .q-badge {
     margin: 2px;
   }
@@ -264,11 +316,14 @@ $grid-column-label-height: 5rem;
 .row-label-scroll-area {
   width: 100%;
   height: 100%;
+  flex-grow: 1;
 }
 
 .grid-column-label {
   width: $grid-item-width;
   height: $grid-column-label-height;
+  display: flex;
+  flex-direction: column;
   margin-left: 10px;
   border-top-left-radius: 3px;
   border-top-right-radius: 3px;
@@ -281,6 +336,7 @@ $grid-column-label-height: 5rem;
 .column-label-scroll-area {
   width: 100%;
   height: 100%;
+  flex-grow: 1;
 }
 
 .grid-column-header {

@@ -71,6 +71,9 @@ export class BackendTaskTypePayload {
   description: string = "";
 
   @Expose()
+  category: string = "";
+
+  @Expose()
   workloadMode: BackendTaskWorkloadMode = BackendTaskWorkloadMode.Single;
 
   @Expose()

@@ -71,6 +71,11 @@ public class SegmentDDADiskBackendTaskWorkload implements BackendTaskWorkload {
     }
 
     @Override
+    public String getCategory() {
+        return "DDA";
+    }
+
+    @Override
     public AssayType getAssayTypeRestriction() {
         return AssayType.DDA;
     }
