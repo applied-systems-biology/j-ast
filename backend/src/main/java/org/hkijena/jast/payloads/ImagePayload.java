@@ -4,9 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hkijena.jast.model.AssayType;
 import org.hkijena.jast.model.entities.Image;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 public class ImagePayload {
     @JsonProperty
@@ -35,6 +33,8 @@ public class ImagePayload {
     private double pixelSizeMillimeter;
     @JsonProperty
     private List<MaskImageAnnotationPayload> maskImageAnnotations = new ArrayList<>();
+    @JsonProperty
+    private Map<String, Object> metadata = new HashMap<>();
 
     public ImagePayload() {
 
@@ -53,6 +53,7 @@ public class ImagePayload {
         this.version = image.getVersion();
         this.pixelSizeMillimeter = image.getPixelSizeMillimeter();
         this.maskImageAnnotations = image.getFilteredMaskImageAnnotations().stream().map(MaskImageAnnotationPayload::create).toList();
+        this.metadata = new HashMap<>(image.getMetadata());
     }
 
     public double getPixelSizeMillimeter() {

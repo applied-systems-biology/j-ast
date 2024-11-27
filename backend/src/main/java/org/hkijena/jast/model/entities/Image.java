@@ -1,7 +1,9 @@
 package org.hkijena.jast.model.entities;
 
+import io.hypersistence.utils.hibernate.type.json.JsonType;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import org.hibernate.annotations.Type;
 import org.hkijena.jast.model.AssayType;
 import org.hkijena.jast.payloads.ImagePayload;
 import org.hkijena.jast.utils.ColorUtils;
@@ -84,8 +86,23 @@ public class Image {
     @Column(name = "pixel_size_mm")
     private Double pixelSizeMillimeter = 0.144;
 
+    @Column(name = "metadata", columnDefinition = "JSON")
+    @Type(JsonType.class)
+    private Map<String, Object> metadata = new HashMap<>();
+
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true, mappedBy = "image")
     private List<MaskImageAnnotation> maskImageAnnotations = new ArrayList<>();
+
+    public Map<String, Object> getMetadata() {
+        if (metadata == null) {
+            this.metadata = new HashMap<>();
+        }
+        return metadata;
+    }
+
+    public void setMetadata(Map<String, Object> metadata) {
+        this.metadata = metadata;
+    }
 
     public int getVersion() {
         return version != null ? version : 1;

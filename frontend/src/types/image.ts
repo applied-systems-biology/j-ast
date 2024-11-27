@@ -64,6 +64,9 @@ export class ImagePayload {
   pixelSizeMillimeter : number = -1;
 
   @Expose()
+  metadata : Record<string, any> = {};
+
+  @Expose()
   maskImageAnnotations: MaskImageAnnotationPayload[] = [];
 
   /**

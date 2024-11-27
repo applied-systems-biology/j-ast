@@ -1,10 +1,14 @@
 package org.hkijena.jast.model.entities;
 
+import io.hypersistence.utils.hibernate.type.json.JsonType;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import org.hibernate.annotations.Type;
 import org.hkijena.jast.model.ResultItemType;
 
 import java.io.Serial;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * A result item that has the metadata (as JSON object) and multiple data fields (raw data, optional data for browser visualization only, and a thumbnail)
@@ -20,9 +24,9 @@ public class ResultItem {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "metadata", columnDefinition = "TEXT")
-    @NotNull
-    private String metadata = "";
+    @Column(name = "metadata", columnDefinition = "JSON")
+    @Type(JsonType.class)
+    private Map<String, Object> metadata = new HashMap<>();
 
     @Column(name = "name", columnDefinition = "TEXT")
     @NotNull
@@ -118,11 +122,14 @@ public class ResultItem {
         this.thumbnailData = thumbnailData;
     }
 
-    public String getMetadata() {
+    public Map<String, Object> getMetadata() {
+        if (metadata == null) {
+            this.metadata = new HashMap<>();
+        }
         return metadata;
     }
 
-    public void setMetadata(String metadata) {
+    public void setMetadata(Map<String, Object> metadata) {
         this.metadata = metadata;
     }
 

@@ -43,6 +43,9 @@ export class ResultItemPayload {
   path: string = "";
 
   @Expose()
+  metadata : Record<string, any> = {};
+
+  @Expose()
   type: ResultItemType = ResultItemType.Unknown;
 
   @Expose()
