@@ -261,6 +261,7 @@ import { ProjectMetadataPayload } from 'src/types/project';
 import { AssayType } from 'src/types/assayType';
 import { ImagePayload, MaskImageAnnotationPayload } from 'src/types/image';
 import { mirrorImageData, MirrorOperationMode } from 'src/types/drawingMirror';
+import { KonvaEvent, MouseEventType, Position } from 'src/types/konva';
 
 const $q = useQuasar();
 const $route = useRoute();
@@ -315,19 +316,6 @@ const foregroundImageConfig: { image: HTMLCanvasElement | null } = reactive({
   image: null,
 });
 
-type KonvaEvent<T> = { evt: T };
-type Position = { x: number; y: number };
-
-enum MouseEventType {
-  LeftMouseDown,
-  LeftMouseUp,
-  LeftMouseClick,
-  RightMouseClick,
-  MouseMove,
-  MouseEnter,
-  MouseLeave,
-  LeftMouseDoubleClick,
-}
 
 const stage = useTemplateRef<any>('stage');
 const foregroundLayer = useTemplateRef<any>('foregroundLayer');
