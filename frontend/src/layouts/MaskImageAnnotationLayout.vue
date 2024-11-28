@@ -227,8 +227,8 @@
 </template>
 
 <script setup lang="ts">
-import LoginButtonComponent from 'components/AuthManagerComponent.vue';
-import HeaderLogoButtonComponent from 'components/HeaderLogoButtonComponent.vue';
+import LoginButtonComponent from 'components/layout/AuthManagerComponent.vue';
+import HeaderLogoButtonComponent from 'components/layout/HeaderLogoButtonComponent.vue';
 import {
   computed,
   onMounted,

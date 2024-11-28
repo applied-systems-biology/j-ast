@@ -72,7 +72,7 @@
 
 <script setup lang="ts">
 import { useRoute } from 'vue-router';
-import HeaderLogoButtonComponent from 'components/HeaderLogoButtonComponent.vue';
+import HeaderLogoButtonComponent from 'components/layout/HeaderLogoButtonComponent.vue';
 import { onMounted, ref, Ref } from 'vue';
 import { loadPayloadInstanceFromApi } from 'src/types/common';
 import { ProjectMetadataPayload } from 'src/types/project';
@@ -80,9 +80,9 @@ import { BackendTaskPayload, TaskStatus } from 'src/types/backendTasks';
 import { useIntervalFn } from '@vueuse/core';
 import { api } from 'boot/axios';
 import { useQuasar } from 'quasar';
-import ProjectBackendTaskButton from 'components/ProjectBackendTaskButton.vue';
-import AuthManagerComponent from 'components/AuthManagerComponent.vue';
-import ProjectResultsButton from 'components/ProjectResultsButton.vue';
+import ProjectBackendTaskButton from 'components/layout/ProjectBackendTaskButton.vue';
+import AuthManagerComponent from 'components/layout/AuthManagerComponent.vue';
+import ProjectResultsButton from 'components/layout/ProjectResultsButton.vue';
 import { ResultPayload } from 'src/types/results';
 
 const $route = useRoute();

@@ -107,7 +107,7 @@
 </template>
 <script setup lang="ts">
 import { computed, ref } from 'vue';
-import ProjectImageButton from 'components/ProjectImageButton.vue';
+import ProjectImageButton from 'components/arranger/ProjectImageButton.vue';
 import {sendFailureNotification} from "src/types/notification";
 import { Badge } from 'src/types/badge';
 import { ProjectImagesPayload, ProjectImagesPayloadRow } from 'src/types/projectImages';

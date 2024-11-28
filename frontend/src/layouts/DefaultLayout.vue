@@ -18,9 +18,9 @@
 </template>
 
 <script setup lang="ts">
-import ImprintComponent from "components/ImprintComponent.vue";
-import LoginButtonComponent from "components/AuthManagerComponent.vue";
-import HeaderLogoButtonComponent from "components/HeaderLogoButtonComponent.vue";
+import ImprintComponent from "components/layout/ImprintComponent.vue";
+import LoginButtonComponent from "components/layout/AuthManagerComponent.vue";
+import HeaderLogoButtonComponent from "components/layout/HeaderLogoButtonComponent.vue";
 
 defineOptions({
   name: 'DefaultLayout'

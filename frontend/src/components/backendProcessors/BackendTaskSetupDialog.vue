@@ -110,7 +110,7 @@ import {
   BackendTaskWorkloadDataSlotType,
   BackendTaskWorkloadMode, BackendTaskWorkloadParameterSlotType
 } from 'src/types/backendTasks';
-import ProjectImageButton from "components/ProjectImageButton.vue";
+import ProjectImageButton from "components/arranger/ProjectImageButton.vue";
 import {renderMaskAnnotationId2} from "src/types/common";
 
 const payload = ref<BackendTaskPayload>(new BackendTaskPayload());

@@ -59,7 +59,7 @@
 <script setup lang="ts">
 import { debounce } from 'quasar';
 import { plainToInstance } from 'class-transformer';
-import MaskImageAnnotationButton from 'components/MaskImageAnnotationButton.vue';
+import MaskImageAnnotationButton from 'components/drawers/MaskImageAnnotationButton.vue';
 import {sendFailureNotification} from "src/types/notification";
 import { AssayType } from 'src/types/assayType';
 import { ImagePayload } from 'src/types/image';

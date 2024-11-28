@@ -41,16 +41,16 @@
 </template>
 
 <script setup lang="ts">
-import HeaderLogoButtonComponent from 'components/HeaderLogoButtonComponent.vue';
-import AuthManagerComponent from 'components/AuthManagerComponent.vue';
+import HeaderLogoButtonComponent from 'components/layout/HeaderLogoButtonComponent.vue';
+import AuthManagerComponent from 'components/layout/AuthManagerComponent.vue';
 import { useRoute } from 'vue-router';
 import { computed, onMounted, ref, Ref } from 'vue';
 import { ProjectMetadataPayload } from 'src/types/project';
 import { loadPayloadInstanceFromApi } from 'src/types/common';
-import ProjectBackendTaskButton from 'components/ProjectBackendTaskButton.vue';
+import ProjectBackendTaskButton from 'components/layout/ProjectBackendTaskButton.vue';
 import { BackendTaskPayload } from 'src/types/backendTasks';
 import { useIntervalFn } from '@vueuse/core';
-import ProjectResultsButton from 'components/ProjectResultsButton.vue';
+import ProjectResultsButton from 'components/layout/ProjectResultsButton.vue';
 import { FullResultPayload, ResultPayload } from 'src/types/results';
 
 const $route = useRoute();

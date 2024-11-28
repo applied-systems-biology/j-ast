@@ -212,20 +212,20 @@
 </template>
 
 <script setup lang="ts">
-import AuthManagerComponent from 'components/AuthManagerComponent.vue';
-import HeaderLogoButtonComponent from 'components/HeaderLogoButtonComponent.vue';
+import AuthManagerComponent from 'components/layout/AuthManagerComponent.vue';
+import HeaderLogoButtonComponent from 'components/layout/HeaderLogoButtonComponent.vue';
 import { computed, onMounted, ref, Ref } from 'vue';
-import ToggleButton from 'components/ToggleButton.vue';
-import ImageUploaderComponent from 'components/ImageUploaderComponent.vue';
+import ToggleButton from 'components/utils/ToggleButton.vue';
+import ImageUploaderComponent from 'components/drawers/ImageUploaderComponent.vue';
 import { useQuasar } from 'quasar';
 // import { VueDraggableNext as draggable } from 'vue-draggable-next';
 import { useRoute, useRouter } from 'vue-router';
 import { api } from 'boot/axios';
 import { downloadFromApi, ensureExtension, loadPayloadInstanceFromApi } from 'src/types/common';
-import ProjectImageEditor from 'components/ProjectImageEditor.vue';
+import ProjectImageEditor from 'components/drawers/ProjectImageEditor.vue';
 import { plainToInstance } from 'class-transformer';
-import ImageArrangerComponent from 'components/ImageArrangerComponent.vue';
-import ProjectMultiImageEditor from 'components/ProjectMultiImageEditor.vue';
+import ImageArrangerComponent from 'components/arranger/ImageArrangerComponent.vue';
+import ProjectMultiImageEditor from 'components/drawers/ProjectMultiImageEditor.vue';
 import {
   FrontEndImageProcessor,
   frontEndImageProcessors,
@@ -246,8 +246,8 @@ import {
   doBackendTask,
 } from 'src/types/backendTasks';
 import { useIntervalFn } from '@vueuse/core';
-import ProjectBackendTaskButton from 'components/ProjectBackendTaskButton.vue';
-import ProjectResultsButton from 'components/ProjectResultsButton.vue';
+import ProjectBackendTaskButton from 'components/layout/ProjectBackendTaskButton.vue';
+import ProjectResultsButton from 'components/layout/ProjectResultsButton.vue';
 import { ResultPayload } from 'src/types/results';
 
 const $q = useQuasar();
