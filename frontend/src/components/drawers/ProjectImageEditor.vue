@@ -8,6 +8,7 @@
       You will not be able to make any changes
     </q-card-section>
   </q-card>
+  <q-btn icon="fa-solid fa-arrow-up-right-from-square" align="left" color="secondary" label="Show image" class="w-100" @click="showImage"/>
   <q-input
     :model-value="model?.fileName"
     :disable="hasTaskRunning"
@@ -65,6 +66,7 @@ import { AssayType } from 'src/types/assayType';
 import { ImagePayload } from 'src/types/image';
 import {BackendTaskPayload, imageHasRunningTask} from "src/types/backendTasks";
 import {computed} from "vue";
+import {showImageViewer} from "src/types/dataViewers";
 
 type SelectValue = string | number | null;
 const model = defineModel<ImagePayload>();
@@ -73,6 +75,10 @@ const hasTaskRunning = computed(() => {
   return imageHasRunningTask(model.value?.id, projectBackendTasks.value);
 })
 const uploadToBackend = debounce(uploadToBackend_, 300);
+
+function showImage() {
+  showImageViewer(`/image/${model.value?.id}/raw`)
+}
 
 function uploadToBackend_() {
   if(model.value) {

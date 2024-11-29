@@ -1,23 +1,59 @@
 <template>
-  <div class="full-width stage-container">
-    <konva-stage
-      ref="stage"
-      :config="stageConfig"
-      @mousedown="onStageMouseDown"
-      @mousemove="onStageMouseMove"
-      @mouseup="onStageMouseUp"
-      @mouseenter="onStageMouseEnter"
-      @mouseleave="onStageMouseLeave"
-      @click="onStageMouseClick($event, 1)"
-      @dblclick="onStageMouseClick($event, 2)"
-      @contextmenu="onStageContextMenu"
-      @wheel="onStageMouseWheel"
+  <q-layout view="hHh lpR fFf" container
+            style="height: 500px">
+    <q-header>
+      <q-toolbar>
+      </q-toolbar>
+    </q-header>
+    <q-drawer
+      side="left"
+      :model-value="true"
+      elevated
+      class="q-pa-lg tool-control-container"
     >
-      <konva-layer>
-        <konva-image :config="backgroundImageConfig" />
-      </konva-layer>
-    </konva-stage>
-  </div>
+      <div class="tool-control">
+        <q-badge color="primary" class="tool-control-badge">
+          <div class="label">Zoom</div>
+          <q-btn size="xs" icon="fa-solid fa-undo" @click="zoom = 1">
+            <q-tooltip>Reset zoom</q-tooltip>
+          </q-btn>
+        </q-badge>
+        <q-slider
+          v-model="zoom"
+          :min="0.25"
+          :max="3"
+          :markers="0.25"
+          :step="0"
+          label
+          marker-labels
+          switch-label-side
+        ></q-slider>
+      </div>
+    </q-drawer>
+    <q-page-container>
+      <q-page padding class="flex column q-gutter-sm">
+        <div class="full-width stage-container" style="border: 1px red solid; min-height: 640px">
+          <konva-stage
+            ref="stage"
+            :config="stageConfig"
+            @mousedown="onStageMouseDown"
+            @mousemove="onStageMouseMove"
+            @mouseup="onStageMouseUp"
+            @mouseenter="onStageMouseEnter"
+            @mouseleave="onStageMouseLeave"
+            @click="onStageMouseClick($event, 1)"
+            @dblclick="onStageMouseClick($event, 2)"
+            @contextmenu="onStageContextMenu"
+            @wheel="onStageMouseWheel"
+          >
+            <konva-layer>
+              <konva-image :config="backgroundImageConfig" />
+            </konva-layer>
+          </konva-stage>
+        </div>
+      </q-page>
+    </q-page-container>
+  </q-layout>
 </template>
 <script setup lang="ts">
 import { onMounted, reactive, ref, useTemplateRef, watch } from 'vue';
@@ -191,10 +227,10 @@ function resetLocationAndZoom() {
 }
 
 function queryFromBackend() {
-  $q.loading.show({
-    message: 'Loading image ...',
-  });
   if(props.imageBackendUrl) {
+    $q.loading.show({
+      message: 'Loading image ...',
+    });
     api.get(props.imageBackendUrl, {
       responseType: 'blob',
     })
@@ -216,9 +252,18 @@ function queryFromBackend() {
   }
 }
 
+function resetTool() {
+  stageConfig.draggable = true
+  lastPosition = null;
+  isPanning = false;
+  panMouseDxDy = null;
+}
+
+
 onMounted(() => {
   updateStageSize();
   queryFromBackend();
+  resetTool();
 });
 window.addEventListener('resize', updateStageSize);
 watch(zoom, onZoomChanged);
@@ -234,6 +279,23 @@ watch(() => props.imageBackendUrl, queryFromBackend)
   height: 0;
   margin-left: 8px !important;
 }
+
+.tool-control {
+  margin-bottom: 2em;
+}
+
+.tool-control-badge {
+  display: flex;
+  flex-direction: row;
+  gap: 3px;
+  height: 3em;
+
+  .label {
+    flex-grow: 1;
+  }
+}
+
+
 </style>
 <style lang="scss">
 .konvajs-content {

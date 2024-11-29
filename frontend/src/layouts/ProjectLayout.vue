@@ -179,7 +179,7 @@
       side="right"
       bordered
       v-model="drawerRight"
-      class="q-pa-sm q-gutter-sm"
+      class="q-pa-md q-gutter-sm flex column"
     >
       <div class="row reverse">
         <q-btn
