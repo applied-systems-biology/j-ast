@@ -1,38 +1,31 @@
 <template>
-  <q-layout view="hHh lpR fFf" container
-            style="height: 500px">
-    <q-header>
-      <q-toolbar>
-      </q-toolbar>
-    </q-header>
-    <q-drawer
-      side="left"
-      :model-value="true"
-      elevated
-      class="q-pa-lg tool-control-container"
-    >
-      <div class="tool-control">
-        <q-badge color="primary" class="tool-control-badge">
-          <div class="label">Zoom</div>
-          <q-btn size="xs" icon="fa-solid fa-undo" @click="zoom = 1">
-            <q-tooltip>Reset zoom</q-tooltip>
-          </q-btn>
-        </q-badge>
-        <q-slider
-          v-model="zoom"
-          :min="0.25"
-          :max="3"
-          :markers="0.25"
-          :step="0"
-          label
-          marker-labels
-          switch-label-side
-        ></q-slider>
+  <div class="flex column col-grow">
+    <q-toolbar class="bg-primary text-white">
+      <q-btn label="Reset view" icon="fa-solid fa-expand" @click="resetLocationAndZoom"/>
+    </q-toolbar>
+    <div class="row col-grow" style="width: calc(100vw - 10px)">
+      <div class="col-2 q-pa-lg tool-control-container">
+        <div class="tool-control">
+          <q-badge color="primary" class="tool-control-badge">
+            <div class="label">Zoom</div>
+            <q-btn size="xs" icon="fa-solid fa-undo" @click="zoom = 1">
+              <q-tooltip>Reset zoom</q-tooltip>
+            </q-btn>
+          </q-badge>
+          <q-slider
+            v-model="zoom"
+            :min="0.25"
+            :max="3"
+            :markers="0.25"
+            :step="0"
+            label
+            marker-labels
+            switch-label-side
+          ></q-slider>
+        </div>
       </div>
-    </q-drawer>
-    <q-page-container>
-      <q-page padding class="flex column q-gutter-sm">
-        <div class="full-width stage-container" style="border: 1px red solid; min-height: 640px">
+      <div class="col flex column">
+        <div class="full-width stage-container">
           <konva-stage
             ref="stage"
             :config="stageConfig"
@@ -51,9 +44,9 @@
             </konva-layer>
           </konva-stage>
         </div>
-      </q-page>
-    </q-page-container>
-  </q-layout>
+      </div>
+    </div>
+  </div>
 </template>
 <script setup lang="ts">
 import { onMounted, reactive, ref, useTemplateRef, watch } from 'vue';

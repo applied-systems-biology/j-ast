@@ -1,5 +1,5 @@
 import {Dialog} from "quasar";
-import ImageViewerDialog from "components/dataViewers/ImageViewerDialog.vue";
+import ImageViewerDialog from "components/dataViewers/DataViewerDialog.vue";
 
 export function showImageViewer(imageBackendUrl: string) {
   Dialog.create({
