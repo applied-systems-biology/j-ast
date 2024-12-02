@@ -124,7 +124,7 @@
           :markers="0.25"
           :step="0"
           label
-          marker-labels
+          :marker-labels="zoomLabels"
           switch-label-side
         ></q-slider>
       </div>
@@ -394,6 +394,10 @@ const annotationName = computed(() => {
   }
   return annotationTypeId;
 });
+
+function zoomLabels(value : number) {
+  return value == 1 ? "100%" : " "
+}
 
 function getStageMousePosition(): Position | undefined {
   if (stage.value) {
@@ -1106,10 +1110,6 @@ useEventListener(window, 'beforeunload', (event) => {
 });
 </script>
 <style scoped lang="scss">
-.edit-toolbar > * {
-  margin-right: 10px;
-}
-
 .tool-control {
   margin-bottom: 2em;
 }

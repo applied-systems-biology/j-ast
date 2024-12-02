@@ -1,14 +1,19 @@
 <template>
   <q-card class="q-mb-lg" v-if="hasTaskRunning">
     <q-card-section>
-      <q-spinner-hourglass size="md"/>
+      <q-spinner-hourglass size="md" />
       <span class="text-caption text-bold">Currently being processed</span>
     </q-card-section>
-    <q-card-section>
-      You will not be able to make any changes
-    </q-card-section>
+    <q-card-section> You will not be able to make any changes </q-card-section>
   </q-card>
-  <q-btn icon="fa-solid fa-arrow-up-right-from-square" align="left" color="secondary" label="Show image" class="w-100" @click="showImage"/>
+  <q-btn
+    icon="fa-solid fa-arrow-up-right-from-square"
+    align="left"
+    color="secondary"
+    label="Show image"
+    class="w-100"
+    @click="showImage"
+  />
   <q-input
     :model-value="model?.fileName"
     :disable="hasTaskRunning"
@@ -53,38 +58,61 @@
     type="number"
     @update:model-value="onUpdatePixelSize"
   />
-  <MaskImageAnnotationButton :disable="hasTaskRunning" v-model="model" annotation-type-id="plate"/>
-  <MaskImageAnnotationButton :disable="hasTaskRunning" v-if="model?.assayType != 'Unknown'" v-model="model" annotation-type-id="strip-disk"/>
-  <MaskImageAnnotationButton :disable="hasTaskRunning" v-if="model?.assayType == 'ETest'" v-model="model" annotation-type-id="zoi-shape"/>
+  <MaskImageAnnotationButton
+    :disable="hasTaskRunning"
+    v-model="model"
+    annotation-type-id="plate"
+  />
+  <MaskImageAnnotationButton
+    :disable="hasTaskRunning"
+    v-if="model?.assayType != 'Unknown'"
+    v-model="model"
+    annotation-type-id="strip-disk"
+  />
+  <MaskImageAnnotationButton
+    :disable="hasTaskRunning"
+    v-if="model?.assayType == 'ETest'"
+    v-model="model"
+    annotation-type-id="zoi-shape"
+  />
 </template>
 <script setup lang="ts">
 import { debounce } from 'quasar';
 import { plainToInstance } from 'class-transformer';
 import MaskImageAnnotationButton from 'components/drawers/MaskImageAnnotationButton.vue';
-import {sendFailureNotification} from "src/types/notification";
+import { sendFailureNotification } from 'src/types/notification';
 import { AssayType } from 'src/types/assayType';
 import { ImagePayload } from 'src/types/image';
-import {BackendTaskPayload, imageHasRunningTask} from "src/types/backendTasks";
-import {computed} from "vue";
-import {showImageViewer} from "src/types/dataViewers";
+import {
+  BackendTaskPayload,
+  imageHasRunningTask,
+} from 'src/types/backendTasks';
+import { computed } from 'vue';
+import { ResultItemPayload, ResultItemType, showResultItem } from 'src/types/results';
 
 type SelectValue = string | number | null;
 const model = defineModel<ImagePayload>();
-const projectBackendTasks = defineModel<BackendTaskPayload[]>("projectBackendTasks");
+const projectBackendTasks = defineModel<BackendTaskPayload[]>(
+  'projectBackendTasks'
+);
 const hasTaskRunning = computed(() => {
   return imageHasRunningTask(model.value?.id, projectBackendTasks.value);
-})
+});
 const uploadToBackend = debounce(uploadToBackend_, 300);
 
 function showImage() {
-  showImageViewer(`/image/${model.value?.id}/raw`)
+  const item = new ResultItemPayload();
+  item.type = ResultItemType.Image;
+  item.overrideUrl = `/image/${model.value?.id}/raw`
+  item.name = model.value?.fileName || "Unnamed";
+  showResultItem(item)
 }
 
 function uploadToBackend_() {
-  if(model.value) {
+  if (model.value) {
     const payload = plainToInstance(ImagePayload, model.value);
     payload.uploadToBackend().catch(() => {
-      sendFailureNotification('Error while updating')
+      sendFailureNotification('Error while updating');
     });
   }
 }
@@ -125,7 +153,7 @@ function onUpdateAssayType(newValue: SelectValue) {
 }
 
 function onUpdatePixelSize(newValue: SelectValue) {
-  if(model.value) {
+  if (model.value) {
     model.value.pixelSizeMillimeter = Number(newValue);
     uploadToBackend();
   }

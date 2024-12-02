@@ -1,4 +1,6 @@
 import { Expose, Type } from 'class-transformer';
+import { Dialog } from 'quasar';
+import ResultItemViewerDialog from 'components/dataViewers/ResultItemViewerDialog.vue';
 
 export enum ResultItemType {
   Image = "Image",
@@ -50,6 +52,34 @@ export class ResultItemPayload {
 
   @Expose()
   visualizationType: ResultItemType = ResultItemType.Unknown;
+
+  /**
+   * Allows to override the backend URL
+   */
+  overrideUrl: string | undefined = undefined;
+
+  /**
+   * Allows to override the backend URL
+   */
+  overrideVisualizationUrl: string | undefined = undefined;
+
+  /**
+   * Returns the backend URL that contains the visualization
+   */
+  getVisualizationUrl() : string {
+    if(this.overrideVisualizationUrl) {
+      return this.overrideVisualizationUrl;
+    }
+    else if(this.overrideUrl) {
+      return this.overrideUrl;
+    }
+    else if(this.visualizationType != ResultItemType.Unknown) {
+      return `/result-item/${this.id}/visualization`;
+    }
+    else {
+      return `/result-item/${this.id}/raw`;
+    }
+  }
 }
 
 
@@ -61,4 +91,21 @@ export class FullResultPayload extends ResultPayload {
   constructor() {
     super();
   }
+}
+
+
+export function showResultItem(resultItem: ResultItemPayload) {
+  Dialog.create({
+    component: ResultItemViewerDialog,
+    componentProps: {
+      resultItem: resultItem,
+      persistent: true,
+    },
+  })
+    .onOk(() => {
+    })
+    .onCancel(() => {
+    })
+    .onDismiss(() => {
+    });
 }

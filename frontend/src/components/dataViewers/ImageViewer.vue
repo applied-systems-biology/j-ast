@@ -1,7 +1,8 @@
 <template>
   <div class="flex column col-grow">
-    <q-toolbar class="bg-primary text-white">
-      <q-btn label="Reset view" icon="fa-solid fa-expand" @click="resetLocationAndZoom"/>
+    <q-toolbar class="bg-primary text-white edit-toolbar">
+      <q-btn label="Download" icon="fa-solid fa-download" color="blue" @click="download"/>
+      <q-btn label="Reset view" icon="fa-solid fa-expand" color="blue" @click="resetLocationAndZoom"/>
     </q-toolbar>
     <div class="row col-grow" style="width: calc(100vw - 10px)">
       <div class="col-2 q-pa-lg tool-control-container">
@@ -19,7 +20,7 @@
             :markers="0.25"
             :step="0"
             label
-            marker-labels
+            :marker-labels="zoomLabels"
             switch-label-side
           ></q-slider>
         </div>
@@ -54,7 +55,7 @@ import { KonvaEvent, MouseEventType, Position } from 'src/types/konva';
 import { useQuasar } from 'quasar';
 import { api } from 'boot/axios';
 import { sendFailureNotification } from 'src/types/notification';
-import { loadImageElementFromDataString } from 'src/types/common';
+import { downloadFromApi, ensureExtension, loadImageElementFromDataString } from 'src/types/common';
 
 const $q = useQuasar()
 
@@ -70,9 +71,13 @@ const backgroundImageConfig: { image: HTMLImageElement | null } = reactive({
 
 const props = defineProps<{
   imageBackendUrl: string;
+  filename: string;
 }>()
 
 const zoom = ref(1);
+function zoomLabels(value : number) {
+  return value == 1 ? "100%" : " "
+}
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 let isMouseDown = false;
@@ -252,6 +257,12 @@ function resetTool() {
   panMouseDxDy = null;
 }
 
+function download() {
+  downloadFromApi(
+    props.imageBackendUrl,
+    ensureExtension(props.filename, ['.png'])
+  );
+}
 
 onMounted(() => {
   updateStageSize();

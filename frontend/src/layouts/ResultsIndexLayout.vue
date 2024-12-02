@@ -160,10 +160,6 @@ useIntervalFn(queryTaskBackend, 2500);
 useIntervalFn(queryResultListBackend, 4000);
 </script>
 <style scoped lang="scss">
-.edit-toolbar > * {
-  margin-right: 10px;
-}
-
 .result-button {
   width: 100%;
 }
