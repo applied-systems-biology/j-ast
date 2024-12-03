@@ -15,7 +15,7 @@
       <q-skeleton v-else type="rect" class="thumbnail" />
       <div class="label text-left">
         <div class="filename text-caption ellipsis">
-          <q-icon name="lock" v-if="hasTaskRunning"/>
+          <q-icon name="lock" v-if="props.hasRunningTask"/>
           {{ currentImage.fileName }}
         </div>
         <div class="badges">
@@ -28,7 +28,7 @@
             <span class="q-ml-sm">{{ renderMaskAnnotationId(props.currentImage, badge.text)}}</span>
           </q-badge>
         </div>
-        <div v-if="hasTaskRunning" class="progress text-indigo" >
+        <div v-if="props.hasRunningTask" class="progress text-indigo" >
           <q-spinner-hourglass size="xs"/>
           <span class="text-caption">Working ...</span>
         </div>
@@ -42,15 +42,14 @@ import { computed, onMounted, ref, watch } from 'vue';
 import { useProjectImageThumbnailStore } from 'stores/project-image-thumbnail-store';
 import { plainToInstance } from 'class-transformer';
 import { ImagePayload } from 'src/types/image';
-import {BackendTaskPayload, imageHasRunningTask} from 'src/types/backendTasks';
 
-const projectBackendTasks = defineModel<BackendTaskPayload[]>("projectBackendTasks");
 const thumbnail = ref<string>('');
 const thumbnailStore = useProjectImageThumbnailStore();
 
 const props = defineProps<{
   currentImage: ImagePayload;
   selectedImageIds: Array<number>;
+  hasRunningTask: boolean
 }>();
 const emit = defineEmits<{
   (e: 'imageSelected', imageId: number, exclusive: boolean): void;
@@ -71,9 +70,6 @@ const selectionColor = computed(() => {
   else {
     return"blue-grey-2";
   }
-})
-const hasTaskRunning = computed(() => {
-  return imageHasRunningTask(props.currentImage.id, projectBackendTasks.value);
 })
 
 function clicked(event : Event) {

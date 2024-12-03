@@ -20,8 +20,8 @@
               @drop="onDrop(new SlotIndex(-1, columnIndex))"
             >
               <ProjectImageButton
-                v-model:project-backend-tasks="projectBackendTasks"
                 v-if="getUnsortedImage(columnIndex)"
+                :has-running-task="imagesWithRunningTasks.has(getUnsortedImage(columnIndex)!.id)"
                 :current-image="getUnsortedImage(columnIndex)!"
                 :selected-image-ids="selectedImageIds"
                 class="draggable-item"
@@ -93,7 +93,7 @@
             v-if="getImageBySlot(rowIndex, columnIndex)"
             :current-image="getImageBySlot(rowIndex, columnIndex)!"
             :selected-image-ids="selectedImageIds"
-            v-model:project-backend-tasks="projectBackendTasks"
+            :has-running-task="imagesWithRunningTasks.has(getImageBySlot(rowIndex, columnIndex)!.id)"
             class="draggable-item"
             draggable="true"
             @dragstart="onDragStart(new SlotIndex(rowIndex, columnIndex))"
@@ -147,6 +147,17 @@ const numCols = computed(() =>
 const numRows = computed(() =>
   projectImages.value ? projectImages.value.groupRows.length : 0
 );
+const imagesWithRunningTasks = computed(() => {
+  const result = new Set<number>()
+  if(projectBackendTasks.value) {
+    for(const task of projectBackendTasks.value) {
+      if(task.isRunning()) {
+        task.imageIds.forEach(result.add, result)
+      }
+    }
+  }
+  return result
+})
 
 const isDragging = ref(false);
 const dragSlot = ref<SlotIndex | null>(null);

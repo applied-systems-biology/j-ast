@@ -60,7 +60,7 @@
           <template v-slot:body-cell-image="props">
             <q-td :props="props">
               <div>
-                <ProjectImageButton class="image-button" :current-image="props.value" :selected-image-ids="[]" />
+                <ProjectImageButton class="image-button" :has-running-task="false" :current-image="props.value" :selected-image-ids="[]" />
               </div>
             </q-td>
           </template>
