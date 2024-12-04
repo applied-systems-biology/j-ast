@@ -101,610 +101,6 @@
   },
   "dependencies" : [ {
     "metadata" : {
-      "name" : "Core",
-      "description" : "<html><head></head><body>A JIPipe project</body></html>",
-      "summary" : "<html><head></head><body></body></html>",
-      "authors" : [ ],
-      "acknowledgements" : [ ],
-      "website" : "",
-      "license" : "",
-      "citation" : "",
-      "dependency-citations" : [ ],
-      "categories" : [ ]
-    },
-    "id" : "org.hkijena.jipipe:core",
-    "version" : "4.2.0",
-    "provides" : [ ],
-    "ij:update-site-dependencies" : [ ],
-    "dependencies" : [ ],
-    "ij:update-site-providers" : [ ]
-  }, {
-    "metadata" : {
-      "name" : "ImageJ algorithms",
-      "description" : "<html><head></head><body>Integrates ImageJ algorithms into JIPipe</body></html>",
-      "summary" : "<html><head></head><body>Integrates ImageJ algorithms into JIPipe</body></html>",
-      "authors" : [ {
-        "title" : null,
-        "first-name" : "Zoltán",
-        "last-name" : "Cseresnyés",
-        "affiliations-list" : [ "Applied Systems Biology, Leibniz Institute for Natural Product Research and Infection Biology – Hans-Knöll-Institute, Jena, Germany" ],
-        "website" : "https://www.leibniz-hki.de/en/staff-details.html?member=144",
-        "contact" : "zoltan.cseresnyes@leibniz-hki.de",
-        "first-author" : true,
-        "corresponding-author" : false,
-        "custom-text" : "<html><head></head><body></body></html>"
-      }, {
-        "title" : null,
-        "first-name" : "Ruman",
-        "last-name" : "Gerst",
-        "affiliations-list" : [ "Applied Systems Biology, Leibniz Institute for Natural Product Research and Infection Biology – Hans-Knöll-Institute, Jena, Germany", "Faculty of Biological Sciences, Friedrich Schiller University Jena, Germany" ],
-        "website" : "https://www.leibniz-hki.de/en/staff-details.html?member=1027",
-        "contact" : "ruman.gerst@leibniz-hki.de",
-        "first-author" : true,
-        "corresponding-author" : false,
-        "custom-text" : "<html><head></head><body></body></html>"
-      }, {
-        "title" : null,
-        "first-name" : "Marc Thilo",
-        "last-name" : "Figge",
-        "affiliations-list" : [ "Applied Systems Biology, Leibniz Institute for Natural Product Research and Infection Biology – Hans-Knöll-Institute, Jena, Germany", "Institute of Microbiology, Faculty of Biological Sciences, Friedrich Schiller University Jena, Germany" ],
-        "website" : "https://www.leibniz-hki.de/en/staff-details.html?member=81",
-        "contact" : "thilo.figge@leibniz-hki.de",
-        "first-author" : false,
-        "corresponding-author" : true,
-        "custom-text" : "<html><head></head><body></body></html>"
-      } ],
-      "acknowledgements" : [ {
-        "title" : null,
-        "first-name" : "Curtis T.",
-        "last-name" : "Rueden",
-        "affiliations-list" : [ "Laboratory for Optical and Computational Instrumentation, University of Wisconsin at Madison, Madison, Wisconsin, USA" ],
-        "website" : "",
-        "contact" : "",
-        "first-author" : true,
-        "corresponding-author" : false,
-        "custom-text" : "<html><head></head><body></body></html>"
-      }, {
-        "title" : null,
-        "first-name" : "Johannes",
-        "last-name" : "Schindelin",
-        "affiliations-list" : [ "Laboratory for Optical and Computational Instrumentation, University of Wisconsin at Madison, Madison, Wisconsin, USA", "Morgridge Institute for Research, Madison, Wisconsin, USA" ],
-        "website" : "",
-        "contact" : "",
-        "first-author" : false,
-        "corresponding-author" : false,
-        "custom-text" : "<html><head></head><body></body></html>"
-      }, {
-        "title" : null,
-        "first-name" : "Mark C.",
-        "last-name" : "Hiner",
-        "affiliations-list" : [ "Laboratory for Optical and Computational Instrumentation, University of Wisconsin at Madison, Madison, Wisconsin, USA" ],
-        "website" : "",
-        "contact" : "",
-        "first-author" : false,
-        "corresponding-author" : false,
-        "custom-text" : "<html><head></head><body></body></html>"
-      }, {
-        "title" : null,
-        "first-name" : "Barry E.",
-        "last-name" : "DeZonia",
-        "affiliations-list" : [ "Laboratory for Optical and Computational Instrumentation, University of Wisconsin at Madison, Madison, Wisconsin, USA" ],
-        "website" : "",
-        "contact" : "",
-        "first-author" : false,
-        "corresponding-author" : false,
-        "custom-text" : "<html><head></head><body></body></html>"
-      }, {
-        "title" : null,
-        "first-name" : "Alison E.",
-        "last-name" : "Walter",
-        "affiliations-list" : [ "Laboratory for Optical and Computational Instrumentation, University of Wisconsin at Madison, Madison, Wisconsin, USA", "Morgridge Institute for Research, Madison, Wisconsin, USA" ],
-        "website" : "",
-        "contact" : "",
-        "first-author" : false,
-        "corresponding-author" : false,
-        "custom-text" : "<html><head></head><body></body></html>"
-      }, {
-        "title" : null,
-        "first-name" : "Ellen T.",
-        "last-name" : "Arena",
-        "affiliations-list" : [ "Laboratory for Optical and Computational Instrumentation, University of Wisconsin at Madison, Madison, Wisconsin, USA", "Morgridge Institute for Research, Madison, Wisconsin, USA" ],
-        "website" : "",
-        "contact" : "",
-        "first-author" : false,
-        "corresponding-author" : false,
-        "custom-text" : "<html><head></head><body></body></html>"
-      }, {
-        "title" : null,
-        "first-name" : "Kevin W.",
-        "last-name" : "Eliceiri",
-        "affiliations-list" : [ "Laboratory for Optical and Computational Instrumentation, University of Wisconsin at Madison, Madison, Wisconsin, USA", "Morgridge Institute for Research, Madison, Wisconsin, USA" ],
-        "website" : "",
-        "contact" : "",
-        "first-author" : true,
-        "corresponding-author" : true,
-        "custom-text" : "<html><head></head><body></body></html>"
-      }, {
-        "title" : null,
-        "first-name" : "Caroline A.",
-        "last-name" : "Schneider",
-        "affiliations-list" : [ "Laboratory for Optical and Computational Instrumentation, University of Wisconsin at Madison, Madison, Wisconsin, USA" ],
-        "website" : "",
-        "contact" : "",
-        "first-author" : true,
-        "corresponding-author" : false,
-        "custom-text" : "<html><head></head><body></body></html>"
-      }, {
-        "title" : null,
-        "first-name" : "Wayne S.",
-        "last-name" : "Rasband",
-        "affiliations-list" : [ "Section on Instrumentation, US National Institutes of Health, Bethesda, Maryland, USA" ],
-        "website" : "",
-        "contact" : "",
-        "first-author" : false,
-        "corresponding-author" : false,
-        "custom-text" : "<html><head></head><body></body></html>"
-      }, {
-        "title" : null,
-        "first-name" : "Melissa",
-        "last-name" : "Linkert",
-        "affiliations-list" : [ "Laboratory for Optical and Computational Instrumentation, Department of Molecular Biology", "Department of Biomedical Engineering, Graduate School, University of Wisconsin at Madison, Madison, WI 53711", "Glencoe Software, Inc., Seattle, WA 98101" ],
-        "website" : "",
-        "contact" : "",
-        "first-author" : true,
-        "corresponding-author" : false,
-        "custom-text" : "<html><head></head><body></body></html>"
-      }, {
-        "title" : null,
-        "first-name" : "Chris",
-        "last-name" : "Allan",
-        "affiliations-list" : [ "Wellcome Trust Centre for Gene Regulation and Expression, College of Life Sciences, University of Dundee, Dundee DD1 5EH, Scotland, UK", "Glencoe Software, Inc., Seattle, WA 98101" ],
-        "website" : "",
-        "contact" : "",
-        "first-author" : false,
-        "corresponding-author" : false,
-        "custom-text" : "<html><head></head><body></body></html>"
-      }, {
-        "title" : null,
-        "first-name" : "Jean-Marie",
-        "last-name" : "Burel",
-        "affiliations-list" : [ "Wellcome Trust Centre for Gene Regulation and Expression, College of Life Sciences, University of Dundee, Dundee DD1 5EH, Scotland, UK" ],
-        "website" : "",
-        "contact" : "",
-        "first-author" : false,
-        "corresponding-author" : false,
-        "custom-text" : "<html><head></head><body></body></html>"
-      }, {
-        "title" : null,
-        "first-name" : "Will",
-        "last-name" : "Moore",
-        "affiliations-list" : [ "Wellcome Trust Centre for Gene Regulation and Expression, College of Life Sciences, University of Dundee, Dundee DD1 5EH, Scotland, UK" ],
-        "website" : "",
-        "contact" : "",
-        "first-author" : false,
-        "corresponding-author" : false,
-        "custom-text" : "<html><head></head><body></body></html>"
-      }, {
-        "title" : null,
-        "first-name" : "Andrew",
-        "last-name" : "Patterson",
-        "affiliations-list" : [ "Wellcome Trust Centre for Gene Regulation and Expression, College of Life Sciences, University of Dundee, Dundee DD1 5EH, Scotland, UK" ],
-        "website" : "",
-        "contact" : "",
-        "first-author" : false,
-        "corresponding-author" : false,
-        "custom-text" : "<html><head></head><body></body></html>"
-      }, {
-        "title" : null,
-        "first-name" : "Brian",
-        "last-name" : "Loranger",
-        "affiliations-list" : [ "Wellcome Trust Centre for Gene Regulation and Expression, College of Life Sciences, University of Dundee, Dundee DD1 5EH, Scotland, UK" ],
-        "website" : "",
-        "contact" : "",
-        "first-author" : false,
-        "corresponding-author" : false,
-        "custom-text" : "<html><head></head><body></body></html>"
-      }, {
-        "title" : null,
-        "first-name" : "Josh",
-        "last-name" : "Moore",
-        "affiliations-list" : [ "Glencoe Software, Inc., Seattle, WA 98101" ],
-        "website" : "",
-        "contact" : "",
-        "first-author" : false,
-        "corresponding-author" : false,
-        "custom-text" : "<html><head></head><body></body></html>"
-      }, {
-        "title" : null,
-        "first-name" : "Carlos",
-        "last-name" : "Neves",
-        "affiliations-list" : [ "Glencoe Software, Inc., Seattle, WA 98101" ],
-        "website" : "",
-        "contact" : "",
-        "first-author" : false,
-        "corresponding-author" : false,
-        "custom-text" : "<html><head></head><body></body></html>"
-      }, {
-        "title" : null,
-        "first-name" : "Donald",
-        "last-name" : "MacDonald",
-        "affiliations-list" : [ "Wellcome Trust Centre for Gene Regulation and Expression, College of Life Sciences, University of Dundee, Dundee DD1 5EH, Scotland, UK" ],
-        "website" : "",
-        "contact" : "",
-        "first-author" : false,
-        "corresponding-author" : false,
-        "custom-text" : "<html><head></head><body></body></html>"
-      }, {
-        "title" : null,
-        "first-name" : "Aleksandra",
-        "last-name" : "Tarkowska",
-        "affiliations-list" : [ "Wellcome Trust Centre for Gene Regulation and Expression, College of Life Sciences, University of Dundee, Dundee DD1 5EH, Scotland, UK" ],
-        "website" : "",
-        "contact" : "",
-        "first-author" : false,
-        "corresponding-author" : false,
-        "custom-text" : "<html><head></head><body></body></html>"
-      }, {
-        "title" : null,
-        "first-name" : "Caitlin",
-        "last-name" : "Sticco",
-        "affiliations-list" : [ "Laboratory for Optical and Computational Instrumentation, Department of Molecular Biology", "Department of Biomedical Engineering, Graduate School, University of Wisconsin at Madison, Madison, WI 53711" ],
-        "website" : "",
-        "contact" : "",
-        "first-author" : false,
-        "corresponding-author" : false,
-        "custom-text" : "<html><head></head><body></body></html>"
-      }, {
-        "title" : null,
-        "first-name" : "Emma",
-        "last-name" : "Hill",
-        "affiliations-list" : [ "The Rockefeller University Press, New York, NY 10065" ],
-        "website" : "",
-        "contact" : "",
-        "first-author" : false,
-        "corresponding-author" : false,
-        "custom-text" : "<html><head></head><body></body></html>"
-      }, {
-        "title" : null,
-        "first-name" : "Mike",
-        "last-name" : "Rossner",
-        "affiliations-list" : [ "The Rockefeller University Press, New York, NY 10065" ],
-        "website" : "",
-        "contact" : "",
-        "first-author" : false,
-        "corresponding-author" : false,
-        "custom-text" : "<html><head></head><body></body></html>"
-      }, {
-        "title" : null,
-        "first-name" : "Jason R.",
-        "last-name" : "Swedlow",
-        "affiliations-list" : [ "Wellcome Trust Centre for Gene Regulation and Expression, College of Life Sciences, University of Dundee, Dundee DD1 5EH, Scotland, UK", "Glencoe Software, Inc., Seattle, WA 98101" ],
-        "website" : "",
-        "contact" : "",
-        "first-author" : false,
-        "corresponding-author" : true,
-        "custom-text" : "<html><head></head><body></body></html>"
-      }, {
-        "title" : null,
-        "first-name" : "David",
-        "last-name" : "Legland",
-        "affiliations-list" : [ "UR1268 Biopolymers, Interactions and Assemblies, INRA, Nantes, France", "UR1268 Biopolymers, Interactions and Assemblies, INRA, Nantes, France", "UMR782 Food Process Engineering and Microbiology, INRA, AgroParisTech, Thiverval-Grignon, France" ],
-        "website" : "",
-        "contact" : "",
-        "first-author" : true,
-        "corresponding-author" : true,
-        "custom-text" : "<html><head></head><body></body></html>"
-      }, {
-        "title" : null,
-        "first-name" : "Ignacio",
-        "last-name" : "Arganda-Carreras",
-        "affiliations-list" : [ "Institut Jean-Pierre Bourgin, INRA, AgroParisTech, CNRS, Université Paris-Saclay, Versailles, Cedex, RD10, 78026, France", "Basque Foundation for Science, Ikerbasque, Bilbao, 48013, Spain", "Computer Science and Artificial Intelligence Department, Basque Country University (UPV/EHU), Donostia-San Sebastian, 20018, Spain", "Donostia International Physics Center (DIPC), Donostia-San Sebastian, 20018, Spain" ],
-        "website" : "",
-        "contact" : "",
-        "first-author" : false,
-        "corresponding-author" : false,
-        "custom-text" : "<html><head></head><body></body></html>"
-      }, {
-        "title" : null,
-        "first-name" : "Philippe",
-        "last-name" : "Andrey",
-        "affiliations-list" : [ "Institut Jean-Pierre Bourgin, INRA, AgroParisTech, CNRS, Université Paris-Saclay, Versailles, Cedex, RD10, 78026, France", "Sorbonne Universités, UPMC Univ Paris 06, UFR 927, Paris, France" ],
-        "website" : "",
-        "contact" : "",
-        "first-author" : false,
-        "corresponding-author" : false,
-        "custom-text" : "<html><head></head><body></body></html>"
-      }, {
-        "title" : null,
-        "first-name" : "Michael R.",
-        "last-name" : "Berthold",
-        "affiliations-list" : [ "Department of Computer and Information Science, Universität Konstanz, Konstanz, Germany" ],
-        "website" : "",
-        "contact" : "",
-        "first-author" : false,
-        "corresponding-author" : false,
-        "custom-text" : "<html><head></head><body></body></html>"
-      }, {
-        "title" : null,
-        "first-name" : "Ilya G.",
-        "last-name" : "Goldberg",
-        "affiliations-list" : [ "National Institute on Aging, National Institutes of Health, Baltimore, Maryland, USA" ],
-        "website" : "",
-        "contact" : "",
-        "first-author" : false,
-        "corresponding-author" : false,
-        "custom-text" : "<html><head></head><body></body></html>"
-      }, {
-        "title" : null,
-        "first-name" : "Luis",
-        "last-name" : "Ibáñez",
-        "affiliations-list" : [ "Kitware Inc., New York, New York, USA" ],
-        "website" : "",
-        "contact" : "",
-        "first-author" : false,
-        "corresponding-author" : false,
-        "custom-text" : "<html><head></head><body></body></html>"
-      }, {
-        "title" : null,
-        "first-name" : "B S.",
-        "last-name" : "Manjunath",
-        "affiliations-list" : [ "Department of Electrical and Computer Engineering, Center for Bio-image", "Informatics, University of California Santa Barbara, Santa Barbara, California, USA" ],
-        "website" : "",
-        "contact" : "",
-        "first-author" : false,
-        "corresponding-author" : false,
-        "custom-text" : "<html><head></head><body></body></html>"
-      }, {
-        "title" : null,
-        "first-name" : "Maryann E.",
-        "last-name" : "Martone",
-        "affiliations-list" : [ "National Center for Microscopy and Imaging Research, University of California San Diego, La Jolla, California, USA" ],
-        "website" : "",
-        "contact" : "",
-        "first-author" : false,
-        "corresponding-author" : false,
-        "custom-text" : "<html><head></head><body></body></html>"
-      }, {
-        "title" : null,
-        "first-name" : "Robert F.",
-        "last-name" : "Murphy",
-        "affiliations-list" : [ "Lane Center for Computational Biology, Carnegie Mellon University, Pittsburgh, Pennsylvania, USA" ],
-        "website" : "",
-        "contact" : "",
-        "first-author" : false,
-        "corresponding-author" : false,
-        "custom-text" : "<html><head></head><body></body></html>"
-      }, {
-        "title" : null,
-        "first-name" : "Hanchuan",
-        "last-name" : "Peng",
-        "affiliations-list" : [ "Janelia Farm Research Campus, Howard Hughes Medical Institute, Ashburn, Virginia, USA" ],
-        "website" : "",
-        "contact" : "",
-        "first-author" : false,
-        "corresponding-author" : false,
-        "custom-text" : "<html><head></head><body></body></html>"
-      }, {
-        "title" : null,
-        "first-name" : "Anne L.",
-        "last-name" : "Plant",
-        "affiliations-list" : [ "Biochemical Science Division, National Institute of Standards and Technology, Gaithersburg, Maryland, USA" ],
-        "website" : "",
-        "contact" : "",
-        "first-author" : false,
-        "corresponding-author" : false,
-        "custom-text" : "<html><head></head><body></body></html>"
-      }, {
-        "title" : null,
-        "first-name" : "Badrinath",
-        "last-name" : "Roysam",
-        "affiliations-list" : [ "Department of Electrical and Computer Engineering, University of Houston, Houston, Texas, USA" ],
-        "website" : "",
-        "contact" : "",
-        "first-author" : false,
-        "corresponding-author" : false,
-        "custom-text" : "<html><head></head><body></body></html>"
-      }, {
-        "title" : null,
-        "first-name" : "Nico",
-        "last-name" : "Stuurman",
-        "affiliations-list" : [ "Department of Cellular and Molecular Pharmacology, University of California, San Francisco, San Francisco, California, USA" ],
-        "website" : "",
-        "contact" : "",
-        "first-author" : false,
-        "corresponding-author" : false,
-        "custom-text" : "<html><head></head><body></body></html>"
-      }, {
-        "title" : null,
-        "first-name" : "Anne E.",
-        "last-name" : "Carpenter",
-        "affiliations-list" : [ "Imaging Platform, Broad Institute of Harvard and the Massachusetts Institute of Technology, Cambridge, Massachusetts, USA" ],
-        "website" : "",
-        "contact" : "",
-        "first-author" : false,
-        "corresponding-author" : true,
-        "custom-text" : "<html><head></head><body></body></html>"
-      }, {
-        "title" : null,
-        "first-name" : "Christian",
-        "last-name" : "Steger",
-        "affiliations-list" : [ "Graz University of Technology Institute of Technical Informatics Graz,Austria" ],
-        "website" : "",
-        "contact" : "",
-        "first-author" : true,
-        "corresponding-author" : false,
-        "custom-text" : "<html><head></head><body></body></html>"
-      }, {
-        "title" : null,
-        "first-name" : "Erik",
-        "last-name" : "Meijering",
-        "affiliations-list" : [ "School of Computer Science and Engineering & Graduate School of Biomedical Engineering, University of New South Wales, Sydney, Australia" ],
-        "website" : "",
-        "contact" : "",
-        "first-author" : true,
-        "corresponding-author" : true,
-        "custom-text" : "<html><head></head><body></body></html>"
-      }, {
-        "title" : null,
-        "first-name" : "Daniel",
-        "last-name" : "Sage",
-        "affiliations-list" : [ "Biomedical Image Group (BIG), EPFL, Switzerland" ],
-        "website" : "",
-        "contact" : "",
-        "first-author" : true,
-        "corresponding-author" : true,
-        "custom-text" : "<html><head></head><body></body></html>"
-      } ],
-      "website" : "https://www.jipipe.org/",
-      "license" : "MIT",
-      "citation" : "Gerst, R., Cseresnyés, Z. & Figge, M.T. JIPipe: visual batch processing for ImageJ. Nat Methods (2023). https://doi.org/10.1038/s41592-022-01744-4",
-      "dependency-citations" : [ "Rueden, C. T.; Schindelin, J. & Hiner, M. C. et al. (2017), \"ImageJ2: ImageJ for the next generation of scientific image data\", BMC Bioinformatics 18:529", "Schneider, C. A.; Rasband, W. S. & Eliceiri, K. W. (2012), \"NIH Image to ImageJ: 25 years of image analysis\", Nature methods 9(7): 671-675", "Melissa Linkert, Curtis T. Rueden, Chris Allan, Jean-Marie Burel, Will Moore, Andrew Patterson, Brian Loranger, Josh Moore, Carlos Neves, Donald MacDonald, Aleksandra Tarkowska, Caitlin Sticco, Emma Hill, Mike Rossner, Kevin W. Eliceiri, and Jason R. Swedlow (2010) Metadata matters: access to image data in the real world. The Journal of Cell Biology 189(5), 777-782", "Legland, D.; Arganda-Carreras, I. & Andrey, P. (2016), \"MorphoLibJ: integrated library and plugins for mathematical morphology with ImageJ\", Bioinformatics (Oxford Univ Press) 32(22): 3532-3534, PMID 27412086, doi:10.1093/bioinformatics/btw413", "Eliceiri K. V., Berthold M. R., Goldberg I. G., Ibanez L., Manjunath B. S., Martone M. E., Murphy R. F., Peng H., Plant A. L., Roysam B., Stuurmann N., Swedlow J.R., Tomancak P., Carpenter A. E. (2012) Biological Imaging Software Tools Nature Methods 9(7), 697-710", "Steger, C., 1998. An unbiased detector of curvilinear structures. IEEE Transactions on Pattern Analysis and Machine Intelligence, 20(2), pp.113–125.", "FeatureJ by Erik Meijering. http://imagescience.org/meijering/software/featurej/", "MTrackJ by Erik Meijering. https://imagescience.org/meijering/software/mtrackj/", "RandomJ by Erik Meijering. https://imagescience.org/meijering/software/randomj/", "ImageScience by Erik Meijering. https://imagescience.org/meijering/software/imagescience/", "OrientationJ by Daniel Sage at the Biomedical Image Group (BIG), EPFL, Switzerland. https://bigwww.epfl.ch/demo/orientation/" ],
-      "categories" : [ "Image analysis", "Image Annotation", "Analysis", "Annotation", "Segmentation", "Filtering", "Montage", "Import-Export", "Fiji", "ImageScience", "Noise", "Transform", "Binary", "Object Detection", "Feature Extraction", "Visualization" ]
-    },
-    "id" : "org.hkijena.jipipe:imagej-algorithms",
-    "version" : "4.2.0",
-    "provides" : [ ],
-    "ij:update-site-dependencies" : [ ],
-    "dependencies" : [ ],
-    "ij:update-site-providers" : [ ]
-  }, {
-    "metadata" : {
-      "name" : "Annotation data types and algorithms",
-      "description" : "<html><head></head><body>Provides data types and algorithms to modify data annotations</body></html>",
-      "summary" : "<html><head></head><body>Provides data types and algorithms to modify data annotations</body></html>",
-      "authors" : [ {
-        "title" : null,
-        "first-name" : "Zoltán",
-        "last-name" : "Cseresnyés",
-        "affiliations-list" : [ "Applied Systems Biology, Leibniz Institute for Natural Product Research and Infection Biology – Hans-Knöll-Institute, Jena, Germany" ],
-        "website" : "https://www.leibniz-hki.de/en/staff-details.html?member=144",
-        "contact" : "zoltan.cseresnyes@leibniz-hki.de",
-        "first-author" : true,
-        "corresponding-author" : false,
-        "custom-text" : "<html><head></head><body></body></html>"
-      }, {
-        "title" : null,
-        "first-name" : "Ruman",
-        "last-name" : "Gerst",
-        "affiliations-list" : [ "Applied Systems Biology, Leibniz Institute for Natural Product Research and Infection Biology – Hans-Knöll-Institute, Jena, Germany", "Faculty of Biological Sciences, Friedrich Schiller University Jena, Germany" ],
-        "website" : "https://www.leibniz-hki.de/en/staff-details.html?member=1027",
-        "contact" : "ruman.gerst@leibniz-hki.de",
-        "first-author" : true,
-        "corresponding-author" : false,
-        "custom-text" : "<html><head></head><body></body></html>"
-      }, {
-        "title" : null,
-        "first-name" : "Marc Thilo",
-        "last-name" : "Figge",
-        "affiliations-list" : [ "Applied Systems Biology, Leibniz Institute for Natural Product Research and Infection Biology – Hans-Knöll-Institute, Jena, Germany", "Institute of Microbiology, Faculty of Biological Sciences, Friedrich Schiller University Jena, Germany" ],
-        "website" : "https://www.leibniz-hki.de/en/staff-details.html?member=81",
-        "contact" : "thilo.figge@leibniz-hki.de",
-        "first-author" : false,
-        "corresponding-author" : true,
-        "custom-text" : "<html><head></head><body></body></html>"
-      } ],
-      "acknowledgements" : [ ],
-      "website" : "https://www.jipipe.org/",
-      "license" : "MIT",
-      "citation" : "Gerst, R., Cseresnyés, Z. & Figge, M.T. JIPipe: visual batch processing for ImageJ. Nat Methods (2023). https://doi.org/10.1038/s41592-022-01744-4",
-      "dependency-citations" : [ ],
-      "categories" : [ "Annotation" ]
-    },
-    "id" : "org.hkijena.jipipe:annotations",
-    "version" : "4.2.0",
-    "provides" : [ ],
-    "ij:update-site-dependencies" : [ ],
-    "dependencies" : [ ],
-    "ij:update-site-providers" : [ ]
-  }, {
-    "metadata" : {
-      "name" : "Forms",
-      "description" : "<html><head></head><body>A JIPipe project</body></html>",
-      "summary" : "<html><head></head><body></body></html>",
-      "authors" : [ ],
-      "acknowledgements" : [ ],
-      "website" : "",
-      "license" : "",
-      "citation" : "",
-      "dependency-citations" : [ ],
-      "categories" : [ ]
-    },
-    "id" : "org.hkijena.jipipe:forms",
-    "version" : "4.2.0",
-    "provides" : [ ],
-    "ij:update-site-dependencies" : [ ],
-    "dependencies" : [ ],
-    "ij:update-site-providers" : [ ]
-  }, {
-    "metadata" : {
-      "name" : "Multi parameter algorithms",
-      "description" : "<html><head></head><body>Extension that provides capabilities to run multiple parameters</body></html>",
-      "summary" : "<html><head></head><body>Extension that provides capabilities to run multiple parameters</body></html>",
-      "authors" : [ {
-        "title" : null,
-        "first-name" : "Zoltán",
-        "last-name" : "Cseresnyés",
-        "affiliations-list" : [ "Applied Systems Biology, Leibniz Institute for Natural Product Research and Infection Biology – Hans-Knöll-Institute, Jena, Germany" ],
-        "website" : "https://www.leibniz-hki.de/en/staff-details.html?member=144",
-        "contact" : "zoltan.cseresnyes@leibniz-hki.de",
-        "first-author" : true,
-        "corresponding-author" : false,
-        "custom-text" : "<html><head></head><body></body></html>"
-      }, {
-        "title" : null,
-        "first-name" : "Ruman",
-        "last-name" : "Gerst",
-        "affiliations-list" : [ "Applied Systems Biology, Leibniz Institute for Natural Product Research and Infection Biology – Hans-Knöll-Institute, Jena, Germany", "Faculty of Biological Sciences, Friedrich Schiller University Jena, Germany" ],
-        "website" : "https://www.leibniz-hki.de/en/staff-details.html?member=1027",
-        "contact" : "ruman.gerst@leibniz-hki.de",
-        "first-author" : true,
-        "corresponding-author" : false,
-        "custom-text" : "<html><head></head><body></body></html>"
-      }, {
-        "title" : null,
-        "first-name" : "Marc Thilo",
-        "last-name" : "Figge",
-        "affiliations-list" : [ "Applied Systems Biology, Leibniz Institute for Natural Product Research and Infection Biology – Hans-Knöll-Institute, Jena, Germany", "Institute of Microbiology, Faculty of Biological Sciences, Friedrich Schiller University Jena, Germany" ],
-        "website" : "https://www.leibniz-hki.de/en/staff-details.html?member=81",
-        "contact" : "thilo.figge@leibniz-hki.de",
-        "first-author" : false,
-        "corresponding-author" : true,
-        "custom-text" : "<html><head></head><body></body></html>"
-      } ],
-      "acknowledgements" : [ ],
-      "website" : "https://www.jipipe.org/",
-      "license" : "MIT",
-      "citation" : "Gerst, R., Cseresnyés, Z. & Figge, M.T. JIPipe: visual batch processing for ImageJ. Nat Methods (2023). https://doi.org/10.1038/s41592-022-01744-4",
-      "dependency-citations" : [ ],
-      "categories" : [ "Core", "Scripting" ]
-    },
-    "id" : "org.hkijena.jipipe:multi-parameters-algorithms",
-    "version" : "4.2.0",
-    "provides" : [ ],
-    "ij:update-site-dependencies" : [ ],
-    "dependencies" : [ ],
-    "ij:update-site-providers" : [ ]
-  }, {
-    "metadata" : {
-      "name" : "Strings",
-      "description" : "<html><head></head><body>A JIPipe project</body></html>",
-      "summary" : "<html><head></head><body></body></html>",
-      "authors" : [ ],
-      "acknowledgements" : [ ],
-      "website" : "",
-      "license" : "",
-      "citation" : "",
-      "dependency-citations" : [ ],
-      "categories" : [ ]
-    },
-    "id" : "org.hkijena.jipipe:strings",
-    "version" : "4.2.0",
-    "provides" : [ ],
-    "ij:update-site-dependencies" : [ ],
-    "dependencies" : [ ],
-    "ij:update-site-providers" : [ ]
-  }, {
-    "metadata" : {
       "name" : "3D ImageJ Suite integration",
       "description" : "<html><head></head><body>A JIPipe project</body></html>",
       "summary" : "<html><head></head><body></body></html>",
@@ -717,6 +113,25 @@
       "categories" : [ ]
     },
     "id" : "org.hkijena.jipipe:ij-3d",
+    "version" : "4.2.0",
+    "provides" : [ ],
+    "ij:update-site-dependencies" : [ ],
+    "dependencies" : [ ],
+    "ij:update-site-providers" : [ ]
+  }, {
+    "metadata" : {
+      "name" : "3D scenes support",
+      "description" : "<html><head></head><body>A JIPipe project</body></html>",
+      "summary" : "<html><head></head><body></body></html>",
+      "authors" : [ ],
+      "acknowledgements" : [ ],
+      "website" : "",
+      "license" : "",
+      "citation" : "",
+      "dependency-citations" : [ ],
+      "categories" : [ ]
+    },
+    "id" : "org.hkijena.jipipe:scene-3d",
     "version" : "4.2.0",
     "provides" : [ ],
     "ij:update-site-dependencies" : [ ],
@@ -773,7 +188,7 @@
     "ij:update-site-providers" : [ ]
   }, {
     "metadata" : {
-      "name" : "Standard table operations",
+      "name" : "ImageJ algorithms",
       "description" : "<html><head></head><body>A JIPipe project</body></html>",
       "summary" : "<html><head></head><body></body></html>",
       "authors" : [ ],
@@ -784,7 +199,7 @@
       "dependency-citations" : [ ],
       "categories" : [ ]
     },
-    "id" : "org.hkijena.jipipe:table-operations",
+    "id" : "org.hkijena.jipipe:imagej-algorithms",
     "version" : "4.2.0",
     "provides" : [ ],
     "ij:update-site-dependencies" : [ ],
@@ -792,105 +207,7 @@
     "ij:update-site-providers" : [ ]
   }, {
     "metadata" : {
-      "name" : "Filaments",
-      "description" : "<html><head></head><body>Introduces support for the processing of filaments.</body></html>",
-      "summary" : "<html><head></head><body>Introduces support for the processing of filaments.</body></html>",
-      "authors" : [ {
-        "title" : null,
-        "first-name" : "Zoltán",
-        "last-name" : "Cseresnyés",
-        "affiliations-list" : [ "Applied Systems Biology, Leibniz Institute for Natural Product Research and Infection Biology – Hans-Knöll-Institute, Jena, Germany" ],
-        "website" : "https://www.leibniz-hki.de/en/staff-details.html?member=144",
-        "contact" : "zoltan.cseresnyes@leibniz-hki.de",
-        "first-author" : true,
-        "corresponding-author" : false,
-        "custom-text" : "<html><head></head><body></body></html>"
-      }, {
-        "title" : null,
-        "first-name" : "Ruman",
-        "last-name" : "Gerst",
-        "affiliations-list" : [ "Applied Systems Biology, Leibniz Institute for Natural Product Research and Infection Biology – Hans-Knöll-Institute, Jena, Germany", "Faculty of Biological Sciences, Friedrich Schiller University Jena, Germany" ],
-        "website" : "https://www.leibniz-hki.de/en/staff-details.html?member=1027",
-        "contact" : "ruman.gerst@leibniz-hki.de",
-        "first-author" : true,
-        "corresponding-author" : false,
-        "custom-text" : "<html><head></head><body></body></html>"
-      }, {
-        "title" : null,
-        "first-name" : "Marc Thilo",
-        "last-name" : "Figge",
-        "affiliations-list" : [ "Applied Systems Biology, Leibniz Institute for Natural Product Research and Infection Biology – Hans-Knöll-Institute, Jena, Germany", "Institute of Microbiology, Faculty of Biological Sciences, Friedrich Schiller University Jena, Germany" ],
-        "website" : "https://www.leibniz-hki.de/en/staff-details.html?member=81",
-        "contact" : "thilo.figge@leibniz-hki.de",
-        "first-author" : false,
-        "corresponding-author" : true,
-        "custom-text" : "<html><head></head><body></body></html>"
-      } ],
-      "acknowledgements" : [ ],
-      "website" : "https://www.jipipe.org/",
-      "license" : "MIT",
-      "citation" : "Gerst, R., Cseresnyés, Z. & Figge, M.T. JIPipe: visual batch processing for ImageJ. Nat Methods (2023). https://doi.org/10.1038/s41592-022-01744-4",
-      "dependency-citations" : [ ],
-      "categories" : [ "Feature Extraction", "Object Detection" ]
-    },
-    "id" : "org.hkijena.jipipe:ij-filaments",
-    "version" : "4.2.0",
-    "provides" : [ ],
-    "ij:update-site-dependencies" : [ ],
-    "dependencies" : [ ],
-    "ij:update-site-providers" : [ ]
-  }, {
-    "metadata" : {
-      "name" : "Multi parameters data types",
-      "description" : "<html><head></head><body>Extension that provides the necessary data types for handling multiple parameters</body></html>",
-      "summary" : "<html><head></head><body>Extension that provides the necessary data types for handling multiple parameters</body></html>",
-      "authors" : [ {
-        "title" : null,
-        "first-name" : "Zoltán",
-        "last-name" : "Cseresnyés",
-        "affiliations-list" : [ "Applied Systems Biology, Leibniz Institute for Natural Product Research and Infection Biology – Hans-Knöll-Institute, Jena, Germany" ],
-        "website" : "https://www.leibniz-hki.de/en/staff-details.html?member=144",
-        "contact" : "zoltan.cseresnyes@leibniz-hki.de",
-        "first-author" : true,
-        "corresponding-author" : false,
-        "custom-text" : "<html><head></head><body></body></html>"
-      }, {
-        "title" : null,
-        "first-name" : "Ruman",
-        "last-name" : "Gerst",
-        "affiliations-list" : [ "Applied Systems Biology, Leibniz Institute for Natural Product Research and Infection Biology – Hans-Knöll-Institute, Jena, Germany", "Faculty of Biological Sciences, Friedrich Schiller University Jena, Germany" ],
-        "website" : "https://www.leibniz-hki.de/en/staff-details.html?member=1027",
-        "contact" : "ruman.gerst@leibniz-hki.de",
-        "first-author" : true,
-        "corresponding-author" : false,
-        "custom-text" : "<html><head></head><body></body></html>"
-      }, {
-        "title" : null,
-        "first-name" : "Marc Thilo",
-        "last-name" : "Figge",
-        "affiliations-list" : [ "Applied Systems Biology, Leibniz Institute for Natural Product Research and Infection Biology – Hans-Knöll-Institute, Jena, Germany", "Institute of Microbiology, Faculty of Biological Sciences, Friedrich Schiller University Jena, Germany" ],
-        "website" : "https://www.leibniz-hki.de/en/staff-details.html?member=81",
-        "contact" : "thilo.figge@leibniz-hki.de",
-        "first-author" : false,
-        "corresponding-author" : true,
-        "custom-text" : "<html><head></head><body></body></html>"
-      } ],
-      "acknowledgements" : [ ],
-      "website" : "https://www.jipipe.org/",
-      "license" : "MIT",
-      "citation" : "Gerst, R., Cseresnyés, Z. & Figge, M.T. JIPipe: visual batch processing for ImageJ. Nat Methods (2023). https://doi.org/10.1038/s41592-022-01744-4",
-      "dependency-citations" : [ ],
-      "categories" : [ "Core" ]
-    },
-    "id" : "org.hkijena.jipipe:multi-parameters",
-    "version" : "4.2.0",
-    "provides" : [ ],
-    "ij:update-site-dependencies" : [ ],
-    "dependencies" : [ ],
-    "ij:update-site-providers" : [ ]
-  }, {
-    "metadata" : {
-      "name" : "ImageJ integration",
+      "name" : "Core",
       "description" : "<html><head></head><body>A JIPipe project</body></html>",
       "summary" : "<html><head></head><body></body></html>",
       "authors" : [ ],
@@ -901,26 +218,7 @@
       "dependency-citations" : [ ],
       "categories" : [ ]
     },
-    "id" : "org.hkijena.jipipe:imagej-integration",
-    "version" : "4.2.0",
-    "provides" : [ ],
-    "ij:update-site-dependencies" : [ ],
-    "dependencies" : [ ],
-    "ij:update-site-providers" : [ ]
-  }, {
-    "metadata" : {
-      "name" : "3D scenes support",
-      "description" : "<html><head></head><body>A JIPipe project</body></html>",
-      "summary" : "<html><head></head><body></body></html>",
-      "authors" : [ ],
-      "acknowledgements" : [ ],
-      "website" : "",
-      "license" : "",
-      "citation" : "",
-      "dependency-citations" : [ ],
-      "categories" : [ ]
-    },
-    "id" : "org.hkijena.jipipe:scene-3d",
+    "id" : "org.hkijena.jipipe:core",
     "version" : "4.2.0",
     "provides" : [ ],
     "ij:update-site-dependencies" : [ ],
@@ -977,6 +275,93 @@
     "ij:update-site-providers" : [ ]
   }, {
     "metadata" : {
+      "name" : "Multi parameters data types",
+      "description" : "<html><head></head><body>Extension that provides the necessary data types for handling multiple parameters</body></html>",
+      "summary" : "<html><head></head><body>Extension that provides the necessary data types for handling multiple parameters</body></html>",
+      "authors" : [ {
+        "title" : null,
+        "first-name" : "Zoltán",
+        "last-name" : "Cseresnyés",
+        "affiliations-list" : [ "Applied Systems Biology, Leibniz Institute for Natural Product Research and Infection Biology – Hans-Knöll-Institute, Jena, Germany" ],
+        "website" : "https://www.leibniz-hki.de/en/staff-details.html?member=144",
+        "contact" : "zoltan.cseresnyes@leibniz-hki.de",
+        "first-author" : true,
+        "corresponding-author" : false,
+        "custom-text" : "<html><head></head><body></body></html>"
+      }, {
+        "title" : null,
+        "first-name" : "Ruman",
+        "last-name" : "Gerst",
+        "affiliations-list" : [ "Applied Systems Biology, Leibniz Institute for Natural Product Research and Infection Biology – Hans-Knöll-Institute, Jena, Germany", "Faculty of Biological Sciences, Friedrich Schiller University Jena, Germany" ],
+        "website" : "https://www.leibniz-hki.de/en/staff-details.html?member=1027",
+        "contact" : "ruman.gerst@leibniz-hki.de",
+        "first-author" : true,
+        "corresponding-author" : false,
+        "custom-text" : "<html><head></head><body></body></html>"
+      }, {
+        "title" : null,
+        "first-name" : "Marc Thilo",
+        "last-name" : "Figge",
+        "affiliations-list" : [ "Applied Systems Biology, Leibniz Institute for Natural Product Research and Infection Biology – Hans-Knöll-Institute, Jena, Germany", "Institute of Microbiology, Faculty of Biological Sciences, Friedrich Schiller University Jena, Germany" ],
+        "website" : "https://www.leibniz-hki.de/en/staff-details.html?member=81",
+        "contact" : "thilo.figge@leibniz-hki.de",
+        "first-author" : false,
+        "corresponding-author" : true,
+        "custom-text" : "<html><head></head><body></body></html>"
+      } ],
+      "acknowledgements" : [ ],
+      "website" : "https://www.jipipe.org/",
+      "license" : "MIT",
+      "citation" : "Gerst, R., Cseresnyés, Z. & Figge, M.T. JIPipe: visual batch processing for ImageJ. Nat Methods (2023). https://doi.org/10.1038/s41592-022-01744-4",
+      "dependency-citations" : [ ],
+      "categories" : [ "Core" ]
+    },
+    "id" : "org.hkijena.jipipe:multi-parameters",
+    "version" : "4.2.0",
+    "provides" : [ ],
+    "ij:update-site-dependencies" : [ ],
+    "dependencies" : [ ],
+    "ij:update-site-providers" : [ ]
+  }, {
+    "metadata" : {
+      "name" : "Standard table operations",
+      "description" : "<html><head></head><body>A JIPipe project</body></html>",
+      "summary" : "<html><head></head><body></body></html>",
+      "authors" : [ ],
+      "acknowledgements" : [ ],
+      "website" : "",
+      "license" : "",
+      "citation" : "",
+      "dependency-citations" : [ ],
+      "categories" : [ ]
+    },
+    "id" : "org.hkijena.jipipe:table-operations",
+    "version" : "4.2.0",
+    "provides" : [ ],
+    "ij:update-site-dependencies" : [ ],
+    "dependencies" : [ ],
+    "ij:update-site-providers" : [ ]
+  }, {
+    "metadata" : {
+      "name" : "Strings",
+      "description" : "<html><head></head><body>A JIPipe project</body></html>",
+      "summary" : "<html><head></head><body></body></html>",
+      "authors" : [ ],
+      "acknowledgements" : [ ],
+      "website" : "",
+      "license" : "",
+      "citation" : "",
+      "dependency-citations" : [ ],
+      "categories" : [ ]
+    },
+    "id" : "org.hkijena.jipipe:strings",
+    "version" : "4.2.0",
+    "provides" : [ ],
+    "ij:update-site-dependencies" : [ ],
+    "dependencies" : [ ],
+    "ij:update-site-providers" : [ ]
+  }, {
+    "metadata" : {
       "name" : "Graph annotations",
       "description" : "<html><head></head><body>Provides the default graph annotations</body></html>",
       "summary" : "<html><head></head><body>Provides the default graph annotations</body></html>",
@@ -1019,6 +404,172 @@
       "categories" : [ "Core" ]
     },
     "id" : "jipipe:graph-annotations",
+    "version" : "4.2.0",
+    "provides" : [ ],
+    "ij:update-site-dependencies" : [ ],
+    "dependencies" : [ ],
+    "ij:update-site-providers" : [ ]
+  }, {
+    "metadata" : {
+      "name" : "ImageJ integration",
+      "description" : "<html><head></head><body>A JIPipe project</body></html>",
+      "summary" : "<html><head></head><body></body></html>",
+      "authors" : [ ],
+      "acknowledgements" : [ ],
+      "website" : "",
+      "license" : "",
+      "citation" : "",
+      "dependency-citations" : [ ],
+      "categories" : [ ]
+    },
+    "id" : "org.hkijena.jipipe:imagej-integration",
+    "version" : "4.2.0",
+    "provides" : [ ],
+    "ij:update-site-dependencies" : [ ],
+    "dependencies" : [ ],
+    "ij:update-site-providers" : [ ]
+  }, {
+    "metadata" : {
+      "name" : "Annotation data types and algorithms",
+      "description" : "<html><head></head><body>Provides data types and algorithms to modify data annotations</body></html>",
+      "summary" : "<html><head></head><body>Provides data types and algorithms to modify data annotations</body></html>",
+      "authors" : [ {
+        "title" : null,
+        "first-name" : "Zoltán",
+        "last-name" : "Cseresnyés",
+        "affiliations-list" : [ "Applied Systems Biology, Leibniz Institute for Natural Product Research and Infection Biology – Hans-Knöll-Institute, Jena, Germany" ],
+        "website" : "https://www.leibniz-hki.de/en/staff-details.html?member=144",
+        "contact" : "zoltan.cseresnyes@leibniz-hki.de",
+        "first-author" : true,
+        "corresponding-author" : false,
+        "custom-text" : "<html><head></head><body></body></html>"
+      }, {
+        "title" : null,
+        "first-name" : "Ruman",
+        "last-name" : "Gerst",
+        "affiliations-list" : [ "Applied Systems Biology, Leibniz Institute for Natural Product Research and Infection Biology – Hans-Knöll-Institute, Jena, Germany", "Faculty of Biological Sciences, Friedrich Schiller University Jena, Germany" ],
+        "website" : "https://www.leibniz-hki.de/en/staff-details.html?member=1027",
+        "contact" : "ruman.gerst@leibniz-hki.de",
+        "first-author" : true,
+        "corresponding-author" : false,
+        "custom-text" : "<html><head></head><body></body></html>"
+      }, {
+        "title" : null,
+        "first-name" : "Marc Thilo",
+        "last-name" : "Figge",
+        "affiliations-list" : [ "Applied Systems Biology, Leibniz Institute for Natural Product Research and Infection Biology – Hans-Knöll-Institute, Jena, Germany", "Institute of Microbiology, Faculty of Biological Sciences, Friedrich Schiller University Jena, Germany" ],
+        "website" : "https://www.leibniz-hki.de/en/staff-details.html?member=81",
+        "contact" : "thilo.figge@leibniz-hki.de",
+        "first-author" : false,
+        "corresponding-author" : true,
+        "custom-text" : "<html><head></head><body></body></html>"
+      } ],
+      "acknowledgements" : [ ],
+      "website" : "https://www.jipipe.org/",
+      "license" : "MIT",
+      "citation" : "Gerst, R., Cseresnyés, Z. & Figge, M.T. JIPipe: visual batch processing for ImageJ. Nat Methods (2023). https://doi.org/10.1038/s41592-022-01744-4",
+      "dependency-citations" : [ ],
+      "categories" : [ "Annotation" ]
+    },
+    "id" : "org.hkijena.jipipe:annotations",
+    "version" : "4.2.0",
+    "provides" : [ ],
+    "ij:update-site-dependencies" : [ ],
+    "dependencies" : [ ],
+    "ij:update-site-providers" : [ ]
+  }, {
+    "metadata" : {
+      "name" : "Filaments",
+      "description" : "<html><head></head><body>Introduces support for the processing of filaments.</body></html>",
+      "summary" : "<html><head></head><body>Introduces support for the processing of filaments.</body></html>",
+      "authors" : [ {
+        "title" : null,
+        "first-name" : "Zoltán",
+        "last-name" : "Cseresnyés",
+        "affiliations-list" : [ "Applied Systems Biology, Leibniz Institute for Natural Product Research and Infection Biology – Hans-Knöll-Institute, Jena, Germany" ],
+        "website" : "https://www.leibniz-hki.de/en/staff-details.html?member=144",
+        "contact" : "zoltan.cseresnyes@leibniz-hki.de",
+        "first-author" : true,
+        "corresponding-author" : false,
+        "custom-text" : "<html><head></head><body></body></html>"
+      }, {
+        "title" : null,
+        "first-name" : "Ruman",
+        "last-name" : "Gerst",
+        "affiliations-list" : [ "Applied Systems Biology, Leibniz Institute for Natural Product Research and Infection Biology – Hans-Knöll-Institute, Jena, Germany", "Faculty of Biological Sciences, Friedrich Schiller University Jena, Germany" ],
+        "website" : "https://www.leibniz-hki.de/en/staff-details.html?member=1027",
+        "contact" : "ruman.gerst@leibniz-hki.de",
+        "first-author" : true,
+        "corresponding-author" : false,
+        "custom-text" : "<html><head></head><body></body></html>"
+      }, {
+        "title" : null,
+        "first-name" : "Marc Thilo",
+        "last-name" : "Figge",
+        "affiliations-list" : [ "Applied Systems Biology, Leibniz Institute for Natural Product Research and Infection Biology – Hans-Knöll-Institute, Jena, Germany", "Institute of Microbiology, Faculty of Biological Sciences, Friedrich Schiller University Jena, Germany" ],
+        "website" : "https://www.leibniz-hki.de/en/staff-details.html?member=81",
+        "contact" : "thilo.figge@leibniz-hki.de",
+        "first-author" : false,
+        "corresponding-author" : true,
+        "custom-text" : "<html><head></head><body></body></html>"
+      } ],
+      "acknowledgements" : [ ],
+      "website" : "https://www.jipipe.org/",
+      "license" : "MIT",
+      "citation" : "Gerst, R., Cseresnyés, Z. & Figge, M.T. JIPipe: visual batch processing for ImageJ. Nat Methods (2023). https://doi.org/10.1038/s41592-022-01744-4",
+      "dependency-citations" : [ ],
+      "categories" : [ "Feature Extraction", "Object Detection" ]
+    },
+    "id" : "org.hkijena.jipipe:ij-filaments",
+    "version" : "4.2.0",
+    "provides" : [ ],
+    "ij:update-site-dependencies" : [ ],
+    "dependencies" : [ ],
+    "ij:update-site-providers" : [ ]
+  }, {
+    "metadata" : {
+      "name" : "Multi parameter algorithms",
+      "description" : "<html><head></head><body>Extension that provides capabilities to run multiple parameters</body></html>",
+      "summary" : "<html><head></head><body>Extension that provides capabilities to run multiple parameters</body></html>",
+      "authors" : [ {
+        "title" : null,
+        "first-name" : "Zoltán",
+        "last-name" : "Cseresnyés",
+        "affiliations-list" : [ "Applied Systems Biology, Leibniz Institute for Natural Product Research and Infection Biology – Hans-Knöll-Institute, Jena, Germany" ],
+        "website" : "https://www.leibniz-hki.de/en/staff-details.html?member=144",
+        "contact" : "zoltan.cseresnyes@leibniz-hki.de",
+        "first-author" : true,
+        "corresponding-author" : false,
+        "custom-text" : "<html><head></head><body></body></html>"
+      }, {
+        "title" : null,
+        "first-name" : "Ruman",
+        "last-name" : "Gerst",
+        "affiliations-list" : [ "Applied Systems Biology, Leibniz Institute for Natural Product Research and Infection Biology – Hans-Knöll-Institute, Jena, Germany", "Faculty of Biological Sciences, Friedrich Schiller University Jena, Germany" ],
+        "website" : "https://www.leibniz-hki.de/en/staff-details.html?member=1027",
+        "contact" : "ruman.gerst@leibniz-hki.de",
+        "first-author" : true,
+        "corresponding-author" : false,
+        "custom-text" : "<html><head></head><body></body></html>"
+      }, {
+        "title" : null,
+        "first-name" : "Marc Thilo",
+        "last-name" : "Figge",
+        "affiliations-list" : [ "Applied Systems Biology, Leibniz Institute for Natural Product Research and Infection Biology – Hans-Knöll-Institute, Jena, Germany", "Institute of Microbiology, Faculty of Biological Sciences, Friedrich Schiller University Jena, Germany" ],
+        "website" : "https://www.leibniz-hki.de/en/staff-details.html?member=81",
+        "contact" : "thilo.figge@leibniz-hki.de",
+        "first-author" : false,
+        "corresponding-author" : true,
+        "custom-text" : "<html><head></head><body></body></html>"
+      } ],
+      "acknowledgements" : [ ],
+      "website" : "https://www.jipipe.org/",
+      "license" : "MIT",
+      "citation" : "Gerst, R., Cseresnyés, Z. & Figge, M.T. JIPipe: visual batch processing for ImageJ. Nat Methods (2023). https://doi.org/10.1038/s41592-022-01744-4",
+      "dependency-citations" : [ ],
+      "categories" : [ "Core", "Scripting" ]
+    },
+    "id" : "org.hkijena.jipipe:multi-parameters-algorithms",
     "version" : "4.2.0",
     "provides" : [ ],
     "ij:update-site-dependencies" : [ ],
@@ -1094,7 +645,8 @@
       "continue-on-failure-settings" : {
         "continue-on-failure" : true,
         "export-failed-loop-inputs" : true,
-        "export-failed-partition-inputs" : false
+        "export-failed-partition-inputs" : false,
+        "disable-on-update-cache" : true
       },
       "iteration-mode" : "IteratingDataBatch"
     },
@@ -1166,7 +718,8 @@
       "continue-on-failure-settings" : {
         "continue-on-failure" : false,
         "export-failed-loop-inputs" : true,
-        "export-failed-partition-inputs" : false
+        "export-failed-partition-inputs" : false,
+        "disable-on-update-cache" : false
       },
       "iteration-mode" : "PassThrough"
     }, {
@@ -1237,7 +790,8 @@
       "continue-on-failure-settings" : {
         "continue-on-failure" : false,
         "export-failed-loop-inputs" : true,
-        "export-failed-partition-inputs" : false
+        "export-failed-partition-inputs" : false,
+        "disable-on-update-cache" : false
       },
       "iteration-mode" : "PassThrough"
     }, {
@@ -1308,7 +862,8 @@
       "continue-on-failure-settings" : {
         "continue-on-failure" : false,
         "export-failed-loop-inputs" : true,
-        "export-failed-partition-inputs" : false
+        "export-failed-partition-inputs" : false,
+        "disable-on-update-cache" : false
       },
       "iteration-mode" : "PassThrough"
     }, {
@@ -1379,7 +934,8 @@
       "continue-on-failure-settings" : {
         "continue-on-failure" : false,
         "export-failed-loop-inputs" : true,
-        "export-failed-partition-inputs" : false
+        "export-failed-partition-inputs" : false,
+        "disable-on-update-cache" : false
       },
       "iteration-mode" : "PassThrough"
     } ]
@@ -1564,7 +1120,7 @@
               "slot-type" : "Output",
               "name" : "Folder paths",
               "custom-name" : "raw",
-              "description" : null,
+              "description" : "",
               "is-virtual" : false,
               "save-outputs" : true,
               "is-optional" : false
@@ -1574,7 +1130,7 @@
         "jipipe:ui-grid-location" : {
           "fb3bfe3a-c9c1-4ec4-908b-3f1b7380a851" : {
             "VerticalCompact" : {
-              "x" : 16,
+              "x" : 10,
               "y" : 1
             }
           }
@@ -1616,7 +1172,7 @@
               "slot-type" : "Output",
               "name" : "Files",
               "custom-name" : null,
-              "description" : null,
+              "description" : "",
               "is-virtual" : false,
               "save-outputs" : true,
               "is-optional" : false
@@ -1632,7 +1188,7 @@
           },
           "fb3bfe3a-c9c1-4ec4-908b-3f1b7380a851" : {
             "VerticalCompact" : {
-              "x" : 16,
+              "x" : 10,
               "y" : 5
             }
           }
@@ -1700,7 +1256,7 @@
               "slot-type" : "Output",
               "name" : "Annotated paths",
               "custom-name" : null,
-              "description" : null,
+              "description" : "",
               "is-virtual" : false,
               "save-outputs" : true,
               "is-optional" : false
@@ -1710,7 +1266,7 @@
         "jipipe:ui-grid-location" : {
           "fb3bfe3a-c9c1-4ec4-908b-3f1b7380a851" : {
             "VerticalCompact" : {
-              "x" : 16,
+              "x" : 10,
               "y" : 9
             }
           }
@@ -1776,7 +1332,7 @@
               "slot-type" : "Output",
               "name" : "Image",
               "custom-name" : null,
-              "description" : null,
+              "description" : "Imported image",
               "is-virtual" : false,
               "save-outputs" : true,
               "is-optional" : false
@@ -1786,7 +1342,7 @@
         "jipipe:ui-grid-location" : {
           "fb3bfe3a-c9c1-4ec4-908b-3f1b7380a851" : {
             "VerticalCompact" : {
-              "x" : 18,
+              "x" : 12,
               "y" : 17
             }
           }
@@ -1856,7 +1412,7 @@
               "slot-type" : "Output",
               "name" : "Exported file",
               "custom-name" : null,
-              "description" : null,
+              "description" : "",
               "is-virtual" : false,
               "save-outputs" : true,
               "is-optional" : false
@@ -1866,8 +1422,8 @@
         "jipipe:ui-grid-location" : {
           "fb3bfe3a-c9c1-4ec4-908b-3f1b7380a851" : {
             "VerticalCompact" : {
-              "x" : 13,
-              "y" : 71
+              "x" : 38,
+              "y" : 128
             }
           }
         },
@@ -1886,7 +1442,7 @@
         "movie-fps" : 100,
         "avi-compression" : "PNG",
         "file-path" : {
-          "expression" : "PATH_COMBINE(project_data_dir.tmp_dir, \"strip-disk\", #ImageId)"
+          "expression" : "PATH_COMBINE(project_data_dir.tmp_dir, \"zoi-shape\", #ImageId)"
         },
         "jpeg-quality" : 100,
         "jipipe:algorithm:custom-expression-variables" : {
@@ -1937,7 +1493,7 @@
               "slot-type" : "Output",
               "name" : "Folder paths",
               "custom-name" : "plate",
-              "description" : null,
+              "description" : "",
               "is-virtual" : false,
               "save-outputs" : true,
               "is-optional" : false
@@ -1953,7 +1509,7 @@
           },
           "fb3bfe3a-c9c1-4ec4-908b-3f1b7380a851" : {
             "VerticalCompact" : {
-              "x" : 25,
+              "x" : 19,
               "y" : 1
             }
           }
@@ -1995,7 +1551,7 @@
               "slot-type" : "Output",
               "name" : "Files",
               "custom-name" : null,
-              "description" : null,
+              "description" : "",
               "is-virtual" : false,
               "save-outputs" : true,
               "is-optional" : false
@@ -2011,7 +1567,7 @@
           },
           "fb3bfe3a-c9c1-4ec4-908b-3f1b7380a851" : {
             "VerticalCompact" : {
-              "x" : 25,
+              "x" : 19,
               "y" : 5
             }
           }
@@ -2079,7 +1635,7 @@
               "slot-type" : "Output",
               "name" : "Annotated paths",
               "custom-name" : null,
-              "description" : null,
+              "description" : "",
               "is-virtual" : false,
               "save-outputs" : true,
               "is-optional" : false
@@ -2095,7 +1651,7 @@
           },
           "fb3bfe3a-c9c1-4ec4-908b-3f1b7380a851" : {
             "VerticalCompact" : {
-              "x" : 25,
+              "x" : 19,
               "y" : 9
             }
           }
@@ -2161,7 +1717,7 @@
               "slot-type" : "Output",
               "name" : "Image",
               "custom-name" : null,
-              "description" : null,
+              "description" : "Imported image",
               "is-virtual" : false,
               "save-outputs" : true,
               "is-optional" : false
@@ -2177,7 +1733,7 @@
           },
           "fb3bfe3a-c9c1-4ec4-908b-3f1b7380a851" : {
             "VerticalCompact" : {
-              "x" : 25,
+              "x" : 19,
               "y" : 17
             }
           }
@@ -2257,7 +1813,7 @@
               "slot-type" : "Output",
               "name" : "Annotated data",
               "custom-name" : null,
-              "description" : null,
+              "description" : "",
               "is-virtual" : false,
               "save-outputs" : true,
               "is-optional" : false
@@ -2267,7 +1823,7 @@
         "jipipe:ui-grid-location" : {
           "fb3bfe3a-c9c1-4ec4-908b-3f1b7380a851" : {
             "VerticalCompact" : {
-              "x" : 11,
+              "x" : 5,
               "y" : 13
             }
           }
@@ -2325,7 +1881,7 @@
               "slot-type" : "Output",
               "name" : "Filename",
               "custom-name" : "metadata.csv",
-              "description" : null,
+              "description" : "",
               "is-virtual" : false,
               "save-outputs" : true,
               "is-optional" : false
@@ -2335,7 +1891,7 @@
         "jipipe:ui-grid-location" : {
           "fb3bfe3a-c9c1-4ec4-908b-3f1b7380a851" : {
             "VerticalCompact" : {
-              "x" : 7,
+              "x" : 1,
               "y" : 1
             }
           }
@@ -2378,7 +1934,7 @@
               "slot-type" : "Output",
               "name" : "Results table",
               "custom-name" : null,
-              "description" : null,
+              "description" : "",
               "is-virtual" : false,
               "save-outputs" : true,
               "is-optional" : false
@@ -2388,7 +1944,7 @@
         "jipipe:ui-grid-location" : {
           "fb3bfe3a-c9c1-4ec4-908b-3f1b7380a851" : {
             "VerticalCompact" : {
-              "x" : 7,
+              "x" : 1,
               "y" : 5
             }
           }
@@ -2477,7 +2033,7 @@
         "jipipe:ui-grid-location" : {
           "fb3bfe3a-c9c1-4ec4-908b-3f1b7380a851" : {
             "VerticalCompact" : {
-              "x" : 18,
+              "x" : 12,
               "y" : 35
             }
           }
@@ -2553,7 +2109,7 @@
               "slot-type" : "Output",
               "name" : "Output",
               "custom-name" : null,
-              "description" : null,
+              "description" : "",
               "is-virtual" : false,
               "save-outputs" : true,
               "is-optional" : false
@@ -2569,7 +2125,7 @@
           },
           "fb3bfe3a-c9c1-4ec4-908b-3f1b7380a851" : {
             "VerticalCompact" : {
-              "x" : 18,
+              "x" : 12,
               "y" : 39
             }
           }
@@ -2631,7 +2187,7 @@
               "slot-type" : "Output",
               "name" : "Annotated paths",
               "custom-name" : null,
-              "description" : null,
+              "description" : "",
               "is-virtual" : false,
               "save-outputs" : true,
               "is-optional" : false
@@ -2647,7 +2203,7 @@
           },
           "fb3bfe3a-c9c1-4ec4-908b-3f1b7380a851" : {
             "VerticalCompact" : {
-              "x" : 35,
+              "x" : 29,
               "y" : 9
             }
           }
@@ -2701,8 +2257,8 @@
               "slot-data-type" : "folder",
               "slot-type" : "Output",
               "name" : "Folder paths",
-              "custom-name" : "plate",
-              "description" : null,
+              "custom-name" : "strip-disk",
+              "description" : "",
               "is-virtual" : false,
               "save-outputs" : true,
               "is-optional" : false
@@ -2718,7 +2274,7 @@
           },
           "fb3bfe3a-c9c1-4ec4-908b-3f1b7380a851" : {
             "VerticalCompact" : {
-              "x" : 35,
+              "x" : 29,
               "y" : 1
             }
           }
@@ -2760,7 +2316,7 @@
               "slot-type" : "Output",
               "name" : "Files",
               "custom-name" : null,
-              "description" : null,
+              "description" : "",
               "is-virtual" : false,
               "save-outputs" : true,
               "is-optional" : false
@@ -2776,7 +2332,7 @@
           },
           "fb3bfe3a-c9c1-4ec4-908b-3f1b7380a851" : {
             "VerticalCompact" : {
-              "x" : 35,
+              "x" : 29,
               "y" : 5
             }
           }
@@ -2844,7 +2400,7 @@
               "slot-type" : "Output",
               "name" : "Image",
               "custom-name" : null,
-              "description" : null,
+              "description" : "Imported image",
               "is-virtual" : false,
               "save-outputs" : true,
               "is-optional" : false
@@ -2860,7 +2416,7 @@
           },
           "fb3bfe3a-c9c1-4ec4-908b-3f1b7380a851" : {
             "VerticalCompact" : {
-              "x" : 32,
+              "x" : 26,
               "y" : 17
             }
           }
@@ -2930,7 +2486,7 @@
               "slot-type" : "Output",
               "name" : "Output",
               "custom-name" : null,
-              "description" : null,
+              "description" : "",
               "is-virtual" : false,
               "save-outputs" : true,
               "is-optional" : false
@@ -2940,7 +2496,7 @@
         "jipipe:ui-grid-location" : {
           "fb3bfe3a-c9c1-4ec4-908b-3f1b7380a851" : {
             "VerticalCompact" : {
-              "x" : 26,
+              "x" : 20,
               "y" : 25
             }
           }
@@ -3011,7 +2567,7 @@
         "jipipe:algorithm:custom-expression-variables" : {
           "parameters" : { }
         },
-        "jipipe:adaptive-parameters/attach-parameter-annotations" : true,
+        "jipipe:adaptive-parameters/attach-parameter-annotations" : false,
         "jipipe:adaptive-parameters/attach-only-non-default-parameter-annotations" : true,
         "jipipe:adaptive-parameters/parameter-annotations-prefix" : "",
         "jipipe:adaptive-parameters/overridden-parameters" : [ {
@@ -3110,7 +2666,7 @@
         "jipipe:ui-grid-location" : {
           "fb3bfe3a-c9c1-4ec4-908b-3f1b7380a851" : {
             "VerticalCompact" : {
-              "x" : 18,
+              "x" : 12,
               "y" : 21
             }
           }
@@ -3204,7 +2760,7 @@
         "jipipe:ui-grid-location" : {
           "fb3bfe3a-c9c1-4ec4-908b-3f1b7380a851" : {
             "VerticalCompact" : {
-              "x" : 23,
+              "x" : 17,
               "y" : 29
             }
           }
@@ -3271,7 +2827,7 @@
               "slot-type" : "Output",
               "name" : "Parameters",
               "custom-name" : null,
-              "description" : null,
+              "description" : "",
               "is-virtual" : false,
               "save-outputs" : true,
               "is-optional" : false
@@ -3287,7 +2843,7 @@
           },
           "fb3bfe3a-c9c1-4ec4-908b-3f1b7380a851" : {
             "VerticalCompact" : {
-              "x" : 27,
+              "x" : 21,
               "y" : 39
             }
           }
@@ -3365,20 +2921,20 @@
               "save-outputs" : true,
               "is-optional" : false
             },
-            "{Parameters}" : {
-              "slot-data-type" : "parameters",
+            "Mask" : {
+              "slot-data-type" : "imagej-imgplus-greyscale-mask",
               "slot-type" : "Input",
-              "name" : "{Parameters}",
+              "name" : "Mask",
               "custom-name" : null,
               "description" : null,
               "is-virtual" : false,
               "save-outputs" : true,
               "is-optional" : false
             },
-            "Mask" : {
-              "slot-data-type" : "imagej-imgplus-greyscale-mask",
+            "{Parameters}" : {
+              "slot-data-type" : "parameters",
               "slot-type" : "Input",
-              "name" : "Mask",
+              "name" : "{Parameters}",
               "custom-name" : null,
               "description" : null,
               "is-virtual" : false,
@@ -3392,7 +2948,7 @@
               "slot-type" : "Output",
               "name" : "Output",
               "custom-name" : null,
-              "description" : null,
+              "description" : "",
               "is-virtual" : false,
               "save-outputs" : true,
               "is-optional" : false
@@ -3402,7 +2958,7 @@
         "jipipe:ui-grid-location" : {
           "fb3bfe3a-c9c1-4ec4-908b-3f1b7380a851" : {
             "VerticalCompact" : {
-              "x" : 18,
+              "x" : 12,
               "y" : 43
             }
           }
@@ -3488,7 +3044,7 @@
               "slot-type" : "Output",
               "name" : "Output",
               "custom-name" : null,
-              "description" : null,
+              "description" : "",
               "is-virtual" : false,
               "save-outputs" : true,
               "is-optional" : false
@@ -3498,7 +3054,7 @@
         "jipipe:ui-grid-location" : {
           "fb3bfe3a-c9c1-4ec4-908b-3f1b7380a851" : {
             "VerticalCompact" : {
-              "x" : 18,
+              "x" : 12,
               "y" : 47
             }
           }
@@ -3575,7 +3131,7 @@
               "slot-type" : "Output",
               "name" : "Output",
               "custom-name" : null,
-              "description" : null,
+              "description" : "",
               "is-virtual" : false,
               "save-outputs" : true,
               "is-optional" : false
@@ -3585,7 +3141,7 @@
         "jipipe:ui-grid-location" : {
           "fb3bfe3a-c9c1-4ec4-908b-3f1b7380a851" : {
             "VerticalCompact" : {
-              "x" : 18,
+              "x" : 12,
               "y" : 51
             }
           }
@@ -3659,7 +3215,7 @@
               "slot-type" : "Output",
               "name" : "Output",
               "custom-name" : null,
-              "description" : null,
+              "description" : "",
               "is-virtual" : false,
               "save-outputs" : true,
               "is-optional" : false
@@ -3669,7 +3225,7 @@
         "jipipe:ui-grid-location" : {
           "fb3bfe3a-c9c1-4ec4-908b-3f1b7380a851" : {
             "VerticalCompact" : {
-              "x" : 18,
+              "x" : 12,
               "y" : 55
             }
           }
@@ -3740,7 +3296,7 @@
         "jipipe:algorithm:custom-expression-variables" : {
           "parameters" : { }
         },
-        "jipipe:adaptive-parameters/attach-parameter-annotations" : true,
+        "jipipe:adaptive-parameters/attach-parameter-annotations" : false,
         "jipipe:adaptive-parameters/attach-only-non-default-parameter-annotations" : true,
         "jipipe:adaptive-parameters/parameter-annotations-prefix" : "",
         "jipipe:adaptive-parameters/overridden-parameters" : [ {
@@ -3789,7 +3345,7 @@
               "slot-type" : "Output",
               "name" : "ROI",
               "custom-name" : null,
-              "description" : null,
+              "description" : "The extracted ROI",
               "is-virtual" : false,
               "save-outputs" : true,
               "is-optional" : false
@@ -3799,7 +3355,7 @@
               "slot-type" : "Output",
               "name" : "Measurements",
               "custom-name" : null,
-              "description" : null,
+              "description" : "The measurements of the ROI",
               "is-virtual" : false,
               "save-outputs" : true,
               "is-optional" : false
@@ -3809,7 +3365,7 @@
         "jipipe:ui-grid-location" : {
           "fb3bfe3a-c9c1-4ec4-908b-3f1b7380a851" : {
             "VerticalCompact" : {
-              "x" : 40,
+              "x" : 34,
               "y" : 36
             }
           }
@@ -3840,7 +3396,7 @@
         "exclude-edges" : false,
         "max-particle-size" : "Infinity",
         "measurements" : {
-          "values" : [ "PixelValueMinMax", "FeretDiameter", "ShapeDescriptors", "AreaFraction", "BoundingRectangle", "IntegratedDensity", "PixelValueKurtosis", "StackPosition", "CenterOfMass", "Perimeter", "PixelValueStandardDeviation", "FitEllipse", "PixelValueMean", "PixelValueModal", "PixelValueMedian", "PixelValueSkewness", "Area", "Centroid" ],
+          "values" : [ "PixelValueMedian", "CenterOfMass", "FeretDiameter", "PixelValueSkewness", "PixelValueStandardDeviation", "ShapeDescriptors", "PixelValueModal", "FitEllipse", "StackPosition", "PixelValueMinMax", "IntegratedDensity", "PixelValueKurtosis", "Perimeter", "Centroid", "AreaFraction", "BoundingRectangle", "PixelValueMean", "Area" ],
           "collapsed" : true
         },
         "jipipe:algorithm:custom-expression-variables" : {
@@ -3890,7 +3446,7 @@
               "slot-type" : "Output",
               "name" : "Output",
               "custom-name" : null,
-              "description" : null,
+              "description" : "",
               "is-virtual" : false,
               "save-outputs" : true,
               "is-optional" : false
@@ -3900,7 +3456,7 @@
         "jipipe:ui-grid-location" : {
           "fb3bfe3a-c9c1-4ec4-908b-3f1b7380a851" : {
             "VerticalCompact" : {
-              "x" : 40,
+              "x" : 34,
               "y" : 40
             }
           }
@@ -3962,7 +3518,7 @@
               "slot-type" : "Output",
               "name" : "Output",
               "custom-name" : null,
-              "description" : null,
+              "description" : "",
               "is-virtual" : false,
               "save-outputs" : true,
               "is-optional" : false
@@ -3972,7 +3528,7 @@
         "jipipe:ui-grid-location" : {
           "fb3bfe3a-c9c1-4ec4-908b-3f1b7380a851" : {
             "VerticalCompact" : {
-              "x" : 40,
+              "x" : 34,
               "y" : 44
             }
           }
@@ -3980,6 +3536,10 @@
         "jipipe:node-info-id" : "filaments-subdivide-edges",
         "jipipe:algorithm:enabled" : true,
         "jipipe:node:ui-locked" : false,
+        "override-radius" : {
+          "content" : 0.0,
+          "enabled" : false
+        },
         "maximum-length" : {
           "content" : {
             "value" : 10.0,
@@ -3998,6 +3558,11 @@
           "index" : 0
         },
         "jipipe:node:description" : "<html><head></head><body></body></html>",
+        "add-metadata" : [ ],
+        "override-value" : {
+          "content" : 0.0,
+          "enabled" : false
+        },
         "jipipe:algorithm:custom-expression-variables" : {
           "parameters" : { }
         },
@@ -4045,7 +3610,7 @@
               "slot-type" : "Output",
               "name" : "Output",
               "custom-name" : null,
-              "description" : null,
+              "description" : "",
               "is-virtual" : false,
               "save-outputs" : true,
               "is-optional" : false
@@ -4055,7 +3620,7 @@
         "jipipe:ui-grid-location" : {
           "fb3bfe3a-c9c1-4ec4-908b-3f1b7380a851" : {
             "VerticalCompact" : {
-              "x" : 27,
+              "x" : 21,
               "y" : 59
             }
           }
@@ -4170,7 +3735,7 @@
               "slot-type" : "Output",
               "name" : "Filaments",
               "custom-name" : null,
-              "description" : null,
+              "description" : "The filaments as extracted by the algorithm",
               "is-virtual" : false,
               "save-outputs" : true,
               "is-optional" : false
@@ -4180,7 +3745,7 @@
         "jipipe:ui-grid-location" : {
           "fb3bfe3a-c9c1-4ec4-908b-3f1b7380a851" : {
             "VerticalCompact" : {
-              "x" : 27,
+              "x" : 21,
               "y" : 63
             }
           }
@@ -4243,7 +3808,7 @@
               "slot-type" : "Output",
               "name" : "Output",
               "custom-name" : null,
-              "description" : null,
+              "description" : "",
               "is-virtual" : false,
               "save-outputs" : true,
               "is-optional" : false
@@ -4253,7 +3818,7 @@
         "jipipe:ui-grid-location" : {
           "fb3bfe3a-c9c1-4ec4-908b-3f1b7380a851" : {
             "VerticalCompact" : {
-              "x" : 27,
+              "x" : 21,
               "y" : 67
             }
           }
@@ -4322,7 +3887,7 @@
               "slot-type" : "Output",
               "name" : "Output",
               "custom-name" : null,
-              "description" : null,
+              "description" : "",
               "is-virtual" : false,
               "save-outputs" : true,
               "is-optional" : false
@@ -4332,7 +3897,7 @@
         "jipipe:ui-grid-location" : {
           "fb3bfe3a-c9c1-4ec4-908b-3f1b7380a851" : {
             "VerticalCompact" : {
-              "x" : 27,
+              "x" : 21,
               "y" : 71
             }
           }
@@ -4397,7 +3962,7 @@
               "slot-type" : "Output",
               "name" : "Output",
               "custom-name" : null,
-              "description" : null,
+              "description" : "",
               "is-virtual" : false,
               "save-outputs" : true,
               "is-optional" : false
@@ -4407,7 +3972,7 @@
         "jipipe:ui-grid-location" : {
           "fb3bfe3a-c9c1-4ec4-908b-3f1b7380a851" : {
             "VerticalCompact" : {
-              "x" : 27,
+              "x" : 21,
               "y" : 75
             }
           }
@@ -4539,7 +4104,7 @@
               "slot-type" : "Output",
               "name" : "Output",
               "custom-name" : null,
-              "description" : null,
+              "description" : "",
               "is-virtual" : false,
               "save-outputs" : true,
               "is-optional" : false
@@ -4549,7 +4114,7 @@
         "jipipe:ui-grid-location" : {
           "fb3bfe3a-c9c1-4ec4-908b-3f1b7380a851" : {
             "VerticalCompact" : {
-              "x" : 34,
+              "x" : 28,
               "y" : 88
             }
           }
@@ -4580,6 +4145,7 @@
           "enabled" : true
         },
         "connect-across-t" : false,
+        "new-edge-metadata" : [ ],
         "ignore-limit-connections-for-target" : true,
         "jipipe:algorithm:enabled" : true,
         "jipipe:node:ui-locked" : false,
@@ -4587,11 +4153,11 @@
           "x" : 0.0,
           "y" : "Infinity"
         },
-        "connect-across-c" : false,
         "candidate-vertex-degree-limit" : {
           "x" : 0,
           "y" : 2147483647
         },
+        "connect-across-c" : false,
         "candidate-vertex-value-limit" : {
           "x" : "-Infinity",
           "y" : "Infinity"
@@ -4663,7 +4229,7 @@
               "slot-type" : "Output",
               "name" : "Output",
               "custom-name" : null,
-              "description" : null,
+              "description" : "",
               "is-virtual" : false,
               "save-outputs" : true,
               "is-optional" : false
@@ -4679,7 +4245,7 @@
           },
           "fb3bfe3a-c9c1-4ec4-908b-3f1b7380a851" : {
             "VerticalCompact" : {
-              "x" : 40,
+              "x" : 34,
               "y" : 59
             }
           }
@@ -4801,7 +4367,7 @@
               "slot-type" : "Output",
               "name" : "Output",
               "custom-name" : null,
-              "description" : null,
+              "description" : "",
               "is-virtual" : false,
               "save-outputs" : true,
               "is-optional" : false
@@ -4811,7 +4377,7 @@
         "jipipe:ui-grid-location" : {
           "fb3bfe3a-c9c1-4ec4-908b-3f1b7380a851" : {
             "VerticalCompact" : {
-              "x" : 34,
+              "x" : 28,
               "y" : 84
             }
           }
@@ -4886,7 +4452,7 @@
               "slot-type" : "Output",
               "name" : "Output",
               "custom-name" : null,
-              "description" : null,
+              "description" : "",
               "is-virtual" : false,
               "save-outputs" : true,
               "is-optional" : false
@@ -4896,7 +4462,7 @@
         "jipipe:ui-grid-location" : {
           "fb3bfe3a-c9c1-4ec4-908b-3f1b7380a851" : {
             "VerticalCompact" : {
-              "x" : 40,
+              "x" : 34,
               "y" : 63
             }
           }
@@ -4961,7 +4527,7 @@
               "slot-type" : "Output",
               "name" : "Output",
               "custom-name" : null,
-              "description" : null,
+              "description" : "",
               "is-virtual" : false,
               "save-outputs" : true,
               "is-optional" : false
@@ -4977,7 +4543,7 @@
           },
           "fb3bfe3a-c9c1-4ec4-908b-3f1b7380a851" : {
             "VerticalCompact" : {
-              "x" : 30,
+              "x" : 24,
               "y" : 79
             }
           }
@@ -5042,7 +4608,7 @@
               "slot-type" : "Output",
               "name" : "Output",
               "custom-name" : null,
-              "description" : null,
+              "description" : "",
               "is-virtual" : false,
               "save-outputs" : true,
               "is-optional" : false
@@ -5052,7 +4618,7 @@
         "jipipe:ui-grid-location" : {
           "fb3bfe3a-c9c1-4ec4-908b-3f1b7380a851" : {
             "VerticalCompact" : {
-              "x" : 34,
+              "x" : 28,
               "y" : 92
             }
           }
@@ -5117,7 +4683,7 @@
               "slot-type" : "Output",
               "name" : "Output",
               "custom-name" : null,
-              "description" : null,
+              "description" : "",
               "is-virtual" : false,
               "save-outputs" : true,
               "is-optional" : false
@@ -5127,7 +4693,7 @@
         "jipipe:ui-grid-location" : {
           "fb3bfe3a-c9c1-4ec4-908b-3f1b7380a851" : {
             "VerticalCompact" : {
-              "x" : 34,
+              "x" : 28,
               "y" : 96
             }
           }
@@ -5170,7 +4736,1063 @@
           "enabled" : false
         }
       },
-      "e3ca19d8-47ce-433b-9387-1180093aeb40" : {
+      "ad59212f-6f0c-4d5d-8bdf-8bbdfb552a4e" : {
+        "jipipe:graph-compartment" : "fb3bfe3a-c9c1-4ec4-908b-3f1b7380a851",
+        "jipipe:alias-id" : "convert-filaments-to-2d-roi",
+        "jipipe:slot-configuration" : {
+          "input" : {
+            "Input" : {
+              "slot-data-type" : "filaments",
+              "slot-type" : "Input",
+              "name" : "Input",
+              "custom-name" : null,
+              "description" : "",
+              "is-virtual" : false,
+              "save-outputs" : true,
+              "is-optional" : false
+            }
+          },
+          "output" : {
+            "Output" : {
+              "slot-data-type" : "imagej-roi",
+              "slot-type" : "Output",
+              "name" : "Output",
+              "custom-name" : null,
+              "description" : "",
+              "is-virtual" : false,
+              "save-outputs" : true,
+              "is-optional" : false
+            }
+          }
+        },
+        "jipipe:ui-grid-location" : {
+          "fb3bfe3a-c9c1-4ec4-908b-3f1b7380a851" : {
+            "VerticalCompact" : {
+              "x" : 28,
+              "y" : 100
+            }
+          }
+        },
+        "jipipe:node-info-id" : "filaments-convert-to-roi",
+        "thin-lines" : false,
+        "with-edges" : false,
+        "jipipe:algorithm:enabled" : true,
+        "jipipe:node:ui-locked" : false,
+        "ignore-non-2d-edges" : false,
+        "forced-vertex-radius" : {
+          "content" : 1,
+          "enabled" : false
+        },
+        "jipipe:node:bookmarked" : false,
+        "jipipe:algorithm:pass-through" : false,
+        "jipipe:node:name" : "Convert filaments to 2D ROI",
+        "jipipe:algorithm:runtime-partition" : {
+          "index" : 0
+        },
+        "jipipe:node:description" : "<html><head></head><body></body></html>",
+        "forced-line-thickness" : {
+          "content" : 1,
+          "enabled" : false
+        },
+        "with-vertices" : true,
+        "jipipe:algorithm:custom-expression-variables" : {
+          "parameters" : { }
+        },
+        "jipipe:adaptive-parameters/attach-parameter-annotations" : true,
+        "jipipe:adaptive-parameters/attach-only-non-default-parameter-annotations" : true,
+        "jipipe:adaptive-parameters/parameter-annotations-prefix" : "",
+        "jipipe:adaptive-parameters/overridden-parameters" : [ ],
+        "jipipe:adaptive-parameters/enabled" : true,
+        "jipipe:adaptive-parameters/parameter-annotations-use-internal-names" : false,
+        "jipipe:parameter-slot-algorithm/has-parameter-slot" : false,
+        "jipipe:parameter-slot-algorithm/attach-parameter-annotations" : true,
+        "jipipe:parameter-slot-algorithm/attach-only-non-default-parameter-annotations" : true,
+        "jipipe:parameter-slot-algorithm/parameter-annotations-prefix" : "",
+        "jipipe:parameter-slot-algorithm/parameter-annotations-use-internal-names" : false,
+        "jipipe:data-batch-generation/limit" : {
+          "content" : {
+            "value" : "0-9",
+            "is-expression" : false,
+            "expression" : {
+              "expression" : "MAKE_SEQUENCE(0, 10)"
+            }
+          },
+          "enabled" : false
+        }
+      },
+      "ade32200-d311-4b9d-8382-5942fead2cd1" : {
+        "jipipe:graph-compartment" : "fb3bfe3a-c9c1-4ec4-908b-3f1b7380a851",
+        "jipipe:alias-id" : "outline-2d-roi-centroid",
+        "jipipe:slot-configuration" : {
+          "input" : {
+            "Input" : {
+              "slot-data-type" : "imagej-roi",
+              "slot-type" : "Input",
+              "name" : "Input",
+              "custom-name" : null,
+              "description" : "",
+              "is-virtual" : false,
+              "save-outputs" : true,
+              "is-optional" : false
+            }
+          },
+          "output" : {
+            "Output" : {
+              "slot-data-type" : "imagej-roi",
+              "slot-type" : "Output",
+              "name" : "Output",
+              "custom-name" : null,
+              "description" : "",
+              "is-virtual" : false,
+              "save-outputs" : true,
+              "is-optional" : false
+            }
+          }
+        },
+        "jipipe:ui-grid-location" : {
+          "fb3bfe3a-c9c1-4ec4-908b-3f1b7380a851" : {
+            "VerticalCompact" : {
+              "x" : 28,
+              "y" : 104
+            }
+          }
+        },
+        "jipipe:node-info-id" : "ij1-roi-to-centroid",
+        "jipipe:algorithm:enabled" : true,
+        "jipipe:node:ui-locked" : false,
+        "jipipe:node:bookmarked" : false,
+        "jipipe:algorithm:pass-through" : false,
+        "jipipe:node:name" : "Outline 2D ROI (Centroid)",
+        "jipipe:algorithm:runtime-partition" : {
+          "index" : 0
+        },
+        "jipipe:node:description" : "<html><head></head><body></body></html>",
+        "jipipe:adaptive-parameters/attach-parameter-annotations" : true,
+        "jipipe:adaptive-parameters/attach-only-non-default-parameter-annotations" : true,
+        "jipipe:adaptive-parameters/parameter-annotations-prefix" : "",
+        "jipipe:adaptive-parameters/overridden-parameters" : [ ],
+        "jipipe:adaptive-parameters/enabled" : true,
+        "jipipe:adaptive-parameters/parameter-annotations-use-internal-names" : false,
+        "jipipe:algorithm:custom-expression-variables" : {
+          "parameters" : { }
+        },
+        "jipipe:parameter-slot-algorithm/has-parameter-slot" : false,
+        "jipipe:parameter-slot-algorithm/attach-parameter-annotations" : true,
+        "jipipe:parameter-slot-algorithm/attach-only-non-default-parameter-annotations" : true,
+        "jipipe:parameter-slot-algorithm/parameter-annotations-prefix" : "",
+        "jipipe:parameter-slot-algorithm/parameter-annotations-use-internal-names" : false,
+        "jipipe:data-batch-generation/limit" : {
+          "content" : {
+            "value" : "0-9",
+            "is-expression" : false,
+            "expression" : {
+              "expression" : "MAKE_SEQUENCE(0, 10)"
+            }
+          },
+          "enabled" : false
+        }
+      },
+      "1d926896-b22a-474d-9677-fd710d10ed9c" : {
+        "jipipe:graph-compartment" : "fb3bfe3a-c9c1-4ec4-908b-3f1b7380a851",
+        "jipipe:alias-id" : "outline-2d-roi-concave-hull-mor",
+        "jipipe:slot-configuration" : {
+          "input" : {
+            "Input" : {
+              "slot-data-type" : "imagej-roi",
+              "slot-type" : "Input",
+              "name" : "Input",
+              "custom-name" : null,
+              "description" : "",
+              "is-virtual" : false,
+              "save-outputs" : true,
+              "is-optional" : false
+            }
+          },
+          "output" : {
+            "Output" : {
+              "slot-data-type" : "imagej-roi",
+              "slot-type" : "Output",
+              "name" : "Output",
+              "custom-name" : null,
+              "description" : "",
+              "is-virtual" : false,
+              "save-outputs" : true,
+              "is-optional" : false
+            }
+          }
+        },
+        "jipipe:ui-grid-location" : {
+          "fb3bfe3a-c9c1-4ec4-908b-3f1b7380a851" : {
+            "VerticalCompact" : {
+              "x" : 28,
+              "y" : 112
+            }
+          }
+        },
+        "jipipe:node-info-id" : "ij1-roi-outline-concave-hull-moreira-santos",
+        "jipipe:algorithm:enabled" : true,
+        "jipipe:node:ui-locked" : false,
+        "skip-invalid-inputs" : true,
+        "kmeans-k" : 3,
+        "jipipe:node:bookmarked" : false,
+        "jipipe:algorithm:pass-through" : false,
+        "jipipe:node:name" : "Outline 2D ROI (Concave Hull Moreira/Santos)",
+        "jipipe:algorithm:runtime-partition" : {
+          "index" : 0
+        },
+        "jipipe:node:description" : "<html><head></head><body></body></html>",
+        "jipipe:algorithm:custom-expression-variables" : {
+          "parameters" : { }
+        },
+        "jipipe:adaptive-parameters/attach-parameter-annotations" : true,
+        "jipipe:adaptive-parameters/attach-only-non-default-parameter-annotations" : true,
+        "jipipe:adaptive-parameters/parameter-annotations-prefix" : "",
+        "jipipe:adaptive-parameters/overridden-parameters" : [ ],
+        "jipipe:adaptive-parameters/enabled" : true,
+        "jipipe:adaptive-parameters/parameter-annotations-use-internal-names" : false,
+        "jipipe:parameter-slot-algorithm/has-parameter-slot" : false,
+        "jipipe:parameter-slot-algorithm/attach-parameter-annotations" : true,
+        "jipipe:parameter-slot-algorithm/attach-only-non-default-parameter-annotations" : true,
+        "jipipe:parameter-slot-algorithm/parameter-annotations-prefix" : "",
+        "jipipe:parameter-slot-algorithm/parameter-annotations-use-internal-names" : false,
+        "jipipe:data-batch-generation/limit" : {
+          "content" : {
+            "value" : "0-9",
+            "is-expression" : false,
+            "expression" : {
+              "expression" : "MAKE_SEQUENCE(0, 10)"
+            }
+          },
+          "enabled" : false
+        }
+      },
+      "fe960bef-1819-4f06-b8ef-a4351380af4a" : {
+        "jipipe:graph-compartment" : "fb3bfe3a-c9c1-4ec4-908b-3f1b7380a851",
+        "jipipe:alias-id" : "2d-roi-calculator-and-or-xor",
+        "jipipe:slot-configuration" : {
+          "input" : {
+            "Input" : {
+              "slot-data-type" : "imagej-roi",
+              "slot-type" : "Input",
+              "name" : "Input",
+              "custom-name" : null,
+              "description" : "",
+              "is-virtual" : false,
+              "save-outputs" : true,
+              "is-optional" : false
+            }
+          },
+          "output" : {
+            "Output" : {
+              "slot-data-type" : "imagej-roi",
+              "slot-type" : "Output",
+              "name" : "Output",
+              "custom-name" : null,
+              "description" : "",
+              "is-virtual" : false,
+              "save-outputs" : true,
+              "is-optional" : false
+            }
+          }
+        },
+        "jipipe:ui-grid-location" : {
+          "fb3bfe3a-c9c1-4ec4-908b-3f1b7380a851" : {
+            "VerticalCompact" : {
+              "x" : 28,
+              "y" : 108
+            }
+          }
+        },
+        "jipipe:node-info-id" : "ij1-roi-calculator",
+        "jipipe:algorithm:enabled" : true,
+        "jipipe:node:ui-locked" : false,
+        "apply-per-frame" : false,
+        "jipipe:node:bookmarked" : false,
+        "jipipe:algorithm:pass-through" : false,
+        "jipipe:node:name" : "2D ROI calculator (AND/OR/XOR)",
+        "jipipe:algorithm:runtime-partition" : {
+          "index" : 0
+        },
+        "jipipe:node:description" : "<html><head></head><body></body></html>",
+        "split-afterwards" : true,
+        "apply-per-slice" : false,
+        "apply-per-channel" : false,
+        "operation" : "LogicalOr",
+        "jipipe:algorithm:custom-expression-variables" : {
+          "parameters" : { }
+        },
+        "jipipe:adaptive-parameters/attach-parameter-annotations" : true,
+        "jipipe:adaptive-parameters/attach-only-non-default-parameter-annotations" : true,
+        "jipipe:adaptive-parameters/parameter-annotations-prefix" : "",
+        "jipipe:adaptive-parameters/overridden-parameters" : [ ],
+        "jipipe:adaptive-parameters/enabled" : true,
+        "jipipe:adaptive-parameters/parameter-annotations-use-internal-names" : false,
+        "jipipe:parameter-slot-algorithm/has-parameter-slot" : false,
+        "jipipe:parameter-slot-algorithm/attach-parameter-annotations" : true,
+        "jipipe:parameter-slot-algorithm/attach-only-non-default-parameter-annotations" : true,
+        "jipipe:parameter-slot-algorithm/parameter-annotations-prefix" : "",
+        "jipipe:parameter-slot-algorithm/parameter-annotations-use-internal-names" : false,
+        "jipipe:data-batch-generation/limit" : {
+          "content" : {
+            "value" : "0-9",
+            "is-expression" : false,
+            "expression" : {
+              "expression" : "MAKE_SEQUENCE(0, 10)"
+            }
+          },
+          "enabled" : false
+        }
+      },
+      "2c5d3334-0898-4de7-a477-34b065ff20ad" : {
+        "jipipe:graph-compartment" : "fb3bfe3a-c9c1-4ec4-908b-3f1b7380a851",
+        "jipipe:alias-id" : "convert-2d-roi-to-mask",
+        "jipipe:slot-configuration" : {
+          "input" : {
+            "Image" : {
+              "slot-data-type" : "imagej-imgplus",
+              "slot-type" : "Input",
+              "name" : "Image",
+              "custom-name" : null,
+              "description" : "",
+              "is-virtual" : false,
+              "save-outputs" : true,
+              "is-optional" : false
+            },
+            "ROI" : {
+              "slot-data-type" : "imagej-roi",
+              "slot-type" : "Input",
+              "name" : "ROI",
+              "custom-name" : null,
+              "description" : "",
+              "is-virtual" : false,
+              "save-outputs" : true,
+              "is-optional" : false
+            }
+          },
+          "output" : {
+            "Output" : {
+              "slot-data-type" : "imagej-imgplus-greyscale-mask",
+              "slot-type" : "Output",
+              "name" : "Output",
+              "custom-name" : null,
+              "description" : "",
+              "is-virtual" : false,
+              "save-outputs" : true,
+              "is-optional" : false
+            }
+          }
+        },
+        "jipipe:ui-grid-location" : {
+          "fb3bfe3a-c9c1-4ec4-908b-3f1b7380a851" : {
+            "VerticalCompact" : {
+              "x" : 24,
+              "y" : 116
+            }
+          }
+        },
+        "jipipe:node-info-id" : "ij1-roi-to-mask",
+        "draw-over" : false,
+        "line-thickness" : 1,
+        "jipipe:algorithm:enabled" : true,
+        "jipipe:node:ui-locked" : false,
+        "jipipe:node:bookmarked" : false,
+        "jipipe:algorithm:pass-through" : false,
+        "fill-outline" : true,
+        "jipipe:node:name" : "Convert 2D ROI to mask",
+        "jipipe:algorithm:runtime-partition" : {
+          "index" : 0
+        },
+        "jipipe:node:description" : "<html><head></head><body></body></html>",
+        "draw-outline" : false,
+        "jipipe:algorithm:custom-expression-variables" : {
+          "parameters" : { }
+        },
+        "jipipe:adaptive-parameters/attach-parameter-annotations" : true,
+        "jipipe:adaptive-parameters/attach-only-non-default-parameter-annotations" : true,
+        "jipipe:adaptive-parameters/parameter-annotations-prefix" : "",
+        "jipipe:adaptive-parameters/overridden-parameters" : [ ],
+        "jipipe:adaptive-parameters/enabled" : true,
+        "jipipe:adaptive-parameters/parameter-annotations-use-internal-names" : false,
+        "jipipe:parameter-slot-algorithm/has-parameter-slot" : false,
+        "jipipe:parameter-slot-algorithm/attach-parameter-annotations" : true,
+        "jipipe:parameter-slot-algorithm/attach-only-non-default-parameter-annotations" : true,
+        "jipipe:parameter-slot-algorithm/parameter-annotations-prefix" : "",
+        "jipipe:parameter-slot-algorithm/parameter-annotations-use-internal-names" : false,
+        "jipipe:data-batch-generation/annotation-merge-strategy" : "Merge",
+        "jipipe:data-batch-generation/column-matching" : "PrefixHashUnion",
+        "jipipe:data-batch-generation/data-annotation-merge-strategy" : "MergeTables",
+        "jipipe:data-batch-generation/custom-matched-columns-expression" : {
+          "expression" : ""
+        },
+        "jipipe:data-batch-generation/skip-incomplete" : false,
+        "jipipe:data-batch-generation/custom-annotation-matching" : {
+          "expression" : "exact_match_results"
+        },
+        "jipipe:data-batch-generation/limit" : {
+          "content" : {
+            "value" : "0-9",
+            "is-expression" : false,
+            "expression" : {
+              "expression" : "MAKE_SEQUENCE(0, 10)"
+            }
+          },
+          "enabled" : false
+        },
+        "jipipe:data-batch-generation/annotation-matching-method" : "ExactMatch",
+        "jipipe:data-batch-generation/force-flow-graph-solver" : false
+      },
+      "a1d6177e-c786-45ef-bed1-20817c4de899" : {
+        "jipipe:graph-compartment" : "fb3bfe3a-c9c1-4ec4-908b-3f1b7380a851",
+        "jipipe:alias-id" : "outline-2d-roi-hull",
+        "jipipe:slot-configuration" : {
+          "input" : {
+            "Input" : {
+              "slot-data-type" : "imagej-roi",
+              "slot-type" : "Input",
+              "name" : "Input",
+              "custom-name" : null,
+              "description" : "",
+              "is-virtual" : false,
+              "save-outputs" : true,
+              "is-optional" : false
+            }
+          },
+          "output" : {
+            "Output" : {
+              "slot-data-type" : "imagej-roi",
+              "slot-type" : "Output",
+              "name" : "Output",
+              "custom-name" : null,
+              "description" : "",
+              "is-virtual" : false,
+              "save-outputs" : true,
+              "is-optional" : false
+            }
+          }
+        },
+        "jipipe:ui-grid-location" : {
+          "fb3bfe3a-c9c1-4ec4-908b-3f1b7380a851" : {
+            "VerticalCompact" : {
+              "x" : 49,
+              "y" : 40
+            }
+          }
+        },
+        "jipipe:node-info-id" : "ij1-roi-outline",
+        "outline" : "MinimumBoundingRectangle",
+        "jipipe:algorithm:enabled" : true,
+        "jipipe:node:ui-locked" : false,
+        "jipipe:node:bookmarked" : false,
+        "jipipe:algorithm:pass-through" : false,
+        "jipipe:node:name" : "Outline 2D ROI (Hull)",
+        "jipipe:algorithm:runtime-partition" : {
+          "index" : 0
+        },
+        "jipipe:node:description" : "<html><head></head><body></body></html>",
+        "jipipe:adaptive-parameters/attach-parameter-annotations" : true,
+        "jipipe:adaptive-parameters/attach-only-non-default-parameter-annotations" : true,
+        "jipipe:adaptive-parameters/parameter-annotations-prefix" : "",
+        "jipipe:adaptive-parameters/overridden-parameters" : [ ],
+        "jipipe:adaptive-parameters/enabled" : true,
+        "jipipe:adaptive-parameters/parameter-annotations-use-internal-names" : false,
+        "jipipe:algorithm:custom-expression-variables" : {
+          "parameters" : { }
+        },
+        "jipipe:parameter-slot-algorithm/has-parameter-slot" : false,
+        "jipipe:parameter-slot-algorithm/attach-parameter-annotations" : true,
+        "jipipe:parameter-slot-algorithm/attach-only-non-default-parameter-annotations" : true,
+        "jipipe:parameter-slot-algorithm/parameter-annotations-prefix" : "",
+        "jipipe:parameter-slot-algorithm/parameter-annotations-use-internal-names" : false,
+        "jipipe:data-batch-generation/limit" : {
+          "content" : {
+            "value" : "0-9",
+            "is-expression" : false,
+            "expression" : {
+              "expression" : "MAKE_SEQUENCE(0, 10)"
+            }
+          },
+          "enabled" : false
+        }
+      },
+      "75dea176-2516-4843-ac10-d71ecf55cf1a" : {
+        "jipipe:graph-compartment" : "fb3bfe3a-c9c1-4ec4-908b-3f1b7380a851",
+        "jipipe:alias-id" : "convert-2d-roi-to-filaments-1",
+        "jipipe:slot-configuration" : {
+          "input" : {
+            "Input" : {
+              "slot-data-type" : "imagej-roi",
+              "slot-type" : "Input",
+              "name" : "Input",
+              "custom-name" : null,
+              "description" : "",
+              "is-virtual" : false,
+              "save-outputs" : true,
+              "is-optional" : false
+            }
+          },
+          "output" : {
+            "Output" : {
+              "slot-data-type" : "filaments",
+              "slot-type" : "Output",
+              "name" : "Output",
+              "custom-name" : null,
+              "description" : "",
+              "is-virtual" : false,
+              "save-outputs" : true,
+              "is-optional" : false
+            }
+          }
+        },
+        "jipipe:ui-grid-location" : {
+          "" : {
+            "VerticalCompact" : {
+              "x" : 46,
+              "y" : 45
+            }
+          },
+          "fb3bfe3a-c9c1-4ec4-908b-3f1b7380a851" : {
+            "VerticalCompact" : {
+              "x" : 49,
+              "y" : 44
+            }
+          }
+        },
+        "jipipe:node-info-id" : "filaments-convert-roi2d-to-filaments",
+        "jipipe:algorithm:enabled" : true,
+        "jipipe:node:ui-locked" : false,
+        "jipipe:node:bookmarked" : false,
+        "jipipe:algorithm:pass-through" : false,
+        "jipipe:node:name" : "Convert 2D ROI to filaments",
+        "jipipe:algorithm:runtime-partition" : {
+          "index" : 0
+        },
+        "jipipe:node:description" : "<html><head></head><body></body></html>",
+        "jipipe:adaptive-parameters/attach-parameter-annotations" : true,
+        "jipipe:adaptive-parameters/attach-only-non-default-parameter-annotations" : true,
+        "jipipe:adaptive-parameters/parameter-annotations-prefix" : "",
+        "jipipe:adaptive-parameters/overridden-parameters" : [ ],
+        "jipipe:adaptive-parameters/enabled" : true,
+        "jipipe:adaptive-parameters/parameter-annotations-use-internal-names" : false,
+        "jipipe:algorithm:custom-expression-variables" : {
+          "parameters" : { }
+        },
+        "jipipe:parameter-slot-algorithm/has-parameter-slot" : false,
+        "jipipe:parameter-slot-algorithm/attach-parameter-annotations" : true,
+        "jipipe:parameter-slot-algorithm/attach-only-non-default-parameter-annotations" : true,
+        "jipipe:parameter-slot-algorithm/parameter-annotations-prefix" : "",
+        "jipipe:parameter-slot-algorithm/parameter-annotations-use-internal-names" : false,
+        "jipipe:data-batch-generation/limit" : {
+          "content" : {
+            "value" : "0-9",
+            "is-expression" : false,
+            "expression" : {
+              "expression" : "MAKE_SEQUENCE(0, 10)"
+            }
+          },
+          "enabled" : false
+        }
+      },
+      "a2686ff9-a5fd-42c2-bfec-cb5fe4497e53" : {
+        "jipipe:graph-compartment" : "fb3bfe3a-c9c1-4ec4-908b-3f1b7380a851",
+        "jipipe:alias-id" : "filter-filament-edges-3",
+        "jipipe:slot-configuration" : {
+          "input" : {
+            "Input" : {
+              "slot-data-type" : "filaments",
+              "slot-type" : "Input",
+              "name" : "Input",
+              "custom-name" : null,
+              "description" : "",
+              "is-virtual" : false,
+              "save-outputs" : true,
+              "is-optional" : false
+            }
+          },
+          "output" : {
+            "Output" : {
+              "slot-data-type" : "filaments",
+              "slot-type" : "Output",
+              "name" : "Output",
+              "custom-name" : null,
+              "description" : "",
+              "is-virtual" : false,
+              "save-outputs" : true,
+              "is-optional" : false
+            }
+          }
+        },
+        "jipipe:ui-grid-location" : {
+          "fb3bfe3a-c9c1-4ec4-908b-3f1b7380a851" : {
+            "VerticalCompact" : {
+              "x" : 50,
+              "y" : 48
+            }
+          }
+        },
+        "jipipe:node-info-id" : "filaments-filter-edges-by-properties",
+        "filter" : {
+          "expression" : "length < MAX(all.length)"
+        },
+        "jipipe:algorithm:enabled" : true,
+        "jipipe:node:ui-locked" : false,
+        "jipipe:node:bookmarked" : false,
+        "jipipe:algorithm:pass-through" : false,
+        "jipipe:node:name" : "Filter filament edges",
+        "jipipe:algorithm:runtime-partition" : {
+          "index" : 0
+        },
+        "jipipe:node:description" : "<html><head></head><body></body></html>",
+        "jipipe:adaptive-parameters/attach-parameter-annotations" : true,
+        "jipipe:adaptive-parameters/attach-only-non-default-parameter-annotations" : true,
+        "jipipe:adaptive-parameters/parameter-annotations-prefix" : "",
+        "jipipe:adaptive-parameters/overridden-parameters" : [ ],
+        "jipipe:adaptive-parameters/enabled" : true,
+        "jipipe:adaptive-parameters/parameter-annotations-use-internal-names" : false,
+        "jipipe:algorithm:custom-expression-variables" : {
+          "parameters" : { }
+        },
+        "jipipe:parameter-slot-algorithm/has-parameter-slot" : false,
+        "jipipe:parameter-slot-algorithm/attach-parameter-annotations" : true,
+        "jipipe:parameter-slot-algorithm/attach-only-non-default-parameter-annotations" : true,
+        "jipipe:parameter-slot-algorithm/parameter-annotations-prefix" : "",
+        "jipipe:parameter-slot-algorithm/parameter-annotations-use-internal-names" : false,
+        "jipipe:data-batch-generation/limit" : {
+          "content" : {
+            "value" : "0-9",
+            "is-expression" : false,
+            "expression" : {
+              "expression" : "MAKE_SEQUENCE(0, 10)"
+            }
+          },
+          "enabled" : false
+        }
+      },
+      "ce328677-4ec9-4973-9328-86a676466c70" : {
+        "jipipe:graph-compartment" : "fb3bfe3a-c9c1-4ec4-908b-3f1b7380a851",
+        "jipipe:alias-id" : "filter-filament-edges-4",
+        "jipipe:slot-configuration" : {
+          "input" : {
+            "Input" : {
+              "slot-data-type" : "filaments",
+              "slot-type" : "Input",
+              "name" : "Input",
+              "custom-name" : null,
+              "description" : "",
+              "is-virtual" : false,
+              "save-outputs" : true,
+              "is-optional" : false
+            }
+          },
+          "output" : {
+            "Output" : {
+              "slot-data-type" : "filaments",
+              "slot-type" : "Output",
+              "name" : "Output",
+              "custom-name" : null,
+              "description" : "",
+              "is-virtual" : false,
+              "save-outputs" : true,
+              "is-optional" : false
+            }
+          }
+        },
+        "jipipe:ui-grid-location" : {
+          "" : {
+            "VerticalCompact" : {
+              "x" : 46,
+              "y" : 52
+            }
+          },
+          "fb3bfe3a-c9c1-4ec4-908b-3f1b7380a851" : {
+            "VerticalCompact" : {
+              "x" : 50,
+              "y" : 52
+            }
+          }
+        },
+        "jipipe:node-info-id" : "filaments-filter-edges-by-properties",
+        "filter" : {
+          "expression" : "length < MAX(all.length)"
+        },
+        "jipipe:algorithm:enabled" : true,
+        "jipipe:node:ui-locked" : false,
+        "jipipe:node:bookmarked" : false,
+        "jipipe:algorithm:pass-through" : false,
+        "jipipe:node:name" : "Filter filament edges",
+        "jipipe:algorithm:runtime-partition" : {
+          "index" : 0
+        },
+        "jipipe:node:description" : "<html><head></head><body></body></html>",
+        "jipipe:adaptive-parameters/attach-parameter-annotations" : true,
+        "jipipe:adaptive-parameters/attach-only-non-default-parameter-annotations" : true,
+        "jipipe:adaptive-parameters/parameter-annotations-prefix" : "",
+        "jipipe:adaptive-parameters/overridden-parameters" : [ ],
+        "jipipe:adaptive-parameters/enabled" : true,
+        "jipipe:adaptive-parameters/parameter-annotations-use-internal-names" : false,
+        "jipipe:algorithm:custom-expression-variables" : {
+          "parameters" : { }
+        },
+        "jipipe:parameter-slot-algorithm/has-parameter-slot" : false,
+        "jipipe:parameter-slot-algorithm/attach-parameter-annotations" : true,
+        "jipipe:parameter-slot-algorithm/attach-only-non-default-parameter-annotations" : true,
+        "jipipe:parameter-slot-algorithm/parameter-annotations-prefix" : "",
+        "jipipe:parameter-slot-algorithm/parameter-annotations-use-internal-names" : false,
+        "jipipe:data-batch-generation/limit" : {
+          "content" : {
+            "value" : "0-9",
+            "is-expression" : false,
+            "expression" : {
+              "expression" : "MAKE_SEQUENCE(0, 10)"
+            }
+          },
+          "enabled" : false
+        }
+      },
+      "07424ded-24f0-49c8-8184-1a202a5c08b2" : {
+        "jipipe:graph-compartment" : "fb3bfe3a-c9c1-4ec4-908b-3f1b7380a851",
+        "jipipe:alias-id" : "subdivide-filament-edges-1",
+        "jipipe:slot-configuration" : {
+          "input" : {
+            "Input" : {
+              "slot-data-type" : "filaments",
+              "slot-type" : "Input",
+              "name" : "Input",
+              "custom-name" : null,
+              "description" : "",
+              "is-virtual" : false,
+              "save-outputs" : true,
+              "is-optional" : false
+            }
+          },
+          "output" : {
+            "Output" : {
+              "slot-data-type" : "filaments",
+              "slot-type" : "Output",
+              "name" : "Output",
+              "custom-name" : null,
+              "description" : "",
+              "is-virtual" : false,
+              "save-outputs" : true,
+              "is-optional" : false
+            }
+          }
+        },
+        "jipipe:ui-grid-location" : {
+          "fb3bfe3a-c9c1-4ec4-908b-3f1b7380a851" : {
+            "VerticalCompact" : {
+              "x" : 50,
+              "y" : 60
+            }
+          }
+        },
+        "jipipe:node-info-id" : "filaments-subdivide-edges",
+        "jipipe:algorithm:enabled" : true,
+        "jipipe:node:ui-locked" : false,
+        "override-radius" : {
+          "content" : 0.0,
+          "enabled" : false
+        },
+        "maximum-length" : {
+          "content" : {
+            "value" : 2.0,
+            "unit" : "px"
+          },
+          "enabled" : false
+        },
+        "jipipe:node:bookmarked" : false,
+        "jipipe:algorithm:pass-through" : false,
+        "max-num-iterations" : {
+          "content" : 1,
+          "enabled" : true
+        },
+        "jipipe:node:name" : "Subdivide filament edges",
+        "jipipe:algorithm:runtime-partition" : {
+          "index" : 0
+        },
+        "jipipe:node:description" : "<html><head></head><body></body></html>",
+        "add-metadata" : [ ],
+        "override-value" : {
+          "content" : 0.0,
+          "enabled" : true
+        },
+        "jipipe:algorithm:custom-expression-variables" : {
+          "parameters" : { }
+        },
+        "jipipe:adaptive-parameters/attach-parameter-annotations" : true,
+        "jipipe:adaptive-parameters/attach-only-non-default-parameter-annotations" : true,
+        "jipipe:adaptive-parameters/parameter-annotations-prefix" : "",
+        "jipipe:adaptive-parameters/overridden-parameters" : [ ],
+        "jipipe:adaptive-parameters/enabled" : true,
+        "jipipe:adaptive-parameters/parameter-annotations-use-internal-names" : false,
+        "jipipe:parameter-slot-algorithm/has-parameter-slot" : false,
+        "jipipe:parameter-slot-algorithm/attach-parameter-annotations" : true,
+        "jipipe:parameter-slot-algorithm/attach-only-non-default-parameter-annotations" : true,
+        "jipipe:parameter-slot-algorithm/parameter-annotations-prefix" : "",
+        "jipipe:parameter-slot-algorithm/parameter-annotations-use-internal-names" : false,
+        "jipipe:data-batch-generation/limit" : {
+          "content" : {
+            "value" : "0-9",
+            "is-expression" : false,
+            "expression" : {
+              "expression" : "MAKE_SEQUENCE(0, 10)"
+            }
+          },
+          "enabled" : false
+        }
+      },
+      "97c457fe-3e11-43cf-abe7-d0bac946759a" : {
+        "jipipe:graph-compartment" : "fb3bfe3a-c9c1-4ec4-908b-3f1b7380a851",
+        "jipipe:alias-id" : "set-filament-vertex-properties-2",
+        "jipipe:slot-configuration" : {
+          "input" : {
+            "Input" : {
+              "slot-data-type" : "filaments",
+              "slot-type" : "Input",
+              "name" : "Input",
+              "custom-name" : null,
+              "description" : "",
+              "is-virtual" : false,
+              "save-outputs" : true,
+              "is-optional" : false
+            }
+          },
+          "output" : {
+            "Output" : {
+              "slot-data-type" : "filaments",
+              "slot-type" : "Output",
+              "name" : "Output",
+              "custom-name" : null,
+              "description" : "",
+              "is-virtual" : false,
+              "save-outputs" : true,
+              "is-optional" : false
+            }
+          }
+        },
+        "jipipe:ui-grid-location" : {
+          "fb3bfe3a-c9c1-4ec4-908b-3f1b7380a851" : {
+            "VerticalCompact" : {
+              "x" : 50,
+              "y" : 56
+            }
+          }
+        },
+        "jipipe:node-info-id" : "filaments-set-vertex-properties-2",
+        "metadata" : [ ],
+        "jipipe:algorithm:enabled" : true,
+        "jipipe:node:ui-locked" : false,
+        "color" : {
+          "content" : "#00FFFF",
+          "enabled" : true
+        },
+        "centroid-c" : {
+          "content" : 0,
+          "enabled" : false
+        },
+        "physical-size-y" : {
+          "content" : {
+            "value" : 1.0,
+            "unit" : "px"
+          },
+          "enabled" : false
+        },
+        "physical-size-x" : {
+          "content" : {
+            "value" : 1.0,
+            "unit" : "px"
+          },
+          "enabled" : false
+        },
+        "jipipe:node:bookmarked" : false,
+        "jipipe:algorithm:pass-through" : false,
+        "jipipe:node:name" : "Set filament vertex properties",
+        "physical-size-z" : {
+          "content" : {
+            "value" : 1.0,
+            "unit" : "px"
+          },
+          "enabled" : false
+        },
+        "jipipe:algorithm:runtime-partition" : {
+          "index" : 0
+        },
+        "jipipe:node:description" : "<html><head></head><body></body></html>",
+        "centroid-t" : {
+          "content" : 0,
+          "enabled" : false
+        },
+        "centroid-x" : {
+          "content" : 0.0,
+          "enabled" : false
+        },
+        "centroid-y" : {
+          "content" : 0.0,
+          "enabled" : false
+        },
+        "radius" : {
+          "content" : 0.0,
+          "enabled" : false
+        },
+        "centroid-z" : {
+          "content" : 0.0,
+          "enabled" : false
+        },
+        "value" : {
+          "content" : 1.0,
+          "enabled" : true
+        },
+        "jipipe:algorithm:custom-expression-variables" : {
+          "parameters" : { }
+        },
+        "jipipe:adaptive-parameters/attach-parameter-annotations" : true,
+        "jipipe:adaptive-parameters/attach-only-non-default-parameter-annotations" : true,
+        "jipipe:adaptive-parameters/parameter-annotations-prefix" : "",
+        "jipipe:adaptive-parameters/overridden-parameters" : [ ],
+        "jipipe:adaptive-parameters/enabled" : true,
+        "jipipe:adaptive-parameters/parameter-annotations-use-internal-names" : false,
+        "vertex-filter/mask" : {
+          "content" : {
+            "expression" : ""
+          },
+          "enabled" : false
+        },
+        "jipipe:parameter-slot-algorithm/has-parameter-slot" : false,
+        "jipipe:parameter-slot-algorithm/attach-parameter-annotations" : true,
+        "jipipe:parameter-slot-algorithm/attach-only-non-default-parameter-annotations" : true,
+        "jipipe:parameter-slot-algorithm/parameter-annotations-prefix" : "",
+        "jipipe:parameter-slot-algorithm/parameter-annotations-use-internal-names" : false,
+        "jipipe:data-batch-generation/limit" : {
+          "content" : {
+            "value" : "0-9",
+            "is-expression" : false,
+            "expression" : {
+              "expression" : "MAKE_SEQUENCE(0, 10)"
+            }
+          },
+          "enabled" : false
+        }
+      },
+      "269253ec-25ea-4395-85d2-37165db80aff" : {
+        "jipipe:graph-compartment" : "fb3bfe3a-c9c1-4ec4-908b-3f1b7380a851",
+        "jipipe:alias-id" : "group-box",
+        "jipipe:slot-configuration" : {
+          "input" : { },
+          "output" : { }
+        },
+        "jipipe:ui-grid-location" : {
+          "fb3bfe3a-c9c1-4ec4-908b-3f1b7380a851" : {
+            "VerticalCompact" : {
+              "x" : 45,
+              "y" : 36
+            }
+          }
+        },
+        "jipipe:node-info-id" : "graph-annotation-group-box",
+        "jipipe:node:ui-locked" : false,
+        "grid-width" : 23,
+        "z-order" : 0,
+        "jipipe:node:bookmarked" : false,
+        "text-content" : "",
+        "jipipe:node:name" : "Group box",
+        "jipipe:node:description" : "<html><head></head><body></body></html>",
+        "text-title" : "Create mirror plane",
+        "grid-height" : 50,
+        "content-style/color" : "#000000",
+        "content-style/font-size" : 12,
+        "content-style/font-family" : "Dialog",
+        "content-style/font-style" : "Plain",
+        "text-location/margin-left" : 8,
+        "text-location/anchor" : "TopLeft",
+        "text-location/margin-top" : 8,
+        "text-location/margin-bottom" : 8,
+        "text-location/margin-right" : 8,
+        "shape-parameters/border-thickness" : 1,
+        "shape-parameters/border-color" : "#B2B28E",
+        "shape-parameters/fill-color" : {
+          "content" : "#FFFFCC",
+          "enabled" : false
+        },
+        "title-style/color" : "#000000",
+        "title-style/font-size" : 18,
+        "title-style/font-family" : "Dialog",
+        "title-style/font-style" : "Plain"
+      },
+      "75573f93-cdba-498d-b3c7-c04db3bc269a" : {
+        "jipipe:graph-compartment" : "fb3bfe3a-c9c1-4ec4-908b-3f1b7380a851",
+        "jipipe:alias-id" : "filter-filament-vertices-2",
+        "jipipe:slot-configuration" : {
+          "input" : {
+            "Input" : {
+              "slot-data-type" : "filaments",
+              "slot-type" : "Input",
+              "name" : "Input",
+              "custom-name" : null,
+              "description" : "",
+              "is-virtual" : false,
+              "save-outputs" : true,
+              "is-optional" : false
+            }
+          },
+          "output" : {
+            "Output" : {
+              "slot-data-type" : "filaments",
+              "slot-type" : "Output",
+              "name" : "Output",
+              "custom-name" : null,
+              "description" : "",
+              "is-virtual" : false,
+              "save-outputs" : true,
+              "is-optional" : false
+            }
+          }
+        },
+        "jipipe:ui-grid-location" : {
+          "fb3bfe3a-c9c1-4ec4-908b-3f1b7380a851" : {
+            "VerticalCompact" : {
+              "x" : 50,
+              "y" : 64
+            }
+          }
+        },
+        "jipipe:node-info-id" : "filaments-filter-vertices-by-properties",
+        "filter" : {
+          "expression" : "value == 0"
+        },
+        "jipipe:algorithm:enabled" : true,
+        "jipipe:node:ui-locked" : false,
+        "jipipe:node:bookmarked" : false,
+        "jipipe:algorithm:pass-through" : false,
+        "jipipe:node:name" : "Filter filament vertices",
+        "jipipe:algorithm:runtime-partition" : {
+          "index" : 0
+        },
+        "jipipe:node:description" : "<html><head></head><body></body></html>",
+        "jipipe:adaptive-parameters/attach-parameter-annotations" : true,
+        "jipipe:adaptive-parameters/attach-only-non-default-parameter-annotations" : true,
+        "jipipe:adaptive-parameters/parameter-annotations-prefix" : "",
+        "jipipe:adaptive-parameters/overridden-parameters" : [ ],
+        "jipipe:adaptive-parameters/enabled" : true,
+        "jipipe:adaptive-parameters/parameter-annotations-use-internal-names" : false,
+        "jipipe:algorithm:custom-expression-variables" : {
+          "parameters" : { }
+        },
+        "jipipe:parameter-slot-algorithm/has-parameter-slot" : false,
+        "jipipe:parameter-slot-algorithm/attach-parameter-annotations" : true,
+        "jipipe:parameter-slot-algorithm/attach-only-non-default-parameter-annotations" : true,
+        "jipipe:parameter-slot-algorithm/parameter-annotations-prefix" : "",
+        "jipipe:parameter-slot-algorithm/parameter-annotations-use-internal-names" : false,
+        "jipipe:data-batch-generation/limit" : {
+          "content" : {
+            "value" : "0-9",
+            "is-expression" : false,
+            "expression" : {
+              "expression" : "MAKE_SEQUENCE(0, 10)"
+            }
+          },
+          "enabled" : false
+        }
+      },
+      "d65265dd-568c-4e0b-93fb-01ffdf61a47c" : {
         "jipipe:graph-compartment" : "fb3bfe3a-c9c1-4ec4-908b-3f1b7380a851",
         "jipipe:alias-id" : "connect-filament-vertices-fast-1",
         "jipipe:slot-configuration" : {
@@ -5202,7 +5824,7 @@
               "slot-type" : "Output",
               "name" : "Output",
               "custom-name" : null,
-              "description" : null,
+              "description" : "",
               "is-virtual" : false,
               "save-outputs" : true,
               "is-optional" : false
@@ -5210,29 +5832,23 @@
           }
         },
         "jipipe:ui-grid-location" : {
-          "" : {
-            "VerticalCompact" : {
-              "x" : 34,
-              "y" : 102
-            }
-          },
           "fb3bfe3a-c9c1-4ec4-908b-3f1b7380a851" : {
             "VerticalCompact" : {
-              "x" : 34,
-              "y" : 100
+              "x" : 50,
+              "y" : 68
             }
           }
         },
         "jipipe:node-info-id" : "filaments-connect-vertices-fast",
-        "enable-3d" : false,
-        "ignore-if-has-path" : false,
+        "enable-3d" : true,
+        "ignore-if-has-path" : true,
         "limit-connections" : {
           "content" : 1,
-          "enabled" : true
+          "enabled" : false
         },
         "source-vertex-filter" : {
           "content" : {
-            "expression" : "value == 0"
+            "expression" : ""
           },
           "enabled" : false
         },
@@ -5244,11 +5860,12 @@
         "limit-connections-length-sort-order" : "Ascending",
         "target-vertex-filter" : {
           "content" : {
-            "expression" : "value == 1"
+            "expression" : ""
           },
           "enabled" : false
         },
         "connect-across-t" : false,
+        "new-edge-metadata" : [ ],
         "ignore-limit-connections-for-target" : false,
         "jipipe:algorithm:enabled" : true,
         "jipipe:node:ui-locked" : false,
@@ -5256,11 +5873,11 @@
           "x" : 0.0,
           "y" : "Infinity"
         },
-        "connect-across-c" : false,
         "candidate-vertex-degree-limit" : {
           "x" : 0,
-          "y" : 0
+          "y" : 1
         },
+        "connect-across-c" : false,
         "candidate-vertex-value-limit" : {
           "x" : "-Infinity",
           "y" : "Infinity"
@@ -5310,73 +5927,333 @@
         "jipipe:parameter-slot-algorithm/parameter-annotations-prefix" : "",
         "jipipe:parameter-slot-algorithm/parameter-annotations-use-internal-names" : false
       },
-      "75af796a-7dd7-4809-ae86-6ee1a0cc12c2" : {
+      "170eb24d-bc9a-47f4-bf44-60593a8143a4" : {
         "jipipe:graph-compartment" : "fb3bfe3a-c9c1-4ec4-908b-3f1b7380a851",
-        "jipipe:alias-id" : "text-box",
+        "jipipe:alias-id" : "convert-filaments-to-2d-roi-1",
         "jipipe:slot-configuration" : {
-          "input" : { },
-          "output" : { }
+          "input" : {
+            "Input" : {
+              "slot-data-type" : "filaments",
+              "slot-type" : "Input",
+              "name" : "Input",
+              "custom-name" : null,
+              "description" : "",
+              "is-virtual" : false,
+              "save-outputs" : true,
+              "is-optional" : false
+            }
+          },
+          "output" : {
+            "Output" : {
+              "slot-data-type" : "imagej-roi",
+              "slot-type" : "Output",
+              "name" : "Output",
+              "custom-name" : null,
+              "description" : "",
+              "is-virtual" : false,
+              "save-outputs" : true,
+              "is-optional" : false
+            }
+          }
         },
         "jipipe:ui-grid-location" : {
           "fb3bfe3a-c9c1-4ec4-908b-3f1b7380a851" : {
             "VerticalCompact" : {
-              "x" : 48,
-              "y" : 100
+              "x" : 50,
+              "y" : 72
             }
           }
         },
-        "jipipe:node-info-id" : "graph-annotation-text-box",
+        "jipipe:node-info-id" : "filaments-convert-to-roi",
+        "thin-lines" : false,
+        "with-edges" : true,
+        "jipipe:algorithm:enabled" : true,
         "jipipe:node:ui-locked" : false,
-        "grid-width" : 15,
-        "z-order" : 0,
-        "jipipe:node:bookmarked" : false,
-        "text-content" : "",
-        "jipipe:node:name" : "Text box",
-        "jipipe:node:description" : "<html><head></head><body></body></html>",
-        "text-title" : "TODO: Non-convex hull (JTS)",
-        "grid-height" : 6,
-        "content-style/color" : "#000000",
-        "content-style/font-size" : 12,
-        "content-style/font-family" : "Dialog",
-        "content-style/font-style" : "Plain",
-        "text-location/margin-left" : 0,
-        "text-location/anchor" : "CenterCenter",
-        "text-location/margin-top" : 0,
-        "text-location/margin-bottom" : 0,
-        "text-location/margin-right" : 0,
-        "shape-parameters/border-thickness" : 1,
-        "shape-parameters/border-color" : "#B2B28E",
-        "shape-parameters/fill-color" : {
-          "content" : "#FFFFCC",
-          "enabled" : true
+        "ignore-non-2d-edges" : false,
+        "forced-vertex-radius" : {
+          "content" : 1,
+          "enabled" : false
         },
-        "title-style/color" : "#000000",
-        "title-style/font-size" : 18,
-        "title-style/font-family" : "Dialog",
-        "title-style/font-style" : "Plain"
+        "jipipe:node:bookmarked" : false,
+        "jipipe:algorithm:pass-through" : false,
+        "jipipe:node:name" : "Convert filaments to 2D ROI",
+        "jipipe:algorithm:runtime-partition" : {
+          "index" : 0
+        },
+        "jipipe:node:description" : "<html><head></head><body></body></html>",
+        "forced-line-thickness" : {
+          "content" : 1,
+          "enabled" : false
+        },
+        "with-vertices" : false,
+        "jipipe:algorithm:custom-expression-variables" : {
+          "parameters" : { }
+        },
+        "jipipe:adaptive-parameters/attach-parameter-annotations" : true,
+        "jipipe:adaptive-parameters/attach-only-non-default-parameter-annotations" : true,
+        "jipipe:adaptive-parameters/parameter-annotations-prefix" : "",
+        "jipipe:adaptive-parameters/overridden-parameters" : [ ],
+        "jipipe:adaptive-parameters/enabled" : true,
+        "jipipe:adaptive-parameters/parameter-annotations-use-internal-names" : false,
+        "jipipe:parameter-slot-algorithm/has-parameter-slot" : false,
+        "jipipe:parameter-slot-algorithm/attach-parameter-annotations" : true,
+        "jipipe:parameter-slot-algorithm/attach-only-non-default-parameter-annotations" : true,
+        "jipipe:parameter-slot-algorithm/parameter-annotations-prefix" : "",
+        "jipipe:parameter-slot-algorithm/parameter-annotations-use-internal-names" : false,
+        "jipipe:data-batch-generation/limit" : {
+          "content" : {
+            "value" : "0-9",
+            "is-expression" : false,
+            "expression" : {
+              "expression" : "MAKE_SEQUENCE(0, 10)"
+            }
+          },
+          "enabled" : false
+        }
+      },
+      "a415c2b3-d1aa-4604-bd20-d8e4dfc1ce81" : {
+        "jipipe:graph-compartment" : "fb3bfe3a-c9c1-4ec4-908b-3f1b7380a851",
+        "jipipe:alias-id" : "mirror-image-over-line-2d-roi",
+        "jipipe:slot-configuration" : {
+          "input" : {
+            "Input" : {
+              "slot-data-type" : "imagej-imgplus",
+              "slot-type" : "Input",
+              "name" : "Input",
+              "custom-name" : null,
+              "description" : "",
+              "is-virtual" : false,
+              "save-outputs" : true,
+              "is-optional" : false
+            },
+            "Mirror" : {
+              "slot-data-type" : "imagej-roi",
+              "slot-type" : "Input",
+              "name" : "Mirror",
+              "custom-name" : null,
+              "description" : "",
+              "is-virtual" : false,
+              "save-outputs" : true,
+              "is-optional" : false
+            }
+          },
+          "output" : {
+            "Output" : {
+              "slot-data-type" : "imagej-imgplus",
+              "slot-type" : "Output",
+              "name" : "Output",
+              "custom-name" : null,
+              "description" : "",
+              "is-virtual" : false,
+              "save-outputs" : true,
+              "is-optional" : false
+            }
+          }
+        },
+        "jipipe:ui-grid-location" : {
+          "fb3bfe3a-c9c1-4ec4-908b-3f1b7380a851" : {
+            "VerticalCompact" : {
+              "x" : 38,
+              "y" : 120
+            }
+          }
+        },
+        "jipipe:node-info-id" : "ij1-transform-line-mirror-by-roi",
+        "jipipe:algorithm:enabled" : true,
+        "jipipe:node:ui-locked" : false,
+        "annotate-with-roi-index" : {
+          "content" : "ROI index",
+          "enabled" : false
+        },
+        "jipipe:node:bookmarked" : false,
+        "jipipe:algorithm:pass-through" : false,
+        "jipipe:node:name" : "Mirror image over line 2D (ROI)",
+        "jipipe:algorithm:runtime-partition" : {
+          "index" : 0
+        },
+        "jipipe:node:description" : "<html><head></head><body></body></html>",
+        "mode" : "Max",
+        "annotate-with-roi-name" : {
+          "content" : "ROI name",
+          "enabled" : false
+        },
+        "jipipe:algorithm:custom-expression-variables" : {
+          "parameters" : { }
+        },
+        "jipipe:adaptive-parameters/attach-parameter-annotations" : true,
+        "jipipe:adaptive-parameters/attach-only-non-default-parameter-annotations" : true,
+        "jipipe:adaptive-parameters/parameter-annotations-prefix" : "",
+        "jipipe:adaptive-parameters/overridden-parameters" : [ ],
+        "jipipe:adaptive-parameters/enabled" : true,
+        "jipipe:adaptive-parameters/parameter-annotations-use-internal-names" : false,
+        "jipipe:parameter-slot-algorithm/has-parameter-slot" : false,
+        "jipipe:parameter-slot-algorithm/attach-parameter-annotations" : true,
+        "jipipe:parameter-slot-algorithm/attach-only-non-default-parameter-annotations" : true,
+        "jipipe:parameter-slot-algorithm/parameter-annotations-prefix" : "",
+        "jipipe:parameter-slot-algorithm/parameter-annotations-use-internal-names" : false,
+        "jipipe:data-batch-generation/annotation-merge-strategy" : "Merge",
+        "jipipe:data-batch-generation/column-matching" : "PrefixHashUnion",
+        "jipipe:data-batch-generation/data-annotation-merge-strategy" : "MergeTables",
+        "jipipe:data-batch-generation/custom-matched-columns-expression" : {
+          "expression" : ""
+        },
+        "jipipe:data-batch-generation/skip-incomplete" : false,
+        "jipipe:data-batch-generation/custom-annotation-matching" : {
+          "expression" : "exact_match_results"
+        },
+        "jipipe:data-batch-generation/limit" : {
+          "content" : {
+            "value" : "0-9",
+            "is-expression" : false,
+            "expression" : {
+              "expression" : "MAKE_SEQUENCE(0, 10)"
+            }
+          },
+          "enabled" : false
+        },
+        "jipipe:data-batch-generation/annotation-matching-method" : "ExactMatch",
+        "jipipe:data-batch-generation/force-flow-graph-solver" : false
+      },
+      "5f887966-72ba-4f87-943a-fbe35bb252ab" : {
+        "jipipe:graph-compartment" : "fb3bfe3a-c9c1-4ec4-908b-3f1b7380a851",
+        "jipipe:alias-id" : "morphological-operation-2d-3",
+        "jipipe:slot-configuration" : {
+          "input" : {
+            "Input" : {
+              "slot-data-type" : "imagej-imgplus",
+              "slot-type" : "Input",
+              "name" : "Input",
+              "custom-name" : null,
+              "description" : "",
+              "is-virtual" : false,
+              "save-outputs" : true,
+              "is-optional" : false
+            }
+          },
+          "output" : {
+            "Output" : {
+              "slot-data-type" : "imagej-imgplus",
+              "slot-type" : "Output",
+              "name" : "Output",
+              "custom-name" : null,
+              "description" : "",
+              "is-virtual" : false,
+              "save-outputs" : true,
+              "is-optional" : false
+            }
+          }
+        },
+        "jipipe:ui-grid-location" : {
+          "" : {
+            "VerticalCompact" : {
+              "x" : 52,
+              "y" : 124
+            }
+          },
+          "fb3bfe3a-c9c1-4ec4-908b-3f1b7380a851" : {
+            "VerticalCompact" : {
+              "x" : 38,
+              "y" : 124
+            }
+          }
+        },
+        "jipipe:node-info-id" : "ij1-morph-operation2d",
+        "jipipe:algorithm:enabled" : true,
+        "jipipe:node:ui-locked" : false,
+        "jipipe:node:bookmarked" : false,
+        "jipipe:algorithm:pass-through" : false,
+        "jipipe:node:name" : "Morphological operation 2D",
+        "jipipe:algorithm:runtime-partition" : {
+          "index" : 0
+        },
+        "jipipe:node:description" : "<html><head></head><body></body></html>",
+        "add-border" : false,
+        "radius" : 5,
+        "operation" : "CLOSING",
+        "element" : "DISK",
+        "border-parameters/jipipe:algorithm:enabled" : true,
+        "border-parameters/jipipe:node:ui-locked" : false,
+        "border-parameters/border-color" : {
+          "expression" : "0"
+        },
+        "border-parameters/jipipe:node:bookmarked" : false,
+        "border-parameters/jipipe:algorithm:pass-through" : false,
+        "border-parameters/jipipe:node:name" : "Add border 2D",
+        "border-parameters/margin-right" : {
+          "expression" : "10"
+        },
+        "border-parameters/jipipe:algorithm:runtime-partition" : {
+          "index" : 0
+        },
+        "border-parameters/jipipe:node:description" : "<html><head></head><body></body></html>",
+        "border-parameters/margin-left" : {
+          "expression" : "10"
+        },
+        "border-parameters/margin-top" : {
+          "expression" : "10"
+        },
+        "border-parameters/border-mode" : "Constant",
+        "border-parameters/margin-bottom" : {
+          "expression" : "10"
+        },
+        "border-parameters/jipipe:algorithm:custom-expression-variables" : {
+          "parameters" : { }
+        },
+        "border-parameters/jipipe:adaptive-parameters/attach-parameter-annotations" : true,
+        "border-parameters/jipipe:adaptive-parameters/attach-only-non-default-parameter-annotations" : true,
+        "border-parameters/jipipe:adaptive-parameters/parameter-annotations-prefix" : "",
+        "border-parameters/jipipe:adaptive-parameters/overridden-parameters" : [ ],
+        "border-parameters/jipipe:adaptive-parameters/enabled" : true,
+        "border-parameters/jipipe:adaptive-parameters/parameter-annotations-use-internal-names" : false,
+        "border-parameters/jipipe:parameter-slot-algorithm/has-parameter-slot" : false,
+        "border-parameters/jipipe:parameter-slot-algorithm/attach-parameter-annotations" : true,
+        "border-parameters/jipipe:parameter-slot-algorithm/attach-only-non-default-parameter-annotations" : true,
+        "border-parameters/jipipe:parameter-slot-algorithm/parameter-annotations-prefix" : "",
+        "border-parameters/jipipe:parameter-slot-algorithm/parameter-annotations-use-internal-names" : false,
+        "border-parameters/jipipe:data-batch-generation/limit" : {
+          "content" : {
+            "value" : "0-9",
+            "is-expression" : false,
+            "expression" : {
+              "expression" : "MAKE_SEQUENCE(0, 10)"
+            }
+          },
+          "enabled" : false
+        },
+        "jipipe:algorithm:custom-expression-variables" : {
+          "parameters" : { }
+        },
+        "jipipe:adaptive-parameters/attach-parameter-annotations" : false,
+        "jipipe:adaptive-parameters/attach-only-non-default-parameter-annotations" : true,
+        "jipipe:adaptive-parameters/parameter-annotations-prefix" : "",
+        "jipipe:adaptive-parameters/overridden-parameters" : [ {
+          "key" : {
+            "expression" : "NUM(PixelSize) * 50"
+          },
+          "value" : "radius"
+        } ],
+        "jipipe:adaptive-parameters/enabled" : true,
+        "jipipe:adaptive-parameters/parameter-annotations-use-internal-names" : false,
+        "jipipe:parameter-slot-algorithm/has-parameter-slot" : false,
+        "jipipe:parameter-slot-algorithm/attach-parameter-annotations" : true,
+        "jipipe:parameter-slot-algorithm/attach-only-non-default-parameter-annotations" : true,
+        "jipipe:parameter-slot-algorithm/parameter-annotations-prefix" : "",
+        "jipipe:parameter-slot-algorithm/parameter-annotations-use-internal-names" : false,
+        "jipipe:data-batch-generation/limit" : {
+          "content" : {
+            "value" : "0-9",
+            "is-expression" : false,
+            "expression" : {
+              "expression" : "MAKE_SEQUENCE(0, 10)"
+            }
+          },
+          "enabled" : false
+        }
       }
     },
     "edges" : [ {
-      "source-node" : "6ab1d4d6-b88d-4ae6-981a-2fa6ae66d81d",
-      "target-node" : "b986be5a-6c34-43bf-8814-3848910fa882",
-      "source-slot" : "Folder paths",
-      "target-slot" : "Folders",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "7a9a9793-0492-4382-a58d-12d9c311b354",
-      "target-node" : "40bd5388-0a6a-4c66-8e14-f228e43c10bf",
-      "source-slot" : "Results table",
-      "target-slot" : "Annotations",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "2cebed73-1a7b-4be1-a5a2-1fb6b76bfa03",
-      "target-node" : "e4aa1d5e-b26c-4b49-995c-02d892875764",
+      "source-node" : "37fa42c9-d08b-49d7-bbd2-2b5c254c54e1",
+      "target-node" : "4e8a123b-1c31-4329-8ffd-7b35b892a3f7",
       "source-slot" : "Output",
       "target-slot" : "Input",
       "metadata" : {
@@ -5384,125 +6261,17 @@
         "ui-shape" : "Elbow"
       }
     }, {
-      "source-node" : "32ed1b6d-bf56-47f3-8498-15fb00d0f42b",
-      "target-node" : "9b456697-7fef-4020-9615-1e2c26ab9ce8",
-      "source-slot" : "Folder paths",
-      "target-slot" : "Folders",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "cf80f274-c15e-4f28-8cc5-60e54387a49b",
-      "target-node" : "8fc51f7a-5e36-4933-8f94-7d67a03a5e11",
-      "source-slot" : "Output",
+      "source-node" : "e668ab13-d13d-42f8-9c26-1c9584f9329d",
+      "target-node" : "a1d6177e-c786-45ef-bed1-20817c4de899",
+      "source-slot" : "ROI",
       "target-slot" : "Input",
       "metadata" : {
         "ui-visibility" : "Smart",
         "ui-shape" : "Elbow"
       }
     }, {
-      "source-node" : "cf516e12-d119-4a66-8452-5436f93928b2",
-      "target-node" : "a4cd2aff-ad08-4f06-aa93-cb33dffe6953",
-      "source-slot" : "Output",
-      "target-slot" : "Input",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "50b33ae4-99b1-4ef6-9eaf-3a4e0aba4fa0",
-      "target-node" : "e668ab13-d13d-42f8-9c26-1c9584f9329d",
-      "source-slot" : "Strip",
-      "target-slot" : "Mask",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "a4cd2aff-ad08-4f06-aa93-cb33dffe6953",
-      "target-node" : "be5db469-effb-477d-80e9-9fdeaf572cd8",
-      "source-slot" : "Output",
-      "target-slot" : "Input",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "8fc51f7a-5e36-4933-8f94-7d67a03a5e11",
-      "target-node" : "f6d1bf95-15ee-46d3-a40c-e9b803a4a208",
-      "source-slot" : "Output",
-      "target-slot" : "Skeleton",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "eb1534e0-95b0-46a4-b07d-8aa6028627db",
-      "target-node" : "cf516e12-d119-4a66-8452-5436f93928b2",
-      "source-slot" : "Output",
-      "target-slot" : "Mask",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "ff44442e-35bb-4a72-93b5-9120ac784474",
-      "target-node" : "4fe0f2d8-040b-4097-82ed-5dd931f1a347",
-      "source-slot" : "Files",
-      "target-slot" : "Paths",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "b986be5a-6c34-43bf-8814-3848910fa882",
-      "target-node" : "b18af83b-0e11-4073-82b4-1992341ce18a",
-      "source-slot" : "Files",
-      "target-slot" : "Paths",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "373419c2-da6b-474e-a429-94fd951c0fa4",
-      "target-node" : "7631c441-772a-48c3-b0d2-95574809ac99",
-      "source-slot" : "Output",
-      "target-slot" : "Input",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "6f56801d-dcb9-48c2-9122-d8d962ffbf8b",
-      "target-node" : "7a2ac438-df31-4ac0-8324-988823cdde97",
-      "source-slot" : "Output",
-      "target-slot" : "Input",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "be5db469-effb-477d-80e9-9fdeaf572cd8",
-      "target-node" : "cf80f274-c15e-4f28-8cc5-60e54387a49b",
-      "source-slot" : "Output",
-      "target-slot" : "Input",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "f2b7c234-40b1-44ca-89e9-651a5c184e67",
-      "target-node" : "b86ebb1a-bfc4-4459-a730-f9b05c707c7a",
-      "source-slot" : "Output",
-      "target-slot" : "Input",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "3ce0f938-61c1-418e-9a0a-815299da1acb",
-      "target-node" : "e3ca19d8-47ce-433b-9387-1180093aeb40",
+      "source-node" : "ec78b386-41d3-4be6-ae34-a3edc15deef2",
+      "target-node" : "f2b7c234-40b1-44ca-89e9-651a5c184e67",
       "source-slot" : "Output",
       "target-slot" : "Input",
       "metadata" : {
@@ -5519,26 +6288,8 @@
         "ui-shape" : "Elbow"
       }
     }, {
-      "source-node" : "a7972570-7e5a-4479-88c8-8069ee844b25",
-      "target-node" : "7a9a9793-0492-4382-a58d-12d9c311b354",
-      "source-slot" : "Filename",
-      "target-slot" : "Files",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "8f625160-d92e-4146-af36-3c47f36dd29e",
-      "target-node" : "50b33ae4-99b1-4ef6-9eaf-3a4e0aba4fa0",
-      "source-slot" : "Image",
-      "target-slot" : "Strip",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "7631c441-772a-48c3-b0d2-95574809ac99",
-      "target-node" : "6f56801d-dcb9-48c2-9122-d8d962ffbf8b",
+      "source-node" : "a2686ff9-a5fd-42c2-bfec-cb5fe4497e53",
+      "target-node" : "ce328677-4ec9-4973-9328-86a676466c70",
       "source-slot" : "Output",
       "target-slot" : "Input",
       "metadata" : {
@@ -5546,8 +6297,17 @@
         "ui-shape" : "Elbow"
       }
     }, {
-      "source-node" : "9b456697-7fef-4020-9615-1e2c26ab9ce8",
-      "target-node" : "af973a43-4e6e-4afa-9455-03801e99946e",
+      "source-node" : "ade32200-d311-4b9d-8382-5942fead2cd1",
+      "target-node" : "fe960bef-1819-4f06-b8ef-a4351380af4a",
+      "source-slot" : "Output",
+      "target-slot" : "Input",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "b986be5a-6c34-43bf-8814-3848910fa882",
+      "target-node" : "b18af83b-0e11-4073-82b4-1992341ce18a",
       "source-slot" : "Files",
       "target-slot" : "Paths",
       "metadata" : {
@@ -5555,46 +6315,19 @@
         "ui-shape" : "Elbow"
       }
     }, {
-      "source-node" : "f36582ae-18ad-44cb-bc44-217083720b93",
-      "target-node" : "ff44442e-35bb-4a72-93b5-9120ac784474",
-      "source-slot" : "Folder paths",
-      "target-slot" : "Folders",
+      "source-node" : "8fc51f7a-5e36-4933-8f94-7d67a03a5e11",
+      "target-node" : "f6d1bf95-15ee-46d3-a40c-e9b803a4a208",
+      "source-slot" : "Output",
+      "target-slot" : "Skeleton",
       "metadata" : {
         "ui-visibility" : "Smart",
         "ui-shape" : "Elbow"
       }
     }, {
-      "source-node" : "4e8a123b-1c31-4329-8ffd-7b35b892a3f7",
-      "target-node" : "d8ab69eb-bf86-47a1-aff4-439de146a5d0",
+      "source-node" : "75573f93-cdba-498d-b3c7-c04db3bc269a",
+      "target-node" : "d65265dd-568c-4e0b-93fb-01ffdf61a47c",
       "source-slot" : "Output",
       "target-slot" : "Input",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "d8ab69eb-bf86-47a1-aff4-439de146a5d0",
-      "target-node" : "cf3f214b-ad18-4418-b327-81bb7cf05ac8",
-      "source-slot" : "Output",
-      "target-slot" : "Input",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "48b6a647-2452-4bd3-ad93-9c2284c9aa4b",
-      "target-node" : "eb1534e0-95b0-46a4-b07d-8aa6028627db",
-      "source-slot" : "Output",
-      "target-slot" : "I2",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "40bd5388-0a6a-4c66-8e14-f228e43c10bf",
-      "target-node" : "919d6b38-cef7-4008-82eb-fc8ea4b5a907",
-      "source-slot" : "Annotated data",
-      "target-slot" : "Files",
       "metadata" : {
         "ui-visibility" : "Smart",
         "ui-shape" : "Elbow"
@@ -5609,37 +6342,10 @@
         "ui-shape" : "Elbow"
       }
     }, {
-      "source-node" : "b86ebb1a-bfc4-4459-a730-f9b05c707c7a",
-      "target-node" : "373419c2-da6b-474e-a429-94fd951c0fa4",
+      "source-node" : "75dea176-2516-4843-ac10-d71ecf55cf1a",
+      "target-node" : "a2686ff9-a5fd-42c2-bfec-cb5fe4497e53",
       "source-slot" : "Output",
       "target-slot" : "Input",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "37fa42c9-d08b-49d7-bbd2-2b5c254c54e1",
-      "target-node" : "4e8a123b-1c31-4329-8ffd-7b35b892a3f7",
-      "source-slot" : "Output",
-      "target-slot" : "Input",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "cf3f214b-ad18-4418-b327-81bb7cf05ac8",
-      "target-node" : "7631c441-772a-48c3-b0d2-95574809ac99",
-      "source-slot" : "Output",
-      "target-slot" : "Input",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "4fe0f2d8-040b-4097-82ed-5dd931f1a347",
-      "target-node" : "40bd5388-0a6a-4c66-8e14-f228e43c10bf",
-      "source-slot" : "Annotated paths",
-      "target-slot" : "Data",
       "metadata" : {
         "ui-visibility" : "Smart",
         "ui-shape" : "Elbow"
@@ -5648,15 +6354,6 @@
       "source-node" : "7a2ac438-df31-4ac0-8324-988823cdde97",
       "target-node" : "3ce0f938-61c1-418e-9a0a-815299da1acb",
       "source-slot" : "Output",
-      "target-slot" : "Input",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "e668ab13-d13d-42f8-9c26-1c9584f9329d",
-      "target-node" : "37fa42c9-d08b-49d7-bbd2-2b5c254c54e1",
-      "source-slot" : "ROI",
       "target-slot" : "Input",
       "metadata" : {
         "ui-visibility" : "Smart",
@@ -5681,35 +6378,44 @@
         "ui-shape" : "Elbow"
       }
     }, {
-      "source-node" : "50b33ae4-99b1-4ef6-9eaf-3a4e0aba4fa0",
-      "target-node" : "48b6a647-2452-4bd3-ad93-9c2284c9aa4b",
-      "source-slot" : "Strip",
+      "source-node" : "4fe0f2d8-040b-4097-82ed-5dd931f1a347",
+      "target-node" : "40bd5388-0a6a-4c66-8e14-f228e43c10bf",
+      "source-slot" : "Annotated paths",
+      "target-slot" : "Data",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "6f56801d-dcb9-48c2-9122-d8d962ffbf8b",
+      "target-node" : "7a2ac438-df31-4ac0-8324-988823cdde97",
+      "source-slot" : "Output",
       "target-slot" : "Input",
       "metadata" : {
         "ui-visibility" : "Smart",
         "ui-shape" : "Elbow"
       }
     }, {
-      "source-node" : "b18af83b-0e11-4073-82b4-1992341ce18a",
-      "target-node" : "8f625160-d92e-4146-af36-3c47f36dd29e",
-      "source-slot" : "Annotated paths",
+      "source-node" : "2cebed73-1a7b-4be1-a5a2-1fb6b76bfa03",
+      "target-node" : "e4aa1d5e-b26c-4b49-995c-02d892875764",
+      "source-slot" : "Output",
+      "target-slot" : "Input",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "a7972570-7e5a-4479-88c8-8069ee844b25",
+      "target-node" : "7a9a9793-0492-4382-a58d-12d9c311b354",
+      "source-slot" : "Filename",
       "target-slot" : "Files",
       "metadata" : {
         "ui-visibility" : "Smart",
         "ui-shape" : "Elbow"
       }
     }, {
-      "source-node" : "3b70eae2-58ed-42f7-990d-7c19260df0f4",
-      "target-node" : "50b33ae4-99b1-4ef6-9eaf-3a4e0aba4fa0",
-      "source-slot" : "Image",
-      "target-slot" : "Plate",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "e4aa1d5e-b26c-4b49-995c-02d892875764",
-      "target-node" : "cf516e12-d119-4a66-8452-5436f93928b2",
+      "source-node" : "be5db469-effb-477d-80e9-9fdeaf572cd8",
+      "target-node" : "cf80f274-c15e-4f28-8cc5-60e54387a49b",
       "source-slot" : "Output",
       "target-slot" : "Input",
       "metadata" : {
@@ -5717,19 +6423,82 @@
         "ui-shape" : "Elbow"
       }
     }, {
-      "source-node" : "ec78b386-41d3-4be6-ae34-a3edc15deef2",
-      "target-node" : "f2b7c234-40b1-44ca-89e9-651a5c184e67",
-      "source-slot" : "Output",
-      "target-slot" : "Input",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "eb1534e0-95b0-46a4-b07d-8aa6028627db",
+      "source-node" : "50b33ae4-99b1-4ef6-9eaf-3a4e0aba4fa0",
       "target-node" : "2cebed73-1a7b-4be1-a5a2-1fb6b76bfa03",
+      "source-slot" : "Raw",
+      "target-slot" : "Input",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "e668ab13-d13d-42f8-9c26-1c9584f9329d",
+      "target-node" : "37fa42c9-d08b-49d7-bbd2-2b5c254c54e1",
+      "source-slot" : "ROI",
+      "target-slot" : "Input",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "cf516e12-d119-4a66-8452-5436f93928b2",
+      "target-node" : "a4cd2aff-ad08-4f06-aa93-cb33dffe6953",
       "source-slot" : "Output",
-      "target-slot" : "Mask",
+      "target-slot" : "Input",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "cf3f214b-ad18-4418-b327-81bb7cf05ac8",
+      "target-node" : "7631c441-772a-48c3-b0d2-95574809ac99",
+      "source-slot" : "Output",
+      "target-slot" : "Input",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "d65265dd-568c-4e0b-93fb-01ffdf61a47c",
+      "target-node" : "170eb24d-bc9a-47f4-bf44-60593a8143a4",
+      "source-slot" : "Output",
+      "target-slot" : "Input",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "2c5d3334-0898-4de7-a477-34b065ff20ad",
+      "target-node" : "a415c2b3-d1aa-4604-bd20-d8e4dfc1ce81",
+      "source-slot" : "Output",
+      "target-slot" : "Input",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "373419c2-da6b-474e-a429-94fd951c0fa4",
+      "target-node" : "7631c441-772a-48c3-b0d2-95574809ac99",
+      "source-slot" : "Output",
+      "target-slot" : "Input",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "a1d6177e-c786-45ef-bed1-20817c4de899",
+      "target-node" : "75dea176-2516-4843-ac10-d71ecf55cf1a",
+      "source-slot" : "Output",
+      "target-slot" : "Input",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "7a9a9793-0492-4382-a58d-12d9c311b354",
+      "target-node" : "40bd5388-0a6a-4c66-8e14-f228e43c10bf",
+      "source-slot" : "Results table",
+      "target-slot" : "Annotations",
       "metadata" : {
         "ui-visibility" : "Smart",
         "ui-shape" : "Elbow"
@@ -5744,9 +6513,297 @@
         "ui-shape" : "Elbow"
       }
     }, {
-      "source-node" : "50b33ae4-99b1-4ef6-9eaf-3a4e0aba4fa0",
+      "source-node" : "ad59212f-6f0c-4d5d-8bdf-8bbdfb552a4e",
+      "target-node" : "ade32200-d311-4b9d-8382-5942fead2cd1",
+      "source-slot" : "Output",
+      "target-slot" : "Input",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "ce328677-4ec9-4973-9328-86a676466c70",
+      "target-node" : "97c457fe-3e11-43cf-abe7-d0bac946759a",
+      "source-slot" : "Output",
+      "target-slot" : "Input",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "d8ab69eb-bf86-47a1-aff4-439de146a5d0",
+      "target-node" : "cf3f214b-ad18-4418-b327-81bb7cf05ac8",
+      "source-slot" : "Output",
+      "target-slot" : "Input",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "9b456697-7fef-4020-9615-1e2c26ab9ce8",
+      "target-node" : "af973a43-4e6e-4afa-9455-03801e99946e",
+      "source-slot" : "Files",
+      "target-slot" : "Paths",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "5f887966-72ba-4f87-943a-fbe35bb252ab",
+      "target-node" : "3002f4e5-a01f-4595-b77e-04accd82f78a",
+      "source-slot" : "Output",
+      "target-slot" : "Input",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "3ce0f938-61c1-418e-9a0a-815299da1acb",
+      "target-node" : "ad59212f-6f0c-4d5d-8bdf-8bbdfb552a4e",
+      "source-slot" : "Output",
+      "target-slot" : "Input",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "32ed1b6d-bf56-47f3-8498-15fb00d0f42b",
+      "target-node" : "9b456697-7fef-4020-9615-1e2c26ab9ce8",
+      "source-slot" : "Folder paths",
+      "target-slot" : "Folders",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "b18af83b-0e11-4073-82b4-1992341ce18a",
+      "target-node" : "8f625160-d92e-4146-af36-3c47f36dd29e",
+      "source-slot" : "Annotated paths",
+      "target-slot" : "Files",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "48b6a647-2452-4bd3-ad93-9c2284c9aa4b",
+      "target-node" : "eb1534e0-95b0-46a4-b07d-8aa6028627db",
+      "source-slot" : "Output",
+      "target-slot" : "I2",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "f36582ae-18ad-44cb-bc44-217083720b93",
+      "target-node" : "ff44442e-35bb-4a72-93b5-9120ac784474",
+      "source-slot" : "Folder paths",
+      "target-slot" : "Folders",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "eb1534e0-95b0-46a4-b07d-8aa6028627db",
       "target-node" : "2cebed73-1a7b-4be1-a5a2-1fb6b76bfa03",
+      "source-slot" : "Output",
+      "target-slot" : "Mask",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "50b33ae4-99b1-4ef6-9eaf-3a4e0aba4fa0",
+      "target-node" : "e668ab13-d13d-42f8-9c26-1c9584f9329d",
+      "source-slot" : "Strip",
+      "target-slot" : "Mask",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "50b33ae4-99b1-4ef6-9eaf-3a4e0aba4fa0",
+      "target-node" : "2c5d3334-0898-4de7-a477-34b065ff20ad",
       "source-slot" : "Raw",
+      "target-slot" : "Image",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "a4cd2aff-ad08-4f06-aa93-cb33dffe6953",
+      "target-node" : "be5db469-effb-477d-80e9-9fdeaf572cd8",
+      "source-slot" : "Output",
+      "target-slot" : "Input",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "e4aa1d5e-b26c-4b49-995c-02d892875764",
+      "target-node" : "cf516e12-d119-4a66-8452-5436f93928b2",
+      "source-slot" : "Output",
+      "target-slot" : "Input",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "ff44442e-35bb-4a72-93b5-9120ac784474",
+      "target-node" : "4fe0f2d8-040b-4097-82ed-5dd931f1a347",
+      "source-slot" : "Files",
+      "target-slot" : "Paths",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "8f625160-d92e-4146-af36-3c47f36dd29e",
+      "target-node" : "50b33ae4-99b1-4ef6-9eaf-3a4e0aba4fa0",
+      "source-slot" : "Image",
+      "target-slot" : "Strip",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "97c457fe-3e11-43cf-abe7-d0bac946759a",
+      "target-node" : "07424ded-24f0-49c8-8184-1a202a5c08b2",
+      "source-slot" : "Output",
+      "target-slot" : "Input",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "1d926896-b22a-474d-9677-fd710d10ed9c",
+      "target-node" : "2c5d3334-0898-4de7-a477-34b065ff20ad",
+      "source-slot" : "Output",
+      "target-slot" : "ROI",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "f2b7c234-40b1-44ca-89e9-651a5c184e67",
+      "target-node" : "b86ebb1a-bfc4-4459-a730-f9b05c707c7a",
+      "source-slot" : "Output",
+      "target-slot" : "Input",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "fe960bef-1819-4f06-b8ef-a4351380af4a",
+      "target-node" : "1d926896-b22a-474d-9677-fd710d10ed9c",
+      "source-slot" : "Output",
+      "target-slot" : "Input",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "6ab1d4d6-b88d-4ae6-981a-2fa6ae66d81d",
+      "target-node" : "b986be5a-6c34-43bf-8814-3848910fa882",
+      "source-slot" : "Folder paths",
+      "target-slot" : "Folders",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "eb1534e0-95b0-46a4-b07d-8aa6028627db",
+      "target-node" : "cf516e12-d119-4a66-8452-5436f93928b2",
+      "source-slot" : "Output",
+      "target-slot" : "Mask",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "3b70eae2-58ed-42f7-990d-7c19260df0f4",
+      "target-node" : "50b33ae4-99b1-4ef6-9eaf-3a4e0aba4fa0",
+      "source-slot" : "Image",
+      "target-slot" : "Plate",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "cf80f274-c15e-4f28-8cc5-60e54387a49b",
+      "target-node" : "8fc51f7a-5e36-4933-8f94-7d67a03a5e11",
+      "source-slot" : "Output",
+      "target-slot" : "Input",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "40bd5388-0a6a-4c66-8e14-f228e43c10bf",
+      "target-node" : "919d6b38-cef7-4008-82eb-fc8ea4b5a907",
+      "source-slot" : "Annotated data",
+      "target-slot" : "Files",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "07424ded-24f0-49c8-8184-1a202a5c08b2",
+      "target-node" : "75573f93-cdba-498d-b3c7-c04db3bc269a",
+      "source-slot" : "Output",
+      "target-slot" : "Input",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "50b33ae4-99b1-4ef6-9eaf-3a4e0aba4fa0",
+      "target-node" : "48b6a647-2452-4bd3-ad93-9c2284c9aa4b",
+      "source-slot" : "Strip",
+      "target-slot" : "Input",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "7631c441-772a-48c3-b0d2-95574809ac99",
+      "target-node" : "6f56801d-dcb9-48c2-9122-d8d962ffbf8b",
+      "source-slot" : "Output",
+      "target-slot" : "Input",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "170eb24d-bc9a-47f4-bf44-60593a8143a4",
+      "target-node" : "a415c2b3-d1aa-4604-bd20-d8e4dfc1ce81",
+      "source-slot" : "Output",
+      "target-slot" : "Mirror",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "a415c2b3-d1aa-4604-bd20-d8e4dfc1ce81",
+      "target-node" : "5f887966-72ba-4f87-943a-fbe35bb252ab",
+      "source-slot" : "Output",
+      "target-slot" : "Input",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "b86ebb1a-bfc4-4459-a730-f9b05c707c7a",
+      "target-node" : "373419c2-da6b-474e-a429-94fd951c0fa4",
+      "source-slot" : "Output",
+      "target-slot" : "Input",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "4e8a123b-1c31-4329-8ffd-7b35b892a3f7",
+      "target-node" : "d8ab69eb-bf86-47a1-aff4-439de146a5d0",
+      "source-slot" : "Output",
       "target-slot" : "Input",
       "metadata" : {
         "ui-visibility" : "Smart",
