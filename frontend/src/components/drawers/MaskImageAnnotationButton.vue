@@ -22,7 +22,7 @@ import { useRouter } from 'vue-router';
 import {
   downloadFromApi,
   loadDataStringFromApi,
-  loadPayloadInstanceFromApi,
+  loadPayloadInstanceFromApi, removeExtensionIfPresent,
   renderMaskAnnotationId
 } from 'src/types/common';
 import {computed, onMounted, ref, watch} from "vue";
@@ -48,11 +48,14 @@ function openEditor() {
 }
 
 function downloadMask() {
-  $q.loading.show({ message: 'Preparing download ...' });
-  downloadFromApi(`/mask-image-annotation/${image.value?.id}/${props.annotationTypeId}/raw`)
-    .finally(() => {
-      $q.loading.hide();
-    })
+  if(image.value) {
+    $q.loading.show({ message: 'Preparing download ...' });
+    downloadFromApi(`/mask-image-annotation/${image.value?.id}/${props.annotationTypeId}/raw`,
+      removeExtensionIfPresent(image.value?.fileName) + "_" + props.annotationTypeId + ".png")
+      .finally(() => {
+        $q.loading.hide();
+      })
+  }
 }
 
 function queryBackend() {
