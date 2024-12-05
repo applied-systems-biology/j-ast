@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia';
 import {api} from "boot/axios";
 import {jwtDecode, JwtPayload} from "jwt-decode";
+import { GuestLimits } from 'src/types/auth';
 
 type AccessTokenField = string | number | string[] | null
 
@@ -9,22 +10,30 @@ export const useAuthStore = defineStore('auth', {
     accessToken: "",
     refreshToken: "",
     username: "",
-    authorities: [],
-    guestExpireSeconds: 0,
+    authorities: new Array<string>(),
+    limits: new GuestLimits(),
     role: ""
   }),
   getters: {
     isLoggedIn(): boolean {
       return Boolean(this.accessToken && this.accessToken.length > 0)
     },
+    isGuest(): boolean {
+      return this.role == "Guest"
+    },
+    isAdmin(): boolean {
+      return this.role == "Admin"
+    },
+    isUser(): boolean {
+      return this.role == "User"
+    }
   },
   actions: {
     doLogout() {
       this.accessToken = ""
       this.refreshToken = ""
       this.username = ""
-      this.authorities = []
-      this.guestExpireSeconds = 0
+      this.authorities = new Array<string>()
       this.role = ""
     },
     async doRefreshToken() {

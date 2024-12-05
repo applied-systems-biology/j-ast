@@ -1,90 +1,117 @@
 package org.hkijena.jast.controller;
 
 import org.hkijena.jast.config.AccountConfig;
+import org.hkijena.jast.model.entities.User;
+import org.hkijena.jast.payloads.register.UserRegistrationAllowedFeaturesPayload;
+import org.hkijena.jast.payloads.register.UserRegistrationRequest;
 import org.hkijena.jast.repositories.ProjectRepository;
 import org.hkijena.jast.repositories.UserRepository;
+import org.hkijena.jast.services.UserService;
+import org.hkijena.jast.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
-@Controller
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.temporal.TemporalUnit;
+
+@RestController
 public class AccountController {
 
     private final ProjectRepository projectRepository;
     private final UserRepository userRepository;
     private final AccountConfig accountConfig;
     private final PasswordEncoder passwordEncoder;
+    private final UserService userService;
+
 
     @Autowired
-    public AccountController(ProjectRepository projectRepository, UserRepository userRepository, AccountConfig accountConfig, PasswordEncoder passwordEncoder) {
+    public AccountController(ProjectRepository projectRepository, UserRepository userRepository, AccountConfig accountConfig, PasswordEncoder passwordEncoder, UserService userService) {
         this.projectRepository = projectRepository;
         this.userRepository = userRepository;
         this.accountConfig = accountConfig;
         this.passwordEncoder = passwordEncoder;
+        this.userService = userService;
     }
 
-//    @GetMapping("/account")
-//    public ModelAndView getAccountIndex(Model model, Authentication authentication) {
-//        if(authentication != null && authentication.isAuthenticated()) {
-//            projectRepository.putSortedToModel(model, authentication);
-//            User user;
-//            if(authentication.getPrincipal() instanceof UserPrincipal) {
-//                user = ((UserPrincipal) authentication.getPrincipal()).getUser();
-//            }
-//            else if(authentication.getPrincipal() instanceof AdminPrincipal) {
-//                user = new User();
-//                user.setEmail(accountConfig.getAdminUsername());
-//                user.setRole(User.Role.Admin);
-//            }
-//            else {
-//                throw new IllegalArgumentException("Unsupported principal type!");
-//            }
-//            model.addAttribute("currentUser", user);
-//
-//            return new ModelAndView("account");
-//        }
-//        else {
-//            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
-//        }
-//    }
-//
-//    @PostMapping("/account/edit")
-//    public ModelAndView updateAccount(Authentication authentication, RedirectAttributes redirectAttributes, @ModelAttribute CreateUpdateUserMessage createUpdateUserMessage) {
-//        if(authentication != null && authentication.isAuthenticated()) {
-//            User user;
-//            if(authentication.getPrincipal() instanceof UserPrincipal) {
-//                user = ((UserPrincipal) authentication.getPrincipal()).getUser();
-//            }
-//            else if(authentication.getPrincipal() instanceof AdminPrincipal) {
-//                Notification.pushToRedirect("Unable to update account!",
-//                        "This admin account can only be changed by editing the J-AST settings file.",
-//                        Notification.Style.danger,
-//                        redirectAttributes);
-//                return new ModelAndView("redirect:/account");
-//            }
-//            else {
-//                throw new IllegalArgumentException("Unsupported principal type!");
-//            }
-//
-//            if(!StringUtils.isNullOrEmpty(createUpdateUserMessage.getNewPassword())) {
-//                if(!Objects.equals(createUpdateUserMessage.getNewPassword(), createUpdateUserMessage.getNewPasswordConfirm())) {
-//                    Notification.pushToRedirect("Unable to update password!",
-//                            "Please ensure that you correctly repeat the password.",
-//                            Notification.Style.danger,
-//                            redirectAttributes);
-//                    return new ModelAndView("redirect:/account");
-//                }
-//                user.setPassword(passwordEncoder.encode(createUpdateUserMessage.getNewPassword()));
-//            }
-//
-//            user.setFirstName(StringUtils.nullToEmpty(createUpdateUserMessage.getFirstName()));
-//            user.setLastName(StringUtils.nullToEmpty(createUpdateUserMessage.getLastName()));
-//            userRepository.save(user);
-//
-//            return new ModelAndView("redirect:/account");
-//        }
-//        else {
-//            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
-//        }
-//    }
+    @GetMapping("/api/auth/registration-features")
+    public ResponseEntity<UserRegistrationAllowedFeaturesPayload> getAllowedFeatures() {
+        UserRegistrationAllowedFeaturesPayload payload = new UserRegistrationAllowedFeaturesPayload();
+        payload.setAllowGuestAccounts(accountConfig.isAllowGuestAccounts());
+        payload.setAllowSelfRegister(accountConfig.isAllowSelfRegister());
+        payload.setGuestProjectLimit(accountConfig.getGuestProjectLimit());
+        payload.setGuestImageLimit(accountConfig.getGuestImageLimit());
+        payload.setAllowSelfRegister(accountConfig.isAllowSelfRegister());
+        payload.setAdminContact(accountConfig.getAdminContact());
+        return ResponseEntity.ok(payload);
+    }
+
+    @PostMapping("/api/auth/register")
+    public ResponseEntity<String> register(@RequestBody UserRegistrationRequest payload, Authentication authentication) {
+        switch (payload.getRole()) {
+            case Admin ->
+                // Only admins can register a new admin
+                    userService.validateIsAdmin(authentication);
+            case Guest -> {
+                if (!accountConfig.isAllowGuestAccounts()) {
+                    throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+                }
+            }
+            case User -> {
+                if (!accountConfig.isAllowSelfRegister()) {
+                    throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+                }
+            }
+            default -> throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+        }
+
+        // Check E-mail
+        if(StringUtils.isNullOrEmpty(payload.getEmail()) || payload.getEmail().contains(" ") || !payload.getEmail().contains("@") || accountConfig.getAdminUsername().equalsIgnoreCase(payload.getEmail())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid E-Mail");
+        }
+
+        // Check if user already exists
+        if(userRepository.existsByEmailIgnoreCase(payload.getEmail())) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "User already exists! Please contact " + accountConfig.getAdminContact() + " if you forgot your password.");
+        }
+
+        // Check password
+        if(StringUtils.isNullOrEmpty(payload.getPassword()) || payload.getPassword().length() < 6) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid Password");
+        }
+
+        // Check other metadata
+        if(StringUtils.isNullOrEmpty(payload.getFirstName())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid first Name");
+        }
+        if(StringUtils.isNullOrEmpty(payload.getLastName())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid last Name");
+        }
+        if(StringUtils.isNullOrEmpty(payload.getAffiliation())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid affiliation");
+        }
+
+        // Create the user
+        User user = new User();
+        user.setRole(payload.getRole());
+        user.setEmail(payload.getEmail().toLowerCase());
+        user.setPassword(passwordEncoder.encode(payload.getPassword()));
+        user.setFirstName(payload.getFirstName());
+        user.setLastName(payload.getLastName());
+        user.setAffiliation(payload.getAffiliation());
+        user.setGuestExpire(LocalDateTime.now().plus(Duration.ofMinutes(accountConfig.getGuestAccountExpireMinutes())));
+
+        userRepository.save(user);
+
+        return ResponseEntity.ok("Successfully registered user " + payload.getEmail() + " with role " + payload.getRole() + (payload.getRole() == User.Role.Guest ? " (Expires on " + user.getGuestExpire() + ")" : ""));
+    }
 }

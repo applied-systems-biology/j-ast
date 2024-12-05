@@ -43,7 +43,9 @@
           </div>
         </div>
       </q-btn>
-      <q-btn class="project-item" size="lg" icon="add" color="green" outline no-caps @click="newProject">New project
+      <q-btn v-if="canAddProject" class="project-item" size="lg" icon="add" color="green" outline no-caps @click="newProject">New project
+      </q-btn>
+      <q-btn v-else-if="authStore.isGuest" class="project-item" size="lg" icon="block" color="red" outline no-caps @click="sendFailureNotification('Too many projects. Please contact the administrator if you want more.')">Project limit reached
       </q-btn>
     </div>
   </q-page>
@@ -52,7 +54,7 @@
 
 import {useQuasar} from "quasar";
 import {useAuthStore} from "stores/auth-store";
-import {ref} from "vue";
+import { computed, ref } from 'vue';
 import {storeToRefs} from "pinia";
 import {api} from "boot/axios";
 import {useWatchInterval} from "../composables/UseWatchInterval";
@@ -66,6 +68,19 @@ const authStore = useAuthStore()
 const router = useRouter()
 const {isLoggedIn} = storeToRefs(authStore)
 const projectList = ref<ProjectMetadataPayload[] | null>()
+const canAddProject = computed(() => {
+  if(authStore.isLoggedIn && projectList.value) {
+    if(authStore.isGuest) {
+      return projectList.value?.length < authStore.limits.guestMaxProjects
+    }
+    else {
+      return true
+    }
+  }
+  else {
+    return false
+  }
+})
 
 /**
  * Creates a new project

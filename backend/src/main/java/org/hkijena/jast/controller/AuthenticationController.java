@@ -1,6 +1,7 @@
 package org.hkijena.jast.controller;
 
 import jakarta.validation.Valid;
+import org.hkijena.jast.config.AccountConfig;
 import org.hkijena.jast.model.UserPrincipal;
 import org.hkijena.jast.model.entities.User;
 import org.hkijena.jast.payloads.auth.UserAuthenticationLoginRequest;
@@ -33,12 +34,14 @@ public class AuthenticationController {
     private final UserDetailsService userDetailsService;
     private final JwtUtil jwtUtil;
     private final AuthenticationManager authenticationManager;
+    private final AccountConfig accountConfig;
 
     @Autowired
-    public AuthenticationController(UserDetailsService userDetailsService, JwtUtil jwtUtil, AuthenticationManager authenticationManager) {
+    public AuthenticationController(UserDetailsService userDetailsService, JwtUtil jwtUtil, AuthenticationManager authenticationManager, AccountConfig accountConfig) {
         this.userDetailsService = userDetailsService;
         this.jwtUtil = jwtUtil;
         this.authenticationManager = authenticationManager;
+        this.accountConfig = accountConfig;
     }
 
     @PostMapping("api/auth/login")
@@ -60,6 +63,10 @@ public class AuthenticationController {
 
             response.setAccessToken(jwtUtil.generateAccessToken(userDetails.getUsername(), accessExpirationDate));
             response.setRefreshToken(jwtUtil.generateRefreshToken(userDetails.getUsername(), refreshExpirationDate));
+
+            response.setGuestMaxProjects(accountConfig.getGuestProjectLimit());
+            response.setGuestMaxImages(accountConfig.getGuestImageLimit());
+
             if (userDetails instanceof UserPrincipal) {
                 User user = ((UserPrincipal) userDetails).getUser();
                 response.setRole(user.getRole());
