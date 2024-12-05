@@ -15,6 +15,7 @@
     @click="showImage"
   />
   <q-input
+    class="w-100"
     :model-value="model?.fileName"
     :disable="hasTaskRunning"
     filled
@@ -22,6 +23,7 @@
     @update:model-value="onUpdateFileName"
   />
   <q-input
+    class="w-100"
     :model-value="model?.experiment"
     :disable="hasTaskRunning"
     filled
@@ -29,6 +31,7 @@
     @update:model-value="onUpdateExperiment"
   />
   <q-input
+    class="w-100"
     :model-value="model?.sample"
     :disable="hasTaskRunning"
     filled
@@ -36,6 +39,7 @@
     @update:model-value="onUpdateSample"
   />
   <q-input
+    class="w-100"
     :model-value="model?.timePoint"
     :disable="hasTaskRunning"
     filled
@@ -43,6 +47,7 @@
     @update:model-value="onUpdateTimePoint"
   />
   <q-select
+    class="w-100"
     :model-value="model?.assayType"
     :disable="hasTaskRunning"
     filled
@@ -51,6 +56,7 @@
     @update:model-value="onUpdateAssayType"
   />
   <q-input
+    class="w-100"
     :model-value="model?.pixelSizeMillimeter"
     :disable="hasTaskRunning"
     filled
@@ -59,17 +65,20 @@
     @update:model-value="onUpdatePixelSize"
   />
   <MaskImageAnnotationButton
+    class="w-100"
     :disable="hasTaskRunning"
     v-model="model"
     annotation-type-id="plate"
   />
   <MaskImageAnnotationButton
+    class="w-100"
     :disable="hasTaskRunning"
     v-if="model?.assayType != 'Unknown'"
     v-model="model"
     annotation-type-id="strip-disk"
   />
   <MaskImageAnnotationButton
+    class="w-100"
     :disable="hasTaskRunning"
     v-if="model?.assayType == 'ETest'"
     v-model="model"
