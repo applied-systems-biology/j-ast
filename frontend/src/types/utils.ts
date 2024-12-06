@@ -14,3 +14,8 @@ export function formatSeconds(seconds : number) {
 
   return parts.join(', ').replace(/,([^,]*)$/, ' and$1');
 }
+
+export function formatExpirationTime(seconds : number) {
+  const expirationDate = new Date(Date.now() + seconds * 1000);
+  return expirationDate.toLocaleString(); // Adjusts to the user's local timezone
+}

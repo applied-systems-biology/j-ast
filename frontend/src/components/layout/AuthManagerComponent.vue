@@ -10,7 +10,7 @@
       color="light-blue"
       show-value
     >
-      <q-tooltip>This account will expire in {{ formatSeconds(authStore.limits.guestExpireSeconds) }}.</q-tooltip>
+      <q-tooltip>This account will expire on {{ formatExpirationTime(authStore.limits.guestExpireSeconds) }}.</q-tooltip>
     </q-circular-progress>
     <q-btn
       v-if="authStore.role == 'Admin'"
@@ -191,7 +191,7 @@ import { loadPayloadInstanceFromApi } from 'src/types/common';
 import * as EmailValidator from 'email-validator';
 import { instanceToPlain, plainToInstance } from 'class-transformer';
 import { UserAuthenticationLoginResponse } from 'src/types/auth';
-import { formatSeconds } from 'src/types/utils';
+import { formatExpirationTime } from 'src/types/utils';
 
 const $q = useQuasar();
 const $router = useRouter();
