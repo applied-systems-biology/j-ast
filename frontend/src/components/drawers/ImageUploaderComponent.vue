@@ -1,8 +1,14 @@
 <template>
   <div class="q-pa-sm">
-    <div class="q-mb-lg">
-      Please upload the raw image files here:
-    </div>
+    <q-banner
+      inline-actions
+      class="text-white bg-red q-mb-md"
+      rounded
+      v-if="authStore.isGuest"
+    >
+      <q-icon name="info" />
+      Please note that you can only have up to {{ authStore.limits.guestMaxImages }} images per project due to the guest account restrictions.
+    </q-banner>
     <q-btn :disable="uploader?.isBusy" class="full-width q-mb-sm" color="green" icon="upload" @click="uploadNow">Upload now</q-btn>
     <div class="uploader-panel" >
       <q-uploader

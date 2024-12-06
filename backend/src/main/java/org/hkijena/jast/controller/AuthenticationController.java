@@ -66,6 +66,7 @@ public class AuthenticationController {
 
             response.setGuestMaxProjects(accountConfig.getGuestProjectLimit());
             response.setGuestMaxImages(accountConfig.getGuestImageLimit());
+            response.setGuestMaxExpireSeconds(accountConfig.getGuestAccountExpireMinutes() * 60L);
 
             if (userDetails instanceof UserPrincipal) {
                 User user = ((UserPrincipal) userDetails).getUser();

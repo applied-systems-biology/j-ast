@@ -159,10 +159,10 @@
         </q-btn>
         <div class="col-grow" />
         <ProjectResultsButton
-          :project-id="projectId[0]"
+          :project-id="projectId"
           v-model="resultList"/>
         <ProjectBackendTaskButton
-          :project-id="projectId[0]"
+          :project-id="projectId"
           v-model="projectBackendTasks"
           @on-task-finished="onTaskFinished"
         />
@@ -170,7 +170,7 @@
     </q-header>
     <q-drawer elevated side="left" bordered v-model="drawerLeft">
       <ImageUploaderComponent
-        :project-id="projectId[0]"
+        :project-id="projectId"
         @finished="queryBackend"
       />
     </q-drawer>
@@ -256,7 +256,7 @@ const router = useRouter();
 const drawerLeft: Ref<boolean> = ref(false);
 const drawerUnsortedImages = ref(false);
 const projectName = computed(() => projectPayload.value?.name ?? undefined);
-const projectId = $route.params.id;
+const projectId = $route.params.id + ""
 const projectPayload: Ref<ProjectMetadataPayload> = ref(
   new ProjectMetadataPayload()
 );

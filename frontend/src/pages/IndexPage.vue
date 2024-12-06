@@ -12,7 +12,7 @@
         <q-separator dark/>
 
         <q-card-actions>
-          <q-btn :disable="!authStore.isLoggedIn" icon="add" flat @click="newProject">Start a new project</q-btn>
+          <q-btn :disable="!authStore.isLoggedIn || !canAddProject" icon="add" flat @click="newProject">Start a new project</q-btn>
           <q-btn :disable="!authStore.isLoggedIn" icon="refresh" flat @click="refreshProjectList">Refresh</q-btn>
           <q-chip outline color="white" square icon="warning" v-if="!authStore.isLoggedIn">
             You are currently not logged in

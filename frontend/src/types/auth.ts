@@ -26,9 +26,13 @@ export class UserAuthenticationLoginResponse {
   @Expose()
   guestMaxImages: number = 0;
 
+  @Expose()
+  guestMaxExpireSeconds: number = 0;
+
   toLimits() {
     const result = new GuestLimits();
     result.guestExpireSeconds = this.guestExpireSeconds;
+    result.guestMaxExpireSeconds = this.guestMaxExpireSeconds;
     result.guestMaxProjects = this.guestMaxProjects;
     result.guestMaxImages = this.guestMaxImages;
     return result;
@@ -44,4 +48,7 @@ export class GuestLimits {
 
   @Expose()
   guestMaxImages: number = 0;
+
+  @Expose()
+  guestMaxExpireSeconds: number = 0;
 }

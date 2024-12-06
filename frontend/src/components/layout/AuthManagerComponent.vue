@@ -1,5 +1,17 @@
 <template>
-  <div class="q-gutter-sm flex row">
+  <div class="q-gutter-sm flex row flex-center">
+    <q-circular-progress
+      reverse
+      :min="0"
+      :max="authStore.limits.guestMaxExpireSeconds"
+      :value="authStore.limits.guestExpireSeconds"
+      size="32px"
+      track-color="blue-grey"
+      color="light-blue"
+      show-value
+    >
+      <q-tooltip>This account will expire in {{ formatSeconds(authStore.limits.guestExpireSeconds) }}.</q-tooltip>
+    </q-circular-progress>
     <q-btn
       v-if="authStore.role == 'Admin'"
       no-caps
@@ -179,6 +191,7 @@ import { loadPayloadInstanceFromApi } from 'src/types/common';
 import * as EmailValidator from 'email-validator';
 import { instanceToPlain, plainToInstance } from 'class-transformer';
 import { UserAuthenticationLoginResponse } from 'src/types/auth';
+import { formatSeconds } from 'src/types/utils';
 
 const $q = useQuasar();
 const $router = useRouter();

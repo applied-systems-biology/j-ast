@@ -27,10 +27,21 @@ public class UserAuthenticationLoginResponse {
     private long guestExpireSeconds;
 
     @JsonProperty
+    private long guestMaxExpireSeconds;
+
+    @JsonProperty
     private int guestMaxProjects;
 
     @JsonProperty
     private int guestMaxImages;
+
+    public long getGuestMaxExpireSeconds() {
+        return guestMaxExpireSeconds;
+    }
+
+    public void setGuestMaxExpireSeconds(long guestMaxExpireSeconds) {
+        this.guestMaxExpireSeconds = guestMaxExpireSeconds;
+    }
 
     public String getAccessToken() {
         return accessToken;
