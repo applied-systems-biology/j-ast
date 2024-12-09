@@ -1,6 +1,7 @@
 <template>
   <div class="q-gutter-sm flex row flex-center">
     <q-circular-progress
+      v-if="authStore.isGuest"
       reverse
       :min="0"
       :max="authStore.limits.guestMaxExpireSeconds"
