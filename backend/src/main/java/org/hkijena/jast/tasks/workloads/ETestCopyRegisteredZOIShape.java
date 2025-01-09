@@ -77,19 +77,19 @@ public class ETestCopyRegisteredZOIShape implements BackendTaskWorkload {
     public void execute(BackendTaskWorkloadParams params, ProgressInfo progressInfo) throws Throwable {
         writeRawImages(params, params.getPayload().getImageIds(), imageRepository, progressInfo);
         writeMaskAnnotations(params, params.getPayload().getImageIds(), "strip-disk", imageRepository, progressInfo);
-        writeFirstMaskAnnotations(params, params.getPayload().getImageIds(), "zoi-shape", imageRepository, progressInfo);
+        writeRowFirstMaskAnnotations(params, params.getPayload().getImageIds(), "zoi-shape", imageRepository, progressInfo);
 
-//        Map<String, Object> parameterOverrides = new HashMap<>();
-//        for (BackendTaskParameterPayload parameter : params.getPayload().getParameters()) {
-//            parameterOverrides.put(PARAMETER_OVERRIDES.get(parameter.getId()), parameter.getValue());
-//        }
-//
-//        Path projectFilePath = writeSharedFile(params, "image-segment-dda-disk.jip");
-//        progressInfo.log("Project file is " + projectFilePath);
-//        runJIPipe(params, projectFilePath, parameterOverrides, "", progressInfo);
-//
-//        Map<String, Path> maskAnnotationsConfig = new HashMap<>();
-//        maskAnnotationsConfig.put("strip-disk", params.getTmpPath().resolve("strip-disk"));
-//        readMaskAnnotations(params.getPayload().getImageIds(), maskAnnotationsConfig, imageRepository, progressInfo);
+        Map<String, Object> parameterOverrides = new HashMap<>();
+        for (BackendTaskParameterPayload parameter : params.getPayload().getParameters()) {
+            parameterOverrides.put(PARAMETER_OVERRIDES.get(parameter.getId()), parameter.getValue());
+        }
+
+        Path projectFilePath = writeSharedFile(params, "etest-copy-registered-zoi-shape.jip");
+        progressInfo.log("Project file is " + projectFilePath);
+        runJIPipe(params, projectFilePath, parameterOverrides, "", progressInfo);
+
+        Map<String, Path> maskAnnotationsConfig = new HashMap<>();
+        maskAnnotationsConfig.put("zoi-shape", params.getTmpPath().resolve("zoi-shape-aligned"));
+        readMaskAnnotations(params.getPayload().getImageIds(), maskAnnotationsConfig, imageRepository, progressInfo);
     }
 }

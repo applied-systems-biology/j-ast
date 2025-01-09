@@ -1,5 +1,6 @@
 package org.hkijena.jast.tasks;
 
+import com.google.common.collect.Lists;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
 import org.apache.commons.exec.CommandLine;
@@ -20,9 +21,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public interface BackendTaskWorkload {
 
@@ -63,7 +63,7 @@ public interface BackendTaskWorkload {
     default void writeRawImages(BackendTaskWorkloadParams params, Iterable<Long> imageIds, ImageRepository repository, ProgressInfo progressInfo) throws IOException {
         Path rawPath = PathUtils.resolveAndMakeSubDirectory(params.getTmpPath(), "raw");
         Path csvPath = params.getTmpPath().resolve("metadata.csv");
-        final String[] csvHeader = new String[] { "#ImageId", "#Experiment", "#Sample", "#TimePoint", "#AssayType", "PixelSize" };
+        final String[] csvHeader = new String[] { "#ImageId", "#Experiment", "#Sample", "#TimePoint", "#AssayType", "PixelSize", "GroupRow", "GroupColumn" };
         try(FileWriter csvFileWriter = new FileWriter(csvPath.toFile())) {
             CSVPrinter csvPrinter = new CSVPrinter(csvFileWriter, CSVFormat.Builder.create().setDelimiter(',').setHeader(csvHeader).build());
             for (Image image : repository.findAllById(imageIds)) {
@@ -72,7 +72,7 @@ public interface BackendTaskWorkload {
                 Files.write(pngPath, image.getRawData());
 
                 // Write metadata
-                csvPrinter.printRecord(image.getId(), image.getExperiment(), image.getSample(), image.getTimePoint(), image.getAssayType(), image.getPixelSizeMillimeter());
+                csvPrinter.printRecord(image.getId(), image.getExperiment(), image.getSample(), image.getTimePoint(), image.getAssayType(), image.getPixelSizeMillimeter(), image.getGroupRow(), image.getGroupColumn());
             }
         }
     }
@@ -89,6 +89,46 @@ public interface BackendTaskWorkload {
             else {
                 BufferedImage dummy= new BufferedImage(image.getImageWidth(), image.getImageHeight(), BufferedImage.TYPE_BYTE_GRAY);
                 ImageIO.write(dummy, "PNG", pngPath.toFile());
+            }
+        }
+    }
+
+    default void writeRowFirstMaskAnnotations(BackendTaskWorkloadParams params, Iterable<Long> imageIds, String annotationTypeId, ImageRepository repository, ProgressInfo progressInfo) throws IOException {
+        Path rawPath = PathUtils.resolveAndMakeSubDirectory(params.getTmpPath(), annotationTypeId);
+        List<Image> images = Lists.newArrayList(repository.findAllById(imageIds));
+        images.sort(Comparator.comparing(Image::getGroupColumn));
+
+        for (int groupRow : images.stream().map(Image::getGroupRow).collect(Collectors.toSet())) {
+            progressInfo.log("Processing row " + groupRow);
+            byte[] firstAnnotation = null;
+            for (Image image : images) {
+                if(image.getGroupRow() != groupRow) {
+                    continue;
+                }
+                MaskImageAnnotation annotation = image.getMaskImageAnnotation(annotationTypeId);
+                if(annotation != null) {
+                    progressInfo.log("Found first available annotation " + annotationTypeId + " image data " + image.getId());
+                    firstAnnotation = annotation.getRawData();
+                    break;
+                }
+            }
+            for (Image image : images) {
+                if(image.getGroupRow() != groupRow) {
+                    continue;
+                }
+                progressInfo.log("Writing first available mask annotation " + annotationTypeId + " image data " + image.getId());
+                MaskImageAnnotation annotation = image.getMaskImageAnnotation(annotationTypeId);
+                Path pngPath = rawPath.resolve(image.getId() + ".png");
+                if(firstAnnotation != null) {
+                    Files.write(pngPath, firstAnnotation);
+                }
+                else if(annotation != null) {
+                    Files.write(pngPath, annotation.getRawData());
+                }
+                else {
+                    BufferedImage dummy= new BufferedImage(image.getImageWidth(), image.getImageHeight(), BufferedImage.TYPE_BYTE_GRAY);
+                    ImageIO.write(dummy, "PNG", pngPath.toFile());
+                }
             }
         }
     }
