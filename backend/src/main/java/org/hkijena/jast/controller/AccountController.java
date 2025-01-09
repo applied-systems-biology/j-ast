@@ -2,8 +2,8 @@ package org.hkijena.jast.controller;
 
 import org.hkijena.jast.config.AccountConfig;
 import org.hkijena.jast.model.entities.User;
+import org.hkijena.jast.payloads.UserPayload;
 import org.hkijena.jast.payloads.register.UserRegistrationAllowedFeaturesPayload;
-import org.hkijena.jast.payloads.register.UserRegistrationRequest;
 import org.hkijena.jast.repositories.ProjectRepository;
 import org.hkijena.jast.repositories.UserRepository;
 import org.hkijena.jast.services.UserService;
@@ -13,7 +13,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -22,7 +21,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.time.temporal.TemporalUnit;
+import java.util.Objects;
 
 @RestController
 public class AccountController {
@@ -56,18 +55,19 @@ public class AccountController {
     }
 
     @PostMapping("/api/auth/register")
-    public ResponseEntity<String> register(@RequestBody UserRegistrationRequest payload, Authentication authentication) {
+    public ResponseEntity<String> register(@RequestBody UserPayload payload, Authentication authentication) {
         switch (payload.getRole()) {
-            case Admin ->
+            case Admin -> {
                 // Only admins can register a new admin
-                    userService.validateIsAdmin(authentication);
+                userService.validateIsAdmin(authentication);
+            }
             case Guest -> {
-                if (!accountConfig.isAllowGuestAccounts()) {
+                if (!accountConfig.isAllowGuestAccounts() && !userService.isAdmin(authentication)) {
                     throw new ResponseStatusException(HttpStatus.FORBIDDEN);
                 }
             }
             case User -> {
-                if (!accountConfig.isAllowSelfRegister()) {
+                if (!accountConfig.isAllowSelfRegister() && !userService.isAdmin(authentication)) {
                     throw new ResponseStatusException(HttpStatus.FORBIDDEN);
                 }
             }
@@ -75,28 +75,28 @@ public class AccountController {
         }
 
         // Check E-mail
-        if(StringUtils.isNullOrEmpty(payload.getEmail()) || payload.getEmail().contains(" ") || !payload.getEmail().contains("@") || accountConfig.getAdminUsername().equalsIgnoreCase(payload.getEmail())) {
+        if (StringUtils.isNullOrEmpty(payload.getEmail()) || payload.getEmail().contains(" ") || !payload.getEmail().contains("@") || accountConfig.getAdminUsername().equalsIgnoreCase(payload.getEmail())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid E-Mail");
         }
 
         // Check if user already exists
-        if(userRepository.existsByEmailIgnoreCase(payload.getEmail())) {
+        if (userRepository.existsByEmailIgnoreCase(payload.getEmail())) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "User already exists! Please contact " + accountConfig.getAdminContact() + " if you forgot your password.");
         }
 
         // Check password
-        if(StringUtils.isNullOrEmpty(payload.getPassword()) || payload.getPassword().length() < 6) {
+        if (StringUtils.isNullOrEmpty(payload.getNewPassword()) || payload.getNewPassword().length() < 6 || !Objects.equals(payload.getNewPassword(), payload.getNewPasswordConfirm())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid Password");
         }
 
         // Check other metadata
-        if(StringUtils.isNullOrEmpty(payload.getFirstName())) {
+        if (StringUtils.isNullOrEmpty(payload.getFirstName())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid first Name");
         }
-        if(StringUtils.isNullOrEmpty(payload.getLastName())) {
+        if (StringUtils.isNullOrEmpty(payload.getLastName())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid last Name");
         }
-        if(StringUtils.isNullOrEmpty(payload.getAffiliation())) {
+        if (StringUtils.isNullOrEmpty(payload.getAffiliation())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid affiliation");
         }
 
@@ -104,7 +104,7 @@ public class AccountController {
         User user = new User();
         user.setRole(payload.getRole());
         user.setEmail(payload.getEmail().toLowerCase());
-        user.setPassword(passwordEncoder.encode(payload.getPassword()));
+        user.setPassword(passwordEncoder.encode(payload.getNewPassword()));
         user.setFirstName(payload.getFirstName());
         user.setLastName(payload.getLastName());
         user.setAffiliation(payload.getAffiliation());

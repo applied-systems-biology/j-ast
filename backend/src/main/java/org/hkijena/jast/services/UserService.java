@@ -148,4 +148,20 @@ public class UserService implements UserDetailsService, ApplicationContextAware 
             throw new ResponseStatusException(HttpStatus.FORBIDDEN);
         }
     }
+
+    public boolean isAdmin(Authentication authentication) {
+        validateAuthentication(authentication);
+        if(authentication.getPrincipal() instanceof AdminPrincipal) {
+           return true;
+        }
+        else if(authentication.getPrincipal() instanceof UserPrincipal) {
+            if(((UserPrincipal) authentication.getPrincipal()).getUser().getRole() != User.Role.Admin) {
+               return false;
+            }
+        }
+        else {
+            return false;
+        }
+        return true;
+    }
 }
