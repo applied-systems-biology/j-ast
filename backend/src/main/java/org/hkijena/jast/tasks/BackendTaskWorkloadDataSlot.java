@@ -7,6 +7,9 @@ public class BackendTaskWorkloadDataSlot {
     private BackendTaskWorkloadDataSlotType type;
 
     @JsonProperty
+    private BackendTaskWorkloadDataSlotValidationMode validationMode;
+
+    @JsonProperty
     private String name;
 
     public BackendTaskWorkloadDataSlot() {
@@ -15,6 +18,21 @@ public class BackendTaskWorkloadDataSlot {
     public BackendTaskWorkloadDataSlot(String name, BackendTaskWorkloadDataSlotType type) {
         this.name = name;
         this.type = type;
+        this.validationMode = BackendTaskWorkloadDataSlotValidationMode.Always;
+    }
+
+    public BackendTaskWorkloadDataSlot(String name, BackendTaskWorkloadDataSlotType type, BackendTaskWorkloadDataSlotValidationMode validationMode) {
+        this.name = name;
+        this.type = type;
+        this.validationMode = validationMode;
+    }
+
+    public BackendTaskWorkloadDataSlotValidationMode getValidationMode() {
+        return validationMode;
+    }
+
+    public void setValidationMode(BackendTaskWorkloadDataSlotValidationMode validationMode) {
+        this.validationMode = validationMode;
     }
 
     public void setName(String name) {

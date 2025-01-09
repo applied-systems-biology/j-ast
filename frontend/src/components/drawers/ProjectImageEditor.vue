@@ -80,7 +80,7 @@
   <MaskImageAnnotationButton
     class="w-100"
     :disable="hasTaskRunning"
-    v-if="model?.assayType == 'ETest'"
+    v-if="model && imageSupportsMaskAnnotation(model, 'zoi-shape')"
     v-model="model"
     annotation-type-id="zoi-shape"
   />
@@ -91,7 +91,7 @@ import { plainToInstance } from 'class-transformer';
 import MaskImageAnnotationButton from 'components/drawers/MaskImageAnnotationButton.vue';
 import { sendFailureNotification } from 'src/types/notification';
 import { AssayType } from 'src/types/assayType';
-import { ImagePayload } from 'src/types/image';
+import { ImagePayload, imageSupportsMaskAnnotation } from 'src/types/image';
 import {
   BackendTaskPayload,
   imageHasRunningTask,

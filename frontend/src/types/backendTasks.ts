@@ -35,9 +35,17 @@ export  enum BackendTaskWorkloadParameterSlotType {
   Boolean = "Boolean",
 }
 
+export enum BackendTaskWorkloadDataSlotValidationMode {
+  Always = "Always",
+  OncePerRow = "OncePerRow",
+}
+
 export class BackendTaskWorkloadDataSlot {
   @Expose()
   type: BackendTaskWorkloadDataSlotType = BackendTaskWorkloadDataSlotType.ImageMaskAnnotation;
+
+  @Expose()
+  validationMode: BackendTaskWorkloadDataSlotValidationMode = BackendTaskWorkloadDataSlotValidationMode.Always;
 
   @Expose()
   name: string = "";

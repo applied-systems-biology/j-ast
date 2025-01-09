@@ -4,7 +4,8 @@ import { api } from 'boot/axios';
 import {
   Badge,
   createAssayTypeBadge,
-  createExperimentBadge, createPixelSizeBadge,
+  createExperimentBadge,
+  createPixelSizeBadge,
   createSampleBadge,
   createTimePointBadge
 } from 'src/types/badge';
@@ -114,4 +115,11 @@ export class ImagePayload {
     }
     return result;
   }
+}
+
+export function imageSupportsMaskAnnotation(img: ImagePayload, name: string): boolean {
+  if(img.assayType == AssayType.DDA && name == "zoi-shape") {
+    return false;
+  }
+  return true;
 }
