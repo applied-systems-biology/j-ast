@@ -26,12 +26,15 @@ export class UserRegistrationAllowedFeaturesPayload {
   adminContact: string = "<Not provided>";
 }
 
-export class UserRegistrationRequest {
+export class UserPayload {
   @Expose()
   email: string = "";
 
   @Expose()
-  password: string = "";
+  newPassword: string = "";
+
+  @Expose()
+  newPasswordConfirm: string = "";
 
   @Expose()
   firstName: string = "";
@@ -44,4 +47,10 @@ export class UserRegistrationRequest {
 
   @Expose()
   role: UserRole = UserRole.User;
+
+  @Expose()
+  id: number = -1;
+
+  @Expose()
+  allowLogin: boolean = true;
 }

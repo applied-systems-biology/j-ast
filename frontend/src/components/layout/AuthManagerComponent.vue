@@ -15,6 +15,7 @@
     </q-circular-progress>
     <q-btn
       v-if="authStore.role == 'Admin'"
+      to="/admin"
       no-caps
       color="blue-grey"
       icon="settings"
@@ -113,7 +114,7 @@
           />
           <q-input
             type="password"
-            v-model="registrationData.password"
+            v-model="registrationData.newPassword"
             filled
             label="Password"
             :rules="[
@@ -124,12 +125,12 @@
           />
           <q-input
             type="password"
-            v-model="registrationPasswordConfirmation"
+            v-model="registrationData.newPasswordConfirm"
             filled
             label="Confirm password"
             :rules="[
               (val) =>
-                val == registrationData.password || 'Passwords do not match',
+                val == registrationData.newPassword || 'Passwords do not match',
             ]"
             autocomplete="off"
           />
@@ -185,7 +186,7 @@ import {
 } from 'src/types/notification';
 import {
   UserRegistrationAllowedFeaturesPayload,
-  UserRegistrationRequest,
+  UserPayload,
   UserRole,
 } from 'src/types/registration';
 import { loadPayloadInstanceFromApi } from 'src/types/common';
@@ -204,16 +205,16 @@ const authStore = useAuthStore();
 const registrationFeatures = ref<UserRegistrationAllowedFeaturesPayload>(
   new UserRegistrationAllowedFeaturesPayload()
 );
-const registrationData = ref<UserRegistrationRequest>(
-  new UserRegistrationRequest()
+const registrationData = ref<UserPayload>(
+  new UserPayload()
 );
 const registrationDataValid = computed(() => {
   if (!EmailValidator.validate(registrationData.value.email)) {
     return false;
   }
   if (
-    !registrationData.value.password ||
-    registrationData.value.password.length < 6
+    !registrationData.value.newPassword ||
+    registrationData.value.newPassword.length < 6
   ) {
     return false;
   }
@@ -231,7 +232,6 @@ const registrationDataValid = computed(() => {
   }
   return true;
 });
-const registrationPasswordConfirmation = ref<string>('');
 const allowedRegistrationRoles = ref<UserRole[]>([]);
 
 function showLoginDialog() {
@@ -254,7 +254,7 @@ function showRegisterDialog() {
           allowedRegistrationRoles.value = [UserRole.Guest, UserRole.User];
           registrationData.value.role = UserRole.User;
         }
-        registrationPasswordConfirmation.value = '';
+        registrationData.value.newPasswordConfirm = '';
 
         displayRegisterDialog.value = true;
       } else {
@@ -320,6 +320,7 @@ function doRegister() {
       $q.loading.hide();
     });
 }
+
 </script>
 <style scoped lang="scss">
 .dialog-register {
