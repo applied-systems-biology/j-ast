@@ -6,6 +6,7 @@ import org.hkijena.jast.model.entities.Project;
 import org.hkijena.jast.payloads.task.BackendTaskParameterPayload;
 import org.hkijena.jast.repositories.ImageRepository;
 import org.hkijena.jast.repositories.ProjectRepository;
+import org.hkijena.jast.repositories.ResultRepository;
 import org.hkijena.jast.tasks.*;
 import org.hkijena.jast.utils.JASTAnnotation;
 import org.hkijena.jast.utils.ProgressInfo;
@@ -25,6 +26,7 @@ import java.util.Map;
 public class GenerateVisualizationsWorkload implements BackendTaskWorkload {
 
     private final ImageRepository imageRepository;
+    private final ResultRepository resultRepository;
     private final ProjectRepository projectRepository;
     private static final List<BackendTaskWorkloadDataSlot> INPUTS = List.of(JASTAnnotation.Plate.toSlot(BackendTaskWorkloadDataSlotValidationMode.Optional),
             JASTAnnotation.ZOIShape.toSlot(BackendTaskWorkloadDataSlotValidationMode.Optional),
@@ -37,8 +39,9 @@ public class GenerateVisualizationsWorkload implements BackendTaskWorkload {
     private static final Map<String, String> PARAMETER_OVERRIDES = new HashMap<>();
 
     @Autowired
-    public GenerateVisualizationsWorkload(ImageRepository imageRepository, ProjectRepository projectRepository) {
+    public GenerateVisualizationsWorkload(ImageRepository imageRepository, ResultRepository resultRepository, ProjectRepository projectRepository) {
         this.imageRepository = imageRepository;
+        this.resultRepository = resultRepository;
         this.projectRepository = projectRepository;
     }
 
@@ -92,7 +95,10 @@ public class GenerateVisualizationsWorkload implements BackendTaskWorkload {
 
         Map<String, Object> parameterOverrides = new HashMap<>();
         for (BackendTaskParameterPayload parameter : params.getPayload().getParameters()) {
-            parameterOverrides.put(PARAMETER_OVERRIDES.get(parameter.getId()), parameter.getValue());
+            String overriddenKey = PARAMETER_OVERRIDES.get(parameter.getId());
+            if(overriddenKey != null) {
+                parameterOverrides.put(overriddenKey, parameter.getValue());
+            }
         }
 
         Path projectFilePath = writeSharedFile(params, "generate-visualizations.jip");
@@ -103,6 +109,6 @@ public class GenerateVisualizationsWorkload implements BackendTaskWorkload {
         String resultDescription = StringUtils.nullToEmpty(params.getPayload().getParameter("result-description").getValue());
         Project project = projectRepository.findById(params.getPayload().getProjectId()).get();
 
-        readResultsDirectory(resultName, resultDescription, params.getTmpPath().resolve("results"), project, projectRepository, progressInfo);
+        readResultsDirectory(resultName, resultDescription, params.getTmpPath().resolve("results"), project, projectRepository, resultRepository, progressInfo);
     }
 }

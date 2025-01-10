@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import org.hibernate.annotations.Type;
 import org.hkijena.jast.model.ResultItemType;
+import org.hkijena.jast.utils.StringUtils;
 
 import java.io.Serial;
 import java.util.HashMap;
@@ -29,7 +30,6 @@ public class ResultItem {
     private Map<String, Object> metadata = new HashMap<>();
 
     @Column(name = "name", columnDefinition = "TEXT")
-    @NotNull
     private String name;
 
     @Column(name = "path", columnDefinition = "TEXT")
@@ -91,7 +91,7 @@ public class ResultItem {
     }
 
     public String getName() {
-        return name;
+        return StringUtils.nullToEmpty(name);
     }
 
     public void setName(String name) {

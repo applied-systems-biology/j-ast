@@ -1,11 +1,12 @@
 package org.hkijena.jast.tasks;
 
 import com.google.common.collect.Lists;
-import jakarta.validation.constraints.NotNull;
+import jakarta.transaction.Transactional;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
 import org.apache.commons.exec.CommandLine;
 import org.apache.commons.exec.ExecuteWatchdog;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.hkijena.jast.config.RuntimeConfig;
 import org.hkijena.jast.model.AssayType;
 import org.hkijena.jast.model.ResultItemType;
@@ -181,7 +182,7 @@ public interface BackendTaskWorkload {
     }
 
     default ResultItem createResultItemFromPath(Path file, Path resultDirectory) {
-        String path = resultDirectory.relativize(file).getParent().toString();
+        String path = StringUtils.nullToEmpty(resultDirectory.relativize(file).getParent());
         String name = file.getFileName().toString();
 
         ResultItem resultItem = new ResultItem();
@@ -230,7 +231,8 @@ public interface BackendTaskWorkload {
         return resultItem;
     }
 
-    default void readResultsDirectory(String resultName, String resultDescription, Path resultDirectory, Project project, ProjectRepository projectRepository, ProgressInfo progressInfo) throws IOException {
+    @Transactional(Transactional.TxType.REQUIRES_NEW)
+    default void readResultsDirectory(String resultName, String resultDescription, Path resultDirectory, Project project, ProjectRepository projectRepository, ResultRepository resultRepository, ProgressInfo progressInfo) throws IOException {
 
         Result result = new Result();
         result.setName(StringUtils.orElse(resultName, "Result"));
@@ -248,6 +250,7 @@ public interface BackendTaskWorkload {
                 }
                 catch (Throwable e) {
                     progressInfo.log("Unable to read result file " + file);
+                    progressInfo.log(ExceptionUtils.getStackTrace(e));
                 }
                 return FileVisitResult.CONTINUE;
             }
@@ -275,6 +278,7 @@ public interface BackendTaskWorkload {
 
         progressInfo.log("-> Discovered " + result.getResultItems().size() + " result items");
         progressInfo.log("Saving to database ...");
+//        Result savedResult = resultRepository.save(result);
         project.addResult(result);
         projectRepository.save(project);
     }

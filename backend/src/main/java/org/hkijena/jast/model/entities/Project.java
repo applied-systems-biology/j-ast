@@ -6,6 +6,7 @@ import jakarta.validation.constraints.NotNull;
 import org.hkijena.jast.model.AdminPrincipal;
 import org.hkijena.jast.model.Privileges;
 import org.hkijena.jast.model.UserPrincipal;
+import org.hkijena.jast.utils.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
@@ -32,7 +33,6 @@ public class Project {
     private Long id;
 
     @Column(name = "name", columnDefinition = "TEXT")
-    @NotNull
     private String name = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -61,7 +61,7 @@ public class Project {
     }
 
     public @NotNull String getName() {
-        return name;
+        return StringUtils.nullToEmpty(name);
     }
 
     public void setName(@NotNull String name) {

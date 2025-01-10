@@ -2,6 +2,7 @@ package org.hkijena.jast.model.entities;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import org.hkijena.jast.utils.StringUtils;
 
 import java.io.Serial;
 import java.time.LocalDateTime;
@@ -19,7 +20,6 @@ public class User {
     private Long id;
 
     @Column(name = "email", unique = true, columnDefinition = "VARCHAR(320)")
-    @NotNull
     private String email = "";
 
     @Column(name = "first_name", columnDefinition = "TEXT")
@@ -35,13 +35,11 @@ public class User {
     private String password = "";
 
     @Column(name = "role")
-    @NotNull
     @Enumerated(EnumType.STRING)
     private Role role = Role.User;
 
     @Column(name = "allow_login")
-    @NotNull
-    private boolean allowLogin = true;
+    private Boolean allowLogin = true;
 
     @Column(name = "guest_expire")
     private LocalDateTime guestExpire = LocalDateTime.now();
@@ -79,7 +77,7 @@ public class User {
     }
 
     public String getEmail() {
-        return email;
+        return StringUtils.nullToEmpty(email);
     }
 
     public void setEmail(String username) {
@@ -87,7 +85,7 @@ public class User {
     }
 
     public String getPassword() {
-        return password;
+        return StringUtils.nullToEmpty(password);
     }
 
     public void setPassword(String password) {
@@ -95,7 +93,7 @@ public class User {
     }
 
     public String getFirstName() {
-        return firstName;
+        return StringUtils.nullToEmpty(firstName);
     }
 
     public void setFirstName(String firstName) {
@@ -103,7 +101,7 @@ public class User {
     }
 
     public String getLastName() {
-        return lastName;
+        return StringUtils.nullToEmpty(lastName);
     }
 
     public void setLastName(String lastName) {
@@ -111,7 +109,7 @@ public class User {
     }
 
     public Role getRole() {
-        return role;
+        return role != null ? role : Role.User;
     }
 
     public void setRole(Role role) {

@@ -33,31 +33,24 @@ public class Image {
     private Long id;
 
     @Column(name = "experiment", columnDefinition = "TEXT")
-    @NotNull
     private String experiment = "";
 
     @Column(name = "sample", columnDefinition = "TEXT")
-    @NotNull
     private String sample = "";
 
     @Column(name = "timepoint", columnDefinition = "TEXT")
-    @NotNull
     private String timePoint = "";
 
     @Column(name = "original_file_name", columnDefinition = "TEXT")
-    @NotNull
     private String originalFileName;
 
     @Column(name = "image_width")
-    @NotNull
-    private int imageWidth;
+    private Integer imageWidth;
 
     @Column(name = "image_height")
-    @NotNull
-    private int imageHeight;
+    private Integer imageHeight;
 
     @Column(name = "assay_type")
-    @NotNull
     @Enumerated(EnumType.STRING)
     private AssayType assayType = AssayType.Unknown;
 
@@ -65,12 +58,10 @@ public class Image {
     private Project project;
 
     @Column(name = "group_row")
-    @NotNull
-    private int groupRow = -1;
+    private Integer groupRow = -1;
 
     @Column(name = "group_column")
-    @NotNull
-    private int groupColumn = -1;
+    private Integer groupColumn = -1;
 
     @Lob
     @Column(name = "raw_data", columnDefinition = "BLOB")
@@ -150,7 +141,7 @@ public class Image {
 
     @NotNull
     public int getGroupColumn() {
-        return groupColumn;
+        return groupColumn != null ? groupColumn : -1;
     }
 
     public void setGroupColumn(@NotNull int groupColumn) {
@@ -159,7 +150,7 @@ public class Image {
 
     @NotNull
     public int getGroupRow() {
-        return groupRow;
+        return groupRow != null ? groupRow : -1;
     }
 
     public void setGroupRow(@NotNull int groupRow) {
@@ -183,7 +174,7 @@ public class Image {
     }
 
     public @NotNull AssayType getAssayType() {
-        return assayType;
+        return assayType != null ? assayType : AssayType.Unknown;
     }
 
     public void setAssayType(@NotNull AssayType assayType) {
@@ -191,7 +182,7 @@ public class Image {
     }
 
     public int getImageWidth() {
-        return imageWidth;
+        return imageWidth != null ? imageWidth : 0;
     }
 
     public void setImageWidth(int imageWidth) {
@@ -199,7 +190,7 @@ public class Image {
     }
 
     public int getImageHeight() {
-        return imageHeight;
+        return imageHeight != null ? imageHeight : 0;
     }
 
     public void setImageHeight(int imageHeight) {
@@ -215,7 +206,7 @@ public class Image {
     }
 
     public String getExperiment() {
-        return experiment;
+        return StringUtils.nullToEmpty(experiment);
     }
 
     public void setExperiment(String experiment) {
@@ -223,7 +214,7 @@ public class Image {
     }
 
     public String getSample() {
-        return sample;
+        return StringUtils.nullToEmpty(sample);
     }
 
     public void setSample(String name) {
@@ -231,7 +222,7 @@ public class Image {
     }
 
     public String getTimePoint() {
-        return timePoint;
+        return StringUtils.nullToEmpty(timePoint);
     }
 
     public void setTimePoint(String timePoint) {
@@ -239,7 +230,7 @@ public class Image {
     }
 
     public String getOriginalFileName() {
-        return originalFileName;
+        return StringUtils.nullToEmpty(originalFileName);
     }
 
     public void setOriginalFileName(String originalFileName) {

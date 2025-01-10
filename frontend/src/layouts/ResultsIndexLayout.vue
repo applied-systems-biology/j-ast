@@ -61,7 +61,7 @@
                     <div class="text-h6">{{ result.name }}</div>
                     <div class="text-caption">
                       <q-icon size="xs" name="fa-solid fa-circle-info fa-fw" />
-                      {{ result.description }}
+                      {{ result.description || "No description" }}
                     </div>
                     <div class="text-caption">
                       <q-icon size="xs" name="fa-solid fa-clock fa-fw" />

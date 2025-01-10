@@ -60,7 +60,7 @@ public class Result {
     }
 
     public LocalDateTime getCreatedAt() {
-        return createdAt;
+        return createdAt != null ? createdAt : LocalDateTime.now();
     }
 
     public void setCreatedAt(LocalDateTime createdAt) {
