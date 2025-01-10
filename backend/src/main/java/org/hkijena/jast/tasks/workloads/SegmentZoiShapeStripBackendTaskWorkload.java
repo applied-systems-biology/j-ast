@@ -5,6 +5,7 @@ import org.hkijena.jast.model.AssayType;
 import org.hkijena.jast.payloads.task.BackendTaskParameterPayload;
 import org.hkijena.jast.repositories.ImageRepository;
 import org.hkijena.jast.tasks.*;
+import org.hkijena.jast.utils.JASTAnnotation;
 import org.hkijena.jast.utils.ProgressInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -20,9 +21,9 @@ import java.util.Map;
 public class SegmentZoiShapeStripBackendTaskWorkload implements BackendTaskWorkload {
 
     private final ImageRepository imageRepository;
-    private static final List<BackendTaskWorkloadDataSlot> INPUTS = List.of(new BackendTaskWorkloadDataSlot("plate", BackendTaskWorkloadDataSlotType.ImageMaskAnnotation),
-            new BackendTaskWorkloadDataSlot("strip-disk", BackendTaskWorkloadDataSlotType.ImageMaskAnnotation));
-    private static final List<BackendTaskWorkloadDataSlot> OUTPUTS = Collections.singletonList(new BackendTaskWorkloadDataSlot("zoi-shape", BackendTaskWorkloadDataSlotType.ImageMaskAnnotation));
+    private static final List<BackendTaskWorkloadDataSlot> INPUTS = List.of(JASTAnnotation.Plate.toSlot(),
+            JASTAnnotation.StripDisk.toSlot());
+    private static final List<BackendTaskWorkloadDataSlot> OUTPUTS = Collections.singletonList(JASTAnnotation.ZOIShape.toSlot());
     private static final List<BackendTaskWorkloadParameterSlot> PARAMETERS = List.of();
     private static final Map<String, String> PARAMETER_OVERRIDES = new HashMap<>();
 

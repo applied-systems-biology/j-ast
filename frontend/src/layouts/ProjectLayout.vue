@@ -265,12 +265,26 @@ const selectedImageIds = ref<Array<number>>([]);
 const availableBackendTasks = ref<Array<BackendTaskTypePayload>>([]);
 const projectBackendTasks = ref<Array<BackendTaskPayload>>([]);
 const resultList = ref<ResultPayload[]>();
+
 const availableBackendTasksCategories = computed(() => {
+  const predefinedOrder = ["Plate", "DDA", "E-Test", "Analyze"];
   const result = new Set<string>();
   for (const taskType of availableBackendTasks.value) {
     result.add(taskType.category || '');
   }
-  return result;
+
+  // Convert the Set to an Array and sort
+  const predefinedOrderSet = new Set(predefinedOrder);
+  const sortedList = Array.from(result).sort((a, b) => {
+    const indexA = predefinedOrderSet.has(a) ? predefinedOrder.indexOf(a) : predefinedOrder.length;
+    const indexB = predefinedOrderSet.has(b) ? predefinedOrder.indexOf(b) : predefinedOrder.length;
+    if (indexA !== indexB) {
+      return indexA - indexB; // Sort by predefined order
+    }
+    return a.localeCompare(b); // Sort alphabetically for items not in the predefined order
+  });
+
+  return sortedList;
 });
 
 // Computed values

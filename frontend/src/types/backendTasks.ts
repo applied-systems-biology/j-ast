@@ -1,5 +1,5 @@
 import { Expose, instanceToPlain } from 'class-transformer';
-import { ImagePayload } from 'src/types/image';
+import { ImagePayload, imageSupportsMaskAnnotation } from "src/types/image";
 import { Dialog } from 'quasar';
 import BackendTaskSetupDialog from 'components/backendProcessors/BackendTaskSetupDialog.vue';
 import { ProjectImagesPayload } from 'src/types/projectImages';
@@ -37,7 +37,14 @@ export  enum BackendTaskWorkloadParameterSlotType {
 
 export enum BackendTaskWorkloadDataSlotValidationMode {
   Always = "Always",
+  Optional = "Optional",
   OncePerRow = "OncePerRow",
+}
+
+export enum BackendTaskWorkloadDataSlotValidationResult {
+  Ok = "Ok",
+  MandatoryMissing = "MandatoryMissing",
+  OptionalMissing = "OptionalMissing",
 }
 
 export class BackendTaskWorkloadDataSlot {
@@ -145,6 +152,52 @@ export function imageHasRunningTask(imageId: number | undefined, tasks: BackendT
     return false
   } else {
     return false
+  }
+}
+
+export function imageSupportsBackendInputSlot(image: ImagePayload, slot: BackendTaskWorkloadDataSlot) : boolean {
+  if(slot.type == BackendTaskWorkloadDataSlotType.ImageMaskAnnotation) {
+    return imageSupportsMaskAnnotation(image, slot.name);
+  }
+  else {
+    return false;
+  }
+}
+
+export function validateImageBackendInputSlot(image: ImagePayload, otherImages: ImagePayload[], slot: BackendTaskWorkloadDataSlot) : BackendTaskWorkloadDataSlotValidationResult {
+  if(slot.type == BackendTaskWorkloadDataSlotType.ImageMaskAnnotation) {
+
+    if(slot.validationMode == BackendTaskWorkloadDataSlotValidationMode.Always) {
+      for(const annotation of image.maskImageAnnotations) {
+        if(annotation.annotationTypeId == slot.name) {
+          return annotation.version > 0 ? BackendTaskWorkloadDataSlotValidationResult.Ok : BackendTaskWorkloadDataSlotValidationResult.MandatoryMissing
+        }
+      }
+    }
+    else if(slot.validationMode == BackendTaskWorkloadDataSlotValidationMode.Optional) {
+      for(const annotation of image.maskImageAnnotations) {
+        if(annotation.annotationTypeId == slot.name) {
+          return annotation.version > 0 ? BackendTaskWorkloadDataSlotValidationResult.Ok : BackendTaskWorkloadDataSlotValidationResult.OptionalMissing
+        }
+      }
+    }
+    else if (slot.validationMode == BackendTaskWorkloadDataSlotValidationMode.OncePerRow) {
+      const targetRow = image.groupRow
+      for(const otherImage of otherImages) {
+        if(otherImage.groupRow == targetRow) {
+          for(const annotation of otherImage.maskImageAnnotations) {
+            if(annotation.annotationTypeId == slot.name && annotation.version > 0) {
+              return BackendTaskWorkloadDataSlotValidationResult.Ok
+            }
+          }
+        }
+      }
+    }
+
+    return BackendTaskWorkloadDataSlotValidationResult.MandatoryMissing
+  }
+  else {
+    return BackendTaskWorkloadDataSlotValidationResult.MandatoryMissing
   }
 }
 

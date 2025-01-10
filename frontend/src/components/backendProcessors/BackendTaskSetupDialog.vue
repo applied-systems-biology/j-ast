@@ -10,7 +10,7 @@
           <q-icon name="help" />
           Info
         </div>
-        <div>{{ props.taskType.description }}</div>
+        <div class="q-mb-md">{{ props.taskType.description }}</div>
         <div>
           Depending on the task and the number of images, this will take a few
           minutes.
@@ -34,7 +34,13 @@
           This operation is applied for the whole column. Your selection was
           updated accordingly.
         </div>
-        <div v-if="issuesDetected" class="text-red">
+        <div
+          v-if="
+            validateAllInputs ==
+            BackendTaskWorkloadDataSlotValidationResult.MandatoryMissing
+          "
+          class="text-red"
+        >
           <q-icon name="warning" />
           There were some issues (e.g., missing inputs, wrong parameters)
           detected. Please review the parameters and the list if processed
@@ -108,8 +114,12 @@
           <template v-slot:body-cell-inputs="props">
             <q-td :props="props">
               <template v-for="slot in props.value" :key="slot.slot.name">
-                <div v-if="slot.present" class="text-green">
+                <div v-if="slot.validation == BackendTaskWorkloadDataSlotValidationResult.Ok" class="text-green">
                   <q-icon name="fa-solid fa-check" />
+                  {{ renderMaskAnnotationId2(slot.slot.name) }}
+                </div>
+                <div v-else-if="slot.validation == BackendTaskWorkloadDataSlotValidationResult.OptionalMissing" class="text-orange">
+                  <q-icon name="fa-solid fa-circle-info" />
                   {{ renderMaskAnnotationId2(slot.slot.name) }}
                 </div>
                 <div v-else class="text-red">
@@ -141,20 +151,21 @@
   </q-dialog>
 </template>
 <script setup lang="ts">
-import { useDialogPluginComponent } from "quasar";
-import { computed, onMounted, ref } from "vue";
-import { ImagePayload, imageSupportsMaskAnnotation } from "src/types/image";
+import { useDialogPluginComponent } from 'quasar';
+import { computed, onMounted, ref } from 'vue';
+import { ImagePayload } from 'src/types/image';
 import {
   BackendTaskPayload,
   BackendTaskTypePayload,
   BackendTaskWorkloadDataSlot,
-  BackendTaskWorkloadDataSlotType,
-  BackendTaskWorkloadDataSlotValidationMode,
+  BackendTaskWorkloadDataSlotValidationResult,
   BackendTaskWorkloadMode,
-  BackendTaskWorkloadParameterSlotType
-} from "src/types/backendTasks";
-import ProjectImageButton from "components/arranger/ProjectImageButton.vue";
-import { renderMaskAnnotationId2 } from "src/types/common";
+  BackendTaskWorkloadParameterSlotType,
+  imageSupportsBackendInputSlot,
+  validateImageBackendInputSlot,
+} from 'src/types/backendTasks';
+import ProjectImageButton from 'components/arranger/ProjectImageButton.vue';
+import { renderMaskAnnotationId2 } from 'src/types/common';
 
 const payload = ref<BackendTaskPayload>(new BackendTaskPayload());
 
@@ -162,7 +173,7 @@ const props = defineProps<{
   taskType: BackendTaskTypePayload;
   images: ImagePayload[];
   projectId: number;
-}>()
+}>();
 
 defineEmits([
   // REQUIRED; need to specify some events that your
@@ -170,7 +181,7 @@ defineEmits([
   ...useDialogPluginComponent.emits,
 ]);
 
-const {dialogRef, onDialogHide, onDialogOK, onDialogCancel} =
+const { dialogRef, onDialogHide, onDialogOK, onDialogCancel } =
   useDialogPluginComponent();
 
 function onOKClick() {
@@ -178,97 +189,79 @@ function onOKClick() {
 }
 
 const previewRows = computed(() => {
-  const result = []
-  for(const image of props.images) {
-    const row : Record<string, any> = {}
-    const inputReport: Array< { slot: BackendTaskWorkloadDataSlot, present: boolean } > = []
-    const outputReport: Array< { slot: BackendTaskWorkloadDataSlot } > = []
+  const result = [];
+  for (const image of props.images) {
+    const row: Record<string, any> = {};
+    const inputReport: Array<{
+      slot: BackendTaskWorkloadDataSlot;
+      validation: BackendTaskWorkloadDataSlotValidationResult;
+    }> = [];
+    const outputReport: Array<{ slot: BackendTaskWorkloadDataSlot }> = [];
 
     // Check if inputs are present
-    for(const slot of props.taskType.inputs) {
-      if(imageSupports(image, slot)) {
+    for (const slot of props.taskType.inputs) {
+      if (imageSupportsBackendInputSlot(image, slot)) {
         inputReport.push({
           slot: slot,
-          present: imageHas(image, slot),
-        })
+          validation: validateImageBackendInputSlot(image, props.images, slot),
+        });
       }
     }
 
     // Add outputs
-    for(const slot of props.taskType.outputs) {
+    for (const slot of props.taskType.outputs) {
       outputReport.push({
-        slot: slot
-      })
+        slot: slot,
+      });
     }
 
-    row["image"] = image;
-    row["inputs"] = inputReport;
-    row["outputs"] = outputReport;
-    result.push(row)
+    row['image'] = image;
+    row['inputs'] = inputReport;
+    row['outputs'] = outputReport;
+    result.push(row);
   }
-  return result
-})
+  return result;
+});
 
-const issuesDetected = computed(() => {
-  for(const image of props.images) {
-    for(const slot of props.taskType.inputs) {
-      if(imageSupports(image, slot) && !imageHas(image, slot)) {
-        return true
-      }
-    }
-  }
-  return false
-})
-
-function imageSupports(image: ImagePayload, slot: BackendTaskWorkloadDataSlot) : boolean {
-  if(slot.type == BackendTaskWorkloadDataSlotType.ImageMaskAnnotation) {
-    return imageSupportsMaskAnnotation(image, slot.name);
-  }
-  else {
-    return false;
-  }
-}
-
-function imageHas(image: ImagePayload, slot: BackendTaskWorkloadDataSlot) : boolean {
-  if(slot.type == BackendTaskWorkloadDataSlotType.ImageMaskAnnotation) {
-
-    if(slot.validationMode == BackendTaskWorkloadDataSlotValidationMode.Always) {
-      for(const annotation of image.maskImageAnnotations) {
-        if(annotation.annotationTypeId == slot.name) {
-          return annotation.version > 0
-        }
-      }
-    } else if (slot.validationMode == BackendTaskWorkloadDataSlotValidationMode.OncePerRow) {
-      const targetRow = image.groupRow
-      console.log(targetRow)
-      for(const otherImage of props.images) {
-        if(otherImage.groupRow == targetRow) {
-          for(const annotation of otherImage.maskImageAnnotations) {
-            if(annotation.annotationTypeId == slot.name && annotation.version > 0) {
-              return true
-            }
-          }
+const validateAllInputs = computed(() => {
+  let response = BackendTaskWorkloadDataSlotValidationResult.Ok;
+  for (const image of props.images) {
+    for (const slot of props.taskType.inputs) {
+      if (imageSupportsBackendInputSlot(image, slot)) {
+        const imageValidation = validateImageBackendInputSlot(
+          image,
+          props.images,
+          slot
+        );
+        if (
+          response == BackendTaskWorkloadDataSlotValidationResult.Ok &&
+          imageValidation != BackendTaskWorkloadDataSlotValidationResult.Ok
+        ) {
+          response = imageValidation;
+        } else if (
+          response ==
+            BackendTaskWorkloadDataSlotValidationResult.OptionalMissing &&
+          imageValidation ==
+            BackendTaskWorkloadDataSlotValidationResult.MandatoryMissing
+        ) {
+          response = imageValidation;
         }
       }
     }
-
-    return false
   }
-  else {
-    return false
-  }
-}
+  return response;
+});
 
 onMounted(() => {
-  payload.value.taskId = props.taskType.taskId
-  payload.value.imageIds = props.images.map(image => image.id)
-  payload.value.projectId = props.projectId
+  payload.value.taskId = props.taskType.taskId;
+  payload.value.imageIds = props.images.map((image) => image.id);
+  payload.value.projectId = props.projectId;
 
   //Copy over parameters
-  for(const parameter of props.taskType.parameters) {
-    payload.value.parameters.push(parameter)
+  for (const parameter of props.taskType.parameters) {
+    payload.value.parameters.push(parameter);
   }
-})
+});
 </script>
 <style scoped lang="scss">
 $grid-item-width: 18rem;

@@ -9,6 +9,10 @@ public enum BackendTaskWorkloadDataSlotValidationMode {
      */
     Always,
     /**
+     * Optionally contains the data
+     */
+    Optional,
+    /**
      * Only one slot per row needs the data
      */
     OncePerRow
