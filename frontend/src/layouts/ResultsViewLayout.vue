@@ -17,17 +17,16 @@
             >{{ projectPayload.name }}
           </router-link>
           <div>/</div>
-          <div>Results</div>
+          <router-link
+            style="text-decoration: underline; color: inherit"
+            :to="`/results/list/${projectId}`"
+          >Results
+          </router-link>
         </q-toolbar-title>
         <AuthManagerComponent />
       </q-toolbar>
       <q-toolbar class="bg-primary text-white edit-toolbar">
         <div class="col-grow" />
-        <ProjectResultsButton :project-id="projectId" v-model="resultList"/>
-        <ProjectBackendTaskButton
-          :project-id="projectId"
-          v-model="projectBackendTasks"
-        />
       </q-toolbar>
     </q-header>
     <q-drawer
@@ -47,11 +46,7 @@ import { useRoute } from 'vue-router';
 import { computed, onMounted, ref, Ref } from 'vue';
 import { ProjectMetadataPayload } from 'src/types/project';
 import { loadPayloadInstanceFromApi } from 'src/types/common';
-import ProjectBackendTaskButton from 'components/layout/ProjectBackendTaskButton.vue';
-import { BackendTaskPayload } from 'src/types/backendTasks';
-import { useIntervalFn } from '@vueuse/core';
-import ProjectResultsButton from 'components/layout/ProjectResultsButton.vue';
-import { FullResultPayload, ResultPayload } from 'src/types/results';
+import { FullResultPayload } from 'src/types/results';
 
 const $route = useRoute();
 const resultId = $route.params.id;
@@ -59,33 +54,11 @@ const projectId = computed(() => result.value.projectId ? result.value.projectId
 const projectPayload: Ref<ProjectMetadataPayload> = ref(
   new ProjectMetadataPayload()
 );
-const projectBackendTasks = ref<Array<BackendTaskPayload>>([]);
 const result = ref<FullResultPayload>(new FullResultPayload());
-const resultList = ref<ResultPayload[]>();
 
 defineOptions({
   name: 'ResultsIndexLayout',
 });
-
-function queryTaskBackend() {
-  if(projectId.value) {
-    loadPayloadInstanceFromApi(
-      `/project/${projectId.value}/tasks`,
-      BackendTaskPayload,
-      projectBackendTasks
-    );
-  }
-}
-
-function queryResultListBackend() {
-  if(projectId.value) {
-    loadPayloadInstanceFromApi(
-      `/project/${projectId.value}/list-results`,
-      ResultPayload,
-      resultList
-    );
-  }
-}
 
 onMounted(() => {
   loadPayloadInstanceFromApi(
@@ -99,12 +72,7 @@ onMounted(() => {
         ProjectMetadataPayload,
         projectPayload
       );
-      queryTaskBackend();
     }
   });
-
-  queryResultListBackend();
 });
-useIntervalFn(queryTaskBackend, 2500);
-useIntervalFn(queryResultListBackend, 4000);
 </script>
