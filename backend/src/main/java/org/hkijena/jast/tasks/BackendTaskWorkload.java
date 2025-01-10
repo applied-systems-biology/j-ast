@@ -1,15 +1,18 @@
 package org.hkijena.jast.tasks;
 
 import com.google.common.collect.Lists;
+import jakarta.validation.constraints.NotNull;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
 import org.apache.commons.exec.CommandLine;
 import org.apache.commons.exec.ExecuteWatchdog;
 import org.hkijena.jast.config.RuntimeConfig;
 import org.hkijena.jast.model.AssayType;
-import org.hkijena.jast.model.entities.Image;
-import org.hkijena.jast.model.entities.MaskImageAnnotation;
+import org.hkijena.jast.model.ResultItemType;
+import org.hkijena.jast.model.entities.*;
 import org.hkijena.jast.repositories.ImageRepository;
+import org.hkijena.jast.repositories.ProjectRepository;
+import org.hkijena.jast.repositories.ResultRepository;
 import org.hkijena.jast.utils.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,9 +21,8 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.nio.file.*;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -176,6 +178,105 @@ public interface BackendTaskWorkload {
         }
 
         imageRepository.saveAll(images);
+    }
+
+    default ResultItem createResultItemFromPath(Path file, Path resultDirectory) {
+        String path = resultDirectory.relativize(file).getParent().toString();
+        String name = file.getFileName().toString();
+
+        ResultItem resultItem = new ResultItem();
+        resultItem.setName(name);
+        resultItem.setPath(path);
+
+        if(name.endsWith(".png") || name.endsWith(".bmp") || name.endsWith(".jpg") || name.endsWith(".jpeg")) {
+            try {
+                BufferedImage bufferedImage = ImageIO.read(file.toFile());
+                resultItem.setRawData(ImageUtils.toPNGByteArray(bufferedImage));
+                resultItem.setThumbnailData(ImageUtils.toPNGByteArrayThumbnail(bufferedImage));
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            resultItem.setType(ResultItemType.Image);
+            resultItem.setVisualizationType(ResultItemType.Null);
+        }
+        else if(name.endsWith(".csv")) {
+            try {
+                resultItem.setRawData(Files.readAllBytes(file));
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            resultItem.setType(ResultItemType.Table);
+            resultItem.setVisualizationType(ResultItemType.Null);
+        }
+        else if(name.endsWith(".txt") || name.endsWith(".json") || name.endsWith(".xml")) {
+            try {
+                resultItem.setRawData(Files.readAllBytes(file));
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            resultItem.setType(ResultItemType.Text);
+            resultItem.setVisualizationType(ResultItemType.Null);
+        }
+        else {
+            try {
+                resultItem.setRawData(Files.readAllBytes(file));
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            resultItem.setType(ResultItemType.Unknown);
+            resultItem.setVisualizationType(ResultItemType.Null);
+        }
+
+        return resultItem;
+    }
+
+    default void readResultsDirectory(String resultName, String resultDescription, Path resultDirectory, Project project, ProjectRepository projectRepository, ProgressInfo progressInfo) throws IOException {
+
+        Result result = new Result();
+        result.setName(StringUtils.orElse(resultName, "Result"));
+        result.setDescription(StringUtils.nullToEmpty(resultDescription));
+
+
+        FileVisitor<Path> visitor = new SimpleFileVisitor<>() {
+            @Override
+            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                try {
+                    ResultItem item = createResultItemFromPath(file, resultDirectory);
+                    if (item != null) {
+                        result.addResultItem(item);
+                    }
+                }
+                catch (Throwable e) {
+                    progressInfo.log("Unable to read result file " + file);
+                }
+                return FileVisitResult.CONTINUE;
+            }
+
+            @Override
+            public FileVisitResult visitFileFailed(Path file, IOException exc) throws IOException {
+                progressInfo.log("Failed: " + file.toString());
+                return FileVisitResult.CONTINUE;
+            }
+
+            @Override
+            public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
+                if (exc != null) {
+                    throw exc;
+                }
+
+                return FileVisitResult.CONTINUE;
+            }
+        };
+        try {
+            Files.walkFileTree(resultDirectory, visitor);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        progressInfo.log("-> Discovered " + result.getResultItems().size() + " result items");
+        progressInfo.log("Saving to database ...");
+        project.addResult(result);
+        projectRepository.save(project);
     }
 
     default void runJIPipe(BackendTaskWorkloadParams params, Path projectFile, Map<String, Object> parameterOverrides, String prefix, ProgressInfo progressInfo) {

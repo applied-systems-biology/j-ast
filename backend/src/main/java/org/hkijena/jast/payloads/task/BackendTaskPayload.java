@@ -9,6 +9,7 @@ import org.hkijena.jast.utils.JsonUtils;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class BackendTaskPayload {
     @JsonProperty
@@ -116,5 +117,14 @@ public class BackendTaskPayload {
 
     public void setParameters(List<BackendTaskParameterPayload> parameters) {
         this.parameters = parameters;
+    }
+
+    public BackendTaskParameterPayload getParameter(String key) {
+        for (BackendTaskParameterPayload parameter : parameters) {
+            if(Objects.equals(parameter.getId(), key)) {
+                return parameter;
+            }
+        }
+        return null;
     }
 }

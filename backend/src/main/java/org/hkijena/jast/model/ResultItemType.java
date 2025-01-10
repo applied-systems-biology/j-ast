@@ -3,5 +3,7 @@ package org.hkijena.jast.model;
 public enum ResultItemType {
     Image,
     Table,
-    Unknown
+    Text,
+    Unknown,
+    Null
 }

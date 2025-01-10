@@ -2,15 +2,19 @@ package org.hkijena.jast.tasks.workloads;
 
 import jakarta.transaction.Transactional;
 import org.hkijena.jast.model.AssayType;
+import org.hkijena.jast.model.entities.Project;
 import org.hkijena.jast.payloads.task.BackendTaskParameterPayload;
 import org.hkijena.jast.repositories.ImageRepository;
+import org.hkijena.jast.repositories.ProjectRepository;
 import org.hkijena.jast.tasks.*;
 import org.hkijena.jast.utils.JASTAnnotation;
 import org.hkijena.jast.utils.ProgressInfo;
+import org.hkijena.jast.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.nio.file.Path;
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -21,16 +25,21 @@ import java.util.Map;
 public class GenerateVisualizationsWorkload implements BackendTaskWorkload {
 
     private final ImageRepository imageRepository;
+    private final ProjectRepository projectRepository;
     private static final List<BackendTaskWorkloadDataSlot> INPUTS = List.of(JASTAnnotation.Plate.toSlot(BackendTaskWorkloadDataSlotValidationMode.Optional),
             JASTAnnotation.ZOIShape.toSlot(BackendTaskWorkloadDataSlotValidationMode.Optional),
             JASTAnnotation.StripDisk.toSlot(BackendTaskWorkloadDataSlotValidationMode.Optional));
     private static final List<BackendTaskWorkloadDataSlot> OUTPUTS = Collections.emptyList();
-    private static final List<BackendTaskWorkloadParameterSlot> PARAMETERS = Collections.emptyList();
+    private static final List<BackendTaskWorkloadParameterSlot> PARAMETERS = List.of(
+            new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotType.String, "result-name", "Result name", "The name of the generated result folder", "Visualization"),
+            new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotType.String, "result-description", "Result description", "Description of the generated result", "")
+    );
     private static final Map<String, String> PARAMETER_OVERRIDES = new HashMap<>();
 
     @Autowired
-    public GenerateVisualizationsWorkload(ImageRepository imageRepository) {
+    public GenerateVisualizationsWorkload(ImageRepository imageRepository, ProjectRepository projectRepository) {
         this.imageRepository = imageRepository;
+        this.projectRepository = projectRepository;
     }
 
     @Override
@@ -89,9 +98,11 @@ public class GenerateVisualizationsWorkload implements BackendTaskWorkload {
         Path projectFilePath = writeSharedFile(params, "generate-visualizations.jip");
         progressInfo.log("Project file is " + projectFilePath);
         runJIPipe(params, projectFilePath, parameterOverrides, "", progressInfo);
-//
-//        Map<String, Path> maskAnnotationsConfig = new HashMap<>();
-//        maskAnnotationsConfig.put("zoi-shape", params.getTmpPath().resolve("zoi-shape-aligned"));
-//        readMaskAnnotations(params.getPayload().getImageIds(), maskAnnotationsConfig, imageRepository, progressInfo);
+
+        String resultName = StringUtils.orElse(params.getPayload().getParameter("result-name").getValue(), "Visualization");
+        String resultDescription = StringUtils.nullToEmpty(params.getPayload().getParameter("result-description").getValue());
+        Project project = projectRepository.findById(params.getPayload().getProjectId()).get();
+
+        readResultsDirectory(resultName, resultDescription, params.getTmpPath().resolve("results"), project, projectRepository, progressInfo);
     }
 }

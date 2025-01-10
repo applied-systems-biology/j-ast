@@ -1,5 +1,8 @@
 package org.hkijena.jast.utils;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 public class StringUtils {
 
     public static final char[] INVALID_FILESYSTEM_CHARACTERS = new char[]{'<', '>', ':', '"', '/', '\\', '|', '?', '*', '{', '}'};
@@ -54,6 +57,17 @@ public class StringUtils {
             }
         }
         return true;
+    }
+
+    /**
+     * A nice human-readable format
+     *
+     * @param dateTime the time point
+     * @return formatted string
+     */
+    public static String formatDateTime(LocalDateTime dateTime) {
+        return dateTime.format(DateTimeFormatter.ISO_LOCAL_DATE) + " " +
+                dateTime.format(DateTimeFormatter.ofPattern("HH:mm:ss"));
     }
 
     /**
