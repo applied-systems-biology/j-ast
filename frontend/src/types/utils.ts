@@ -19,3 +19,35 @@ export function formatExpirationTime(seconds : number) {
   const expirationDate = new Date(Date.now() + seconds * 1000);
   return expirationDate.toLocaleString(); // Adjusts to the user's local timezone
 }
+
+export function sortPathsByHierarchy(paths: Iterable<string>): string[] {
+  // Convert the input to an array (works for Set, Array, or any iterable)
+  const pathsArray = Array.from(paths);
+
+  // Sort the paths by hierarchy and alphabetically
+  return pathsArray.sort((a, b) => {
+    const depthA = a.split('/').length;
+    const depthB = b.split('/').length;
+
+    if (depthA === depthB) {
+      // If depths are equal, sort alphabetically
+      return a.localeCompare(b);
+    }
+    // Otherwise, sort by depth
+    return depthA - depthB;
+  });
+}
+
+export function makeFilesystemCompatible(input: string): string {
+  // Define a regex to match forbidden characters
+  const forbiddenChars = /[<>:"/\\|?*\x00]/g;
+  // Replace forbidden characters with an underscore or other safe character
+  let cleanString = input.replace(forbiddenChars, '_');
+  // Trim whitespace from the beginning and end
+  cleanString = cleanString.trim();
+  // Ensure the length does not exceed common filename limits (255 characters)
+  if (cleanString.length > 255) {
+    cleanString = cleanString.substring(0, 255);
+  }
+  return cleanString;
+}

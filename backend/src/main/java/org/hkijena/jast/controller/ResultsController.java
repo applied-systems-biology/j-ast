@@ -1,13 +1,19 @@
 package org.hkijena.jast.controller;
 
+import jakarta.servlet.http.HttpServletResponse;
+import org.hkijena.jast.model.entities.Image;
 import org.hkijena.jast.model.entities.Project;
 import org.hkijena.jast.model.entities.Result;
+import org.hkijena.jast.model.entities.ResultItem;
 import org.hkijena.jast.payloads.result.FullResultPayload;
 import org.hkijena.jast.payloads.result.ResultPayload;
 import org.hkijena.jast.repositories.ProjectRepository;
+import org.hkijena.jast.repositories.ResultItemRepository;
 import org.hkijena.jast.repositories.ResultRepository;
 import org.hkijena.jast.services.ProjectService;
 import org.hkijena.jast.services.UserService;
+import org.hkijena.jast.utils.MimeTypeUtils;
+import org.hkijena.jast.utils.RequestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +24,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -29,13 +36,15 @@ public class ResultsController {
     private final UserService userService;
     private final ProjectRepository projectRepository;
     private final ResultRepository resultRepository;
+    private final ResultItemRepository resultItemRepository;
 
     @Autowired
-    public ResultsController(ProjectService projectService, UserService userService, ProjectRepository projectRepository, ResultRepository resultRepository) {
+    public ResultsController(ProjectService projectService, UserService userService, ProjectRepository projectRepository, ResultRepository resultRepository, ResultItemRepository resultItemRepository) {
         this.projectService = projectService;
         this.userService = userService;
         this.projectRepository = projectRepository;
         this.resultRepository = resultRepository;
+        this.resultItemRepository = resultItemRepository;
     }
 
     @GetMapping("/api/project/{id}/list-results")
@@ -69,6 +78,28 @@ public class ResultsController {
             resultRepository.save(result);
         }
         return ResponseEntity.ok(new FullResultPayload(result));
+    }
+
+    @GetMapping("/api/result/{id}/thumbnail")
+    public void getThumbnail(HttpServletResponse response, Authentication authentication, @PathVariable long id) throws IOException {
+        userService.validateAuthentication(authentication);
+        Optional<ResultItem> resultItem_ = resultItemRepository.findById(id);
+        if(resultItem_.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
+        ResultItem resultItem = resultItem_.get();
+        RequestUtils.sendContent(response, resultItem.getThumbnailData(), MimeTypeUtils.MIME_TYPE_PNG);
+    }
+
+    @GetMapping("/api/result/{id}/raw")
+    public void getRaw(HttpServletResponse response, Authentication authentication, @PathVariable long id) throws IOException {
+        userService.validateAuthentication(authentication);
+        Optional<ResultItem> resultItem_ = resultItemRepository.findById(id);
+        if(resultItem_.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
+        ResultItem resultItem = resultItem_.get();
+        RequestUtils.sendContent(response, resultItem.getRawData(), MimeTypeUtils.MIME_TYPE_OCTET_STREAM);
     }
 
     @PostMapping("/api/result/{id}/delete")
