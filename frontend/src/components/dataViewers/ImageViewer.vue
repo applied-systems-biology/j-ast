@@ -1,7 +1,7 @@
 <template>
   <div class="flex column col-grow">
     <q-toolbar class="bg-primary text-white edit-toolbar">
-      <q-btn label="Download" icon="fa-solid fa-download" color="blue" @click="download"/>
+      <q-btn label="Download" icon="fa-solid fa-download" color="green" @click="download"/>
       <q-btn label="Reset view" icon="fa-solid fa-expand" color="blue" @click="resetLocationAndZoom"/>
     </q-toolbar>
     <div class="row col-grow" style="width: calc(100vw - 10px)">

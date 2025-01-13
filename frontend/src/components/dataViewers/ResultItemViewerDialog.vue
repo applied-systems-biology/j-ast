@@ -16,6 +16,12 @@
             :image-backend-url="props.resultItem.getVisualizationUrl()"
             :filename="props.resultItem.name"
           />
+          <TableViewer
+            v-if="props.resultItem.getVisualizationType() == ResultItemType.Table"
+            class="viewer"
+            :table-backend-url="props.resultItem.getVisualizationUrl()"
+            :filename="props.resultItem.name"
+          />
           <q-banner v-else rounded class="bg-blue-grey text-white q-ma-md">
             Currently, the web application does not know how to display {{ props.resultItem.name }}.<br/>
             Please download the file and view it on your computer.
@@ -33,6 +39,7 @@ import { useDialogPluginComponent } from 'quasar';
 import ImageViewer from 'components/dataViewers/ImageViewer.vue';
 import { ResultItemPayload, ResultItemType } from 'src/types/results';
 import { downloadFromApi } from "src/types/common";
+import TableViewer from "components/dataViewers/TableViewer.vue";
 
 const props = defineProps<{
   resultItem: ResultItemPayload;
