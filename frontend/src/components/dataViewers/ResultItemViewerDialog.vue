@@ -17,7 +17,7 @@
             :filename="props.resultItem.name"
           />
           <TableViewer
-            v-if="props.resultItem.getVisualizationType() == ResultItemType.Table"
+            v-else-if="props.resultItem.getVisualizationType() == ResultItemType.Table"
             class="viewer"
             :table-backend-url="props.resultItem.getVisualizationUrl()"
             :filename="props.resultItem.name"
