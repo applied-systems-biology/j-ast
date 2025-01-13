@@ -82,8 +82,8 @@
           <template v-slot:body-cell-actions="props">
             <q-td :props="props">
               <div class="q-gutter-sm" v-if="props.row.id >= 0">
-                <q-btn icon="download" @click="downloadResultItem(props.row.id)"/>
-                <q-btn icon="search" @click="displayResultItem(props.row.id)"/>
+                <q-btn icon="download" @click.stop="downloadResultItem(props.row.id)"/>
+                <q-btn icon="search" @click.stop="displayResultItem(props.row.id)"/>
               </div>
             </q-td>
           </template>
@@ -105,7 +105,7 @@ import {useRoute, useRouter} from 'vue-router';
 import {computed, onMounted, ref, Ref} from 'vue';
 import {ProjectMetadataPayload} from 'src/types/project';
 import {downloadFromApi, loadPayloadInstanceFromApi} from 'src/types/common';
-import {FullResultPayload, generateAndDownloadResultsZip, ResultItemPayload} from 'src/types/results';
+import { FullResultPayload, generateAndDownloadResultsZip, ResultItemPayload, showResultItem } from "src/types/results";
 import { formatFileSize, sortPathsByHierarchy } from "src/types/utils";
 import {QSpinnerHourglass, QTableColumn, useQuasar} from "quasar";
 import ResultItemThumbnailComponent from "components/results/ResultItemThumbnailComponent.vue";
@@ -268,13 +268,16 @@ function onRowClick(evt: any, row: VfsEntry) {
       navigateToFolder(row.content)
     }
   }
+  else {
+    displayResultItem(row.id)
+  }
 }
 
 function downloadResultItem(id: number) {
   const resultItem = resultPayload.value.items.findLast(v => v.id == id)
   if (resultItem) {
     downloadFromApi(
-      `/result/${id}/raw`,
+      `/result-item/${id}/raw`,
       resultItem.name
     );
   } else {
@@ -285,7 +288,7 @@ function downloadResultItem(id: number) {
 function displayResultItem(id: number) {
   const resultItem = resultPayload.value.items.findLast(v => v.id == id)
   if (resultItem) {
-    sendFailureNotification("Display of items with type " + resultItem.type + " is current unsupported. Please download the data.");
+    showResultItem(resultItem)
   } else {
     sendFailureNotification("Unable to retrieve result item with id " + id)
   }

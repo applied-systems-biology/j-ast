@@ -3,7 +3,7 @@
     no-caps
     class="shadow-3 item text-black"
     :color="selectionColor"
-    @click="clicked($event)"
+    @click.stop="clicked($event)"
   >
     <div class="content q-gutter-sm">
       <q-img

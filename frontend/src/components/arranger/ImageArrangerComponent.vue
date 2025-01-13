@@ -1,5 +1,5 @@
 <template>
-  <div class="grid-container">
+  <div class="grid-container" @click="selectedImageIds = []">
     <q-card class="full-width bg-indigo-1" v-if="showUnsorted" flat>
       <q-card-section class="flex row q-gutter-sm">
         <div class="text-bold flex flex-center">Unsorted images</div>
@@ -8,7 +8,7 @@
       <!-- Unsorted -->
       <q-card-section>
         <q-scroll-area class="unsorted-scroll-area" visible>
-          <div class="grid-row grid-row-unsorted bg-indigo-1">
+          <div class="grid-row grid-row-unsorted bg-indigo-1" >
             <div
               v-for="(k, columnIndex) in (projectImages?.unsortedRow.images
                 .length || 0) + 1"
@@ -59,7 +59,7 @@
               <span class="q-ml-sm">{{ badge.text}}</span>
             </q-badge>
           </q-scroll-area>
-          <q-btn flat size="xs" icon="fa-solid fa-chevron-down" @click="selectColumn(columnIndex, $event)">
+          <q-btn flat size="xs" icon="fa-solid fa-chevron-down" @click.stop="selectColumn(columnIndex, $event)">
             <q-tooltip>Select the whole column</q-tooltip>
           </q-btn>
         </div>
@@ -76,7 +76,7 @@
               <span class="q-ml-sm">{{ badge.text}}</span>
             </q-badge>
           </q-scroll-area>
-          <q-btn flat size="xs" icon="fa-solid fa-chevron-right" class="select-all-button" @click="selectRow(rowIndex, $event)">
+          <q-btn flat size="xs" icon="fa-solid fa-chevron-right" class="select-all-button" @click.stop="selectRow(rowIndex, $event)">
             <q-tooltip>Select the whole row</q-tooltip>
           </q-btn>
         </div>

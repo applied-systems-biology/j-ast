@@ -18,7 +18,7 @@ export const useResultItemThumbnailStore = defineStore('resultItemThumbnailStore
 
       // Fetch the image from the backend using .then
       return api
-        .get(`/result/${id}/thumbnail`, { responseType: 'blob' })
+        .get(`/result-item/${id}/thumbnail`, { responseType: 'blob' })
         .then((response) => {
           const imageBlob = response.data;
           const objectUrl = URL.createObjectURL(imageBlob);

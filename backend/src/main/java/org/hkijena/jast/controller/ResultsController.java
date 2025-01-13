@@ -80,7 +80,7 @@ public class ResultsController {
         return ResponseEntity.ok(new FullResultPayload(result));
     }
 
-    @GetMapping("/api/result/{id}/thumbnail")
+    @GetMapping("/api/result-item/{id}/thumbnail")
     public void getThumbnail(HttpServletResponse response, Authentication authentication, @PathVariable long id) throws IOException {
         userService.validateAuthentication(authentication);
         Optional<ResultItem> resultItem_ = resultItemRepository.findById(id);
@@ -91,7 +91,7 @@ public class ResultsController {
         RequestUtils.sendContent(response, resultItem.getThumbnailData(), MimeTypeUtils.MIME_TYPE_PNG);
     }
 
-    @GetMapping("/api/result/{id}/raw")
+    @GetMapping("/api/result-item/{id}/raw")
     public void getRaw(HttpServletResponse response, Authentication authentication, @PathVariable long id) throws IOException {
         userService.validateAuthentication(authentication);
         Optional<ResultItem> resultItem_ = resultItemRepository.findById(id);

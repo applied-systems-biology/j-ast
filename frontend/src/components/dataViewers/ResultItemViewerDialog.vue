@@ -3,7 +3,7 @@
     <q-layout view="hHh lpR fFf" container class="layout">
       <q-header>
         <q-toolbar-title class="row items-center q-gutter-sm">
-          {{ props.resultItem.path }} / {{ props.resultItem.name }}
+          <div class="q-ml-md">{{ props.resultItem.path }} / {{ props.resultItem.name }}</div>
           <q-space />
           <q-btn icon="close" flat @click="onDialogOK" />
         </q-toolbar-title>
@@ -11,11 +11,18 @@
       <q-page-container>
         <q-page class="flex column">
           <ImageViewer
-            v-if="props.resultItem.type == ResultItemType.Image"
+            v-if="props.resultItem.getVisualizationType() == ResultItemType.Image"
             class="viewer"
             :image-backend-url="props.resultItem.getVisualizationUrl()"
             :filename="props.resultItem.name"
           />
+          <q-banner v-else rounded class="bg-blue-grey text-white q-ma-md">
+            Currently, the web application does not know how to display {{ props.resultItem.name }}.<br/>
+            Please download the file and view it on your computer.
+            <template v-slot:action>
+              <q-btn color="green" label="Download" @click="downloadResultItem"/>
+            </template>
+          </q-banner>
         </q-page>
       </q-page-container>
     </q-layout>
@@ -25,6 +32,7 @@
 import { useDialogPluginComponent } from 'quasar';
 import ImageViewer from 'components/dataViewers/ImageViewer.vue';
 import { ResultItemPayload, ResultItemType } from 'src/types/results';
+import { downloadFromApi } from "src/types/common";
 
 const props = defineProps<{
   resultItem: ResultItemPayload;
@@ -35,6 +43,14 @@ defineEmits([...useDialogPluginComponent.emits]);
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const { dialogRef, onDialogHide, onDialogOK, onDialogCancel } =
   useDialogPluginComponent();
+
+function downloadResultItem() {
+  downloadFromApi(
+    `/result-item/${props.resultItem.id}/raw`,
+    props.resultItem.name
+  );
+}
+
 </script>
 
 <style scoped lang="scss">

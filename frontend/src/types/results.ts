@@ -11,6 +11,7 @@ export enum ResultItemType {
   Image = "Image",
   Table= "Table",
   Unknown = "Unknown",
+  Null = "Null",
 }
 
 export class ResultPayload {
@@ -81,11 +82,20 @@ export class ResultItemPayload {
     else if(this.overrideUrl) {
       return this.overrideUrl;
     }
-    else if(this.visualizationType != ResultItemType.Unknown) {
+    else if(this.visualizationType != ResultItemType.Null) {
       return `/result-item/${this.id}/visualization`;
     }
     else {
       return `/result-item/${this.id}/raw`;
+    }
+  }
+
+  getVisualizationType() : ResultItemType {
+    if(this.visualizationType != ResultItemType.Null) {
+      return this.visualizationType;
+    }
+    else {
+      return this.type
     }
   }
 }
@@ -103,6 +113,7 @@ export class FullResultPayload extends ResultPayload {
 
 
 export function showResultItem(resultItem: ResultItemPayload) {
+  console.log(resultItem);
   Dialog.create({
     component: ResultItemViewerDialog,
     componentProps: {
@@ -138,7 +149,7 @@ export function generateAndDownloadResultsZip(
   const downloadPromises = items.map((item) => {
     if (cancelled) return Promise.resolve();
 
-    return api.get(`result/${item.id}/raw`, { responseType: 'blob' })
+    return api.get(`result-item/${item.id}/raw`, { responseType: 'blob' })
       .then((response) => {
         if (onCancel()) {
           console.log('Download cancelled.');
