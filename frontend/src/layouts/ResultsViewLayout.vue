@@ -87,6 +87,11 @@
               </div>
             </q-td>
           </template>
+          <template v-slot:body-cell-fileSize="props">
+            <q-td :props="props">
+             <span v-if="props.row.id >= 0">{{ formatFileSize(props.row.size) }}</span>
+            </q-td>
+          </template>
         </q-table>
       </q-page>
     </q-page-container>
@@ -101,7 +106,7 @@ import {computed, onMounted, ref, Ref} from 'vue';
 import {ProjectMetadataPayload} from 'src/types/project';
 import {downloadFromApi, loadPayloadInstanceFromApi} from 'src/types/common';
 import {FullResultPayload, generateAndDownloadResultsZip, ResultItemPayload} from 'src/types/results';
-import {sortPathsByHierarchy} from "src/types/utils";
+import { formatFileSize, sortPathsByHierarchy } from "src/types/utils";
 import {QSpinnerHourglass, QTableColumn, useQuasar} from "quasar";
 import ResultItemThumbnailComponent from "components/results/ResultItemThumbnailComponent.vue";
 import {sendFailureNotification} from "src/types/notification";
@@ -122,6 +127,13 @@ const filesViewColumns: QTableColumn[] = [
     name: "fileName",
     label: "File Name",
     field: "name",
+    sortable: true,
+    align: 'left',
+  },
+  {
+    name: "fileSize",
+    label: "Size",
+    field: "size",
     sortable: true,
     align: 'left',
   },
@@ -147,6 +159,7 @@ interface VfsEntry {
   type: string;
   content: ResultItemPayload | string;
   key: string;
+  size: number;
 }
 
 const $q = useQuasar()
@@ -182,7 +195,8 @@ const vfsCurrentDirectoryItems = computed(() => {
         name: resultItem.name,
         type: resultItem.type,
         content: resultItem,
-        key: resultItem.id + ""
+        key: resultItem.id + "",
+        size: resultItem.size,
       });
     } else if (!allPaths.has(candidatePath)) {
       let success = false
@@ -203,7 +217,8 @@ const vfsCurrentDirectoryItems = computed(() => {
           name: resultItem.path,
           type: "Directory",
           content: resultItem.path,
-          key: resultItem.path
+          key: resultItem.path,
+          size: 0
         });
         allPaths.add(resultItem.path);
       }
@@ -218,7 +233,8 @@ const vfsCurrentDirectoryItems = computed(() => {
       name: "Parent directory",
       type: "Directory",
       content: parentPath,
-      key: parentPath
+      key: parentPath,
+      size: 0
     });
   }
 
@@ -287,9 +303,14 @@ function downloadZip(path: string) {
     sendFailureNotification("Nothing to download.")
     return
   }
+  let downloadSizeBytes = 0
+  for(const resultItem of toDownload) {
+    downloadSizeBytes += resultItem.size
+  }
   $q.dialog({
     title: 'Download results',
-    message: `You are about to download ${toDownload.length} files. Do you want to continue?`,
+    message: `You are about to download ${toDownload.length} files (${formatFileSize(downloadSizeBytes)}).<br/>Do you want to continue?<br/><br/>Please note that due how the ZIP file is created, your computer needs at least ${formatFileSize(downloadSizeBytes)} of free RAM space.`,
+    html: true,
     cancel: true,
     persistent: true
   }).onOk(() => {

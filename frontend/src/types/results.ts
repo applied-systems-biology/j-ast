@@ -58,6 +58,9 @@ export class ResultItemPayload {
   @Expose()
   visualizationType: ResultItemType = ResultItemType.Unknown;
 
+  @Expose()
+  size: number = 0;
+
   /**
    * Allows to override the backend URL
    */

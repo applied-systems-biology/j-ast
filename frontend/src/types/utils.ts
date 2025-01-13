@@ -20,6 +20,16 @@ export function formatExpirationTime(seconds : number) {
   return expirationDate.toLocaleString(); // Adjusts to the user's local timezone
 }
 
+export function formatFileSize(bytes: number): string {
+  const units = ["bytes", "KB", "MB", "GB", "TB"];
+  if (bytes === 0) return "0 bytes";
+
+  const exponent = Math.floor(Math.log(bytes) / Math.log(1024));
+  const size = bytes / Math.pow(1024, exponent);
+
+  return `${size.toFixed(2)} ${units[exponent]}`;
+}
+
 export function sortPathsByHierarchy(paths: Iterable<string>): string[] {
   // Convert the input to an array (works for Set, Array, or any iterable)
   const pathsArray = Array.from(paths);

@@ -26,6 +26,9 @@ public class ResultItemPayload {
     @JsonProperty
     private ResultItemType visualizationType;
 
+    @JsonProperty
+    private long size = 0;
+
     public ResultItemPayload() {
     }
 
@@ -37,6 +40,15 @@ public class ResultItemPayload {
         this.path = resultItem.getPath();
         this.type = resultItem.getType();
         this.visualizationType = resultItem.getVisualizationType();
+        this.size = resultItem.getRawData().length;
+    }
+
+    public long getSize() {
+        return size;
+    }
+
+    public void setSize(long size) {
+        this.size = size;
     }
 
     public String getPath() {
