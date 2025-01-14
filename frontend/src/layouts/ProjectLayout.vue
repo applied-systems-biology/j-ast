@@ -22,7 +22,7 @@
         <ToggleButton
           not-selected-icon="upload"
           selected-icon="close"
-          class="bg-secondary"
+          class="bg-green"
           v-model="drawerLeft"
         >
           Upload
@@ -31,6 +31,26 @@
             images will be put into the "Unsorted images" list.
           </q-tooltip>
         </ToggleButton>
+        <q-btn-dropdown color="green" icon="download" label="Download">
+          <q-list>
+            <q-item v-if="selectedImageIds.length > 0" clickable v-close-popup @click="downloadZip(selectedImageIds)">
+              <q-item-section>
+                <q-item-label>Download selected images and annotations (*.zip)</q-item-label>
+              </q-item-section>
+            </q-item>
+            <q-item v-if="selectedImageIds.length > 0" clickable v-close-popup @click="downloadSelectedImages">
+              <q-item-section>
+                <q-item-label>Download selected raw images (*.png)</q-item-label>
+              </q-item-section>
+            </q-item>
+            <q-separator v-if="selectedImageIds.length > 0"/>
+            <q-item clickable v-close-popup @click="downloadZip(null)">
+              <q-item-section>
+                <q-item-label>Download everything (*.zip)</q-item-label>
+              </q-item-section>
+            </q-item>
+          </q-list>
+        </q-btn-dropdown>
         <ToggleButton
           selected-icon="close"
           not-selected-icon="sort"
@@ -71,14 +91,6 @@
           @click="selectedImageIds = []"
         >
           <q-tooltip> Clears the current selection</q-tooltip>
-        </q-btn>
-        <q-btn
-          icon="download"
-          color="blue"
-          v-if="selectedImageIds.length > 0"
-          @click="downloadSelectedImages"
-        >
-          <q-tooltip> Downloads the selected image(s)</q-tooltip>
         </q-btn>
         <q-btn
           color="accent"
@@ -217,11 +229,11 @@ import HeaderLogoButtonComponent from 'components/layout/HeaderLogoButtonCompone
 import { computed, onMounted, ref, Ref } from 'vue';
 import ToggleButton from 'components/utils/ToggleButton.vue';
 import ImageUploaderComponent from 'components/drawers/ImageUploaderComponent.vue';
-import { useQuasar } from 'quasar';
+import { QSpinnerHourglass, useQuasar } from "quasar";
 // import { VueDraggableNext as draggable } from 'vue-draggable-next';
 import { useRoute, useRouter } from 'vue-router';
 import { api } from 'boot/axios';
-import { downloadFromApi, ensureExtension, loadPayloadInstanceFromApi } from 'src/types/common';
+import { downloadFromApi, ensureExtension, loadPayloadInstanceFromApi, removeExtensionIfPresent } from "src/types/common";
 import ProjectImageEditor from 'components/drawers/ProjectImageEditor.vue';
 import { plainToInstance } from 'class-transformer';
 import ImageArrangerComponent from 'components/arranger/ImageArrangerComponent.vue';
@@ -248,7 +260,9 @@ import {
 import { useIntervalFn } from '@vueuse/core';
 import ProjectBackendTaskButton from 'components/layout/ProjectBackendTaskButton.vue';
 import ProjectResultsButton from 'components/layout/ProjectResultsButton.vue';
-import { ResultPayload } from 'src/types/results';
+import { ResultPayload } from "src/types/results";
+import { generateAndDownloadZip, ZipItem } from "src/types/zip";
+import { formatFileSize } from "src/types/utils";
 
 const $q = useQuasar();
 const $route = useRoute();
@@ -363,6 +377,70 @@ function downloadSelectedImages() {
       ensureExtension(projectImages.value.getImageById(id).fileName, ['.png'])
     );
   }
+}
+
+function downloadZip(imageIds : Array<number> | null) {
+  if(imageIds == null) {
+    imageIds = projectImages.value.imageIds
+  }
+
+  // Map to images
+  const items = imageIds.map(id => projectImages.value.getImageById(id));
+
+  // Create Zip items
+  const zipItems : Array<ZipItem>  = []
+  const usedFileNames = new Set<string>()
+  let downloadSizeBytes = 0
+  for(const item of items) {
+    let fileName = item.fileName || `${item.assayType}_${item.experiment}_${item.sample}_${item.timePoint}`
+    fileName = removeExtensionIfPresent(fileName)
+    if(usedFileNames.has(fileName)) {
+      fileName = fileName + "_" + item.id
+    }
+    usedFileNames.add(fileName)
+    zipItems.push({ entryName: ensureExtension(fileName), url: `/image/${item.id}/raw`, content: null })
+    downloadSizeBytes += item.size
+
+    // Add annotations
+    for(const annotation of item.maskImageAnnotations) {
+      zipItems.push({ entryName: ensureExtension(fileName + "_" + annotation.annotationTypeId), url: `/mask-image-annotation/${item.id}/${annotation.annotationTypeId}/raw`, content: null })
+      downloadSizeBytes += annotation.size
+    }
+  }
+
+  $q.dialog({
+    title: 'Download inputs',
+    message: `You are about to download ${zipItems.length} files (${formatFileSize(downloadSizeBytes)}).<br/>Do you want to continue?<br/><br/>Please note that due how the ZIP file is created, your computer needs at least ${formatFileSize(downloadSizeBytes)} of free RAM space.`,
+    html: true,
+    cancel: true,
+    persistent: true
+  }).onOk(() => {
+    const shouldCancel = ref<boolean>(false);
+    const dialog = $q.dialog({
+      title: 'Downloading results ...',
+      message: 'Preparing ...',
+      progress: {
+        spinner: QSpinnerHourglass,
+      },
+      persistent: true,
+      ok: false,
+      cancel: true,
+    })
+    dialog.onCancel(() => {
+      shouldCancel.value = true
+      dialog.hide()
+    })
+
+    generateAndDownloadZip(zipItems, projectPayload.value.name, (percentage, info) => {
+      dialog.update({
+        message: `${percentage}% ${info}`
+      })
+    }, () => shouldCancel.value)
+      .finally(() => {
+        dialog.hide()
+      })
+
+  })
 }
 
 function selectAll() {

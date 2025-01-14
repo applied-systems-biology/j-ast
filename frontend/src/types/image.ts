@@ -25,6 +25,9 @@ export class MaskImageAnnotationPayload {
 
   @Expose()
   annotationTypeId: string = '';
+
+  @Expose()
+  size: number = 0;
 }
 
 export class ImagePayload {
@@ -69,6 +72,9 @@ export class ImagePayload {
 
   @Expose()
   maskImageAnnotations: MaskImageAnnotationPayload[] = [];
+
+  @Expose()
+  size: number = 0;
 
   /**
    * Returns true if this is a non-empty payload

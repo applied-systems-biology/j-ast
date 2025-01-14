@@ -7,12 +7,14 @@ public record MaskImageAnnotationPayload(@JsonProperty long id,
                                          @JsonProperty int version,
                                          @JsonProperty long imageId,
                                          @JsonProperty long projectId,
-                                         @JsonProperty String annotationTypeId) {
+                                         @JsonProperty String annotationTypeId,
+                                         @JsonProperty long size) {
     public static MaskImageAnnotationPayload create(MaskImageAnnotation annotation) {
         return new MaskImageAnnotationPayload(annotation.getId(),
                 annotation.getVersion(),
                 annotation.getImage().getId(),
                 annotation.getImage().getProject().getId(),
-                annotation.getType());
+                annotation.getType(),
+                annotation.getRawData() != null ? annotation.getRawData().length : 0);
     }
 }

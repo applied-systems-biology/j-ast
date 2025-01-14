@@ -35,6 +35,8 @@ public class ImagePayload {
     private List<MaskImageAnnotationPayload> maskImageAnnotations = new ArrayList<>();
     @JsonProperty
     private Map<String, Object> metadata = new HashMap<>();
+    @JsonProperty
+    private long size;
 
     public ImagePayload() {
 
@@ -54,6 +56,23 @@ public class ImagePayload {
         this.pixelSizeMillimeter = image.getPixelSizeMillimeter();
         this.maskImageAnnotations = image.getFilteredMaskImageAnnotations().stream().map(MaskImageAnnotationPayload::create).toList();
         this.metadata = new HashMap<>(image.getMetadata());
+        this.size = image.getRawData().length;
+    }
+
+    public Map<String, Object> getMetadata() {
+        return metadata;
+    }
+
+    public void setMetadata(Map<String, Object> metadata) {
+        this.metadata = metadata;
+    }
+
+    public long getSize() {
+        return size;
+    }
+
+    public void setSize(long size) {
+        this.size = size;
     }
 
     public double getPixelSizeMillimeter() {
