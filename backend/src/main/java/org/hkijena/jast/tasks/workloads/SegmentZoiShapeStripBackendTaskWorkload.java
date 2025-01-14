@@ -78,6 +78,11 @@ public class SegmentZoiShapeStripBackendTaskWorkload implements BackendTaskWorkl
     }
 
     @Override
+    public boolean isOutputsResult() {
+        return false;
+    }
+
+    @Override
     @Transactional(Transactional.TxType.REQUIRES_NEW)
     public void execute(BackendTaskWorkloadParams params, ProgressInfo progressInfo) throws Throwable {
         writeRawImages(params, params.getPayload().getImageIds(), imageRepository, progressInfo);

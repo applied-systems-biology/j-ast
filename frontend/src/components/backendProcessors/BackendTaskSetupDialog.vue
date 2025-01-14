@@ -11,6 +11,10 @@
           Info
         </div>
         <div class="q-mb-md">{{ props.taskType.description }}</div>
+        <div class="text-blue" v-if="props.taskType.outputsResult">
+          <q-icon name="archive" />
+          This operation will create items in the <i>Results</i> section.
+        </div>
         <div>
           Depending on the task and the number of images, this will take a few
           minutes.
@@ -133,11 +137,15 @@
               </div>
             </q-td>
           </template>
-          <template v-slot:body-cell-outputs="props">
-            <q-td :props="props">
-              <div v-for="slot in props.value" :key="slot.slot.name">
+          <template v-slot:body-cell-outputs="props2">
+            <q-td :props="props2">
+              <div v-for="slot in props2.value" :key="slot.slot.name">
                 <q-icon name="fa-solid fa-save" />
                 {{ renderMaskAnnotationId2(slot.slot.name) }}
+              </div>
+              <div class="text-blue" v-if="props.taskType.outputsResult">
+                <q-icon name="archive" />
+                Results
               </div>
             </q-td>
           </template>

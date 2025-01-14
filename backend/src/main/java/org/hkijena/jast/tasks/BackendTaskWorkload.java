@@ -47,6 +47,8 @@ public interface BackendTaskWorkload {
 
     AssayType getAssayTypeRestriction();
 
+    boolean isOutputsResult();
+
     void execute(BackendTaskWorkloadParams params, ProgressInfo progressInfo) throws Throwable;
 
     default Path writeSharedFile(BackendTaskWorkloadParams params, Path sourcePath, Path targetPath) throws IOException {

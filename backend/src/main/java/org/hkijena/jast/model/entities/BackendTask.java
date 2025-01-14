@@ -5,6 +5,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hkijena.jast.model.TaskStatus;
 import org.hkijena.jast.payloads.task.BackendTaskPayload;
 import org.hkijena.jast.utils.JsonUtils;
+import org.hkijena.jast.utils.StringUtils;
 
 import java.io.Serial;
 import java.time.LocalDateTime;
@@ -29,6 +30,9 @@ public class BackendTask {
 
     @Column(name = "payload", columnDefinition = "TEXT")
     private String payload;
+
+    @Column(name = "log", columnDefinition = "TEXT")
+    private String log;
 
     @Column(name = "status")
     @Enumerated(EnumType.STRING)
@@ -109,6 +113,14 @@ public class BackendTask {
 
     public boolean isRunning() {
         return status == TaskStatus.Running || status == TaskStatus.Ready;
+    }
+
+    public String getLog() {
+        return log;
+    }
+
+    public void setLog(String log) {
+        this.log = log;
     }
 
     public BackendTaskPayload toPayload() {

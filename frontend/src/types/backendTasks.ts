@@ -102,6 +102,9 @@ export class BackendTaskTypePayload {
 
   @Expose()
   parameters: BackendTaskParameterPayload[] = [];
+
+  @Expose()
+  outputsResult: boolean = false;
 }
 
 export class BackendTaskPayload {

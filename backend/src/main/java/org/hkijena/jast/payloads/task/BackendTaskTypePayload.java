@@ -30,6 +30,8 @@ public class BackendTaskTypePayload {
     private List<BackendTaskWorkloadDataSlot> outputs = new ArrayList<>();
     @JsonProperty
     private List<BackendTaskParameterPayload> parameters = new ArrayList<>();
+    @JsonProperty
+    private boolean outputsResult = false;
 
     public BackendTaskTypePayload() {
     }
@@ -44,6 +46,15 @@ public class BackendTaskTypePayload {
         setCategory(workload.getCategory());
         setAssayTypeRestriction(workload.getAssayTypeRestriction());
         setParameters(workload.getParameters().stream().map(BackendTaskParameterPayload::new).collect(Collectors.toList()));
+        setOutputsResult(workload.isOutputsResult());
+    }
+
+    public boolean isOutputsResult() {
+        return outputsResult;
+    }
+
+    public void setOutputsResult(boolean outputsResult) {
+        this.outputsResult = outputsResult;
     }
 
     public String getCategory() {

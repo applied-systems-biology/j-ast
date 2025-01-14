@@ -111,6 +111,7 @@ public class BackendTaskService {
             if (task_.isPresent()) {
                 BackendTask task = task_.get();
                 task.setStatus(TaskStatus.Successful);
+                task.setLog(progressInfo.getLog().toString());
                 backendTaskRepository.save(task);
             }
         } catch (Throwable e) {
@@ -122,6 +123,7 @@ public class BackendTaskService {
             if (task_.isPresent()) {
                 BackendTask task = task_.get();
                 task.setStatus(TaskStatus.Failed);
+                task.setLog(progressInfo.getLog().toString());
                 backendTaskRepository.save(task);
             }
         }

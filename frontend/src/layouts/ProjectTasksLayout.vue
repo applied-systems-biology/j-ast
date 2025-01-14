@@ -65,7 +65,9 @@
       </q-list>
     </q-drawer>
     <q-page-container>
-      <q-page padding class="flex column q-gutter-sm"></q-page>
+      <q-page padding class="flex column q-gutter-sm">
+        
+      </q-page>
     </q-page-container>
   </q-layout>
 </template>
