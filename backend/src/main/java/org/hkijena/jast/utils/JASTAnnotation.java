@@ -7,7 +7,8 @@ import org.hkijena.jast.tasks.BackendTaskWorkloadDataSlotValidationMode;
 public enum JASTAnnotation {
     Plate("plate", BackendTaskWorkloadDataSlotType.ImageMaskAnnotation),
     StripDisk("strip-disk", BackendTaskWorkloadDataSlotType.ImageMaskAnnotation),
-    ZOIShape("zoi-shape", BackendTaskWorkloadDataSlotType.ImageMaskAnnotation);
+    ZOIShape("zoi-shape", BackendTaskWorkloadDataSlotType.ImageMaskAnnotation),
+    PixelSize("pixelSize", BackendTaskWorkloadDataSlotType.Metadata);
 
     private final String key;
     private final BackendTaskWorkloadDataSlotType slotType;
