@@ -101,25 +101,6 @@
   },
   "dependencies" : [ {
     "metadata" : {
-      "name" : "Standard table operations",
-      "description" : "<html><head></head><body>A JIPipe project</body></html>",
-      "summary" : "<html><head></head><body></body></html>",
-      "authors" : [ ],
-      "acknowledgements" : [ ],
-      "website" : "",
-      "license" : "",
-      "citation" : "",
-      "dependency-citations" : [ ],
-      "categories" : [ ]
-    },
-    "id" : "org.hkijena.jipipe:table-operations",
-    "version" : "5.0.0",
-    "provides" : [ ],
-    "ij:update-site-dependencies" : [ ],
-    "dependencies" : [ ],
-    "ij:update-site-providers" : [ ]
-  }, {
-    "metadata" : {
       "name" : "Compartment management",
       "description" : "<html><head></head><body>Data types required for graph compartment management</body></html>",
       "summary" : "<html><head></head><body>Data types required for graph compartment management</body></html>",
@@ -181,63 +162,6 @@
       "categories" : [ ]
     },
     "id" : "org.hkijena.jipipe:core",
-    "version" : "5.0.0",
-    "provides" : [ ],
-    "ij:update-site-dependencies" : [ ],
-    "dependencies" : [ ],
-    "ij:update-site-providers" : [ ]
-  }, {
-    "metadata" : {
-      "name" : "Napari integration",
-      "description" : "<html><head></head><body>A JIPipe project</body></html>",
-      "summary" : "<html><head></head><body></body></html>",
-      "authors" : [ ],
-      "acknowledgements" : [ ],
-      "website" : "",
-      "license" : "",
-      "citation" : "",
-      "dependency-citations" : [ ],
-      "categories" : [ ]
-    },
-    "id" : "org.hkijena.jipipe:napari",
-    "version" : "5.0.0",
-    "provides" : [ ],
-    "ij:update-site-dependencies" : [ ],
-    "dependencies" : [ ],
-    "ij:update-site-providers" : [ ]
-  }, {
-    "metadata" : {
-      "name" : "Filesystem types and algorithms",
-      "description" : "<html><head></head><body>A JIPipe project</body></html>",
-      "summary" : "<html><head></head><body></body></html>",
-      "authors" : [ ],
-      "acknowledgements" : [ ],
-      "website" : "",
-      "license" : "",
-      "citation" : "",
-      "dependency-citations" : [ ],
-      "categories" : [ ]
-    },
-    "id" : "org.hkijena.jipipe:filesystem",
-    "version" : "5.0.0",
-    "provides" : [ ],
-    "ij:update-site-dependencies" : [ ],
-    "dependencies" : [ ],
-    "ij:update-site-providers" : [ ]
-  }, {
-    "metadata" : {
-      "name" : "Strings",
-      "description" : "<html><head></head><body>A JIPipe project</body></html>",
-      "summary" : "<html><head></head><body></body></html>",
-      "authors" : [ ],
-      "acknowledgements" : [ ],
-      "website" : "",
-      "license" : "",
-      "citation" : "",
-      "dependency-citations" : [ ],
-      "categories" : [ ]
-    },
-    "id" : "org.hkijena.jipipe:strings",
     "version" : "5.0.0",
     "provides" : [ ],
     "ij:update-site-dependencies" : [ ],
@@ -694,6 +618,25 @@
     "ij:update-site-providers" : [ ]
   }, {
     "metadata" : {
+      "name" : "Standard table operations",
+      "description" : "<html><head></head><body>A JIPipe project</body></html>",
+      "summary" : "<html><head></head><body></body></html>",
+      "authors" : [ ],
+      "acknowledgements" : [ ],
+      "website" : "",
+      "license" : "",
+      "citation" : "",
+      "dependency-citations" : [ ],
+      "categories" : [ ]
+    },
+    "id" : "org.hkijena.jipipe:table-operations",
+    "version" : "5.0.0",
+    "provides" : [ ],
+    "ij:update-site-dependencies" : [ ],
+    "dependencies" : [ ],
+    "ij:update-site-providers" : [ ]
+  }, {
+    "metadata" : {
       "name" : "ImageJ integration",
       "description" : "<html><head></head><body>Adds support for commonly used ImageJ data types</body></html>",
       "summary" : "<html><head></head><body>Adds support for commonly used ImageJ data types</body></html>",
@@ -985,6 +928,63 @@
       "categories" : [ ]
     },
     "id" : "org.hkijena.jipipe:forms",
+    "version" : "5.0.0",
+    "provides" : [ ],
+    "ij:update-site-dependencies" : [ ],
+    "dependencies" : [ ],
+    "ij:update-site-providers" : [ ]
+  }, {
+    "metadata" : {
+      "name" : "Strings",
+      "description" : "<html><head></head><body>A JIPipe project</body></html>",
+      "summary" : "<html><head></head><body></body></html>",
+      "authors" : [ ],
+      "acknowledgements" : [ ],
+      "website" : "",
+      "license" : "",
+      "citation" : "",
+      "dependency-citations" : [ ],
+      "categories" : [ ]
+    },
+    "id" : "org.hkijena.jipipe:strings",
+    "version" : "5.0.0",
+    "provides" : [ ],
+    "ij:update-site-dependencies" : [ ],
+    "dependencies" : [ ],
+    "ij:update-site-providers" : [ ]
+  }, {
+    "metadata" : {
+      "name" : "Filesystem types and algorithms",
+      "description" : "<html><head></head><body>A JIPipe project</body></html>",
+      "summary" : "<html><head></head><body></body></html>",
+      "authors" : [ ],
+      "acknowledgements" : [ ],
+      "website" : "",
+      "license" : "",
+      "citation" : "",
+      "dependency-citations" : [ ],
+      "categories" : [ ]
+    },
+    "id" : "org.hkijena.jipipe:filesystem",
+    "version" : "5.0.0",
+    "provides" : [ ],
+    "ij:update-site-dependencies" : [ ],
+    "dependencies" : [ ],
+    "ij:update-site-providers" : [ ]
+  }, {
+    "metadata" : {
+      "name" : "Napari integration",
+      "description" : "<html><head></head><body>A JIPipe project</body></html>",
+      "summary" : "<html><head></head><body></body></html>",
+      "authors" : [ ],
+      "acknowledgements" : [ ],
+      "website" : "",
+      "license" : "",
+      "citation" : "",
+      "dependency-citations" : [ ],
+      "categories" : [ ]
+    },
+    "id" : "org.hkijena.jipipe:napari",
     "version" : "5.0.0",
     "provides" : [ ],
     "ij:update-site-dependencies" : [ ],
@@ -2371,8 +2371,8 @@
         "jipipe:ui-grid-location" : {
           "fb3bfe3a-c9c1-4ec4-908b-3f1b7380a851" : {
             "VerticalCompact" : {
-              "x" : 3,
-              "y" : 45
+              "x" : 12,
+              "y" : 57
             }
           }
         },
@@ -2604,11 +2604,351 @@
           },
           "enabled" : false
         }
+      },
+      "65c5c986-1b81-4298-bfd3-ede849e5eaee" : {
+        "jipipe:graph-compartment" : "fb3bfe3a-c9c1-4ec4-908b-3f1b7380a851",
+        "jipipe:alias-id" : "find-particles-2d",
+        "jipipe:slot-configuration" : {
+          "input" : {
+            "Mask" : {
+              "slot-data-type" : "imagej-imgplus-greyscale-mask",
+              "slot-type" : "Input",
+              "name" : "Mask",
+              "custom-name" : null,
+              "description" : "The mask where particles are extracted from. White pixels are foreground.",
+              "is-virtual" : false,
+              "save-outputs" : true,
+              "is-optional" : false
+            }
+          },
+          "output" : {
+            "ROI" : {
+              "slot-data-type" : "imagej-roi",
+              "slot-type" : "Output",
+              "name" : "ROI",
+              "custom-name" : null,
+              "description" : "The extracted ROI",
+              "is-virtual" : false,
+              "save-outputs" : true,
+              "is-optional" : false
+            },
+            "Measurements" : {
+              "slot-data-type" : "imagej-results-table",
+              "slot-type" : "Output",
+              "name" : "Measurements",
+              "custom-name" : null,
+              "description" : "The measurements of the ROI",
+              "is-virtual" : false,
+              "save-outputs" : true,
+              "is-optional" : false
+            }
+          }
+        },
+        "jipipe:ui-grid-location" : {
+          "fb3bfe3a-c9c1-4ec4-908b-3f1b7380a851" : {
+            "VerticalCompact" : {
+              "x" : 3,
+              "y" : 45
+            }
+          }
+        },
+        "jipipe:node-info-id" : "ij1-analyze-find-particles2d",
+        "min-particle-circularity" : 0.0,
+        "jipipe:algorithm:enabled" : true,
+        "jipipe:node:ui-locked" : false,
+        "include-holes" : true,
+        "jipipe:node:bookmarked" : false,
+        "composite-roi" : false,
+        "jipipe:algorithm:pass-through" : false,
+        "measure-in-physical-units" : true,
+        "jipipe:node:name" : "Find particles 2D",
+        "jipipe:algorithm:runtime-partition" : {
+          "index" : 0
+        },
+        "jipipe:node:description" : "<html><head></head><body></body></html>",
+        "min-particle-size" : 0.0,
+        "black-background" : true,
+        "annotation-type" : {
+          "content" : "Image index",
+          "enabled" : false
+        },
+        "neighborhood" : "EightConnected",
+        "max-particle-circularity" : 1.0,
+        "split-slices" : false,
+        "exclude-edges" : false,
+        "max-particle-size" : "Infinity",
+        "measurements" : {
+          "values" : [ "Area", "PixelValueModal", "PixelValueSkewness", "PixelValueMedian", "Centroid", "Perimeter", "IntegratedDensity", "FeretDiameter", "StackPosition", "FitEllipse", "PixelValueKurtosis", "CenterOfMass", "AreaFraction", "PixelValueMinMax", "PixelValueStandardDeviation", "PixelValueMean", "ShapeDescriptors", "BoundingRectangle" ],
+          "collapsed" : true
+        },
+        "jipipe:algorithm:custom-expression-variables" : {
+          "parameters" : { }
+        },
+        "jipipe:adaptive-parameters/attach-parameter-annotations" : true,
+        "jipipe:adaptive-parameters/attach-only-non-default-parameter-annotations" : true,
+        "jipipe:adaptive-parameters/parameter-annotations-prefix" : "",
+        "jipipe:adaptive-parameters/overridden-parameters" : [ ],
+        "jipipe:adaptive-parameters/enabled" : true,
+        "jipipe:adaptive-parameters/parameter-annotations-use-internal-names" : false,
+        "jipipe:parameter-slot-algorithm/has-parameter-slot" : false,
+        "jipipe:parameter-slot-algorithm/attach-parameter-annotations" : true,
+        "jipipe:parameter-slot-algorithm/attach-only-non-default-parameter-annotations" : true,
+        "jipipe:parameter-slot-algorithm/parameter-annotations-prefix" : "",
+        "jipipe:parameter-slot-algorithm/parameter-annotations-use-internal-names" : false,
+        "jipipe:data-batch-generation/limit" : {
+          "content" : {
+            "value" : "0-9",
+            "is-expression" : false,
+            "expression" : {
+              "expression" : "MAKE_SEQUENCE(0, 10)"
+            }
+          },
+          "enabled" : false
+        }
+      },
+      "776c403a-0830-49e7-8b7f-62123aa9d4a8" : {
+        "jipipe:graph-compartment" : "fb3bfe3a-c9c1-4ec4-908b-3f1b7380a851",
+        "jipipe:alias-id" : "table-to-2d-rectangular-oval-ro",
+        "jipipe:slot-configuration" : {
+          "input" : {
+            "Input" : {
+              "slot-data-type" : "imagej-results-table",
+              "slot-type" : "Input",
+              "name" : "Input",
+              "custom-name" : null,
+              "description" : "",
+              "is-virtual" : false,
+              "save-outputs" : true,
+              "is-optional" : false
+            }
+          },
+          "output" : {
+            "Output" : {
+              "slot-data-type" : "imagej-roi",
+              "slot-type" : "Output",
+              "name" : "Output",
+              "custom-name" : null,
+              "description" : "",
+              "is-virtual" : false,
+              "save-outputs" : true,
+              "is-optional" : false
+            }
+          }
+        },
+        "jipipe:ui-grid-location" : {
+          "fb3bfe3a-c9c1-4ec4-908b-3f1b7380a851" : {
+            "VerticalCompact" : {
+              "x" : 7,
+              "y" : 49
+            }
+          }
+        },
+        "jipipe:node-info-id" : "ij1-roi-from-table-rectangular",
+        "jipipe:algorithm:enabled" : true,
+        "jipipe:node:ui-locked" : false,
+        "column-x1" : {
+          "key" : "ExistingColumn",
+          "value" : {
+            "expression" : "\"BX\""
+          }
+        },
+        "column-y2" : {
+          "key" : "Generate",
+          "value" : {
+            "expression" : "0"
+          }
+        },
+        "column-x2" : {
+          "key" : "Generate",
+          "value" : {
+            "expression" : "0"
+          }
+        },
+        "column-t" : {
+          "key" : "Generate",
+          "value" : {
+            "expression" : "0"
+          }
+        },
+        "jipipe:node:bookmarked" : false,
+        "jipipe:algorithm:pass-through" : false,
+        "column-height" : {
+          "key" : "ExistingColumn",
+          "value" : {
+            "expression" : "\"Height\""
+          }
+        },
+        "jipipe:node:name" : "Table to 2D rectangular/oval ROI",
+        "jipipe:algorithm:runtime-partition" : {
+          "index" : 0
+        },
+        "jipipe:node:description" : "<html><head></head><body></body></html>",
+        "mode" : "MinCircle",
+        "column-z" : {
+          "key" : "Generate",
+          "value" : {
+            "expression" : "0"
+          }
+        },
+        "anchor" : "TopLeft",
+        "one-based-positions" : true,
+        "column-c" : {
+          "key" : "Generate",
+          "value" : {
+            "expression" : "0"
+          }
+        },
+        "column-y1" : {
+          "key" : "ExistingColumn",
+          "value" : {
+            "expression" : "\"BY\""
+          }
+        },
+        "column-width" : {
+          "key" : "ExistingColumn",
+          "value" : {
+            "expression" : "\"Width\""
+          }
+        },
+        "jipipe:algorithm:custom-expression-variables" : {
+          "parameters" : { }
+        },
+        "jipipe:adaptive-parameters/attach-parameter-annotations" : true,
+        "jipipe:adaptive-parameters/attach-only-non-default-parameter-annotations" : true,
+        "jipipe:adaptive-parameters/parameter-annotations-prefix" : "",
+        "jipipe:adaptive-parameters/overridden-parameters" : [ ],
+        "jipipe:adaptive-parameters/enabled" : true,
+        "jipipe:adaptive-parameters/parameter-annotations-use-internal-names" : false,
+        "jipipe:parameter-slot-algorithm/has-parameter-slot" : false,
+        "jipipe:parameter-slot-algorithm/attach-parameter-annotations" : true,
+        "jipipe:parameter-slot-algorithm/attach-only-non-default-parameter-annotations" : true,
+        "jipipe:parameter-slot-algorithm/parameter-annotations-prefix" : "",
+        "jipipe:parameter-slot-algorithm/parameter-annotations-use-internal-names" : false,
+        "roi-properties/line-width" : 1.0,
+        "roi-properties/roi-name" : {
+          "expression" : "\"unnamed\""
+        },
+        "roi-properties/fill-color" : {
+          "content" : "#FF0000",
+          "enabled" : false
+        },
+        "roi-properties/line-color" : {
+          "content" : "#FFFF00",
+          "enabled" : true
+        },
+        "jipipe:data-batch-generation/limit" : {
+          "content" : {
+            "value" : "0-9",
+            "is-expression" : false,
+            "expression" : {
+              "expression" : "MAKE_SEQUENCE(0, 10)"
+            }
+          },
+          "enabled" : false
+        }
+      },
+      "c7f01abf-281d-4111-b7d3-f77265f028db" : {
+        "jipipe:graph-compartment" : "fb3bfe3a-c9c1-4ec4-908b-3f1b7380a851",
+        "jipipe:alias-id" : "convert-2d-roi-to-mask",
+        "jipipe:slot-configuration" : {
+          "input" : {
+            "ROI" : {
+              "slot-data-type" : "imagej-roi",
+              "slot-type" : "Input",
+              "name" : "ROI",
+              "custom-name" : null,
+              "description" : "",
+              "is-virtual" : false,
+              "save-outputs" : true,
+              "is-optional" : false
+            },
+            "Image" : {
+              "slot-data-type" : "imagej-imgplus",
+              "slot-type" : "Input",
+              "name" : "Image",
+              "custom-name" : null,
+              "description" : "",
+              "is-virtual" : false,
+              "save-outputs" : true,
+              "is-optional" : false
+            }
+          },
+          "output" : {
+            "Output" : {
+              "slot-data-type" : "imagej-imgplus-greyscale-mask",
+              "slot-type" : "Output",
+              "name" : "Output",
+              "custom-name" : null,
+              "description" : "",
+              "is-virtual" : false,
+              "save-outputs" : true,
+              "is-optional" : false
+            }
+          }
+        },
+        "jipipe:ui-grid-location" : {
+          "fb3bfe3a-c9c1-4ec4-908b-3f1b7380a851" : {
+            "VerticalCompact" : {
+              "x" : 11,
+              "y" : 53
+            }
+          }
+        },
+        "jipipe:node-info-id" : "ij1-roi-to-mask",
+        "draw-over" : false,
+        "line-thickness" : 1,
+        "jipipe:algorithm:enabled" : true,
+        "jipipe:node:ui-locked" : false,
+        "jipipe:node:bookmarked" : false,
+        "jipipe:algorithm:pass-through" : false,
+        "fill-outline" : true,
+        "jipipe:node:name" : "Convert 2D ROI to mask",
+        "jipipe:algorithm:runtime-partition" : {
+          "index" : 0
+        },
+        "jipipe:node:description" : "<html><head></head><body></body></html>",
+        "draw-outline" : false,
+        "jipipe:algorithm:custom-expression-variables" : {
+          "parameters" : { }
+        },
+        "jipipe:adaptive-parameters/attach-parameter-annotations" : true,
+        "jipipe:adaptive-parameters/attach-only-non-default-parameter-annotations" : true,
+        "jipipe:adaptive-parameters/parameter-annotations-prefix" : "",
+        "jipipe:adaptive-parameters/overridden-parameters" : [ ],
+        "jipipe:adaptive-parameters/enabled" : true,
+        "jipipe:adaptive-parameters/parameter-annotations-use-internal-names" : false,
+        "jipipe:parameter-slot-algorithm/has-parameter-slot" : false,
+        "jipipe:parameter-slot-algorithm/attach-parameter-annotations" : true,
+        "jipipe:parameter-slot-algorithm/attach-only-non-default-parameter-annotations" : true,
+        "jipipe:parameter-slot-algorithm/parameter-annotations-prefix" : "",
+        "jipipe:parameter-slot-algorithm/parameter-annotations-use-internal-names" : false,
+        "jipipe:data-batch-generation/annotation-merge-strategy" : "Merge",
+        "jipipe:data-batch-generation/column-matching" : "PrefixHashUnion",
+        "jipipe:data-batch-generation/data-annotation-merge-strategy" : "MergeTables",
+        "jipipe:data-batch-generation/custom-matched-columns-expression" : {
+          "expression" : ""
+        },
+        "jipipe:data-batch-generation/skip-incomplete" : false,
+        "jipipe:data-batch-generation/custom-annotation-matching" : {
+          "expression" : "exact_match_results"
+        },
+        "jipipe:data-batch-generation/limit" : {
+          "content" : {
+            "value" : "0-9",
+            "is-expression" : false,
+            "expression" : {
+              "expression" : "MAKE_SEQUENCE(0, 10)"
+            }
+          },
+          "enabled" : false
+        },
+        "jipipe:data-batch-generation/annotation-matching-method" : "ExactMatch",
+        "jipipe:data-batch-generation/force-flow-graph-solver" : false
       }
     },
     "edges" : [ {
-      "source-node" : "3a93b7ce-7d08-4da7-bad0-10bc5baf96b6",
-      "target-node" : "0532d90d-f1ce-4223-bb55-3d6dc5ed326c",
+      "source-node" : "2c85ea8b-a8cd-4faa-bfb4-5ac667c46836",
+      "target-node" : "3a93b7ce-7d08-4da7-bad0-10bc5baf96b6",
       "source-slot" : "Output",
       "target-slot" : "Input",
       "metadata" : {
@@ -2616,8 +2956,44 @@
         "ui-shape" : "Elbow"
       }
     }, {
-      "source-node" : "f0651e5c-91c0-4b3d-8d9b-629cadfccc29",
+      "source-node" : "c7f01abf-281d-4111-b7d3-f77265f028db",
       "target-node" : "3002f4e5-a01f-4595-b77e-04accd82f78a",
+      "source-slot" : "Output",
+      "target-slot" : "Input",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "65c5c986-1b81-4298-bfd3-ede849e5eaee",
+      "target-node" : "776c403a-0830-49e7-8b7f-62123aa9d4a8",
+      "source-slot" : "Measurements",
+      "target-slot" : "Input",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "776c403a-0830-49e7-8b7f-62123aa9d4a8",
+      "target-node" : "c7f01abf-281d-4111-b7d3-f77265f028db",
+      "source-slot" : "Output",
+      "target-slot" : "ROI",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "4fe0f2d8-040b-4097-82ed-5dd931f1a347",
+      "target-node" : "919d6b38-cef7-4008-82eb-fc8ea4b5a907",
+      "source-slot" : "Annotated paths",
+      "target-slot" : "Files",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "3a93b7ce-7d08-4da7-bad0-10bc5baf96b6",
+      "target-node" : "0532d90d-f1ce-4223-bb55-3d6dc5ed326c",
       "source-slot" : "Output",
       "target-slot" : "Input",
       "metadata" : {
@@ -2643,15 +3019,6 @@
         "ui-shape" : "Elbow"
       }
     }, {
-      "source-node" : "2c85ea8b-a8cd-4faa-bfb4-5ac667c46836",
-      "target-node" : "3a93b7ce-7d08-4da7-bad0-10bc5baf96b6",
-      "source-slot" : "Output",
-      "target-slot" : "Input",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
       "source-node" : "0532d90d-f1ce-4223-bb55-3d6dc5ed326c",
       "target-node" : "f0651e5c-91c0-4b3d-8d9b-629cadfccc29",
       "source-slot" : "Output",
@@ -2665,6 +3032,15 @@
       "target-node" : "74354bc0-2fe7-4cd2-be85-8fed8d0586e1",
       "source-slot" : "Image",
       "target-slot" : "Input",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "f0651e5c-91c0-4b3d-8d9b-629cadfccc29",
+      "target-node" : "c7f01abf-281d-4111-b7d3-f77265f028db",
+      "source-slot" : "Output",
+      "target-slot" : "Image",
       "metadata" : {
         "ui-visibility" : "Smart",
         "ui-shape" : "Elbow"
@@ -2697,10 +3073,10 @@
         "ui-shape" : "Elbow"
       }
     }, {
-      "source-node" : "4fe0f2d8-040b-4097-82ed-5dd931f1a347",
-      "target-node" : "919d6b38-cef7-4008-82eb-fc8ea4b5a907",
-      "source-slot" : "Annotated paths",
-      "target-slot" : "Files",
+      "source-node" : "f0651e5c-91c0-4b3d-8d9b-629cadfccc29",
+      "target-node" : "65c5c986-1b81-4298-bfd3-ede849e5eaee",
+      "source-slot" : "Output",
+      "target-slot" : "Mask",
       "metadata" : {
         "ui-visibility" : "Smart",
         "ui-shape" : "Elbow"
