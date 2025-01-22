@@ -32,50 +32,23 @@
     </q-header>
     <q-page-container>
       <q-page padding class="q-gutter-sm">
-        <q-card v-if="!resultList || resultList.length == 0">
-          <q-card-section horizontal class="items-center">
-            <q-card-section>
-              <q-icon size="xl" name="fa-solid fa-file-circle-xmark" />
-            </q-card-section>
-            <q-card-section>
-              <div class="text-h6">No results</div>
-              <div class="text-subtitle2">This project has no results</div>
-            </q-card-section>
-          </q-card-section>
-        </q-card>
-        <q-card v-for="result in resultList" :key="result.id">
-          <q-card-section horizontal class="items-center">
-            <q-card-section class="col">
-              <q-btn
-                flat
-                no-caps
-                class="result-button"
-                align="left"
-                @click="goToResult(result.id)"
-              >
-                <div class="row q-gutter-lg">
-                  <div>
-                    <q-icon size="xl" name="fa-solid fa-folder" />
-                  </div>
-                  <div class="col text-left">
-                    <div class="text-h6">{{ result.name }}</div>
-                    <div class="text-caption">
-                      <q-icon size="xs" name="fa-solid fa-circle-info fa-fw" />
-                      {{ result.description || "No description" }}
-                    </div>
-                    <div class="text-caption">
-                      <q-icon size="xs" name="fa-solid fa-clock fa-fw" />
-                      {{ result.createdAt }}
-                    </div>
-                  </div>
-                </div>
-              </q-btn>
-            </q-card-section>
-            <q-card-actions>
-              <q-btn icon="delete" flat @click="deleteResult(result)" />
-            </q-card-actions>
-          </q-card-section>
-        </q-card>
+        <q-table :rows="resultsTableRows" :columns="resultsTableColumns" :pagination="filesViewPagination"
+                 @row-click="onRowClick" row-key="key">
+          <template v-slot:body-cell-thumbnail="props">
+            <q-td :props="props">
+              <q-icon class="thumbnail" name="fa-solid fa-folder" color="blue" size="xl"/>
+              <q-badge align="top" color="green" v-if="!props.row.viewed">New</q-badge>
+            </q-td>
+          </template>
+          <template v-slot:body-cell-actions="props">
+            <q-td :props="props">
+              <div class="q-gutter-sm" v-if="props.row.id >= 0">
+                <q-btn icon="search" @click.stop="goToResult(props.row.id)"/>
+                <q-btn icon="delete" @click.stop="deleteResult(props.row.id)"/>
+              </div>
+            </q-td>
+          </template>
+        </q-table>
       </q-page>
     </q-page-container>
   </q-layout>
@@ -85,7 +58,7 @@
 import HeaderLogoButtonComponent from 'components/layout/HeaderLogoButtonComponent.vue';
 import AuthManagerComponent from 'components/layout/AuthManagerComponent.vue';
 import { useRoute, useRouter } from 'vue-router';
-import { onMounted, ref, Ref } from 'vue';
+import { computed, onMounted, ref, Ref } from 'vue';
 import { ProjectMetadataPayload } from 'src/types/project';
 import { loadPayloadInstanceFromApi } from 'src/types/common';
 import ProjectBackendTaskButton from 'components/layout/ProjectBackendTaskButton.vue';
@@ -96,6 +69,7 @@ import { ResultPayload } from 'src/types/results';
 import { onDialogYes } from 'src/types/dialog';
 import { api } from 'boot/axios';
 import { sendFailureNotification, sendSuccessNotification } from 'src/types/notification';
+import { QTableColumn } from 'quasar';
 
 const $route = useRoute();
 const $router = useRouter();
@@ -109,6 +83,63 @@ const resultList = ref<ResultPayload[]>();
 defineOptions({
   name: 'ResultsIndexLayout',
 });
+
+const filesViewPagination = {
+  rowsPerPage: 100
+}
+
+const resultsTableColumns : QTableColumn[] = [
+  {
+    name: "thumbnail",
+    label: "",
+    field: "id",
+    sortable: false,
+    align: 'center',
+    style: 'width: 120px; height: 120px;',
+  },
+  {
+    name: "name",
+    label: "Name",
+    field: "name",
+    sortable: true,
+    align: 'left',
+  },
+  {
+    name: "description",
+    label: "Description",
+    field: "description",
+    sortable: true,
+    align: 'left',
+  },
+  {
+    name: "createdAt",
+    label: "Created at",
+    field: "createdAt",
+    sortable: true,
+    align: 'left',
+  },
+  {
+    name: "actions",
+    label: "",
+    field: "id",
+    sortable: false,
+    align: 'right',
+  }
+]
+
+const resultsTableRows = computed(() => {
+    if(!resultList.value) {
+      return []
+    }
+    return [...resultList.value].sort((a, b) =>
+      new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+    )
+  }
+);
+
+function onRowClick(evt: any, row: ResultPayload) {
+  goToResult(row.id)
+}
 
 function goToResult(id: number) {
   $router.push(`/results/view/${id}`);

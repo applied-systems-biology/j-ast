@@ -5,17 +5,8 @@
       <ToggleButton selected-icon="fa-regular fa-square-check" not-selected-icon="fa-regular fa-square" v-model="enhancedView" label="Enhanced display"/>
     </q-toolbar>
   </div>
-  <div class="row col-grow q-pa-sm" style="width: calc(100vw - 10px)">
-    <q-table :rows="tableData" :pagination="tablePagination" class="w-100">
-      <!-- #ImageId fields are referencing project images -->
-<!--      <template v-slot:body-cell-#ImageId="props">-->
-<!--        <q-td :props="props">-->
-<!--          <div class="row q-gutter-md" style="align-items: center">-->
-<!--            <div>{{ props.value }}</div>-->
-<!--            <ProjectImageIdThumbnailComponent v-if="enhancedView" :image-id="props.value" />-->
-<!--          </div>-->
-<!--        </q-td>-->
-<!--      </template>-->
+  <q-scroll-area class="row col-grow q-pa-sm" style="height: 400px; max-width: 100vw;">
+    <q-table :rows="tableData" :pagination="tablePagination">
       <template v-slot:body-cell="props">
         <q-td :props="props">
           <div v-if="!enhancedView">
@@ -30,7 +21,10 @@
         </q-td>
       </template>
     </q-table>
-  </div>
+  </q-scroll-area>
+<!--  <div class="row col-grow q-pa-sm" style="width: calc(100vw - 10px); border: 1px solid red;">-->
+
+<!--  </div>-->
 </template>
 <script setup lang="ts">
 import Papa from "papaparse"
