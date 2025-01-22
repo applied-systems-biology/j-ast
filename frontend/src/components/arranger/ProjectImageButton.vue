@@ -9,6 +9,7 @@
       <q-img
         v-if="thumbnail"
         class="thumbnail"
+        :style="{ opacity: props.hasRunningTask ? 0.6 : 1 }"
         :src="thumbnail"
         fit="contain"
       />
