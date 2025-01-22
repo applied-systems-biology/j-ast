@@ -8,11 +8,24 @@
   <div class="row col-grow q-pa-sm" style="width: calc(100vw - 10px)">
     <q-table :rows="tableData" :pagination="tablePagination" class="w-100">
       <!-- #ImageId fields are referencing project images -->
-      <template v-slot:body-cell-#ImageId="props">
+<!--      <template v-slot:body-cell-#ImageId="props">-->
+<!--        <q-td :props="props">-->
+<!--          <div class="row q-gutter-md" style="align-items: center">-->
+<!--            <div>{{ props.value }}</div>-->
+<!--            <ProjectImageIdThumbnailComponent v-if="enhancedView" :image-id="props.value" />-->
+<!--          </div>-->
+<!--        </q-td>-->
+<!--      </template>-->
+      <template v-slot:body-cell="props">
         <q-td :props="props">
-          <div class="row q-gutter-md" style="align-items: center">
-            <div>{{ props.value }}</div>
-            <ProjectImageIdThumbnailComponent v-if="enhancedView" :image-id="props.value" />
+          <div v-if="!enhancedView">
+            {{ props.value }}
+          </div>
+          <div class="row q-gutter-md" style="align-items: center" v-else>
+            <ProjectImageIdThumbnailComponent v-if="props.col.field.startsWith('#ImageId')" :image-id="props.value" />
+            <div>
+              {{ props.value }}
+            </div>
           </div>
         </q-td>
       </template>

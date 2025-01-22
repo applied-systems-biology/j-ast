@@ -3,7 +3,9 @@ package org.hkijena.jast.tasks;
 import com.google.common.collect.Lists;
 import jakarta.transaction.Transactional;
 import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVPrinter;
+import org.apache.commons.csv.CSVRecord;
 import org.apache.commons.exec.CommandLine;
 import org.apache.commons.exec.ExecuteWatchdog;
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -20,6 +22,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.*;
@@ -32,6 +35,10 @@ public interface BackendTaskWorkload {
     Logger LOGGER = LoggerFactory.getLogger(BackendTaskWorkload.class);
 
     String getName();
+
+    default String getShortDescription() {
+        return getDescription();
+    }
 
     String getDescription();
 
@@ -65,12 +72,23 @@ public interface BackendTaskWorkload {
         return writeSharedFile(params, sourcePath, sourcePath);
     }
 
+    default List<Map<String, String>> readCsv(BackendTaskWorkloadParams params, Path relativePath) throws IOException {
+        return readCsv(params.getTmpPath().resolve(relativePath));
+    }
+
+    default List<Map<String, String>> readCsv(Path fullPath) throws IOException {
+        try(FileReader reader = new FileReader(fullPath.toFile())) {
+            CSVParser parser = new CSVParser(reader,  CSVFormat.Builder.create().setHeader().setSkipHeaderRecord(true).setDelimiter(',').setQuote('"').build());
+            return parser.getRecords().stream().map(CSVRecord::toMap).toList();
+        }
+    }
+
     default void writeRawImages(BackendTaskWorkloadParams params, Iterable<Long> imageIds, ImageRepository repository, ProgressInfo progressInfo) throws IOException {
         Path rawPath = PathUtils.resolveAndMakeSubDirectory(params.getTmpPath(), "raw");
         Path csvPath = params.getTmpPath().resolve("metadata.csv");
         final String[] csvHeader = new String[] { "#ImageId", "#Experiment", "#Sample", "#TimePoint", "#AssayType", "PixelSize", "GroupRow", "GroupColumn" };
         try(FileWriter csvFileWriter = new FileWriter(csvPath.toFile())) {
-            CSVPrinter csvPrinter = new CSVPrinter(csvFileWriter, CSVFormat.Builder.create().setDelimiter(',').setHeader(csvHeader).build());
+            CSVPrinter csvPrinter = new CSVPrinter(csvFileWriter, CSVFormat.Builder.create().setDelimiter(',').setQuote('"').setHeader(csvHeader).build());
             for (Image image : repository.findAllById(imageIds)) {
                 progressInfo.log("Writing raw image data " + image.getId());
                 Path pngPath = rawPath.resolve(image.getId() + ".png");
@@ -183,13 +201,15 @@ public interface BackendTaskWorkload {
         imageRepository.saveAll(images);
     }
 
-    default ResultItem createResultItemFromPath(Path file, Path resultDirectory) {
+    default ResultItem createResultItemFromPath(Path file, Path resultDirectory, ProgressInfo progressInfo) {
         String path = StringUtils.nullToEmpty(resultDirectory.relativize(file).getParent());
         String name = file.getFileName().toString();
 
         ResultItem resultItem = new ResultItem();
         resultItem.setName(name);
         resultItem.setPath(path);
+
+        progressInfo.log("Processing result " + path + "/" + name);
 
         if(name.endsWith(".png") || name.endsWith(".bmp") || name.endsWith(".jpg") || name.endsWith(".jpeg")) {
             try {
@@ -245,7 +265,7 @@ public interface BackendTaskWorkload {
             @Override
             public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
                 try {
-                    ResultItem item = createResultItemFromPath(file, resultDirectory);
+                    ResultItem item = createResultItemFromPath(file, resultDirectory, progressInfo);
                     if (item != null) {
                         result.addResultItem(item);
                     }

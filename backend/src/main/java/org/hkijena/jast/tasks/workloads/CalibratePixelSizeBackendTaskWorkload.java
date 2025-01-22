@@ -2,6 +2,7 @@ package org.hkijena.jast.tasks.workloads;
 
 import jakarta.transaction.Transactional;
 import org.hkijena.jast.model.AssayType;
+import org.hkijena.jast.model.entities.Image;
 import org.hkijena.jast.repositories.ImageRepository;
 import org.hkijena.jast.tasks.*;
 import org.hkijena.jast.utils.JASTAnnotation;
@@ -10,10 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.nio.file.Path;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.nio.file.Paths;
+import java.util.*;
 
 @Component
 @BackendTaskType(typeId = "image-calibrate-pixel-size-by-plate")
@@ -81,12 +80,26 @@ public class CalibratePixelSizeBackendTaskWorkload implements BackendTaskWorkloa
         writeRawImages(params, params.getPayload().getImageIds(), imageRepository, progressInfo);
         writeMaskAnnotations(params, params.getPayload().getImageIds(), "plate", imageRepository, progressInfo);
 
-//        Path projectFilePath = writeSharedFile(params, "image-segment-plate.jip");
-//        progressInfo.log("Project file is " + projectFilePath);
-//        runJIPipe(params, projectFilePath, null, "", progressInfo);
-//
-//        Map<String, Path> maskAnnotationsConfig = new HashMap<>();
-//        maskAnnotationsConfig.put("plate", params.getTmpPath().resolve("plate"));
-//        readMaskAnnotations(params.getPayload().getImageIds(), maskAnnotationsConfig, imageRepository, progressInfo);
+        Path projectFilePath = writeSharedFile(params, "image-calibrate-pixel-size-by-plate.jip");
+        progressInfo.log("Project file is " + projectFilePath);
+        runJIPipe(params, projectFilePath, null, "", progressInfo);
+
+        List<Map<String, String>> updatedMetadata = readCsv(params, Paths.get("metadata_updated.csv"));
+        List<Image> toSave= new ArrayList<>();
+        for (Map<String, String> map : updatedMetadata) {
+            String imageId = map.get("#ImageId");
+            String pixelSize = map.get("PixelSize");
+            if(imageId != null && pixelSize != null) {
+                long imageId_ = Long.parseLong(imageId);
+                double pixelSize_ = Double.parseDouble(pixelSize);
+                Optional<Image> image = imageRepository.findById(imageId_);
+                if(image.isPresent()) {
+                    image.get().setPixelSizeMillimeter(pixelSize_);
+                    toSave.add(image.get());
+                }
+            }
+        }
+
+        imageRepository.saveAll(toSave);
     }
 }

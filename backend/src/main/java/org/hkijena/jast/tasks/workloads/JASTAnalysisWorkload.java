@@ -33,8 +33,8 @@ public class JASTAnalysisWorkload implements BackendTaskWorkload {
             JASTAnnotation.ZOIShape.toSlot(BackendTaskWorkloadDataSlotValidationMode.OncePerRow));
     private static final List<BackendTaskWorkloadDataSlot> OUTPUTS = Collections.emptyList();
     private static final List<BackendTaskWorkloadParameterSlot> PARAMETERS = List.of(
-            new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotType.String, "result-name", "Result name", "The name of the generated result folder", "Visualization"),
-            new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotType.String, "result-description", "Result description", "Description of the generated result", ""),
+            new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotType.String, "result-name", "Result name", "The name of the generated result folder", "DiskImageR-style result"),
+            new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotType.String, "result-description", "Result description", "Description of the generated result", "RAD/FoG/ZOI"),
             new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotType.String, "thresholds", "Thresholds (%)", "The thresholds in percent (separate items with a semicolon)", "20; 50; 80")
     );
     private static final Map<String, String> PARAMETER_OVERRIDES = new HashMap<>();
@@ -52,12 +52,22 @@ public class JASTAnalysisWorkload implements BackendTaskWorkload {
 
     @Override
     public String getName() {
-        return "J-AST analysis";
+        return "DiskImageR-style analysis (RAD/FoG/ZOI)";
+    }
+
+    @Override
+    public String getShortDescription() {
+        return "Applies an analysis that is based on the DiskImageR tool (Gerstein et al).";
     }
 
     @Override
     public String getDescription() {
-        return "Generates results with the J-AST analysis algorithm. Supports only two time points per row.";
+        return "Applies an analysis that is based on the DiskImageR tool (Gerstein et al). " +
+                "For each time series, the tool will generate label areas around the strip/disk that follows the zone-of-inhibition (ZOI) shape (i.e. for DDA this is trivial). " +
+                "Then the analysis will proceed to find for each percentage threshold (default 20%, 50%, and 80%) the label that has the given reduction in brightness. " +
+                "This yields the radius-of-inhibition (RAD), which for DDA is the distance of the ZOI border to the disk, and for E-tests the distance to the point inside the strip where the distance to the ZOI shape is greatest. " +
+                "The ZOI is then applied to the other time point to calculate the field-of-growth (FoG)." +
+                "Please note that the pixel size must be correctly calibrated for appropriate physical RAD values in millimeters.";
     }
 
     @Override
@@ -104,7 +114,7 @@ public class JASTAnalysisWorkload implements BackendTaskWorkload {
         // Parse and read the thresholds
         String rawThresholds = StringUtils.nullToEmpty(params.getPayload().getParameter("thresholds").getValue());
         List<Integer> thresholds = StringUtils.getIntegersFromRangeString(rawThresholds);
-        parameterOverrides.put(PARAMETER_OVERRIDES.get("__thresholds"), thresholds);
+        parameterOverrides.put(PARAMETER_OVERRIDES.get("__thresholds"), thresholds.stream().map(t -> t / 100.0).toList());
 
         writeRawImages(params, params.getPayload().getImageIds(), imageRepository, progressInfo);
         writeMaskAnnotations(params, params.getPayload().getImageIds(), "plate", imageRepository, progressInfo);

@@ -86,6 +86,9 @@ export class BackendTaskTypePayload {
   description: string = "";
 
   @Expose()
+  shortDescription: string = "";
+
+  @Expose()
   category: string = "";
 
   @Expose()

@@ -6,30 +6,43 @@
     :src="thumbnail"
     fit="contain"
   />
-  <q-icon v-else class="thumbnail" color="grey" name="fa-solid fa-file" size="xl"/>
+  <q-icon
+    v-else-if="resultItem.type == ResultItemType.Table"
+    class="thumbnail"
+    color="green"
+    name="fa-solid fa-table"
+    size="xl"
+  />
+  <q-icon
+    v-else
+    class="thumbnail"
+    color="grey"
+    name="fa-solid fa-file"
+    size="xl"
+  />
 </template>
 <script setup lang="ts">
-import {ResultItemPayload, ResultItemType} from "src/types/results";
-import {useResultItemThumbnailStore} from "stores/result-item-thumbnail-store";
-import {onMounted, ref, watch} from "vue";
+import { ResultItemPayload, ResultItemType } from 'src/types/results';
+import { useResultItemThumbnailStore } from 'stores/result-item-thumbnail-store';
+import { onMounted, ref, watch } from 'vue';
 
 const props = defineProps<{
-  resultItem: ResultItemPayload
-}>()
+  resultItem: ResultItemPayload;
+}>();
 
-const thumbnailStore = useResultItemThumbnailStore()
+const thumbnailStore = useResultItemThumbnailStore();
 const thumbnail = ref<string>('');
 
 function queryBackend() {
   if (props.resultItem && props.resultItem.type == ResultItemType.Image) {
-    thumbnailStore.fetchImage(props.resultItem.id).then(data => {
-      thumbnail.value = data || ""
-    })
+    thumbnailStore.fetchImage(props.resultItem.id).then((data) => {
+      thumbnail.value = data || '';
+    });
   }
 }
 
 onMounted(() => {
-  queryBackend()
+  queryBackend();
 });
 watch(
   () => [props.resultItem],

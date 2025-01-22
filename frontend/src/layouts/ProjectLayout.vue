@@ -139,7 +139,7 @@
                       <q-icon name="fa-solid fa-wand-magic-sparkles" />
                     </q-item-section>
                     <q-item-section>{{ tool.name }}</q-item-section>
-                    <q-tooltip>{{ tool.description }}</q-tooltip>
+                    <q-tooltip>{{ tool.shortDescription }}</q-tooltip>
                   </q-item>
                 </q-menu>
               </q-item>
@@ -156,7 +156,7 @@
                   <q-icon name="fa-solid fa-wand-magic-sparkles" />
                 </q-item-section>
                 <q-item-section>{{ tool.name }}</q-item-section>
-                <q-tooltip>{{ tool.description }}</q-tooltip>
+                <q-tooltip>{{ tool.shortDescription }}</q-tooltip>
               </q-item>
             </q-list>
           </q-menu>

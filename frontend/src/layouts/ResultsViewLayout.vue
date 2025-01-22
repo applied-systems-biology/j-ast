@@ -105,7 +105,7 @@ import {useRoute, useRouter} from 'vue-router';
 import {computed, onMounted, ref, Ref} from 'vue';
 import {ProjectMetadataPayload} from 'src/types/project';
 import {downloadFromApi, loadPayloadInstanceFromApi} from 'src/types/common';
-import { FullResultPayload, generateAndDownloadResultsZip, ResultItemPayload, showResultItem } from "src/types/results";
+import { FullResultPayload, generateAndDownloadResultsZip, ResultItemPayload, showResultItem } from 'src/types/results';
 import { formatFileSize, sortPathsByHierarchy } from "src/types/utils";
 import {QSpinnerHourglass, QTableColumn, useQuasar} from "quasar";
 import ResultItemThumbnailComponent from "components/results/ResultItemThumbnailComponent.vue";

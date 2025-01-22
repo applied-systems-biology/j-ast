@@ -19,6 +19,8 @@ public class BackendTaskTypePayload {
     @JsonProperty
     private String description;
     @JsonProperty
+    private String shortDescription;
+    @JsonProperty
     private String category;
     @JsonProperty
     private BackendTaskWorkloadMode workloadMode = BackendTaskWorkloadMode.Single;
@@ -40,6 +42,7 @@ public class BackendTaskTypePayload {
         setTaskId(taskId);
         setName(workload.getName());
         setDescription(workload.getDescription());
+        setShortDescription(workload.getShortDescription());
         setWorkloadMode(workload.getMode());
         setInputs(workload.getInputs());
         setOutputs(workload.getOutputs());
@@ -47,6 +50,14 @@ public class BackendTaskTypePayload {
         setAssayTypeRestriction(workload.getAssayTypeRestriction());
         setParameters(workload.getParameters().stream().map(BackendTaskParameterPayload::new).collect(Collectors.toList()));
         setOutputsResult(workload.isOutputsResult());
+    }
+
+    public String getShortDescription() {
+        return shortDescription;
+    }
+
+    public void setShortDescription(String shortDescription) {
+        this.shortDescription = shortDescription;
     }
 
     public boolean isOutputsResult() {
