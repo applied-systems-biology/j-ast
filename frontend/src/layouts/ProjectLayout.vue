@@ -281,7 +281,7 @@ const projectBackendTasks = ref<Array<BackendTaskPayload>>([]);
 const resultList = ref<ResultPayload[]>();
 
 const availableBackendTasksCategories = computed(() => {
-  const predefinedOrder = ["Plate", "DDA", "E-Test", "Analyze"];
+  const predefinedOrder = ["Preprocessing", "Plate", "DDA", "E-Test", "Analyze"];
   const result = new Set<string>();
   for (const taskType of availableBackendTasks.value) {
     result.add(taskType.category || '');

@@ -19,6 +19,33 @@ public class ImageUtils {
         return createThumbnail(image, DEFAULT_THUMBNAIL_SIZE, DEFAULT_THUMBNAIL_SIZE);
     }
 
+    public static BufferedImage invertImage(BufferedImage original) {
+        int width = original.getWidth();
+        int height = original.getHeight();
+
+        BufferedImage invertedImage = new BufferedImage(width, height, original.getType());
+
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                int rgba = original.getRGB(x, y);
+                int a = (rgba >> 24) & 0xFF; // Extract alpha
+                int r = (rgba >> 16) & 0xFF; // Extract red
+                int g = (rgba >> 8) & 0xFF;  // Extract green
+                int b = rgba & 0xFF;         // Extract blue
+
+                // Invert colors
+                r = 255 - r;
+                g = 255 - g;
+                b = 255 - b;
+
+                // Combine back into ARGB format
+                int invertedRGBA = (a << 24) | (r << 16) | (g << 8) | b;
+                invertedImage.setRGB(x, y, invertedRGBA);
+            }
+        }
+        return invertedImage;
+    }
+
     public static BufferedImage createThumbnail(BufferedImage image, int thumbnailWidth, int thumbnailHeight) {
         double thumbnailScale = Math.max(1.0 * thumbnailWidth / image.getWidth(), 1.0 * thumbnailHeight / image.getHeight());
         Image scaledImage = image.getScaledInstance((int) (image.getWidth() * thumbnailScale), (int) (image.getHeight() * thumbnailScale), Image.SCALE_SMOOTH);

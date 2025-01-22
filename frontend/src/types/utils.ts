@@ -15,6 +15,15 @@ export function formatSeconds(seconds : number) {
   return parts.join(', ').replace(/,([^,]*)$/, ' and$1');
 }
 
+export function splitByDelimiters(input: string, delimiters: string): string[] {
+  // Escape special regex characters in the delimiters
+  const escapedDelimiters = delimiters.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&');
+  // Create a regular expression to split by any of the delimiters
+  const delimiterRegex = new RegExp(`[${escapedDelimiters}]`, 'g');
+  // Split the input string using the regex
+  return input.split(delimiterRegex);
+}
+
 export function formatExpirationTime(seconds : number) {
   const expirationDate = new Date(Date.now() + seconds * 1000);
   return expirationDate.toLocaleString(); // Adjusts to the user's local timezone

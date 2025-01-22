@@ -5,7 +5,7 @@ import org.hkijena.jast.model.AssayType;
 import org.hkijena.jast.payloads.task.BackendTaskParameterPayload;
 import org.hkijena.jast.repositories.ImageRepository;
 import org.hkijena.jast.tasks.*;
-import org.hkijena.jast.utils.JASTAnnotation;
+import org.hkijena.jast.utils.JASTDataSlot;
 import org.hkijena.jast.utils.ProgressInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -21,8 +21,8 @@ import java.util.Map;
 public class SegmentDDADiskBackendTaskWorkload implements BackendTaskWorkload {
 
     private final ImageRepository imageRepository;
-    private static final List<BackendTaskWorkloadDataSlot> INPUTS = Collections.singletonList(JASTAnnotation.Plate.toSlot());
-    private static final List<BackendTaskWorkloadDataSlot> OUTPUTS = Collections.singletonList(JASTAnnotation.StripDisk.toSlot());
+    private static final List<BackendTaskWorkloadDataSlot> INPUTS = Collections.singletonList(JASTDataSlot.Plate.toSlot());
+    private static final List<BackendTaskWorkloadDataSlot> OUTPUTS = Collections.singletonList(JASTDataSlot.StripDisk.toSlot());
     private static final List<BackendTaskWorkloadParameterSlot> PARAMETERS = List.of(
             new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotType.Number, "minCirc", "Minimum circularity (0-1)", "Minimum circularity of the disk", 0.5),
             new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotType.Number, "minFeret", "Minimum diameter (mm)", "Minimum diameter in millimeters. A lower than expected value is better.", 2),

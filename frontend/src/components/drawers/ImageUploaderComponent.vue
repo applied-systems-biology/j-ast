@@ -23,6 +23,7 @@
         @uploading="onUpload"
         @finish="onFinished"
         hide-upload-btn
+        no-thumbnails
         :headers="[ { name: 'Authorization', value: `Bearer ${authStore.accessToken}` } ]"
       />
     </div>

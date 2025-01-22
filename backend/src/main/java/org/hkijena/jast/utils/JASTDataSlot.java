@@ -4,7 +4,8 @@ import org.hkijena.jast.tasks.BackendTaskWorkloadDataSlot;
 import org.hkijena.jast.tasks.BackendTaskWorkloadDataSlotType;
 import org.hkijena.jast.tasks.BackendTaskWorkloadDataSlotValidationMode;
 
-public enum JASTAnnotation {
+public enum JASTDataSlot {
+    Raw("raw", BackendTaskWorkloadDataSlotType.Raw),
     Plate("plate", BackendTaskWorkloadDataSlotType.ImageMaskAnnotation),
     StripDisk("strip-disk", BackendTaskWorkloadDataSlotType.ImageMaskAnnotation),
     ZOIShape("zoi-shape", BackendTaskWorkloadDataSlotType.ImageMaskAnnotation),
@@ -13,7 +14,7 @@ public enum JASTAnnotation {
     private final String key;
     private final BackendTaskWorkloadDataSlotType slotType;
 
-    JASTAnnotation(String key, BackendTaskWorkloadDataSlotType slotType) {
+    JASTDataSlot(String key, BackendTaskWorkloadDataSlotType slotType) {
         this.key = key;
         this.slotType = slotType;
     }

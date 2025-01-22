@@ -8,7 +8,7 @@ import org.hkijena.jast.repositories.ImageRepository;
 import org.hkijena.jast.repositories.ProjectRepository;
 import org.hkijena.jast.repositories.ResultRepository;
 import org.hkijena.jast.tasks.*;
-import org.hkijena.jast.utils.JASTAnnotation;
+import org.hkijena.jast.utils.JASTDataSlot;
 import org.hkijena.jast.utils.ProgressInfo;
 import org.hkijena.jast.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,9 +28,9 @@ public class JASTAnalysisWorkload implements BackendTaskWorkload {
     private final ProjectRepository projectRepository;
     private final ResultRepository resultRepository;
     private static final List<BackendTaskWorkloadDataSlot> INPUTS = List.of(
-            JASTAnnotation.Plate.toSlot(),
-            JASTAnnotation.StripDisk.toSlot(),
-            JASTAnnotation.ZOIShape.toSlot(BackendTaskWorkloadDataSlotValidationMode.OncePerRow));
+            JASTDataSlot.Plate.toSlot(),
+            JASTDataSlot.StripDisk.toSlot(),
+            JASTDataSlot.ZOIShape.toSlot(BackendTaskWorkloadDataSlotValidationMode.OncePerRow));
     private static final List<BackendTaskWorkloadDataSlot> OUTPUTS = Collections.emptyList();
     private static final List<BackendTaskWorkloadParameterSlot> PARAMETERS = List.of(
             new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotType.String, "result-name", "Result name", "The name of the generated result folder", "DiskImageR-style result"),

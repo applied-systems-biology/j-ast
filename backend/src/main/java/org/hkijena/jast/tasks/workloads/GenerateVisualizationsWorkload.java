@@ -8,14 +8,13 @@ import org.hkijena.jast.repositories.ImageRepository;
 import org.hkijena.jast.repositories.ProjectRepository;
 import org.hkijena.jast.repositories.ResultRepository;
 import org.hkijena.jast.tasks.*;
-import org.hkijena.jast.utils.JASTAnnotation;
+import org.hkijena.jast.utils.JASTDataSlot;
 import org.hkijena.jast.utils.ProgressInfo;
 import org.hkijena.jast.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.nio.file.Path;
-import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -28,9 +27,9 @@ public class GenerateVisualizationsWorkload implements BackendTaskWorkload {
     private final ImageRepository imageRepository;
     private final ResultRepository resultRepository;
     private final ProjectRepository projectRepository;
-    private static final List<BackendTaskWorkloadDataSlot> INPUTS = List.of(JASTAnnotation.Plate.toSlot(BackendTaskWorkloadDataSlotValidationMode.Optional),
-            JASTAnnotation.ZOIShape.toSlot(BackendTaskWorkloadDataSlotValidationMode.Optional),
-            JASTAnnotation.StripDisk.toSlot(BackendTaskWorkloadDataSlotValidationMode.Optional));
+    private static final List<BackendTaskWorkloadDataSlot> INPUTS = List.of(JASTDataSlot.Plate.toSlot(BackendTaskWorkloadDataSlotValidationMode.Optional),
+            JASTDataSlot.ZOIShape.toSlot(BackendTaskWorkloadDataSlotValidationMode.Optional),
+            JASTDataSlot.StripDisk.toSlot(BackendTaskWorkloadDataSlotValidationMode.Optional));
     private static final List<BackendTaskWorkloadDataSlot> OUTPUTS = Collections.emptyList();
     private static final List<BackendTaskWorkloadParameterSlot> PARAMETERS = List.of(
             new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotType.String, "result-name", "Result name", "The name of the generated result folder", "Visualization"),

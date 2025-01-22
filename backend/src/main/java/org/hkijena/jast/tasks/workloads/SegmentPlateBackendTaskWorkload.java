@@ -4,7 +4,7 @@ import jakarta.transaction.Transactional;
 import org.hkijena.jast.model.AssayType;
 import org.hkijena.jast.repositories.ImageRepository;
 import org.hkijena.jast.tasks.*;
-import org.hkijena.jast.utils.JASTAnnotation;
+import org.hkijena.jast.utils.JASTDataSlot;
 import org.hkijena.jast.utils.ProgressInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -18,7 +18,7 @@ public class SegmentPlateBackendTaskWorkload implements BackendTaskWorkload {
 
     private final ImageRepository imageRepository;
     private static final List<BackendTaskWorkloadDataSlot> INPUTS = Collections.emptyList();
-    private static final List<BackendTaskWorkloadDataSlot> OUTPUTS = Collections.singletonList(JASTAnnotation.Plate.toSlot());
+    private static final List<BackendTaskWorkloadDataSlot> OUTPUTS = Collections.singletonList(JASTDataSlot.Plate.toSlot());
 
     @Autowired
     public SegmentPlateBackendTaskWorkload(ImageRepository imageRepository) {

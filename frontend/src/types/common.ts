@@ -31,6 +31,8 @@ export function renderMaskAnnotationId2(id: string) {
       return 'ETest ZOI shape';
     case 'plate':
       return 'Plate';
+    case 'raw':
+      return 'Raw image';
   }
   return id;
 }

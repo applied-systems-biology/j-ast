@@ -5,7 +5,7 @@ import org.hkijena.jast.model.AssayType;
 import org.hkijena.jast.model.entities.Image;
 import org.hkijena.jast.repositories.ImageRepository;
 import org.hkijena.jast.tasks.*;
-import org.hkijena.jast.utils.JASTAnnotation;
+import org.hkijena.jast.utils.JASTDataSlot;
 import org.hkijena.jast.utils.ProgressInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -19,8 +19,8 @@ import java.util.*;
 public class CalibratePixelSizeBackendTaskWorkload implements BackendTaskWorkload {
 
     private final ImageRepository imageRepository;
-    private static final List<BackendTaskWorkloadDataSlot> INPUTS = Collections.singletonList(JASTAnnotation.Plate.toSlot());
-    private static final List<BackendTaskWorkloadDataSlot> OUTPUTS = Collections.singletonList(JASTAnnotation.PixelSize.toSlot());
+    private static final List<BackendTaskWorkloadDataSlot> INPUTS = Collections.singletonList(JASTDataSlot.Plate.toSlot());
+    private static final List<BackendTaskWorkloadDataSlot> OUTPUTS = Collections.singletonList(JASTDataSlot.PixelSize.toSlot());
     private static final List<BackendTaskWorkloadParameterSlot> PARAMETERS = Collections.singletonList(
             new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotType.Number, "plate-diameter-mm", "Plate diameter (mm)", "The plate diameter in millimeters", 90));
 

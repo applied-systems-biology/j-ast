@@ -5,7 +5,7 @@ import org.hkijena.jast.model.AssayType;
 import org.hkijena.jast.payloads.task.BackendTaskParameterPayload;
 import org.hkijena.jast.repositories.ImageRepository;
 import org.hkijena.jast.tasks.*;
-import org.hkijena.jast.utils.JASTAnnotation;
+import org.hkijena.jast.utils.JASTDataSlot;
 import org.hkijena.jast.utils.ProgressInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -21,8 +21,8 @@ import java.util.Map;
 public class ETestCopyRegisteredZOIShapeWorkload implements BackendTaskWorkload {
 
     private final ImageRepository imageRepository;
-    private static final List<BackendTaskWorkloadDataSlot> INPUTS = List.of(JASTAnnotation.StripDisk.toSlot(),
-            JASTAnnotation.ZOIShape.toSlot(BackendTaskWorkloadDataSlotValidationMode.OncePerRow));
+    private static final List<BackendTaskWorkloadDataSlot> INPUTS = List.of(JASTDataSlot.StripDisk.toSlot(),
+            JASTDataSlot.ZOIShape.toSlot(BackendTaskWorkloadDataSlotValidationMode.OncePerRow));
     private static final List<BackendTaskWorkloadDataSlot> OUTPUTS = Collections.emptyList();
     private static final List<BackendTaskWorkloadParameterSlot> PARAMETERS = Collections.emptyList();
     private static final Map<String, String> PARAMETER_OVERRIDES = new HashMap<>();

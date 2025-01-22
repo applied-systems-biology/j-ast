@@ -1,15 +1,13 @@
-import {Dialog} from 'quasar';
-import ImageAutofillMetadataDialog, {
-  ImageAutofillMetadataDialogPayload
-} from 'components/frontendProcessors/ImageAutofillMetadataDialog.vue';
-import {removeExtensionIfPresent} from 'src/types/common';
-import {onDialogYes} from 'src/types/dialog';
-import ImageAutoSortByMetadataDialog from 'components/frontendProcessors/ImageAutoSortByMetadataDialog.vue';
-import {ImageAutoSortByMetadataDialogPayload} from "components/frontendProcessors/ImageAutoSortByMetadataDialog.vue";
-import {sendFailureNotification, sendSuccessNotification} from "src/types/notification";
+import { Dialog } from 'quasar';
+import ImageAutofillMetadataDialog, { ImageAutofillMetadataDialogFieldPayloadMode, ImageAutofillMetadataDialogPayload } from 'components/frontendProcessors/ImageAutofillMetadataDialog.vue';
+import { removeExtensionIfPresent } from 'src/types/common';
+import { onDialogYes } from 'src/types/dialog';
+import ImageAutoSortByMetadataDialog, { ImageAutoSortByMetadataDialogPayload } from 'components/frontendProcessors/ImageAutoSortByMetadataDialog.vue';
+import { sendFailureNotification, sendSuccessNotification } from 'src/types/notification';
 import { parseAssayType } from 'src/types/assayType';
 import { ImagePayload } from 'src/types/image';
 import { ProjectImagesPayload } from 'src/types/projectImages';
+import { splitByDelimiters } from 'src/types/utils';
 
 export interface FrontEndImageProcessorResponse {
   images: ImagePayload[];
@@ -45,13 +43,29 @@ export function doImageAutofillMetadata(
               fileName = removeExtensionIfPresent(fileName);
             }
             if (fileName) {
-              const elements = fileName.split(payload.delimiter);
+              const elements = splitByDelimiters(fileName, payload.delimiter);
               for (const fieldPayload of payload.fields) {
-                if (fieldPayload.enabled && fieldPayload.index >= 0 && fieldPayload.index < elements.length) {
+                
+                if(fieldPayload.mode == ImageAutofillMetadataDialogFieldPayloadMode.Dynamic) {
+                  if (fieldPayload.index >= 0 && fieldPayload.index < elements.length) {
+                    const currentValue = (image as any)[fieldPayload.fieldName];
+                    if (payload.overrideExisting || !currentValue) {
+                      // Read out the current value
+                      let newValue = elements[fieldPayload.index]
+
+                      // Special case for assay Type
+                      if (fieldPayload.fieldName == "assayType") {
+                        newValue = parseAssayType(newValue)
+                      }
+
+                      (image as any)[fieldPayload.fieldName] = newValue;
+                    }
+                  }
+                }
+                else if(fieldPayload.mode == ImageAutofillMetadataDialogFieldPayloadMode.Static) {
                   const currentValue = (image as any)[fieldPayload.fieldName];
                   if (payload.overrideExisting || !currentValue) {
-                    // Read out the current value
-                    let newValue = elements[fieldPayload.index]
+                    let newValue = fieldPayload.staticValue
 
                     // Special case for assay Type
                     if (fieldPayload.fieldName == "assayType") {
@@ -61,6 +75,7 @@ export function doImageAutofillMetadata(
                     (image as any)[fieldPayload.fieldName] = newValue;
                   }
                 }
+
               }
             }
           }

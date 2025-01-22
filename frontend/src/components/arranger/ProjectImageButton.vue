@@ -29,8 +29,7 @@
           </q-badge>
         </div>
         <div v-if="props.hasRunningTask" class="progress text-indigo" >
-          <q-spinner-hourglass size="xs"/>
-          <span class="text-caption">Working ...</span>
+          <span class="text-caption text-bold">Currently being processed ...</span>
         </div>
       </div>
     </div>
