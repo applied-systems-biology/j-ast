@@ -172,7 +172,7 @@ const numCols = computed(() =>
 const numRows = computed(() =>
   projectImages.value ? projectImages.value.groupRows.length : 0
 );
-const maxNumRenderedRows = ref(0);
+const maxNumRenderedRows = ref(10);
 const numRenderedRows = computed(() => {
   return Math.min(numRows.value, maxNumRenderedRows.value);
 });
@@ -343,7 +343,7 @@ onMounted(() => {
   watch(projectImages, () => {
     console.log("new project images:" + projectImages.value?.projectId)
     if(projectImages.value?.projectId != lastProjectId.value) {
-      maxNumRenderedRows.value = 0
+      maxNumRenderedRows.value = 10
     }
   });
 });
