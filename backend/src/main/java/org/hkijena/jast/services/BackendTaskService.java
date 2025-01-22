@@ -19,6 +19,7 @@ import org.hkijena.jast.utils.StringUtils;
 import org.jobrunr.jobs.annotations.Job;
 import org.jobrunr.jobs.annotations.Recurring;
 import org.jobrunr.jobs.context.JobContext;
+import org.jobrunr.scheduling.JobBuilder;
 import org.jobrunr.scheduling.JobScheduler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -83,6 +84,27 @@ public class BackendTaskService {
         if (!newTasks.isEmpty()) {
             logger.info("Started {} backend tasks, {} failures", newTasks.size(), numFailures);
             backendTaskRepository.saveAll(newTasks);
+        }
+    }
+
+    @Transactional
+    public void enqueueTask(BackendTask newTask) {
+        if(newTask.getStatus() != TaskStatus.Ready) {
+            return;
+        }
+        BackendTaskWorkload workload = backendTaskRegistry.getTask(newTask.getTaskTypeId());
+        if (workload != null) {
+            BackendTaskPayload payload = newTask.toPayload();
+            newTask.setStatus(TaskStatus.Running);
+
+            BackendTaskWorkloadParams params = new BackendTaskWorkloadParams();
+            params.setPayload(payload);
+            params.setTmpPath(Paths.get(newTask.getTmpPath()));
+            params.setRuntimeConfig(runtimeConfig);
+            params.setLockFilePath(params.getTmpPath().resolve("lockfile"));
+            PathUtils.createFileIfNotExists(params.getLockFilePath());
+
+            jobScheduler.create(JobBuilder.aJob().withLabels("taskId-" + newTask.getId(), "projectId-" + newTask.getProject().getId()).withDetails(() -> startBackendTask(params, JobContext.Null)));
         }
     }
 

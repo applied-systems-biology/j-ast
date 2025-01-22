@@ -8,7 +8,7 @@
       <!-- Unsorted -->
       <q-card-section>
         <q-scroll-area class="unsorted-scroll-area" visible>
-          <div class="grid-row grid-row-unsorted bg-indigo-1" >
+          <div class="grid-row grid-row-unsorted bg-indigo-1">
             <div
               v-for="(k, columnIndex) in (projectImages?.unsortedRow.images
                 .length || 0) + 1"
@@ -54,12 +54,21 @@
           class="grid-column-label bg-indigo-1"
         >
           <q-scroll-area class="column-label-scroll-area">
-            <q-badge v-for="badge in getColumnBadges(columnIndex)" :key="`${badge.type}-${badge.text}`" :style="{ backgroundColor: badge.color }">
+            <q-badge
+              v-for="badge in getColumnBadges(columnIndex)"
+              :key="`${badge.type}-${badge.text}`"
+              :style="{ backgroundColor: badge.color }"
+            >
               <q-icon :name="badge.icon" />
-              <span class="q-ml-sm">{{ badge.text}}</span>
+              <span class="q-ml-sm">{{ badge.text }}</span>
             </q-badge>
           </q-scroll-area>
-          <q-btn flat size="xs" icon="fa-solid fa-chevron-down" @click.stop="selectColumn(columnIndex, $event)">
+          <q-btn
+            flat
+            size="xs"
+            icon="fa-solid fa-chevron-down"
+            @click.stop="selectColumn(columnIndex, $event)"
+          >
             <q-tooltip>Select the whole column</q-tooltip>
           </q-btn>
         </div>
@@ -71,12 +80,22 @@
       >
         <div class="grid-row-label">
           <q-scroll-area class="row-label-scroll-area">
-            <q-badge v-for="badge in getRowBadges(rowIndex)" :key="`${badge.type}-${badge.text}`" :style="{ backgroundColor: badge.color }">
+            <q-badge
+              v-for="badge in getRowBadges(rowIndex)"
+              :key="`${badge.type}-${badge.text}`"
+              :style="{ backgroundColor: badge.color }"
+            >
               <q-icon :name="badge.icon" />
-              <span class="q-ml-sm">{{ badge.text}}</span>
+              <span class="q-ml-sm">{{ badge.text }}</span>
             </q-badge>
           </q-scroll-area>
-          <q-btn flat size="xs" icon="fa-solid fa-chevron-right" class="select-all-button" @click.stop="selectRow(rowIndex, $event)">
+          <q-btn
+            flat
+            size="xs"
+            icon="fa-solid fa-chevron-right"
+            class="select-all-button"
+            @click.stop="selectRow(rowIndex, $event)"
+          >
             <q-tooltip>Select the whole row</q-tooltip>
           </q-btn>
         </div>
@@ -111,11 +130,14 @@
   </div>
 </template>
 <script setup lang="ts">
-import { computed, ref } from 'vue';
+import { computed, onMounted, ref, watch } from 'vue';
 import ProjectImageButton from 'components/arranger/ProjectImageButton.vue';
-import {sendFailureNotification} from "src/types/notification";
+import { sendFailureNotification } from 'src/types/notification';
 import { Badge } from 'src/types/badge';
-import { ProjectImagesPayload, ProjectImagesPayloadRow } from 'src/types/projectImages';
+import {
+  ProjectImagesPayload,
+  ProjectImagesPayloadRow,
+} from 'src/types/projectImages';
 import { BackendTaskPayload } from 'src/types/backendTasks';
 
 defineProps<{
@@ -143,7 +165,7 @@ class SlotIndex {
 const selectedImageIds = defineModel<Array<number>>('selectedImageIds', {
   required: true,
 });
-const projectBackendTasks = defineModel<BackendTaskPayload[]>("backendTasks")
+const projectBackendTasks = defineModel<BackendTaskPayload[]>('backendTasks');
 
 const projectImages = defineModel<ProjectImagesPayload>();
 const numCols = computed(() =>
@@ -152,21 +174,22 @@ const numCols = computed(() =>
 const numRows = computed(() =>
   projectImages.value ? projectImages.value.groupRows.length : 0
 );
-const maxNumRenderedRows = ref(0)
+const maxNumRenderedRows = ref(0);
 const numRenderedRows = computed(() => {
-  return Math.min(numRows.value, maxNumRenderedRows.value)
-})
+  return Math.min(numRows.value, maxNumRenderedRows.value);
+});
 const imagesWithRunningTasks = computed(() => {
-  const result = new Set<number>()
-  if(projectBackendTasks.value) {
-    for(const task of projectBackendTasks.value) {
-      if(task.isRunning()) {
-        task.imageIds.forEach(result.add, result)
+  const result = new Set<number>();
+  if (projectBackendTasks.value) {
+    for (const task of projectBackendTasks.value) {
+      if (task.isRunning()) {
+        task.imageIds.forEach(result.add, result);
       }
     }
   }
-  return result
-})
+  return result;
+});
+const lastProjectId = ref(-1);
 
 const isDragging = ref(false);
 const dragSlot = ref<SlotIndex | null>(null);
@@ -180,18 +203,18 @@ function getImageBySlot(row: number, column: number) {
   return projectImages.value?.getImageBySlot(row, column) || undefined;
 }
 
-function getRowBadges(rowIndex: number) : Array<Badge> {
-  const row : ProjectImagesPayloadRow | undefined = projectImages.value?.groupRows[rowIndex];
-  if(row) {
-    return row!.getRowMetadataAsBadges()
-  }
-  else {
-    return []
+function getRowBadges(rowIndex: number): Array<Badge> {
+  const row: ProjectImagesPayloadRow | undefined =
+    projectImages.value?.groupRows[rowIndex];
+  if (row) {
+    return row!.getRowMetadataAsBadges();
+  } else {
+    return [];
   }
 }
 
-function getColumnBadges(columnIndex : number) : Array<Badge> {
-  return projectImages.value?.getColumnMetadataAsBadges(columnIndex) || []
+function getColumnBadges(columnIndex: number): Array<Badge> {
+  return projectImages.value?.getColumnMetadataAsBadges(columnIndex) || [];
 }
 
 function onDragStart(slot: SlotIndex) {
@@ -215,10 +238,11 @@ function onDragEnter(slot: SlotIndex) {
   dragOverSlot.value = slot;
 }
 
-function loadNextRows(index : number, done: (stop : boolean) => void) {
-  console.log('loadNextRows');
-  maxNumRenderedRows.value = maxNumRenderedRows.value + 5
-  done(maxNumRenderedRows.value > numRows.value)
+function loadNextRows(index: number, done: (stop: boolean) => void) {
+  // console.log('loadNextRows ' + maxNumRenderedRows.value);
+  maxNumRenderedRows.value = maxNumRenderedRows.value + 5;
+  // const stop = maxNumRenderedRows.value > numRows.value
+  done(false);
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -243,27 +267,26 @@ function onDrop(targetSlot: SlotIndex) {
   onDragEnd();
   if (success) {
     projectImages.value?.uploadToBackend().catch(() => {
-      sendFailureNotification('Error while updating')
+      sendFailureNotification('Error while updating');
     });
   }
 }
 
 function onImageSelected(imageId: number, exclusive: boolean) {
   const isMulti = selectedImageIds.value.length > 1;
-  const alreadySelected = selectedImageIds.value.includes(imageId)
+  const alreadySelected = selectedImageIds.value.includes(imageId);
   if (alreadySelected) {
-    if(exclusive && isMulti) {
+    if (exclusive && isMulti) {
       // Select only that image
-      selectedImageIds.value = [imageId]
-    }
-    else {
+      selectedImageIds.value = [imageId];
+    } else {
       // Remove from selection
       selectedImageIds.value.splice(selectedImageIds.value.indexOf(imageId), 1);
     }
   } else {
     if (exclusive) {
       // Select only that image
-      selectedImageIds.value = [imageId]
+      selectedImageIds.value = [imageId];
     } else {
       selectedImageIds.value.push(imageId);
     }
@@ -271,51 +294,61 @@ function onImageSelected(imageId: number, exclusive: boolean) {
 }
 
 function selectAllUnsorted() {
-  if(projectImages.value) {
-    selectedImageIds.value = projectImages.value?.unsortedRow.images.filter(img => img.groupRow < 0).map(img => img.id)
+  if (projectImages.value) {
+    selectedImageIds.value = projectImages.value?.unsortedRow.images
+      .filter((img) => img.groupRow < 0)
+      .map((img) => img.id);
   }
 }
 
-function selectColumn(columnIndex : number, event : Event) {
+function selectColumn(columnIndex: number, event: Event) {
   const mouseEvent = event as MouseEvent;
-  if(projectImages.value) {
+  if (projectImages.value) {
     const indices = new Set<number>();
-    if(mouseEvent.shiftKey) {
-      for(const id of selectedImageIds.value) {
-        indices.add(id)
+    if (mouseEvent.shiftKey) {
+      for (const id of selectedImageIds.value) {
+        indices.add(id);
       }
     }
-    for(const row of projectImages.value.groupRows) {
-      for(const image of row.images) {
-        if(image.groupColumn == columnIndex) {
-          indices.add(image.id)
+    for (const row of projectImages.value.groupRows) {
+      for (const image of row.images) {
+        if (image.groupColumn == columnIndex) {
+          indices.add(image.id);
         }
       }
     }
-    selectedImageIds.value = [...indices]
+    selectedImageIds.value = [...indices];
   }
 }
 
-function selectRow(rowIndex : number, event : Event) {
+function selectRow(rowIndex: number, event: Event) {
   const mouseEvent = event as MouseEvent;
-  if(projectImages.value) {
+  if (projectImages.value) {
     const indices = new Set<number>();
-    if(mouseEvent.shiftKey) {
-      for(const id of selectedImageIds.value) {
-        indices.add(id)
+    if (mouseEvent.shiftKey) {
+      for (const id of selectedImageIds.value) {
+        indices.add(id);
       }
     }
-    for(const row of projectImages.value.groupRows) {
-      for(const image of row.images) {
-        if(image.groupRow == rowIndex) {
-          indices.add(image.id)
+    for (const row of projectImages.value.groupRows) {
+      for (const image of row.images) {
+        if (image.groupRow == rowIndex) {
+          indices.add(image.id);
         }
       }
     }
-    selectedImageIds.value = [...indices]
+    selectedImageIds.value = [...indices];
   }
 }
 
+onMounted(() => {
+  watch(projectImages, () => {
+    console.log("new project images:" + projectImages.value?.projectId)
+    if(projectImages.value?.projectId != lastProjectId.value) {
+      maxNumRenderedRows.value = 0
+    }
+  });
+});
 </script>
 <style scoped lang="scss">
 $grid-item-width: 18rem;

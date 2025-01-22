@@ -169,6 +169,13 @@
         >
           <q-tooltip> Deletes the selected image(s)</q-tooltip>
         </q-btn>
+        <q-btn
+          icon="refresh"
+          color="primary"
+          @click="queryBackend"
+        >
+          <q-tooltip>Reloads the view</q-tooltip>
+        </q-btn>
         <div class="col-grow" />
         <ProjectResultsButton
           :project-id="projectId"

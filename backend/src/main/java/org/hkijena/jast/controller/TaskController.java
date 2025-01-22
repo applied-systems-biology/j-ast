@@ -90,7 +90,7 @@ public class TaskController {
         }
 
         // Check the images
-        List<Image> images = new ArrayList<>();
+//        List<Image> images = new ArrayList<>();
         for (long imageId : payload.getImageIds()) {
             Optional<Image> image_ = imageRepository.findById(imageId);
             if(image_.isPresent()) {
@@ -99,7 +99,7 @@ public class TaskController {
                     throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Image " + imageId + " is not part of project " + project.getId());
                 }
 
-                images.add(image_.get());
+//                images.add(image_.get());
             }
             else {
                 throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No image found with id " + imageId);
@@ -120,6 +120,9 @@ public class TaskController {
 
         // Update the payload
         payload.setId(task.getId());
+
+        // Immediately schedule the job
+        backendTaskService.enqueueTask(task);
 
         return ResponseEntity.ok(payload);
     }
