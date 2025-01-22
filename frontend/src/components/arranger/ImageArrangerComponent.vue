@@ -44,7 +44,7 @@
       <q-separator />
     </q-card>
 
-    <q-scroll-area class="table-scroll-area q-mt-md" visible>
+    <q-infinite-scroll class="table-scroll-area q-mt-md" @load="loadNextRows">
       <!-- Sorted -->
       <div class="grid-column-header">
         <div class="grid-row-label"></div>
@@ -65,7 +65,7 @@
         </div>
       </div>
       <div
-        v-for="(i, rowIndex) in numRows + 1"
+        v-for="(i, rowIndex) in numRenderedRows + 1"
         :key="`row-${rowIndex}`"
         class="grid-row bg-indigo-1"
       >
@@ -102,7 +102,12 @@
           />
         </div>
       </div>
-    </q-scroll-area>
+      <template v-slot:loading>
+        <div class="row justify-center q-my-md">
+          <q-spinner-dots color="primary" size="40px" />
+        </div>
+      </template>
+    </q-infinite-scroll>
   </div>
 </template>
 <script setup lang="ts">
@@ -147,6 +152,10 @@ const numCols = computed(() =>
 const numRows = computed(() =>
   projectImages.value ? projectImages.value.groupRows.length : 0
 );
+const maxNumRenderedRows = ref(0)
+const numRenderedRows = computed(() => {
+  return Math.min(numRows.value, maxNumRenderedRows.value)
+})
 const imagesWithRunningTasks = computed(() => {
   const result = new Set<number>()
   if(projectBackendTasks.value) {
@@ -204,6 +213,12 @@ function onDragOver(slot: SlotIndex) {
 
 function onDragEnter(slot: SlotIndex) {
   dragOverSlot.value = slot;
+}
+
+function loadNextRows(index : number, done: (stop : boolean) => void) {
+  console.log('loadNextRows');
+  maxNumRenderedRows.value = maxNumRenderedRows.value + 5
+  done(maxNumRenderedRows.value > numRows.value)
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
