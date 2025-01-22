@@ -121,11 +121,9 @@
           />
         </div>
       </div>
-      <template v-slot:loading>
-        <div class="row justify-center q-my-md">
-          <q-spinner-dots color="primary" size="40px" />
-        </div>
-      </template>
+     <q-btn icon="refresh" flat class="q-ma-sm" @click="maxNumRenderedRows += 5" >
+       Load more rows ({{ Math.max(0, numRows - numRenderedRows) }} left)
+     </q-btn>
     </q-infinite-scroll>
   </div>
 </template>
