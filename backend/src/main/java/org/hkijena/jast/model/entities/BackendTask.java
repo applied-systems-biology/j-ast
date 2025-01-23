@@ -30,7 +30,7 @@ public class BackendTask {
     @Column(name = "payload", columnDefinition = "TEXT")
     private String payload;
 
-    @Column(name = "log", columnDefinition = "TEXT")
+    @Column(name = "log", columnDefinition = "LONGTEXT")
     private String log;
 
     @Column(name = "status")
