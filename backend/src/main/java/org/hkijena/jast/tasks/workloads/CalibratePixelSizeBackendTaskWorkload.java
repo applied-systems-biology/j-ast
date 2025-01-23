@@ -4,6 +4,7 @@ import jakarta.transaction.Transactional;
 import org.hkijena.jast.model.AssayType;
 import org.hkijena.jast.model.entities.Image;
 import org.hkijena.jast.repositories.ImageRepository;
+import org.hkijena.jast.services.FileStorageService;
 import org.hkijena.jast.tasks.*;
 import org.hkijena.jast.utils.JASTDataSlot;
 import org.hkijena.jast.utils.ProgressInfo;
@@ -23,10 +24,12 @@ public class CalibratePixelSizeBackendTaskWorkload implements BackendTaskWorkloa
     private static final List<BackendTaskWorkloadParameterSlot> PARAMETERS = Collections.singletonList(
             new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotType.Number, "plate-diameter-mm", "Plate diameter (mm)", "The plate diameter in millimeters", 90));
     private final ImageRepository imageRepository;
+    private final FileStorageService fileStorageService;
 
     @Autowired
-    public CalibratePixelSizeBackendTaskWorkload(ImageRepository imageRepository) {
+    public CalibratePixelSizeBackendTaskWorkload(ImageRepository imageRepository, FileStorageService fileStorageService) {
         this.imageRepository = imageRepository;
+        this.fileStorageService = fileStorageService;
     }
 
     @Override
@@ -77,7 +80,7 @@ public class CalibratePixelSizeBackendTaskWorkload implements BackendTaskWorkloa
     @Override
     @Transactional(Transactional.TxType.REQUIRES_NEW)
     public void execute(BackendTaskWorkloadParams params, ProgressInfo progressInfo) throws Throwable {
-        writeRawImages(params, params.getPayload().getImageIds(), imageRepository, progressInfo);
+        writeRawImages(params, params.getPayload().getImageIds(), imageRepository, fileStorageService, progressInfo);
         writeMaskAnnotations(params, params.getPayload().getImageIds(), "plate", imageRepository, progressInfo);
 
         Path projectFilePath = writeSharedFile(params, "image-calibrate-pixel-size-by-plate.jip");

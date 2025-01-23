@@ -11,8 +11,6 @@ import java.util.List;
 @Entity
 @Table(name = "results")
 public class Result {
-    @Serial
-    private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

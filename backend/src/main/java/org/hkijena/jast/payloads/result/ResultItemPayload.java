@@ -40,7 +40,7 @@ public class ResultItemPayload {
         this.path = resultItem.getPath();
         this.type = resultItem.getType();
         this.visualizationType = resultItem.getVisualizationType();
-        this.size = resultItem.getRawData().length;
+        this.size = resultItem.getRawDataFileSize();
     }
 
     public long getSize() {

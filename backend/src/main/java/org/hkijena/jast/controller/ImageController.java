@@ -7,6 +7,7 @@ import org.hkijena.jast.payloads.ImagePayload;
 import org.hkijena.jast.payloads.ProjectImagesPayload;
 import org.hkijena.jast.repositories.ImageRepository;
 import org.hkijena.jast.repositories.ProjectRepository;
+import org.hkijena.jast.services.FileStorageService;
 import org.hkijena.jast.services.ProjectService;
 import org.hkijena.jast.services.UserService;
 import org.hkijena.jast.utils.MimeTypeUtils;
@@ -28,13 +29,15 @@ public class ImageController {
     private final ImageRepository imageRepository;
     private final ProjectService projectService;
     private final UserService userService;
+    private final FileStorageService fileStorageService;
 
     @Autowired
-    public ImageController(ProjectRepository projectRepository, ImageRepository imageRepository, ProjectService projectService, UserService userService) {
+    public ImageController(ProjectRepository projectRepository, ImageRepository imageRepository, ProjectService projectService, UserService userService, FileStorageService fileStorageService) {
         this.projectRepository = projectRepository;
         this.imageRepository = imageRepository;
         this.projectService = projectService;
         this.userService = userService;
+        this.fileStorageService = fileStorageService;
     }
 
     @GetMapping("/api/project/{id}/images")
@@ -89,7 +92,7 @@ public class ImageController {
                 throw new ResponseStatusException(HttpStatus.FORBIDDEN);
             }
 
-            RequestUtils.sendContent(response, image.getThumbnailData(), MimeTypeUtils.MIME_TYPE_PNG);
+            RequestUtils.sendContent(response, image.getThumbnailData(fileStorageService), MimeTypeUtils.MIME_TYPE_PNG);
         } else {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
@@ -106,7 +109,7 @@ public class ImageController {
                 throw new ResponseStatusException(HttpStatus.FORBIDDEN);
             }
 
-            RequestUtils.sendContent(response, image.getRawData(), MimeTypeUtils.MIME_TYPE_PNG);
+            RequestUtils.sendContent(response, image.getRawData(fileStorageService), MimeTypeUtils.MIME_TYPE_PNG);
         } else {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }

@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hkijena.jast.model.TaskStatus;
 import org.hkijena.jast.payloads.task.BackendTaskPayload;
+import org.hkijena.jast.services.FileStorageService;
 import org.hkijena.jast.utils.JsonUtils;
 
 import java.io.Serial;
@@ -30,8 +31,8 @@ public class BackendTask {
     @Column(name = "payload", columnDefinition = "TEXT")
     private String payload;
 
-    @Column(name = "log", columnDefinition = "LONGTEXT")
-    private String log;
+    @Column(name = "log_file_id", columnDefinition = "TEXT")
+    private String logFileId;
 
     @Column(name = "status")
     @Enumerated(EnumType.STRING)
@@ -114,12 +115,12 @@ public class BackendTask {
         return status == TaskStatus.Running || status == TaskStatus.Ready;
     }
 
-    public String getLog() {
-        return log;
+    public String getLogFileId() {
+        return logFileId;
     }
 
-    public void setLog(String log) {
-        this.log = log;
+    public void setLogFileId(String logFile) {
+        this.logFileId = logFile;
     }
 
     public BackendTaskPayload toPayload() {
@@ -130,5 +131,9 @@ public class BackendTask {
         instance.setName(name);
         instance.setParameters(new ArrayList<>(instance.getParameters()));
         return instance;
+    }
+
+    public void setLog(FileStorageService fileStorageService, String log) {
+        logFileId = fileStorageService.store(log);
     }
 }

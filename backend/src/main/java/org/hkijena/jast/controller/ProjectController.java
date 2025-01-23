@@ -9,6 +9,7 @@ import org.hkijena.jast.payloads.ProjectMetadataPayload;
 import org.hkijena.jast.repositories.ImageRepository;
 import org.hkijena.jast.repositories.ProjectRepository;
 import org.hkijena.jast.services.BackendTaskService;
+import org.hkijena.jast.services.FileStorageService;
 import org.hkijena.jast.services.ProjectService;
 import org.hkijena.jast.services.UserService;
 import org.hkijena.jast.utils.ImageUtils;
@@ -37,15 +38,17 @@ public class ProjectController {
     private final BackendTaskService backendTaskService;
     private final ProjectService projectService;
     private final UserService userService;
+    private final FileStorageService fileStorageService;
 
     @Autowired
-    public ProjectController(AccountConfig accountConfig, ProjectRepository projectRepository, ImageRepository imageRepository, BackendTaskService backendTaskService, ProjectService projectService, UserService userService) {
+    public ProjectController(AccountConfig accountConfig, ProjectRepository projectRepository, ImageRepository imageRepository, BackendTaskService backendTaskService, ProjectService projectService, UserService userService, FileStorageService fileStorageService) {
         this.accountConfig = accountConfig;
         this.projectRepository = projectRepository;
         this.imageRepository = imageRepository;
         this.backendTaskService = backendTaskService;
         this.projectService = projectService;
         this.userService = userService;
+        this.fileStorageService = fileStorageService;
     }
 
     @GetMapping("/api/list-projects")
@@ -111,8 +114,8 @@ public class ProjectController {
             image.setOriginalFileName(StringUtils.nullToEmpty(imageFile.getOriginalFilename()));
             image.setImageWidth(bufferedImage.getWidth());
             image.setImageHeight(bufferedImage.getHeight());
-            image.setRawData(ImageUtils.toPNGByteArray(bufferedImage));
-            image.rebuildThumbnail(bufferedImage);
+            image.setRawData(fileStorageService, ImageUtils.toPNGByteArray(bufferedImage));
+            image.rebuildThumbnail(fileStorageService, bufferedImage);
 
             project.addImage(image);
         } catch (IOException e) {

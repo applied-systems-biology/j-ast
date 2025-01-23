@@ -4,6 +4,8 @@ import io.hypersistence.utils.hibernate.type.json.JsonType;
 import jakarta.persistence.*;
 import org.hibernate.annotations.Type;
 import org.hkijena.jast.model.ResultItemType;
+import org.hkijena.jast.services.FileStorageService;
+import org.hkijena.jast.utils.ImageUtils;
 import org.hkijena.jast.utils.StringUtils;
 
 import java.io.Serial;
@@ -16,8 +18,6 @@ import java.util.Map;
 @Entity
 @Table(name = "result_items")
 public class ResultItem {
-    @Serial
-    private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -37,20 +37,17 @@ public class ResultItem {
     @ManyToOne(fetch = FetchType.LAZY)
     private Result result;
 
+    @Column(name = "raw_data_file_id", columnDefinition = "TEXT")
+    private String rawDataFileId;
 
-    @Column(name = "raw_data", columnDefinition = "LONGBLOB")
-    @Lob
-    private byte[] rawData;
+    @Column(name = "raw_data_file_size")
+    private long rawDataFileSize = 0;
 
+    @Column(name = "visualization_data_file_id", columnDefinition = "TEXT")
+    private String visualizationDataFileId;
 
-    @Column(name = "visualization_data", columnDefinition = "LONGBLOB")
-    @Lob
-    private byte[] visualizationData;
-
-
-    @Column(name = "thumbnail_data", columnDefinition = "LONGBLOB")
-    @Lob
-    private byte[] thumbnailData;
+    @Column(name = "thumbnail_data_file_id", columnDefinition = "TEXT")
+    private String thumbnailDataFileId;
 
     @Column(name = "type")
     @Enumerated(EnumType.STRING)
@@ -66,14 +63,6 @@ public class ResultItem {
 
     public void setPath(String path) {
         this.path = path;
-    }
-
-    public byte[] getVisualizationData() {
-        return visualizationData;
-    }
-
-    public void setVisualizationData(byte[] visualizationData) {
-        this.visualizationData = visualizationData;
     }
 
     public ResultItemType getVisualizationType() {
@@ -100,14 +89,6 @@ public class ResultItem {
         this.name = name;
     }
 
-    public byte[] getRawData() {
-        return rawData;
-    }
-
-    public void setRawData(byte[] rawData) {
-        this.rawData = rawData;
-    }
-
     public Result getResult() {
         return result;
     }
@@ -116,12 +97,36 @@ public class ResultItem {
         this.result = result;
     }
 
-    public byte[] getThumbnailData() {
-        return thumbnailData;
+    public String getRawDataFileId() {
+        return rawDataFileId;
     }
 
-    public void setThumbnailData(byte[] thumbnailData) {
-        this.thumbnailData = thumbnailData;
+    public void setRawDataFileId(String rawDataFileId) {
+        this.rawDataFileId = rawDataFileId;
+    }
+
+    public long getRawDataFileSize() {
+        return rawDataFileSize;
+    }
+
+    public void setRawDataFileSize(long rawDataFileSize) {
+        this.rawDataFileSize = rawDataFileSize;
+    }
+
+    public String getThumbnailDataFileId() {
+        return thumbnailDataFileId;
+    }
+
+    public void setThumbnailDataFileId(String thumbnailDataFileId) {
+        this.thumbnailDataFileId = thumbnailDataFileId;
+    }
+
+    public String getVisualizationDataFileId() {
+        return visualizationDataFileId;
+    }
+
+    public void setVisualizationDataFileId(String visualizationDataFileId) {
+        this.visualizationDataFileId = visualizationDataFileId;
     }
 
     public Map<String, Object> getMetadata() {
@@ -141,5 +146,23 @@ public class ResultItem {
 
     public void setType(ResultItemType type) {
         this.type = type;
+    }
+
+    public byte[] getThumbnailData(FileStorageService fileStorageService) {
+        byte[] bytes = fileStorageService.loadOrNull(thumbnailDataFileId);
+        return bytes != null ? bytes : ImageUtils.DUMMY_THUMBNAIL_BYTES;
+    }
+
+    public byte[] getRawData(FileStorageService fileStorageService) {
+        return fileStorageService.load(rawDataFileId);
+    }
+
+    public void setRawData(FileStorageService fileStorageService, byte[] byteArray) {
+        this.rawDataFileId = fileStorageService.store(byteArray);
+        this.rawDataFileSize = byteArray.length;
+    }
+
+    public void setThumbnailData(FileStorageService fileStorageService, byte[] byteArray) {
+        this.thumbnailDataFileId = fileStorageService.store(byteArray);
     }
 }

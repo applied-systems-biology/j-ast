@@ -13,9 +13,6 @@ import java.io.Serial;
 @Entity
 @Table(name = "mask_image_annotations")
 public class MaskImageAnnotation {
-    @Serial
-    private static final long serialVersionUID = 1L;
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")

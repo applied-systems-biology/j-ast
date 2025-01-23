@@ -2,12 +2,19 @@ package org.hkijena.jast.services;
 
 import jakarta.transaction.Transactional;
 import org.hkijena.jast.config.RuntimeConfig;
+import org.hkijena.jast.utils.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.support.TransactionSynchronization;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -16,6 +23,7 @@ import java.util.UUID;
 @Service
 public class FileStorageService {
 
+    public static final Logger LOGGER = LoggerFactory.getLogger(FileStorageService.class);
     private final Path storageLocation;
 
     @Autowired
@@ -103,6 +111,62 @@ public class FileStorageService {
         } else {
             throw new IllegalStateException("No active transaction. deleteLater requires an active transaction.");
         }
+    }
+
+    public BufferedImage loadPngOrNull(String fileId) {
+        if(StringUtils.isNullOrEmpty(fileId)) {
+            return null;
+        }
+        Path filePath = storageLocation.resolve(fileId).normalize();
+        if(!Files.exists(filePath)) {
+            return null;
+        }
+        try {
+            return ImageIO.read(filePath.toFile());
+        } catch (Exception e) {
+            LOGGER.error("Could not load file", e);
+        }
+        return null;
+    }
+
+    public String store(BufferedImage image) {
+        String fileId = UUID.randomUUID().toString();
+
+        try {
+            ImageIO.write(image, "PNG", storageLocation.resolve(fileId).toFile());
+            return fileId;
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public String loadStringOrNull(String fileId) {
+        if(StringUtils.isNullOrEmpty(fileId)) {
+            return null;
+        }
+        Path filePath = storageLocation.resolve(fileId).normalize();
+        if(!Files.exists(filePath)) {
+            return null;
+        }
+        try {
+            return Files.readString(filePath);
+        } catch (Exception e) {
+            LOGGER.error("Could not load file", e);
+        }
+        return null;
+    }
+
+    public byte[] loadOrNull(String fileId) {
+        try {
+            Path filePath = storageLocation.resolve(fileId).normalize();
+            return Files.readAllBytes(filePath);
+        } catch (IOException e) {
+            return null;
+        }
+    }
+
+    public String store(String text) {
+        return store(text.getBytes(StandardCharsets.UTF_8));
     }
 }
 

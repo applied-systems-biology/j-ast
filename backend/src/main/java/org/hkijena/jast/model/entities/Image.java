@@ -6,6 +6,7 @@ import jakarta.validation.constraints.NotNull;
 import org.hibernate.annotations.Type;
 import org.hkijena.jast.model.AssayType;
 import org.hkijena.jast.payloads.ImagePayload;
+import org.hkijena.jast.services.FileStorageService;
 import org.hkijena.jast.utils.ColorUtils;
 import org.hkijena.jast.utils.ImageUtils;
 import org.hkijena.jast.utils.StringUtils;
@@ -24,9 +25,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 @Entity
 @Table(name = "images")
 public class Image {
-    @Serial
-    private static final long serialVersionUID = 1L;
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
@@ -64,14 +62,14 @@ public class Image {
     private Integer groupColumn = -1;
 
 
-    @Column(name = "raw_data", columnDefinition = "LONGBLOB")
-    @Lob
-    private byte[] rawData;
+    @Column(name = "raw_data_file_id", columnDefinition = "TEXT")
+    private String rawDataFileId;
 
+    @Column(name = "raw_data_file_size")
+    private long rawDataFileSize = 0;
 
-    @Column(name = "thumbnail_data", columnDefinition = "LONGBLOB")
-    @Lob
-    private byte[] thumbnailData;
+    @Column(name = "thumbnail_data_file_id", columnDefinition = "TEXT")
+    private String thumbnailDataFileId;
 
     @Column(name = "version")
     private Integer version = 1;
@@ -91,6 +89,14 @@ public class Image {
             this.metadata = new HashMap<>();
         }
         return metadata;
+    }
+
+    public long getRawDataFileSize() {
+        return rawDataFileSize;
+    }
+
+    public void setRawDataFileSize(long rawDataFileSize) {
+        this.rawDataFileSize = rawDataFileSize;
     }
 
     public void setMetadata(Map<String, Object> metadata) {
@@ -159,20 +165,48 @@ public class Image {
         this.groupRow = groupRow;
     }
 
-    public byte[] getRawData() {
-        return rawData;
+    public String getRawDataFileId() {
+        return rawDataFileId;
     }
 
-    public void setRawData(byte[] rawData) {
-        this.rawData = rawData;
+    public void setRawDataFileId(String rawDataFileId) {
+        this.rawDataFileId = rawDataFileId;
     }
 
-    public byte[] getThumbnailData() {
-        return thumbnailData;
+    public void setGroupColumn(Integer groupColumn) {
+        this.groupColumn = groupColumn;
     }
 
-    public void setThumbnailData(byte[] thumbnailData) {
-        this.thumbnailData = thumbnailData;
+    public void setGroupRow(Integer groupRow) {
+        this.groupRow = groupRow;
+    }
+
+    public void setImageHeight(Integer imageHeight) {
+        this.imageHeight = imageHeight;
+    }
+
+    public void setImageWidth(Integer imageWidth) {
+        this.imageWidth = imageWidth;
+    }
+
+    public void setMaskImageAnnotations(List<MaskImageAnnotation> maskImageAnnotations) {
+        this.maskImageAnnotations = maskImageAnnotations;
+    }
+
+    public void setPixelSizeMillimeter(Double pixelSizeMillimeter) {
+        this.pixelSizeMillimeter = pixelSizeMillimeter;
+    }
+
+    public String getThumbnailDataFileId() {
+        return thumbnailDataFileId;
+    }
+
+    public void setThumbnailDataFileId(String thumbnailDataFileId) {
+        this.thumbnailDataFileId = thumbnailDataFileId;
+    }
+
+    public void setVersion(Integer version) {
+        this.version = version;
     }
 
     public @NotNull AssayType getAssayType() {
@@ -257,15 +291,15 @@ public class Image {
         setGroupRow(payload.getGroupRow());
     }
 
-    public void rebuildThumbnail() {
-        BufferedImage raw = ImageUtils.fromPNGBytes(this.rawData);
+    public void rebuildThumbnail(FileStorageService fileStorageService) {
+        BufferedImage raw = fileStorageService.loadPngOrNull(rawDataFileId);
         if (raw == null) {
             return;
         }
-        rebuildThumbnail(raw);
+        rebuildThumbnail(fileStorageService, raw);
     }
 
-    public void rebuildThumbnail(BufferedImage originalImage) {
+    public void rebuildThumbnail(FileStorageService fileStorageService, BufferedImage originalImage) {
         BufferedImage thumbnail = ImageUtils.createThumbnail(originalImage);
         for (MaskImageAnnotation annotation : getFilteredMaskImageAnnotations()) {
             BufferedImage annotationThumbnail = ImageUtils.fromPNGBytes(annotation.getThumbnailData());
@@ -274,7 +308,7 @@ public class Image {
                 ImageUtils.overlayMask(thumbnail, gradient, ColorUtils.paletteColorFromString(annotation.getType()), 0.8);
             }
         }
-        setThumbnailData(ImageUtils.toPNGByteArray(thumbnail));
+        setThumbnailDataFileId(fileStorageService.store(thumbnail));
     }
 
     public MaskImageAnnotation getOrCreateMaskAnnotation(String annotationTypeId, AtomicBoolean responseShouldSave) {
@@ -303,5 +337,19 @@ public class Image {
         }
 
         return null;
+    }
+
+    public byte[] getThumbnailData(FileStorageService fileStorageService) {
+        byte[] data = fileStorageService.loadOrNull(thumbnailDataFileId);
+        return data != null ? data : ImageUtils.DUMMY_THUMBNAIL_BYTES;
+    }
+
+    public byte[] getRawData(FileStorageService fileStorageService) {
+        return fileStorageService.load(rawDataFileId);
+    }
+
+    public void setRawData(FileStorageService fileStorageService, byte[] pngByteArray) {
+        this.rawDataFileId = fileStorageService.store(pngByteArray);
+        this.rawDataFileSize = pngByteArray.length;
     }
 }

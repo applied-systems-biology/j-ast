@@ -4,6 +4,7 @@ import jakarta.transaction.Transactional;
 import org.hkijena.jast.model.AssayType;
 import org.hkijena.jast.payloads.task.BackendTaskParameterPayload;
 import org.hkijena.jast.repositories.ImageRepository;
+import org.hkijena.jast.services.FileStorageService;
 import org.hkijena.jast.tasks.*;
 import org.hkijena.jast.utils.JASTDataSlot;
 import org.hkijena.jast.utils.ProgressInfo;
@@ -26,10 +27,12 @@ public class ETestCopyRegisteredZOIShapeWorkload implements BackendTaskWorkload 
     private static final List<BackendTaskWorkloadParameterSlot> PARAMETERS = Collections.emptyList();
     private static final Map<String, String> PARAMETER_OVERRIDES = new HashMap<>();
     private final ImageRepository imageRepository;
+    private final FileStorageService fileStorageService;
 
     @Autowired
-    public ETestCopyRegisteredZOIShapeWorkload(ImageRepository imageRepository) {
+    public ETestCopyRegisteredZOIShapeWorkload(ImageRepository imageRepository, FileStorageService fileStorageService) {
         this.imageRepository = imageRepository;
+        this.fileStorageService = fileStorageService;
     }
 
     @Override
@@ -81,7 +84,7 @@ public class ETestCopyRegisteredZOIShapeWorkload implements BackendTaskWorkload 
     @Override
     @Transactional(Transactional.TxType.REQUIRES_NEW)
     public void execute(BackendTaskWorkloadParams params, ProgressInfo progressInfo) throws Throwable {
-        writeRawImages(params, params.getPayload().getImageIds(), imageRepository, progressInfo);
+        writeRawImages(params, params.getPayload().getImageIds(), imageRepository, fileStorageService, progressInfo);
         writeMaskAnnotations(params, params.getPayload().getImageIds(), "strip-disk", imageRepository, progressInfo);
         writeRowFirstMaskAnnotations(params, params.getPayload().getImageIds(), "zoi-shape", imageRepository, progressInfo);
 
@@ -96,6 +99,6 @@ public class ETestCopyRegisteredZOIShapeWorkload implements BackendTaskWorkload 
 
         Map<String, Path> maskAnnotationsConfig = new HashMap<>();
         maskAnnotationsConfig.put("zoi-shape", params.getTmpPath().resolve("zoi-shape-aligned"));
-        readMaskAnnotations(params.getPayload().getImageIds(), maskAnnotationsConfig, imageRepository, progressInfo);
+        readMaskAnnotations(params.getPayload().getImageIds(), maskAnnotationsConfig, imageRepository, fileStorageService, progressInfo);
     }
 }

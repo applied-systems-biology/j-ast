@@ -7,6 +7,7 @@ import org.hkijena.jast.payloads.MaskImageAnnotationPayload;
 import org.hkijena.jast.repositories.ImageRepository;
 import org.hkijena.jast.repositories.MaskImageAnnotationRepository;
 import org.hkijena.jast.repositories.ProjectRepository;
+import org.hkijena.jast.services.FileStorageService;
 import org.hkijena.jast.services.ProjectService;
 import org.hkijena.jast.services.UserService;
 import org.hkijena.jast.utils.ImageUtils;
@@ -34,14 +35,16 @@ public class AnnotationController {
     private final MaskImageAnnotationRepository maskImageAnnotationRepository;
     private final ProjectService projectService;
     private final UserService userService;
+    private final FileStorageService fileStorageService;
 
     @Autowired
-    public AnnotationController(ProjectRepository projectRepository, ImageRepository imageRepository, MaskImageAnnotationRepository maskImageAnnotationRepository, ProjectService projectService, UserService userService) {
+    public AnnotationController(ProjectRepository projectRepository, ImageRepository imageRepository, MaskImageAnnotationRepository maskImageAnnotationRepository, ProjectService projectService, UserService userService, FileStorageService fileStorageService) {
         this.projectRepository = projectRepository;
         this.imageRepository = imageRepository;
         this.maskImageAnnotationRepository = maskImageAnnotationRepository;
         this.projectService = projectService;
         this.userService = userService;
+        this.fileStorageService = fileStorageService;
     }
 
     @PostMapping("/api/mask-image-annotation/{imageId}/{annotationType}/raw")
@@ -66,7 +69,7 @@ public class AnnotationController {
             maskImageAnnotationRepository.save(maskImageAnnotation);
 
             // Update the image thumbnail
-            maskImageAnnotation.getImage().rebuildThumbnail();
+            maskImageAnnotation.getImage().rebuildThumbnail(fileStorageService);
             maskImageAnnotation.getImage().incrementVersion();
             imageRepository.save(maskImageAnnotation.getImage());
 

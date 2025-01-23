@@ -4,6 +4,7 @@ import jakarta.transaction.Transactional;
 import org.hkijena.jast.model.AssayType;
 import org.hkijena.jast.payloads.task.BackendTaskParameterPayload;
 import org.hkijena.jast.repositories.ImageRepository;
+import org.hkijena.jast.services.FileStorageService;
 import org.hkijena.jast.tasks.*;
 import org.hkijena.jast.utils.JASTDataSlot;
 import org.hkijena.jast.utils.ProgressInfo;
@@ -31,10 +32,12 @@ public class SegmentZoiShapeStripBackendTaskWorkload implements BackendTaskWorkl
     }
 
     private final ImageRepository imageRepository;
+    private final FileStorageService fileStorageService;
 
     @Autowired
-    public SegmentZoiShapeStripBackendTaskWorkload(ImageRepository imageRepository) {
+    public SegmentZoiShapeStripBackendTaskWorkload(ImageRepository imageRepository, FileStorageService fileStorageService) {
         this.imageRepository = imageRepository;
+        this.fileStorageService = fileStorageService;
     }
 
     @Override
@@ -86,7 +89,7 @@ public class SegmentZoiShapeStripBackendTaskWorkload implements BackendTaskWorkl
     @Override
     @Transactional(Transactional.TxType.REQUIRES_NEW)
     public void execute(BackendTaskWorkloadParams params, ProgressInfo progressInfo) throws Throwable {
-        writeRawImages(params, params.getPayload().getImageIds(), imageRepository, progressInfo);
+        writeRawImages(params, params.getPayload().getImageIds(), imageRepository, fileStorageService, progressInfo);
         writeMaskAnnotations(params, params.getPayload().getImageIds(), "plate", imageRepository, progressInfo);
         writeMaskAnnotations(params, params.getPayload().getImageIds(), "strip-disk", imageRepository, progressInfo);
 
@@ -101,6 +104,6 @@ public class SegmentZoiShapeStripBackendTaskWorkload implements BackendTaskWorkl
 
         Map<String, Path> maskAnnotationsConfig = new HashMap<>();
         maskAnnotationsConfig.put("zoi-shape", params.getTmpPath().resolve("zoi-shape"));
-        readMaskAnnotations(params.getPayload().getImageIds(), maskAnnotationsConfig, imageRepository, progressInfo);
+        readMaskAnnotations(params.getPayload().getImageIds(), maskAnnotationsConfig, imageRepository, fileStorageService, progressInfo);
     }
 }

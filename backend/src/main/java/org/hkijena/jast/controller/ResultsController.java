@@ -9,6 +9,7 @@ import org.hkijena.jast.payloads.result.ResultPayload;
 import org.hkijena.jast.repositories.ProjectRepository;
 import org.hkijena.jast.repositories.ResultItemRepository;
 import org.hkijena.jast.repositories.ResultRepository;
+import org.hkijena.jast.services.FileStorageService;
 import org.hkijena.jast.services.ProjectService;
 import org.hkijena.jast.services.UserService;
 import org.hkijena.jast.utils.MimeTypeUtils;
@@ -36,14 +37,16 @@ public class ResultsController {
     private final ProjectRepository projectRepository;
     private final ResultRepository resultRepository;
     private final ResultItemRepository resultItemRepository;
+    private final FileStorageService fileStorageService;
 
     @Autowired
-    public ResultsController(ProjectService projectService, UserService userService, ProjectRepository projectRepository, ResultRepository resultRepository, ResultItemRepository resultItemRepository) {
+    public ResultsController(ProjectService projectService, UserService userService, ProjectRepository projectRepository, ResultRepository resultRepository, ResultItemRepository resultItemRepository, FileStorageService fileStorageService) {
         this.projectService = projectService;
         this.userService = userService;
         this.projectRepository = projectRepository;
         this.resultRepository = resultRepository;
         this.resultItemRepository = resultItemRepository;
+        this.fileStorageService = fileStorageService;
     }
 
     @GetMapping("/api/project/{id}/list-results")
@@ -87,7 +90,7 @@ public class ResultsController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
         ResultItem resultItem = resultItem_.get();
-        RequestUtils.sendContent(response, resultItem.getThumbnailData(), MimeTypeUtils.MIME_TYPE_PNG);
+        RequestUtils.sendContent(response, resultItem.getThumbnailData(fileStorageService), MimeTypeUtils.MIME_TYPE_PNG);
     }
 
     @GetMapping("/api/result-item/{id}/raw")
@@ -98,7 +101,7 @@ public class ResultsController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
         ResultItem resultItem = resultItem_.get();
-        RequestUtils.sendContent(response, resultItem.getRawData(), MimeTypeUtils.MIME_TYPE_OCTET_STREAM);
+        RequestUtils.sendContent(response, resultItem.getRawData(fileStorageService), MimeTypeUtils.MIME_TYPE_OCTET_STREAM);
     }
 
     @PostMapping("/api/result/{id}/delete")

@@ -7,6 +7,7 @@ import org.hkijena.jast.payloads.task.BackendTaskParameterPayload;
 import org.hkijena.jast.repositories.ImageRepository;
 import org.hkijena.jast.repositories.ProjectRepository;
 import org.hkijena.jast.repositories.ResultRepository;
+import org.hkijena.jast.services.FileStorageService;
 import org.hkijena.jast.tasks.*;
 import org.hkijena.jast.utils.JASTDataSlot;
 import org.hkijena.jast.utils.ProgressInfo;
@@ -43,12 +44,14 @@ public class JASTAnalysisWorkload implements BackendTaskWorkload {
     private final ImageRepository imageRepository;
     private final ProjectRepository projectRepository;
     private final ResultRepository resultRepository;
+    private final FileStorageService fileStorageService;
 
     @Autowired
-    public JASTAnalysisWorkload(ImageRepository imageRepository, ProjectRepository projectRepository, ResultRepository resultRepository) {
+    public JASTAnalysisWorkload(ImageRepository imageRepository, ProjectRepository projectRepository, ResultRepository resultRepository, FileStorageService fileStorageService) {
         this.imageRepository = imageRepository;
         this.projectRepository = projectRepository;
         this.resultRepository = resultRepository;
+        this.fileStorageService = fileStorageService;
     }
 
     @Override
@@ -117,7 +120,7 @@ public class JASTAnalysisWorkload implements BackendTaskWorkload {
         List<Integer> thresholds = StringUtils.getIntegersFromRangeString(rawThresholds);
         parameterOverrides.put(PARAMETER_OVERRIDES.get("__thresholds"), thresholds.stream().map(t -> t / 100.0).toList());
 
-        writeRawImages(params, params.getPayload().getImageIds(), imageRepository, progressInfo);
+        writeRawImages(params, params.getPayload().getImageIds(), imageRepository, fileStorageService, progressInfo);
         writeMaskAnnotations(params, params.getPayload().getImageIds(), "plate", imageRepository, progressInfo);
         writeMaskAnnotations(params, params.getPayload().getImageIds(), "strip-disk", imageRepository, progressInfo);
         writeRowFirstMaskAnnotations(params, params.getPayload().getImageIds(), "zoi-shape", imageRepository, progressInfo);
@@ -137,6 +140,6 @@ public class JASTAnalysisWorkload implements BackendTaskWorkload {
         String resultDescription = StringUtils.nullToEmpty(params.getPayload().getParameter("result-description").getValue());
         Project project = projectRepository.findById(params.getPayload().getProjectId()).get();
 
-        readResultsDirectory(resultName, resultDescription, params.getTmpPath().resolve("results"), project, projectRepository, resultRepository, progressInfo);
+        readResultsDirectory(resultName, resultDescription, params.getTmpPath().resolve("results"), project, projectRepository, fileStorageService, progressInfo);
     }
 }

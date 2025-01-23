@@ -15,7 +15,7 @@ import org.hkijena.jast.model.ResultItemType;
 import org.hkijena.jast.model.entities.*;
 import org.hkijena.jast.repositories.ImageRepository;
 import org.hkijena.jast.repositories.ProjectRepository;
-import org.hkijena.jast.repositories.ResultRepository;
+import org.hkijena.jast.services.FileStorageService;
 import org.hkijena.jast.utils.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -86,7 +86,7 @@ public interface BackendTaskWorkload {
         }
     }
 
-    default void writeRawImages(BackendTaskWorkloadParams params, Iterable<Long> imageIds, ImageRepository repository, ProgressInfo progressInfo) throws IOException {
+    default void writeRawImages(BackendTaskWorkloadParams params, Iterable<Long> imageIds, ImageRepository repository, FileStorageService fileStorageService, ProgressInfo progressInfo) throws IOException {
         Path rawPath = PathUtils.resolveAndMakeSubDirectory(params.getTmpPath(), "raw");
         Path csvPath = params.getTmpPath().resolve("metadata.csv");
         final String[] csvHeader = new String[]{"#ImageId", "#Experiment", "#Sample", "#TimePoint", "#AssayType", "PixelSize", "GroupRow", "GroupColumn"};
@@ -95,7 +95,7 @@ public interface BackendTaskWorkload {
             for (Image image : repository.findAllById(imageIds)) {
                 progressInfo.log("Writing raw image data " + image.getId());
                 Path pngPath = rawPath.resolve(image.getId() + ".png");
-                Files.write(pngPath, image.getRawData());
+                Files.write(pngPath, image.getRawData(fileStorageService));
 
                 // Write metadata
                 csvPrinter.printRecord(image.getId(), image.getExperiment(), image.getSample(), image.getTimePoint(), image.getAssayType(), image.getPixelSizeMillimeter(), image.getGroupRow(), image.getGroupColumn());
@@ -157,7 +157,7 @@ public interface BackendTaskWorkload {
     }
 
     default void readMaskAnnotations(Iterable<Long> imageIds, Map<String, Path> annotationTypeIdDirectories,
-                                     ImageRepository imageRepository, ProgressInfo progressInfo) throws IOException {
+                                     ImageRepository imageRepository, FileStorageService fileStorageService, ProgressInfo progressInfo) throws IOException {
         Iterable<Image> images = imageRepository.findAllById(imageIds);
         for (Image image : images) {
             boolean changed = false;
@@ -192,7 +192,7 @@ public interface BackendTaskWorkload {
 
             if (changed) {
                 // Update the image as well
-                image.rebuildThumbnail();
+                image.rebuildThumbnail(fileStorageService);
                 image.incrementVersion();
             }
         }
@@ -200,7 +200,7 @@ public interface BackendTaskWorkload {
         imageRepository.saveAll(images);
     }
 
-    default void readRawImages(Iterable<Long> imageIds, Path imageDirectory, ImageRepository imageRepository, ProgressInfo progressInfo) throws IOException {
+    default void readRawImages(Iterable<Long> imageIds, Path imageDirectory, ImageRepository imageRepository, FileStorageService fileStorageService, ProgressInfo progressInfo) throws IOException {
         Iterable<Image> images = imageRepository.findAllById(imageIds);
         for (Image image : images) {
             boolean changed = false;
@@ -216,7 +216,7 @@ public interface BackendTaskWorkload {
                         throw new IllegalArgumentException("Image dimensions do not match");
                     }
 
-                    image.setRawData(ImageUtils.toPNGByteArray(rawImage));
+                    image.setRawData(fileStorageService, ImageUtils.toPNGByteArray(rawImage));
 
                     // Mark as changed
                     changed = true;
@@ -227,7 +227,7 @@ public interface BackendTaskWorkload {
 
             if (changed) {
                 // Update the image as well
-                image.rebuildThumbnail();
+                image.rebuildThumbnail(fileStorageService);
                 image.incrementVersion();
             }
         }
@@ -235,7 +235,7 @@ public interface BackendTaskWorkload {
         imageRepository.saveAll(images);
     }
 
-    default ResultItem createResultItemFromPath(Path file, Path resultDirectory, ProgressInfo progressInfo) {
+    default ResultItem createResultItemFromPath(Path file, Path resultDirectory, FileStorageService fileStorageService, ProgressInfo progressInfo) {
         String path = StringUtils.nullToEmpty(resultDirectory.relativize(file).getParent());
         String name = file.getFileName().toString();
 
@@ -248,8 +248,8 @@ public interface BackendTaskWorkload {
         if (name.endsWith(".png") || name.endsWith(".bmp") || name.endsWith(".jpg") || name.endsWith(".jpeg")) {
             try {
                 BufferedImage bufferedImage = ImageIO.read(file.toFile());
-                resultItem.setRawData(ImageUtils.toPNGByteArray(bufferedImage));
-                resultItem.setThumbnailData(ImageUtils.toPNGByteArrayThumbnail(bufferedImage));
+                resultItem.setRawData(fileStorageService, ImageUtils.toPNGByteArray(bufferedImage));
+                resultItem.setThumbnailData(fileStorageService, ImageUtils.toPNGByteArrayThumbnail(bufferedImage));
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -257,7 +257,7 @@ public interface BackendTaskWorkload {
             resultItem.setVisualizationType(ResultItemType.Null);
         } else if (name.endsWith(".csv")) {
             try {
-                resultItem.setRawData(Files.readAllBytes(file));
+                resultItem.setRawData(fileStorageService, Files.readAllBytes(file));
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -265,7 +265,7 @@ public interface BackendTaskWorkload {
             resultItem.setVisualizationType(ResultItemType.Null);
         } else if (name.endsWith(".txt") || name.endsWith(".json") || name.endsWith(".xml")) {
             try {
-                resultItem.setRawData(Files.readAllBytes(file));
+                resultItem.setRawData(fileStorageService, Files.readAllBytes(file));
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -273,7 +273,7 @@ public interface BackendTaskWorkload {
             resultItem.setVisualizationType(ResultItemType.Null);
         } else {
             try {
-                resultItem.setRawData(Files.readAllBytes(file));
+                resultItem.setRawData(fileStorageService, Files.readAllBytes(file));
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -285,7 +285,7 @@ public interface BackendTaskWorkload {
     }
 
     @Transactional(Transactional.TxType.REQUIRES_NEW)
-    default void readResultsDirectory(String resultName, String resultDescription, Path resultDirectory, Project project, ProjectRepository projectRepository, ResultRepository resultRepository, ProgressInfo progressInfo) throws IOException {
+    default void readResultsDirectory(String resultName, String resultDescription, Path resultDirectory, Project project, ProjectRepository projectRepository, FileStorageService fileStorageService, ProgressInfo progressInfo) throws IOException {
 
         Result result = new Result();
         result.setName(StringUtils.orElse(resultName, "Result"));
@@ -296,7 +296,7 @@ public interface BackendTaskWorkload {
             @Override
             public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
                 try {
-                    ResultItem item = createResultItemFromPath(file, resultDirectory, progressInfo);
+                    ResultItem item = createResultItemFromPath(file, resultDirectory, fileStorageService, progressInfo);
                     if (item != null) {
                         result.addResultItem(item);
                     }

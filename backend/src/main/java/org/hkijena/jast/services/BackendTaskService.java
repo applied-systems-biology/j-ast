@@ -44,46 +44,18 @@ public class BackendTaskService {
     private final BackendTaskRegistry backendTaskRegistry;
     private final BackendTaskRepository backendTaskRepository;
     private final JobScheduler jobScheduler;
+    private final FileStorageService fileStorageService;
 
     @Autowired
-    public BackendTaskService(RuntimeConfig runtimeConfig, ImageRepository imageRepository, ProjectRepository projectRepository, BackendTaskRegistry backendTaskRegistry, BackendTaskRepository backendTaskRepository, JobScheduler jobScheduler) {
+    public BackendTaskService(RuntimeConfig runtimeConfig, ImageRepository imageRepository, ProjectRepository projectRepository, BackendTaskRegistry backendTaskRegistry, BackendTaskRepository backendTaskRepository, JobScheduler jobScheduler, FileStorageService fileStorageService) {
         this.runtimeConfig = runtimeConfig;
         this.projectRepository = projectRepository;
         this.imageRepository = imageRepository;
         this.backendTaskRegistry = backendTaskRegistry;
         this.backendTaskRepository = backendTaskRepository;
         this.jobScheduler = jobScheduler;
+        this.fileStorageService = fileStorageService;
     }
-
-//    @Recurring(id = "start-scheduled-tasks", cron = "*/5 * * * * *")
-//    @Job(name = "Start scheduled backend tasks")
-//    @Transactional(Transactional.TxType.REQUIRES_NEW)
-//    public void startTasks() {
-//        List<BackendTask> newTasks = backendTaskRepository.findAllByStatus(TaskStatus.Ready);
-//        int numFailures = 0;
-//        for (BackendTask newTask : newTasks) {
-//            BackendTaskWorkload workload = backendTaskRegistry.getTask(newTask.getTaskTypeId());
-//            if (workload != null) {
-//                BackendTaskPayload payload = newTask.toPayload();
-//                newTask.setStatus(TaskStatus.Running);
-//
-//                BackendTaskWorkloadParams params = new BackendTaskWorkloadParams();
-//                params.setPayload(payload);
-//                params.setTmpPath(Paths.get(newTask.getTmpPath()));
-//                params.setRuntimeConfig(runtimeConfig);
-//                params.setLockFilePath(params.getTmpPath().resolve("lockfile"));
-//                PathUtils.createFileIfNotExists(params.getLockFilePath());
-//
-//                jobScheduler.enqueue(() -> startBackendTask(params, JobContext.Null));
-//            } else {
-//                ++numFailures;
-//            }
-//        }
-//        if (!newTasks.isEmpty()) {
-//            logger.info("Started {} backend tasks, {} failures", newTasks.size(), numFailures);
-//            backendTaskRepository.saveAll(newTasks);
-//        }
-//    }
 
     @Transactional
     public void enqueueTask(BackendTask newTask) {
@@ -131,7 +103,7 @@ public class BackendTaskService {
             if (task_.isPresent()) {
                 BackendTask task = task_.get();
                 task.setStatus(TaskStatus.Successful);
-                task.setLog(progressInfo.getLog().toString());
+                task.setLog(fileStorageService, progressInfo.getLog().toString());
                 backendTaskRepository.save(task);
             }
         } catch (Throwable e) {
@@ -143,7 +115,7 @@ public class BackendTaskService {
             if (task_.isPresent()) {
                 BackendTask task = task_.get();
                 task.setStatus(TaskStatus.Failed);
-                task.setLog(progressInfo.getLog().toString());
+                task.setLog(fileStorageService, progressInfo.getLog().toString());
                 backendTaskRepository.save(task);
             }
         }

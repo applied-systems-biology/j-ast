@@ -11,6 +11,7 @@ import org.hkijena.jast.repositories.ImageRepository;
 import org.hkijena.jast.repositories.ProjectRepository;
 import org.hkijena.jast.services.BackendTaskRegistry;
 import org.hkijena.jast.services.BackendTaskService;
+import org.hkijena.jast.services.FileStorageService;
 import org.hkijena.jast.services.ProjectService;
 import org.hkijena.jast.tasks.BackendTaskWorkload;
 import org.hkijena.jast.utils.JsonUtils;
@@ -37,16 +38,18 @@ public class TaskController {
     private final ProjectRepository projectRepository;
     private final BackendTaskRepository backendTaskRepository;
     private final BackendTaskService backendTaskService;
+    private final FileStorageService fileStorageService;
     private final RuntimeConfig runtimeConfig;
 
     @Autowired
-    public TaskController(ProjectService projectService, ImageRepository imageRepository, BackendTaskRegistry backendTaskRegistry, ProjectRepository projectRepository, BackendTaskRepository backendTaskRepository, BackendTaskService backendTaskService, RuntimeConfig runtimeConfig) {
+    public TaskController(ProjectService projectService, ImageRepository imageRepository, BackendTaskRegistry backendTaskRegistry, ProjectRepository projectRepository, BackendTaskRepository backendTaskRepository, BackendTaskService backendTaskService, FileStorageService fileStorageService, RuntimeConfig runtimeConfig) {
         this.projectService = projectService;
         this.imageRepository = imageRepository;
         this.backendTaskRegistry = backendTaskRegistry;
         this.projectRepository = projectRepository;
         this.backendTaskRepository = backendTaskRepository;
         this.backendTaskService = backendTaskService;
+        this.fileStorageService = fileStorageService;
         this.runtimeConfig = runtimeConfig;
     }
 
@@ -162,6 +165,7 @@ public class TaskController {
         if (!task.getProject().canAccess(authentication)) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
         }
-        return ResponseEntity.ok(task.getLog());
+        String log = fileStorageService.loadStringOrNull(task.getLogFileId());
+        return ResponseEntity.ok(StringUtils.orElse(log, "No log available for task " + task.getId()));
     }
 }

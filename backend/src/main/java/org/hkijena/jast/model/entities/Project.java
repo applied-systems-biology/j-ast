@@ -24,9 +24,6 @@ public class Project {
 
     public static final Logger LOGGER = LoggerFactory.getLogger(Project.class);
 
-    @Serial
-    private static final long serialVersionUID = 1L;
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")

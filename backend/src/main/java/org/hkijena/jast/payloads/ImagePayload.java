@@ -59,7 +59,7 @@ public class ImagePayload {
         this.pixelSizeMillimeter = image.getPixelSizeMillimeter();
         this.maskImageAnnotations = image.getFilteredMaskImageAnnotations().stream().map(MaskImageAnnotationPayload::create).toList();
         this.metadata = new HashMap<>(image.getMetadata());
-        this.size = image.getRawData().length;
+        this.size = image.getRawDataFileSize();
     }
 
     public Map<String, Object> getMetadata() {
