@@ -1,5 +1,7 @@
 package org.hkijena.jast.utils;
 
+import java.io.RandomAccessFile;
+import java.nio.file.Path;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -156,5 +158,34 @@ public class StringUtils {
             }
         }
         return integers;
+    }
+
+    public static List<String> readLastNLines(Path filePath, int n) throws Exception {
+        List<String> result = new ArrayList<>();
+        try (RandomAccessFile file = new RandomAccessFile(filePath.toFile(), "r")) {
+            long fileLength = file.length() - 1;
+            int linesRead = 0;
+            StringBuilder line = new StringBuilder();
+
+            for (long pointer = fileLength; pointer >= 0; pointer--) {
+                file.seek(pointer);
+                char c = (char) file.readByte();
+
+                if (c == '\n' || pointer == 0) {
+                    if (!line.isEmpty() || pointer == 0) {
+                        if (pointer == 0 && c != '\n') {
+                            line.append(c);
+                        }
+                        result.add(0, line.reverse().toString());
+                        line = new StringBuilder();
+                        linesRead++;
+                        if (linesRead == n) break;
+                    }
+                } else {
+                    line.append(c);
+                }
+            }
+        }
+        return result;
     }
 }

@@ -57,7 +57,7 @@ export class ResultItemPayload {
   type: ResultItemType = ResultItemType.Unknown;
 
   @Expose()
-  visualizationType: ResultItemType = ResultItemType.Unknown;
+  visualizationType: ResultItemType = ResultItemType.Null;
 
   @Expose()
   size: number = 0;

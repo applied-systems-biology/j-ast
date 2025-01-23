@@ -1,7 +1,7 @@
 <template>
   <q-card class="q-mb-lg" v-if="hasTaskRunning">
     <q-card-section>
-      <q-spinner-hourglass size="md" />
+      <q-icon name="lock" size="l"/>
       <span class="text-caption text-bold">Currently being processed</span>
     </q-card-section>
     <q-card-section> You will not be able to make any changes </q-card-section>
@@ -97,7 +97,11 @@ import {
   imageHasRunningTask,
 } from 'src/types/backendTasks';
 import { computed } from 'vue';
-import { ResultItemPayload, ResultItemType, showResultItem } from 'src/types/results';
+import {
+  ResultItemPayload,
+  ResultItemType,
+  showResultItem,
+} from 'src/types/results';
 
 type SelectValue = string | number | null;
 const model = defineModel<ImagePayload>();
@@ -112,9 +116,10 @@ const uploadToBackend = debounce(uploadToBackend_, 300);
 function showImage() {
   const item = new ResultItemPayload();
   item.type = ResultItemType.Image;
-  item.overrideUrl = `/image/${model.value?.id}/raw`
-  item.name = model.value?.fileName || "Unnamed";
-  showResultItem(item)
+  item.visualizationType = ResultItemType.Null;
+  item.overrideUrl = `/image/${model.value?.id}/raw`;
+  item.name = model.value?.fileName || 'Unnamed';
+  showResultItem(item);
 }
 
 function uploadToBackend_() {

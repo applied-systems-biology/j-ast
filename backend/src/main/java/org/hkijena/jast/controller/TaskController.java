@@ -14,6 +14,7 @@ import org.hkijena.jast.services.BackendTaskService;
 import org.hkijena.jast.services.ProjectService;
 import org.hkijena.jast.tasks.BackendTaskWorkload;
 import org.hkijena.jast.utils.JsonUtils;
+import org.hkijena.jast.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +22,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -135,7 +139,15 @@ public class TaskController {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
         }
         if (task.isRunning()) {
-
+            try {
+                Path logFile = Paths.get(task.getTmpPath()).resolve("log.txt");
+                if (Files.isRegularFile(logFile)) {
+                    return ResponseEntity.ok(String.join("\n", StringUtils.readLastNLines(logFile, 5)));
+                }
+            }
+            catch (Throwable e) {
+                return ResponseEntity.ok("Error while reading the log file");
+            }
         }
         return ResponseEntity.ok("Status: " + task.getStatus());
     }
