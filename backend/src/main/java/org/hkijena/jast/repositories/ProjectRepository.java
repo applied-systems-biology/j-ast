@@ -20,22 +20,20 @@ public interface ProjectRepository extends CrudRepository<Project, Long> {
     List<Project> findByOwner(User owner);
 
     default Iterable<Project> getByAuthentication(Authentication authentication) {
-        if(authentication == null || !authentication.isAuthenticated()) {
+        if (authentication == null || !authentication.isAuthenticated()) {
             return Collections.emptyList();
         }
-        if(authentication.getPrincipal() instanceof UserPrincipal) {
+        if (authentication.getPrincipal() instanceof UserPrincipal) {
             return findByOwner(((UserPrincipal) authentication.getPrincipal()).getUser());
-        }
-        else if(authentication.getPrincipal() instanceof AdminPrincipal) {
+        } else if (authentication.getPrincipal() instanceof AdminPrincipal) {
             return findByOwnerIsNull();
-        }
-        else {
+        } else {
             throw new IllegalArgumentException("Unsupported principal type!");
         }
     }
 
     default void putSortedToModel(Model model, Authentication authentication) {
-        if(authentication == null || !authentication.isAuthenticated()) {
+        if (authentication == null || !authentication.isAuthenticated()) {
             return;
         }
 

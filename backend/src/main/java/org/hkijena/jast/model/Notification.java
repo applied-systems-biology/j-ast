@@ -9,10 +9,9 @@ import java.util.*;
 
 public class Notification implements Serializable {
 
+    public static final String MODEL_ATTRIBUTE = "notifications";
     @Serial
     private static final long serialVersionUID = 1L;
-    public static final String MODEL_ATTRIBUTE = "notifications";
-
     private String id = "notification-" + UUID.randomUUID();
     private String title;
     private String text;
@@ -25,6 +24,41 @@ public class Notification implements Serializable {
         this.title = title;
         this.text = text;
         this.style = style;
+    }
+
+    public static void pushToModel(String title, String text, Style style, Model model) {
+        Notification notification = new Notification(title, text, style.name());
+        Object attribute = model.getAttribute(MODEL_ATTRIBUTE);
+        if (attribute instanceof Notification) {
+            List<Notification> objects = new ArrayList<>();
+            objects.add((Notification) attribute);
+            objects.add(notification);
+            model.addAttribute(MODEL_ATTRIBUTE, objects);
+        } else if (attribute instanceof Collection<?>) {
+            List<Object> objects = new ArrayList<>((Collection<?>) attribute);
+            objects.add(notification);
+            model.addAttribute(MODEL_ATTRIBUTE, objects);
+        } else {
+            model.addAttribute(MODEL_ATTRIBUTE, Collections.singletonList(notification));
+        }
+    }
+
+    public static void pushToRedirect(String title, String text, Style style, RedirectAttributes redirectAttributes) {
+        Notification notification = new Notification(title, text, style.name());
+        Map<String, ?> flashAttributes = redirectAttributes.getFlashAttributes();
+        Object attribute = flashAttributes.get(MODEL_ATTRIBUTE);
+        if (attribute instanceof Notification) {
+            List<Notification> objects = new ArrayList<>();
+            objects.add((Notification) attribute);
+            objects.add(notification);
+            redirectAttributes.addFlashAttribute(MODEL_ATTRIBUTE, objects);
+        } else if (attribute instanceof Collection<?>) {
+            List<Object> objects = new ArrayList<>((Collection<?>) attribute);
+            objects.add(notification);
+            redirectAttributes.addFlashAttribute(MODEL_ATTRIBUTE, objects);
+        } else {
+            redirectAttributes.addFlashAttribute(MODEL_ATTRIBUTE, Collections.singletonList(notification));
+        }
     }
 
     public String getId() {
@@ -57,45 +91,6 @@ public class Notification implements Serializable {
 
     public void setStyle(String style) {
         this.style = style;
-    }
-
-    public static void pushToModel(String title, String text, Style style, Model model) {
-        Notification notification = new Notification(title, text, style.name());
-        Object attribute = model.getAttribute(MODEL_ATTRIBUTE);
-        if(attribute instanceof Notification) {
-            List<Notification> objects = new ArrayList<>();
-            objects.add((Notification) attribute);
-            objects.add(notification);
-            model.addAttribute(MODEL_ATTRIBUTE, objects);
-        }
-        else if(attribute instanceof Collection<?>) {
-            List<Object> objects = new ArrayList<>((Collection<?>) attribute);
-            objects.add(notification);
-            model.addAttribute(MODEL_ATTRIBUTE, objects);
-        }
-        else {
-            model.addAttribute(MODEL_ATTRIBUTE, Collections.singletonList(notification));
-        }
-    }
-
-    public static void pushToRedirect(String title, String text, Style style, RedirectAttributes redirectAttributes) {
-        Notification notification = new Notification(title, text, style.name());
-        Map<String, ?> flashAttributes = redirectAttributes.getFlashAttributes();
-        Object attribute = flashAttributes.get(MODEL_ATTRIBUTE);
-        if(attribute instanceof Notification) {
-            List<Notification> objects = new ArrayList<>();
-            objects.add((Notification) attribute);
-            objects.add(notification);
-            redirectAttributes.addFlashAttribute(MODEL_ATTRIBUTE, objects);
-        }
-        else if(attribute instanceof Collection<?>) {
-            List<Object> objects = new ArrayList<>((Collection<?>) attribute);
-            objects.add(notification);
-            redirectAttributes.addFlashAttribute(MODEL_ATTRIBUTE, objects);
-        }
-        else {
-            redirectAttributes.addFlashAttribute(MODEL_ATTRIBUTE, Collections.singletonList(notification));
-        }
     }
 
     @Override

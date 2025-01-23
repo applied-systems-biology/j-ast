@@ -4,8 +4,8 @@ import org.hkijena.jast.config.RuntimeConfig;
 import org.hkijena.jast.model.entities.BackendTask;
 import org.hkijena.jast.model.entities.Image;
 import org.hkijena.jast.model.entities.Project;
-import org.hkijena.jast.payloads.task.BackendTaskTypePayload;
 import org.hkijena.jast.payloads.task.BackendTaskPayload;
+import org.hkijena.jast.payloads.task.BackendTaskTypePayload;
 import org.hkijena.jast.repositories.BackendTaskRepository;
 import org.hkijena.jast.repositories.ImageRepository;
 import org.hkijena.jast.repositories.ProjectRepository;
@@ -14,7 +14,6 @@ import org.hkijena.jast.services.BackendTaskService;
 import org.hkijena.jast.services.ProjectService;
 import org.hkijena.jast.tasks.BackendTaskWorkload;
 import org.hkijena.jast.utils.JsonUtils;
-import org.hkijena.jast.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,7 +21,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -59,7 +57,7 @@ public class TaskController {
     @GetMapping("/api/project/{id}/tasks")
     public ResponseEntity<List<BackendTaskPayload>> listTasksForProject(@PathVariable long id, Authentication authentication) {
         Project project = projectService.getProjectByIdOrError(id);
-        if(!project.canAccess(authentication)) {
+        if (!project.canAccess(authentication)) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
         }
         return ResponseEntity.ok(project.getTasks().stream().map(BackendTaskPayload::new).toList());
@@ -69,7 +67,7 @@ public class TaskController {
     @PostMapping("/api/project/{id}/clear-tasks")
     public void clearProjectTasks(@PathVariable long id, Authentication authentication) {
         Project project = projectService.getProjectByIdOrError(id);
-        if(!project.canEdit(authentication)) {
+        if (!project.canEdit(authentication)) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
         }
         project.clearTasks();
@@ -79,13 +77,13 @@ public class TaskController {
     @PostMapping("/api/task/new")
     public ResponseEntity<BackendTaskPayload> startNewTask(@RequestBody BackendTaskPayload payload, Authentication authentication) {
         Project project = projectService.getProjectByIdOrError(payload.getProjectId());
-        if(!project.canEdit(authentication)) {
+        if (!project.canEdit(authentication)) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
         }
 
         // Check if the task is valid
         BackendTaskWorkload taskWorkload = backendTaskRegistry.getTask(payload.getTaskId());
-        if(taskWorkload == null) {
+        if (taskWorkload == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
 
@@ -93,15 +91,14 @@ public class TaskController {
 //        List<Image> images = new ArrayList<>();
         for (long imageId : payload.getImageIds()) {
             Optional<Image> image_ = imageRepository.findById(imageId);
-            if(image_.isPresent()) {
+            if (image_.isPresent()) {
                 // Check if the project is actually the same
-                if(!Objects.equals(image_.get().getProject().getId(), project.getId())) {
+                if (!Objects.equals(image_.get().getProject().getId(), project.getId())) {
                     throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Image " + imageId + " is not part of project " + project.getId());
                 }
 
 //                images.add(image_.get());
-            }
-            else {
+            } else {
                 throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No image found with id " + imageId);
             }
         }
@@ -130,14 +127,14 @@ public class TaskController {
     @GetMapping("/api/task/{id}/running-log")
     public ResponseEntity<String> getRunningTaskLog(@PathVariable long id, Authentication authentication) {
         Optional<BackendTask> task_ = backendTaskRepository.findById(id);
-        if(task_.isEmpty()) {
+        if (task_.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
         BackendTask task = task_.get();
-        if(!task.getProject().canAccess(authentication)) {
+        if (!task.getProject().canAccess(authentication)) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
         }
-        if(task.isRunning()) {
+        if (task.isRunning()) {
 
         }
         return ResponseEntity.ok("Status: " + task.getStatus());
@@ -146,11 +143,11 @@ public class TaskController {
     @GetMapping("/api/task/{id}/log")
     public ResponseEntity<String> getTaskLog(@PathVariable long id, Authentication authentication) {
         Optional<BackendTask> task_ = backendTaskRepository.findById(id);
-        if(task_.isEmpty()) {
+        if (task_.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
         BackendTask task = task_.get();
-        if(!task.getProject().canAccess(authentication)) {
+        if (!task.getProject().canAccess(authentication)) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
         }
         return ResponseEntity.ok(task.getLog());

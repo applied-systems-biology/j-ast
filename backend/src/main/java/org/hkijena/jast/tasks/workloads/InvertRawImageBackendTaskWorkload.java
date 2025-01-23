@@ -3,7 +3,6 @@ package org.hkijena.jast.tasks.workloads;
 import jakarta.transaction.Transactional;
 import org.hkijena.jast.model.AssayType;
 import org.hkijena.jast.model.entities.Image;
-import org.hkijena.jast.payloads.task.BackendTaskParameterPayload;
 import org.hkijena.jast.repositories.ImageRepository;
 import org.hkijena.jast.tasks.*;
 import org.hkijena.jast.utils.ImageUtils;
@@ -13,17 +12,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.awt.image.BufferedImage;
-import java.nio.file.Path;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 @Component
 @BackendTaskType(typeId = "invert-raw-image")
 public class InvertRawImageBackendTaskWorkload implements BackendTaskWorkload {
 
-    private final ImageRepository imageRepository;
     private static final List<BackendTaskWorkloadDataSlot> INPUTS = List.of(JASTDataSlot.Raw.toSlot());
     private static final List<BackendTaskWorkloadDataSlot> OUTPUTS = List.of();
     private static final List<BackendTaskWorkloadParameterSlot> PARAMETERS = List.of();
+    private final ImageRepository imageRepository;
 
     @Autowired
     public InvertRawImageBackendTaskWorkload(ImageRepository imageRepository) {
@@ -82,7 +82,7 @@ public class InvertRawImageBackendTaskWorkload implements BackendTaskWorkload {
         for (Long imageId : params.getPayload().getImageIds()) {
             progressInfo.log("Processing image " + imageId);
             Optional<Image> image_ = imageRepository.findById(imageId);
-            if(image_.isPresent()) {
+            if (image_.isPresent()) {
                 Image image = image_.get();
                 BufferedImage bufferedImage = ImageUtils.fromPNGBytes(image.getRawData());
                 BufferedImage inverted = ImageUtils.invertImage(bufferedImage);

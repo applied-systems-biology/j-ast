@@ -1,7 +1,8 @@
 package org.hkijena.jast.services;
 
-import org.hkijena.jast.tasks.BackendTaskWorkload;
 import org.hkijena.jast.tasks.BackendTaskType;
+import org.hkijena.jast.tasks.BackendTaskWorkload;
+import org.reflections.Reflections;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,8 +12,6 @@ import org.springframework.stereotype.Service;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-
-import org.reflections.Reflections;
 
 @Service
 public class BackendTaskRegistry {
@@ -30,15 +29,14 @@ public class BackendTaskRegistry {
         Reflections reflections = new Reflections("org.hkijena.jast");
         Set<Class<?>> taskClasses = reflections.getTypesAnnotatedWith(BackendTaskType.class);
         for (Class<?> taskClass : taskClasses) {
-            if(BackendTaskWorkload.class.isAssignableFrom(taskClass)) {
+            if (BackendTaskWorkload.class.isAssignableFrom(taskClass)) {
                 try {
                     BackendTaskType annotation = taskClass.getAnnotation(BackendTaskType.class);
 
                     BackendTaskWorkload task = (BackendTaskWorkload) applicationContext.getBean(taskClass);
                     logger.info("Registering task {} as {}", task.getClass().getSimpleName(), annotation.typeId());
                     registeredTasks.put(annotation.typeId(), task);
-                }
-                catch (Exception e) {
+                } catch (Exception e) {
                     logger.error("Unable to register {}: {}", taskClass, e.getMessage());
                 }
             }

@@ -20,7 +20,6 @@ import java.util.Map;
 @BackendTaskType(typeId = "image-segment-dda-disk")
 public class SegmentDDADiskBackendTaskWorkload implements BackendTaskWorkload {
 
-    private final ImageRepository imageRepository;
     private static final List<BackendTaskWorkloadDataSlot> INPUTS = Collections.singletonList(JASTDataSlot.Plate.toSlot());
     private static final List<BackendTaskWorkloadDataSlot> OUTPUTS = Collections.singletonList(JASTDataSlot.StripDisk.toSlot());
     private static final List<BackendTaskWorkloadParameterSlot> PARAMETERS = List.of(
@@ -35,6 +34,8 @@ public class SegmentDDADiskBackendTaskWorkload implements BackendTaskWorkload {
         PARAMETER_OVERRIDES.put("minFeret", "dc2e186c-881c-42d1-a9b6-78a8f24579ec/exported/circle filter/minFeret");
         PARAMETER_OVERRIDES.put("maxFeret", "dc2e186c-881c-42d1-a9b6-78a8f24579ec/exported/circle filter/maxFeret");
     }
+
+    private final ImageRepository imageRepository;
 
     @Autowired
     public SegmentDDADiskBackendTaskWorkload(ImageRepository imageRepository) {

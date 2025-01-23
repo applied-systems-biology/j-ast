@@ -225,7 +225,7 @@ public class ProcessUtils {
          *
          * @param timeout          the timeout for the process in milliseconds. It must be
          *                         greater than 0 or 'INFINITE_TIMEOUT'
-         * @param lockFilePath  the lockfile (must exist)
+         * @param lockFilePath     the lockfile (must exist)
          * @param extendedExecutor the executor
          */
         public RunCancellationExecuteWatchdog(long timeout, ProgressInfo progressInfo, Path lockFilePath, ExtendedExecutor extendedExecutor) {

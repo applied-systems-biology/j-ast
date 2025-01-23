@@ -5,7 +5,6 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hkijena.jast.model.TaskStatus;
 import org.hkijena.jast.payloads.task.BackendTaskPayload;
 import org.hkijena.jast.utils.JsonUtils;
-import org.hkijena.jast.utils.StringUtils;
 
 import java.io.Serial;
 import java.time.LocalDateTime;

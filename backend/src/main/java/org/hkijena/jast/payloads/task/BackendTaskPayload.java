@@ -122,7 +122,7 @@ public class BackendTaskPayload {
 
     public BackendTaskParameterPayload getParameter(String key) {
         for (BackendTaskParameterPayload parameter : parameters) {
-            if(Objects.equals(parameter.getId(), key)) {
+            if (Objects.equals(parameter.getId(), key)) {
                 return parameter;
             }
         }

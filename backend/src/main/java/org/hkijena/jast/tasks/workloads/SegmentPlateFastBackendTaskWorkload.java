@@ -19,9 +19,9 @@ import java.util.Map;
 @BackendTaskType(typeId = "image-segment-plate-fast")
 public class SegmentPlateFastBackendTaskWorkload implements BackendTaskWorkload {
 
-    private final ImageRepository imageRepository;
     private static final List<BackendTaskWorkloadDataSlot> INPUTS = Collections.emptyList();
     private static final List<BackendTaskWorkloadDataSlot> OUTPUTS = Collections.singletonList(JASTDataSlot.Plate.toSlot());
+    private final ImageRepository imageRepository;
 
     @Autowired
     public SegmentPlateFastBackendTaskWorkload(ImageRepository imageRepository) {

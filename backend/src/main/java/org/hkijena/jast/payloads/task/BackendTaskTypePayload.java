@@ -2,7 +2,6 @@ package org.hkijena.jast.payloads.task;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hkijena.jast.model.AssayType;
-import org.hkijena.jast.tasks.BackendTaskType;
 import org.hkijena.jast.tasks.BackendTaskWorkload;
 import org.hkijena.jast.tasks.BackendTaskWorkloadDataSlot;
 import org.hkijena.jast.tasks.BackendTaskWorkloadMode;

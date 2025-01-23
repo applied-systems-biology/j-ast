@@ -20,7 +20,6 @@ import java.util.Map;
 @BackendTaskType(typeId = "image-segment-etest-zoi-shape")
 public class SegmentZoiShapeStripBackendTaskWorkload implements BackendTaskWorkload {
 
-    private final ImageRepository imageRepository;
     private static final List<BackendTaskWorkloadDataSlot> INPUTS = List.of(JASTDataSlot.Plate.toSlot(),
             JASTDataSlot.StripDisk.toSlot());
     private static final List<BackendTaskWorkloadDataSlot> OUTPUTS = Collections.singletonList(JASTDataSlot.ZOIShape.toSlot());
@@ -30,6 +29,8 @@ public class SegmentZoiShapeStripBackendTaskWorkload implements BackendTaskWorkl
     static {
 //        PARAMETER_OVERRIDES.put("expectedAR", "961ff2c5-c955-4600-97fe-f7e09b6e515a/jipipe:algorithm:custom-expression-variables/expectedAR");
     }
+
+    private final ImageRepository imageRepository;
 
     @Autowired
     public SegmentZoiShapeStripBackendTaskWorkload(ImageRepository imageRepository) {

@@ -1,8 +1,6 @@
 package org.hkijena.jast.payloads.auth;
 
-import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonSetter;
 import org.hkijena.jast.model.entities.User;
 
 import java.util.List;

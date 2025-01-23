@@ -66,19 +66,19 @@ public class AccountConfig {
         this.guestAccountExpireMinutes = guestAccountExpireMinutes;
     }
 
-    public void setAdminUsername(String adminUsername) {
-        this.adminUsername = adminUsername;
-    }
-
-    public void setAdminPassword(String adminPassword) {
-        this.adminPassword = adminPassword;
-    }
-
     public String getAdminUsername() {
         return adminUsername;
     }
 
+    public void setAdminUsername(String adminUsername) {
+        this.adminUsername = adminUsername;
+    }
+
     public String getAdminPassword() {
         return adminPassword;
+    }
+
+    public void setAdminPassword(String adminPassword) {
+        this.adminPassword = adminPassword;
     }
 }

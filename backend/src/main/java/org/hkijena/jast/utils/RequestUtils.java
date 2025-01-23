@@ -15,16 +15,14 @@ import java.util.Map;
 public class RequestUtils {
     public static <T> T getObjectFromInputFlashMap(HttpServletRequest request, String key, Class<T> klass) {
         Map<String, ?> inputFlashMap = RequestContextUtils.getInputFlashMap(request);
-        if(inputFlashMap != null) {
+        if (inputFlashMap != null) {
             Object value = inputFlashMap.getOrDefault(key, null);
-            if(value != null && klass.isAssignableFrom(value.getClass())) {
+            if (value != null && klass.isAssignableFrom(value.getClass())) {
                 return (T) value;
-            }
-            else {
+            } else {
                 return null;
             }
-        }
-        else {
+        } else {
             return null;
         }
     }
@@ -32,7 +30,7 @@ public class RequestUtils {
     public static void sendAttachment(HttpServletResponse response, Path absoluteCurrentEntryPath, String fileName) throws IOException {
         response.setContentType(Files.probeContentType(absoluteCurrentEntryPath));
         response.setHeader("Content-Length", Long.toString(Files.size(absoluteCurrentEntryPath)));
-        response.setHeader("Content-Disposition", "attachment; filename=\"" + fileName +"\"");
+        response.setHeader("Content-Disposition", "attachment; filename=\"" + fileName + "\"");
 
         var ins = new FileInputStream(absoluteCurrentEntryPath.toFile());
         IOUtils.copy(ins, response.getOutputStream());
@@ -43,7 +41,7 @@ public class RequestUtils {
     public static void sendAttachment(HttpServletResponse response, byte[] data, String fileName, String contentType) throws IOException {
         response.setContentType(contentType);
         response.setHeader("Content-Length", Long.toString(data.length));
-        response.setHeader("Content-Disposition", "attachment; filename=\"" + fileName +"\"");
+        response.setHeader("Content-Disposition", "attachment; filename=\"" + fileName + "\"");
 
         var ins = new ByteArrayInputStream(data);
         IOUtils.copy(ins, response.getOutputStream());

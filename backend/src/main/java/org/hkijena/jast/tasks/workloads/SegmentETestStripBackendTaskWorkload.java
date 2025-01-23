@@ -20,7 +20,6 @@ import java.util.Map;
 @BackendTaskType(typeId = "image-segment-etest-strip")
 public class SegmentETestStripBackendTaskWorkload implements BackendTaskWorkload {
 
-    private final ImageRepository imageRepository;
     private static final List<BackendTaskWorkloadDataSlot> INPUTS = Collections.singletonList(JASTDataSlot.Plate.toSlot());
     private static final List<BackendTaskWorkloadDataSlot> OUTPUTS = Collections.singletonList(JASTDataSlot.StripDisk.toSlot());
     private static final List<BackendTaskWorkloadParameterSlot> PARAMETERS = List.of(
@@ -31,6 +30,8 @@ public class SegmentETestStripBackendTaskWorkload implements BackendTaskWorkload
     static {
         PARAMETER_OVERRIDES.put("expectedAR", "961ff2c5-c955-4600-97fe-f7e09b6e515a/jipipe:algorithm:custom-expression-variables/expectedAR");
     }
+
+    private final ImageRepository imageRepository;
 
     @Autowired
     public SegmentETestStripBackendTaskWorkload(ImageRepository imageRepository) {

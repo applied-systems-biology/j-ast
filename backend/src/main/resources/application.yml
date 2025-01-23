@@ -2,10 +2,10 @@ server:
   port: 8081
 spring:
   datasource:
-#    url: jdbc:h2:file:./storage/database
-#    username: sa
-#    password: password
-#    driverClassName: org.h2.Driver
+    #    url: jdbc:h2:file:./storage/database
+    #    username: sa
+    #    password: password
+    #    driverClassName: org.h2.Driver
     url: 'jdbc:mariadb://localhost:3306/jast-dev'
     username: jast-dev
     password: jast
@@ -14,9 +14,6 @@ spring:
     hibernate:
       ddl-auto: update
     show-sql: false
-    database-platform: org.hibernate.dialect.MariaDBDialect
-  #    database-platform: org.hibernate.dialect.H2Dialect
-
   servlet:
     multipart:
       enabled: true
@@ -32,7 +29,7 @@ org:
 runtime:
   fiji-path: 'bin/jipipe-linux'
   fiji-executable-path: 'bin/jipipe-linux/ImageJ-linux64'
-  fiji-args: ['--memory', '8G']
+  fiji-args: [ '--memory', '8G' ]
   fiji-wrapper-enabled: true
   fiji-wrapper: '/usr/bin/xvfb-run'
   fiji-wrapper-args: [ '-a' ]

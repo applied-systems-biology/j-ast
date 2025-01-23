@@ -57,7 +57,7 @@ public class AuthenticationController {
             Date accessExpirationDate = jwtUtil.getNewLimitedAccessExpirationDate(limit);
             Date refreshExpirationDate = jwtUtil.getNewLimitedRefreshExpirationDate(limit);
 
-            if(accessExpirationDate == null || refreshExpirationDate == null) {
+            if (accessExpirationDate == null || refreshExpirationDate == null) {
                 throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Access expired");
             }
 
@@ -84,9 +84,9 @@ public class AuthenticationController {
 
     private LocalDateTime tryExtractGuestLimit(UserDetails userDetails) {
         LocalDateTime limit = null;
-        if(userDetails instanceof UserPrincipal principal) {
-            if(principal.getUser().getRole() == User.Role.Guest) {
-                if(principal.isAccountNonExpired()) {
+        if (userDetails instanceof UserPrincipal principal) {
+            if (principal.getUser().getRole() == User.Role.Guest) {
+                if (principal.isAccountNonExpired()) {
                     limit = principal.getUser().getGuestExpire();
                 }
             }
@@ -103,12 +103,12 @@ public class AuthenticationController {
                 String userName2 = jwtUtil.extractUsername(request.getAccessToken(), false);
 
                 // Sanity check for the two tokens
-                if(!userName.equals(userName2)) {
+                if (!userName.equals(userName2)) {
                     return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
                 }
 
                 // Check if we have the correct token types
-                if(!jwtUtil.isAccessToken(request.getAccessToken(), false) || !jwtUtil.isRefreshToken(request.getRefreshToken(), true)) {
+                if (!jwtUtil.isAccessToken(request.getAccessToken(), false) || !jwtUtil.isRefreshToken(request.getRefreshToken(), true)) {
                     return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
                 }
 
@@ -125,13 +125,13 @@ public class AuthenticationController {
                 Date accessExpirationDate = jwtUtil.getNewLimitedAccessExpirationDate(limit);
                 Date refreshExpirationDate = jwtUtil.getNewLimitedRefreshExpirationDate(limit);
 
-                if(accessExpirationDate == null || refreshExpirationDate == null) {
+                if (accessExpirationDate == null || refreshExpirationDate == null) {
                     throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Access expired");
                 }
 
                 // Update the expiration date if needed
                 // To Prefer the smaller date
-                if(!refreshExpirationDateFromToken.after(refreshExpirationDate)) {
+                if (!refreshExpirationDateFromToken.after(refreshExpirationDate)) {
                     refreshExpirationDate = refreshExpirationDateFromToken;
                 }
 

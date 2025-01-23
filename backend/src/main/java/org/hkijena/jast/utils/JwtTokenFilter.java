@@ -65,7 +65,7 @@ public class JwtTokenFilter extends OncePerRequestFilter implements ApplicationC
 
         // Get user identity and set it on the spring security context
         String username = jwtUtil.extractUsername(token, true);
-        if(accountConfig.getAdminUsername().equals(username)) {
+        if (accountConfig.getAdminUsername().equals(username)) {
             // Admin authentication
             AdminPrincipal principal = new AdminPrincipal(accountConfig, applicationContext.getBean(PasswordEncoder.class));
             UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
@@ -77,14 +77,13 @@ public class JwtTokenFilter extends OncePerRequestFilter implements ApplicationC
                     new WebAuthenticationDetailsSource().buildDetails(request)
             );
             SecurityContextHolder.getContext().setAuthentication(authentication);
-        }
-        else {
+        } else {
             // User authentication
             User user = userRepository
                     .findByEmailIgnoreCase(username)
                     .orElse(null);
 
-            if(user == null) {
+            if (user == null) {
                 // User not found
                 chain.doFilter(request, response);
                 return;

@@ -2,7 +2,6 @@ package org.hkijena.jast.model.entities;
 
 import io.hypersistence.utils.hibernate.type.json.JsonType;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import org.hibernate.annotations.Type;
 import org.hkijena.jast.model.ResultItemType;
 import org.hkijena.jast.utils.StringUtils;
@@ -38,16 +37,19 @@ public class ResultItem {
     @ManyToOne(fetch = FetchType.LAZY)
     private Result result;
 
-    
-    @Column(name = "raw_data", columnDefinition = "BLOB") @Lob
+
+    @Column(name = "raw_data", columnDefinition = "LONGBLOB")
+    @Lob
     private byte[] rawData;
 
-    
-    @Column(name = "visualization_data", columnDefinition = "BLOB") @Lob
+
+    @Column(name = "visualization_data", columnDefinition = "LONGBLOB")
+    @Lob
     private byte[] visualizationData;
 
-    
-    @Column(name = "thumbnail_data", columnDefinition = "BLOB") @Lob
+
+    @Column(name = "thumbnail_data", columnDefinition = "LONGBLOB")
+    @Lob
     private byte[] thumbnailData;
 
     @Column(name = "type")

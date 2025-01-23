@@ -31,7 +31,7 @@ public class ProjectImagesPayload {
             numRows = Math.max(numRows, image.getGroupRow() + 1);
 
             // Sort unsorted images
-            if(image.getGroupRow() < 0 || image.getGroupColumn() < 0) {
+            if (image.getGroupRow() < 0 || image.getGroupColumn() < 0) {
                 unsortedRow.images.add(new ImagePayload(image));
             }
         }
@@ -45,7 +45,7 @@ public class ProjectImagesPayload {
         }
 
         // Handle the sorted rows
-        if(numRows > 0) {
+        if (numRows > 0) {
             for (int i = 0; i < numRows; i++) {
                 Row row = new Row();
                 for (Image image : project.getImages()) {

@@ -15,8 +15,8 @@ import java.awt.*;
 import java.io.Serial;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 @Entity
 @Table(name = "projects")
@@ -155,16 +155,15 @@ public class Project {
         Map<Point, Image> locationMap = new HashMap<>();
         for (Image image : getImages()) {
             Point location = new Point(image.getGroupColumn(), Math.max(-1, image.getGroupRow()));
-            if(locationMap.containsKey(location)) {
+            if (locationMap.containsKey(location)) {
                 // For unsorted rows, we don't care - the frontend will handle this
                 // For sorted rows we kick duplicates back into unsorted
-                if(image.getGroupRow() >= 0) {
+                if (image.getGroupRow() >= 0) {
                     LOGGER.info("Fixing duplicate assigment of image {} to {} by moving back to unsorted array", image.getId(), location);
                     image.setGroupRow(-1);
                     result.add(image);
                 }
-            }
-            else {
+            } else {
                 locationMap.put(location, image);
             }
         }

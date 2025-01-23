@@ -30,13 +30,29 @@ public class MaskImageAnnotation {
     @Column(name = "type", columnDefinition = "TEXT")
     private String type;
 
-    
-    @Column(name = "raw_data", columnDefinition = "BLOB") @Lob
+
+    @Column(name = "raw_data", columnDefinition = "LONGBLOB")
+    @Lob
     private byte[] rawData;
 
-    
-    @Column(name = "thumbnail_data", columnDefinition = "BLOB") @Lob
+
+    @Column(name = "thumbnail_data", columnDefinition = "LONGBLOB")
+    @Lob
     private byte[] thumbnailData;
+
+    /**
+     * Checks if a type ID is valid
+     * For J-AST this only is true if the type is one of:
+     * * strip-disk
+     * * plate
+     * * zoi-shape
+     *
+     * @param type the type
+     * @return if it's a valid type
+     */
+    public static boolean isValidType(String type) {
+        return "strip-disk".equals(type) || "plate".equals(type) || "zoi-shape".equals(type);
+    }
 
     public int getVersion() {
         return version == null ? 0 : version;
@@ -87,20 +103,8 @@ public class MaskImageAnnotation {
     }
 
     /**
-     * Checks if a type ID is valid
-     * For J-AST this only is true if the type is one of:
-     * * strip-disk
-     * * plate
-     * * zoi-shape
-     * @param type the type
-     * @return if it's a valid type
-     */
-    public static boolean isValidType(String type) {
-        return "strip-disk".equals(type) || "plate".equals(type) || "zoi-shape".equals(type);
-    }
-
-    /**
      * Sets the raw data and thumbnail to an empty mask
+     *
      * @param image the image used as size reference
      */
     public void resetToMask(Image image) {

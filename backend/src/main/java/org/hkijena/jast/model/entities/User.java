@@ -1,12 +1,10 @@
 package org.hkijena.jast.model.entities;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import org.hkijena.jast.utils.StringUtils;
 
 import java.io.Serial;
 import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 
 @Entity
 @Table(name = "users")

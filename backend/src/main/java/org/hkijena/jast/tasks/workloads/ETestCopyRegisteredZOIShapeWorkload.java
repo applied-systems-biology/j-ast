@@ -20,12 +20,12 @@ import java.util.Map;
 @BackendTaskType(typeId = "etest-copy-registered-zoi-shape")
 public class ETestCopyRegisteredZOIShapeWorkload implements BackendTaskWorkload {
 
-    private final ImageRepository imageRepository;
     private static final List<BackendTaskWorkloadDataSlot> INPUTS = List.of(JASTDataSlot.StripDisk.toSlot(),
             JASTDataSlot.ZOIShape.toSlot(BackendTaskWorkloadDataSlotValidationMode.OncePerRow));
     private static final List<BackendTaskWorkloadDataSlot> OUTPUTS = Collections.emptyList();
     private static final List<BackendTaskWorkloadParameterSlot> PARAMETERS = Collections.emptyList();
     private static final Map<String, String> PARAMETER_OVERRIDES = new HashMap<>();
+    private final ImageRepository imageRepository;
 
     @Autowired
     public ETestCopyRegisteredZOIShapeWorkload(ImageRepository imageRepository) {

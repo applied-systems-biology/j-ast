@@ -64,12 +64,12 @@ public class Image {
     private Integer groupColumn = -1;
 
 
-    @Column(name = "raw_data", columnDefinition = "BLOB")
+    @Column(name = "raw_data", columnDefinition = "LONGBLOB")
     @Lob
     private byte[] rawData;
 
 
-    @Column(name = "thumbnail_data", columnDefinition = "BLOB")
+    @Column(name = "thumbnail_data", columnDefinition = "LONGBLOB")
     @Lob
     private byte[] thumbnailData;
 

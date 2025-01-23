@@ -16,8 +16,6 @@ import org.hkijena.jast.tasks.BackendTaskWorkloadParams;
 import org.hkijena.jast.utils.PathUtils;
 import org.hkijena.jast.utils.ProgressInfo;
 import org.hkijena.jast.utils.StringUtils;
-import org.jobrunr.jobs.annotations.Job;
-import org.jobrunr.jobs.annotations.Recurring;
 import org.jobrunr.jobs.context.JobContext;
 import org.jobrunr.scheduling.JobBuilder;
 import org.jobrunr.scheduling.JobScheduler;
@@ -89,7 +87,7 @@ public class BackendTaskService {
 
     @Transactional
     public void enqueueTask(BackendTask newTask) {
-        if(newTask.getStatus() != TaskStatus.Ready) {
+        if (newTask.getStatus() != TaskStatus.Ready) {
             return;
         }
         BackendTaskWorkload workload = backendTaskRegistry.getTask(newTask.getTaskTypeId());

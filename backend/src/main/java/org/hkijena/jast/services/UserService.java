@@ -4,9 +4,9 @@ import com.google.common.collect.ImmutableList;
 import jakarta.transaction.Transactional;
 import org.hkijena.jast.config.AccountConfig;
 import org.hkijena.jast.model.AdminPrincipal;
+import org.hkijena.jast.model.UserPrincipal;
 import org.hkijena.jast.model.entities.Project;
 import org.hkijena.jast.model.entities.User;
-import org.hkijena.jast.model.UserPrincipal;
 import org.hkijena.jast.repositories.ProjectRepository;
 import org.hkijena.jast.repositories.UserRepository;
 import org.slf4j.Logger;
@@ -41,8 +41,8 @@ public class UserService implements UserDetailsService, ApplicationContextAware 
     private final UserRepository userRepository;
     private final ProjectService projectService;
     private final ProjectRepository projectRepository;
-    private ApplicationContext applicationContext;
     private final SessionRegistry sessionRegistry;
+    private ApplicationContext applicationContext;
 
     @Autowired
     public UserService(AccountConfig accountConfig, UserRepository userRepository, ProjectService projectService, @Lazy SessionRegistry sessionRegistry, ProjectRepository projectRepository) {
@@ -74,8 +74,8 @@ public class UserService implements UserDetailsService, ApplicationContextAware 
 
     public void logoutUser(User user) {
         for (Object principal : sessionRegistry.getAllPrincipals()) {
-            if(principal instanceof UserPrincipal) {
-                if(Objects.equals(((UserPrincipal) principal).getUser().getId(), user.getId())) {
+            if (principal instanceof UserPrincipal) {
+                if (Objects.equals(((UserPrincipal) principal).getUser().getId(), user.getId())) {
                     List<SessionInformation> allSessions = sessionRegistry.getAllSessions(principal, false);
                     for (SessionInformation session : allSessions) {
                         session.expireNow();
@@ -119,8 +119,8 @@ public class UserService implements UserDetailsService, ApplicationContextAware 
     @Transactional
     public void autoDeleteGuests() {
         for (User user : ImmutableList.copyOf(userRepository.findAll())) {
-            if(user.getRole() == User.Role.Guest) {
-                if(user.getGuestExpire() == null || LocalDateTime.now().isAfter(user.getGuestExpire())) {
+            if (user.getRole() == User.Role.Guest) {
+                if (user.getGuestExpire() == null || LocalDateTime.now().isAfter(user.getGuestExpire())) {
                     log.info("Deleting expired guest account " + user.getId() + " / " + user.getEmail());
                     deleteUser(user);
                 }
@@ -136,30 +136,26 @@ public class UserService implements UserDetailsService, ApplicationContextAware 
 
     public void validateIsAdmin(Authentication authentication) {
         validateAuthentication(authentication);
-        if(authentication.getPrincipal() instanceof AdminPrincipal) {
+        if (authentication.getPrincipal() instanceof AdminPrincipal) {
             // Everything OK
-        }
-        else if(authentication.getPrincipal() instanceof UserPrincipal) {
-            if(((UserPrincipal) authentication.getPrincipal()).getUser().getRole() != User.Role.Admin) {
+        } else if (authentication.getPrincipal() instanceof UserPrincipal) {
+            if (((UserPrincipal) authentication.getPrincipal()).getUser().getRole() != User.Role.Admin) {
                 throw new ResponseStatusException(HttpStatus.FORBIDDEN);
             }
-        }
-        else {
+        } else {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN);
         }
     }
 
     public boolean isAdmin(Authentication authentication) {
         validateAuthentication(authentication);
-        if(authentication.getPrincipal() instanceof AdminPrincipal) {
-           return true;
-        }
-        else if(authentication.getPrincipal() instanceof UserPrincipal) {
-            if(((UserPrincipal) authentication.getPrincipal()).getUser().getRole() != User.Role.Admin) {
-               return false;
+        if (authentication.getPrincipal() instanceof AdminPrincipal) {
+            return true;
+        } else if (authentication.getPrincipal() instanceof UserPrincipal) {
+            if (((UserPrincipal) authentication.getPrincipal()).getUser().getRole() != User.Role.Admin) {
+                return false;
             }
-        }
-        else {
+        } else {
             return false;
         }
         return true;

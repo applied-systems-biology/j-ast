@@ -23,10 +23,10 @@ import java.util.function.Function;
 @Component
 public class JwtUtil {
 
-    private final JwtConfig jwtConfig;
     public static final String TOKEN_CLAIM_KEY_TYPE = "type";
     public static final String TOKEN_CLAIM_VALUE_TYPE_ACCESS = "access";
     public static final String TOKEN_CLAIM_VALUE_TYPE_REFRESH = "refresh";
+    private final JwtConfig jwtConfig;
 
     @Autowired
     public JwtUtil(JwtConfig jwtConfig) {
@@ -61,12 +61,10 @@ public class JwtUtil {
     private Claims extractAllClaims(String token, boolean verify) {
         try {
             return Jwts.parser().verifyWith(getSecretKey()).build().parse(token).accept(Jws.CLAIMS).getPayload();
-        }
-        catch (ExpiredJwtException e) {
-            if(!verify) {
+        } catch (ExpiredJwtException e) {
+            if (!verify) {
                 return e.getClaims();
-            }
-            else {
+            } else {
                 throw e;
             }
         }
@@ -81,31 +79,27 @@ public class JwtUtil {
     }
 
     public Date getNewLimitedRefreshExpirationDate(LocalDateTime limit) {
-        if(limit != null) {
+        if (limit != null) {
             long millis = Duration.between(LocalDateTime.now(), limit).toMillis();
-            if(millis > 0) {
+            if (millis > 0) {
                 return new Date(System.currentTimeMillis() + Math.min(jwtConfig.getJwtRefreshTokenExpirationInMinutes() * 60L * 1000, millis));
-            }
-            else {
+            } else {
                 return null;
             }
-        }
-        else {
+        } else {
             return getNewRefreshExpirationDate();
         }
     }
 
     public Date getNewLimitedAccessExpirationDate(LocalDateTime limit) {
-        if(limit != null) {
+        if (limit != null) {
             long millis = Duration.between(LocalDateTime.now(), limit).toMillis();
-            if(millis > 0) {
+            if (millis > 0) {
                 return new Date(System.currentTimeMillis() + Math.min(jwtConfig.getJwtAccessTokenExpirationInMinutes() * 60L * 1000, millis));
-            }
-            else {
+            } else {
                 return null;
             }
-        }
-        else {
+        } else {
             return getNewAccessExpirationDate();
         }
     }
@@ -137,8 +131,7 @@ public class JwtUtil {
     public boolean isTokenExpired(String token) {
         try {
             return extractExpiration(token, true).before(new Date());
-        }
-        catch (ExpiredJwtException ignored) {
+        } catch (ExpiredJwtException ignored) {
             return true;
         }
     }

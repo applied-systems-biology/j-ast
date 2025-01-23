@@ -4,8 +4,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.hkijena.jast.model.entities.Image;
 import org.hkijena.jast.model.entities.MaskImageAnnotation;
 import org.hkijena.jast.payloads.MaskImageAnnotationPayload;
-import org.hkijena.jast.repositories.MaskImageAnnotationRepository;
 import org.hkijena.jast.repositories.ImageRepository;
+import org.hkijena.jast.repositories.MaskImageAnnotationRepository;
 import org.hkijena.jast.repositories.ProjectRepository;
 import org.hkijena.jast.services.ProjectService;
 import org.hkijena.jast.services.UserService;
@@ -56,7 +56,7 @@ public class AnnotationController {
             }
 
             // Check if size is correct
-            if(bufferedImage.getWidth() != maskImageAnnotation.getImage().getImageWidth() || bufferedImage.getHeight() != maskImageAnnotation.getImage().getImageHeight()) {
+            if (bufferedImage.getWidth() != maskImageAnnotation.getImage().getImageWidth() || bufferedImage.getHeight() != maskImageAnnotation.getImage().getImageHeight()) {
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid image data (wrong size)");
             }
 
@@ -97,7 +97,7 @@ public class AnnotationController {
         if (image_.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
-        if(!MaskImageAnnotation.isValidType(annotationType)) {
+        if (!MaskImageAnnotation.isValidType(annotationType)) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
         Image image = image_.get();
@@ -105,10 +105,9 @@ public class AnnotationController {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN);
         }
         Optional<MaskImageAnnotation> imageAnnotation_ = maskImageAnnotationRepository.findFirstByImageAndType(image, annotationType);
-        if(imageAnnotation_.isPresent()) {
+        if (imageAnnotation_.isPresent()) {
             RequestUtils.sendContent(response, imageAnnotation_.get().getThumbnailData(), MimeTypeUtils.MIME_TYPE_PNG);
-        }
-        else {
+        } else {
             // Send dummy thumbnail
             RequestUtils.sendContent(response, ImageUtils.getDummyThumbnailBytes(), MimeTypeUtils.MIME_TYPE_PNG);
         }
@@ -119,7 +118,7 @@ public class AnnotationController {
         if (image_.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
-        if(!MaskImageAnnotation.isValidType(annotationType)) {
+        if (!MaskImageAnnotation.isValidType(annotationType)) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
         Image image = image_.get();
@@ -131,7 +130,7 @@ public class AnnotationController {
         }
 
         Optional<MaskImageAnnotation> imageAnnotation_ = maskImageAnnotationRepository.findFirstByImageAndType(image, annotationType);
-        if(imageAnnotation_.isEmpty()) {
+        if (imageAnnotation_.isEmpty()) {
             // Create a new annotation
             MaskImageAnnotation maskImageAnnotation = new MaskImageAnnotation();
             maskImageAnnotation.setImage(image);
@@ -140,8 +139,7 @@ public class AnnotationController {
 
             image.addMaskImageAnnotation(maskImageAnnotation);
             return maskImageAnnotationRepository.save(maskImageAnnotation);
-        }
-        else {
+        } else {
             return imageAnnotation_.get();
         }
     }

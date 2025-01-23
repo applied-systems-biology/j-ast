@@ -6,7 +6,7 @@ import java.util.Map;
 
 public class ColorUtils {
 
-    public static final Color[] PALETTE = new Color[] {
+    public static final Color[] PALETTE = new Color[]{
             new Color(255, 0, 0),        // Red
             new Color(0, 255, 0),        // Green
             new Color(255, 255, 0),      // Yellow
@@ -51,11 +51,11 @@ public class ColorUtils {
 
     public static Color paletteColorFromString(String str) {
         Color color = STATIC_PALETTE.getOrDefault(str, null);
-        if(color != null) {
+        if (color != null) {
             return color;
         }
         int hash = str.hashCode();
-        if(hash < 0) {
+        if (hash < 0) {
             hash = -hash;
         }
         return PALETTE[hash % PALETTE.length];

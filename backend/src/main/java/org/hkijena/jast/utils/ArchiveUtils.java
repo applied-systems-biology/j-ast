@@ -14,16 +14,16 @@ public class ArchiveUtils {
     private static final int BUFFER_SIZE = 8192;
 
     public static void zipFileOrDirectory(Path fileToZip, Path zipFile, ProgressInfo progressInfo) throws IOException {
-        try(ZipOutputStream zipOut = new ZipOutputStream(new FileOutputStream(zipFile.toFile()))) {
+        try (ZipOutputStream zipOut = new ZipOutputStream(new FileOutputStream(zipFile.toFile()))) {
             zipFile(fileToZip, fileToZip.getFileName().toString(), zipOut, progressInfo);
         }
     }
 
     public static void zipDirectory(Path rootPath, String rootPathName, Path zipFile, ProgressInfo progressInfo) throws IOException {
-        if(!Files.isDirectory(rootPath)) {
+        if (!Files.isDirectory(rootPath)) {
             throw new IOException("Path is not a directory");
         }
-        try(ZipOutputStream zipOut = new ZipOutputStream(new FileOutputStream(zipFile.toFile()))) {
+        try (ZipOutputStream zipOut = new ZipOutputStream(new FileOutputStream(zipFile.toFile()))) {
             zipFile(rootPath, rootPathName, zipOut, progressInfo);
         }
     }
@@ -40,7 +40,7 @@ public class ArchiveUtils {
                 zipOut.putNextEntry(new ZipEntry(fileName + "/"));
                 zipOut.closeEntry();
             }
-            try(Stream<Path> stream = Files.list(fileToZip)) {
+            try (Stream<Path> stream = Files.list(fileToZip)) {
                 List<Path> children = stream.toList();
                 for (Path child : children) {
                     zipFile(child, fileName + "/" + child.getFileName(), zipOut, progressInfo);
@@ -50,7 +50,7 @@ public class ArchiveUtils {
             return;
         }
         progressInfo.log("ZIP " + fileToZip + " -> " + fileName);
-        try(FileInputStream fis = new FileInputStream(fileToZip.toFile())) {
+        try (FileInputStream fis = new FileInputStream(fileToZip.toFile())) {
             ZipEntry zipEntry = new ZipEntry(fileName);
             zipOut.putNextEntry(zipEntry);
             byte[] bytes = new byte[BUFFER_SIZE];

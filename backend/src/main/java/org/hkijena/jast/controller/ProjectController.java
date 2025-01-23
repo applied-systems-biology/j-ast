@@ -6,14 +6,13 @@ import org.hkijena.jast.model.entities.Image;
 import org.hkijena.jast.model.entities.Project;
 import org.hkijena.jast.payloads.CreateEditProjectRequest;
 import org.hkijena.jast.payloads.ProjectMetadataPayload;
-import org.hkijena.jast.repositories.ProjectRepository;
 import org.hkijena.jast.repositories.ImageRepository;
+import org.hkijena.jast.repositories.ProjectRepository;
 import org.hkijena.jast.services.BackendTaskService;
 import org.hkijena.jast.services.ProjectService;
 import org.hkijena.jast.services.UserService;
 import org.hkijena.jast.utils.ImageUtils;
 import org.hkijena.jast.utils.StringUtils;
-import org.jobrunr.scheduling.JobScheduler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -69,12 +68,11 @@ public class ProjectController {
     public ResponseEntity<ProjectMetadataPayload> editProject(Authentication authentication, @PathVariable("id") long id, @RequestBody CreateEditProjectRequest request) {
         userService.validateAuthentication(authentication);
         Project project = projectService.getProjectByIdOrError(id);
-        if(project.canEdit(authentication)) {
+        if (project.canEdit(authentication)) {
             project.setName(StringUtils.orElse(request.getName(), "Unnamed project"));
             projectRepository.save(project);
             return ResponseEntity.ok(ProjectMetadataPayload.create(project));
-        }
-        else {
+        } else {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN);
         }
     }
@@ -98,14 +96,14 @@ public class ProjectController {
     public void uploadRawImage(Authentication authentication, @PathVariable("id") long id, @RequestPart("file") MultipartFile imageFile) {
         userService.validateAuthentication(authentication);
         Project project = projectService.getProjectByIdOrError(id);
-        if(!projectService.canUploadImage(project, authentication)) {
+        if (!projectService.canUploadImage(project, authentication)) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN);
         }
 
         try (InputStream stream = imageFile.getInputStream()) {
             BufferedImage bufferedImage = ImageIO.read(stream);
             if (bufferedImage == null) {
-              throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid image data");
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid image data");
             }
 
             // Create object
@@ -128,7 +126,7 @@ public class ProjectController {
     public void deleteProject(Authentication authentication, @PathVariable("id") long id) {
         userService.validateAuthentication(authentication);
         Project project = projectService.getProjectByIdOrError(id);
-        if(!project.canEdit(authentication)) {
+        if (!project.canEdit(authentication)) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN);
         }
         projectRepository.delete(project);

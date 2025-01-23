@@ -31,51 +31,51 @@ public class RuntimeConfig {
         this.fijiWrapperEnabled = fijiWrapperEnabled;
     }
 
-    public void setCustomTempDirectory(String customTempDirectory) {
-        this.customTempDirectory = customTempDirectory;
+    public String getFijiPath() {
+        return fijiPath;
     }
 
     public void setFijiPath(String fijiPath) {
         this.fijiPath = fijiPath;
     }
 
-    public void setFijiExecutablePath(String fijiExecutablePath) {
-        this.fijiExecutablePath = fijiExecutablePath;
-    }
-
-    public void setFijiWrapper(String fijiWrapper) {
-        this.fijiWrapper = fijiWrapper;
-    }
-
-    public void setFijiArgs(List<String> fijiArgs) {
-        this.fijiArgs = fijiArgs;
-    }
-
-    public void setFijiWrapperArgs(List<String> fijiWrapperArgs) {
-        this.fijiWrapperArgs = fijiWrapperArgs;
-    }
-
-    public String getFijiPath() {
-        return fijiPath;
-    }
-
     public String getCustomTempDirectory() {
         return customTempDirectory;
+    }
+
+    public void setCustomTempDirectory(String customTempDirectory) {
+        this.customTempDirectory = customTempDirectory;
     }
 
     public String getFijiExecutablePath() {
         return fijiExecutablePath;
     }
 
+    public void setFijiExecutablePath(String fijiExecutablePath) {
+        this.fijiExecutablePath = fijiExecutablePath;
+    }
+
     public List<String> getFijiWrapperArgs() {
         return fijiWrapperArgs;
+    }
+
+    public void setFijiWrapperArgs(List<String> fijiWrapperArgs) {
+        this.fijiWrapperArgs = fijiWrapperArgs;
     }
 
     public String getFijiWrapper() {
         return fijiWrapper;
     }
 
+    public void setFijiWrapper(String fijiWrapper) {
+        this.fijiWrapper = fijiWrapper;
+    }
+
     public List<String> getFijiArgs() {
         return fijiArgs;
+    }
+
+    public void setFijiArgs(List<String> fijiArgs) {
+        this.fijiArgs = fijiArgs;
     }
 }

@@ -24,9 +24,6 @@ import java.util.Map;
 @BackendTaskType(typeId = "j-ast-analysis")
 public class JASTAnalysisWorkload implements BackendTaskWorkload {
 
-    private final ImageRepository imageRepository;
-    private final ProjectRepository projectRepository;
-    private final ResultRepository resultRepository;
     private static final List<BackendTaskWorkloadDataSlot> INPUTS = List.of(
             JASTDataSlot.Plate.toSlot(),
             JASTDataSlot.StripDisk.toSlot(),
@@ -42,6 +39,10 @@ public class JASTAnalysisWorkload implements BackendTaskWorkload {
     static {
         PARAMETER_OVERRIDES.put("__thresholds", "3d3aba6c-2688-47bd-94af-aef3ebf058bf/variables/thresholds");
     }
+
+    private final ImageRepository imageRepository;
+    private final ProjectRepository projectRepository;
+    private final ResultRepository resultRepository;
 
     @Autowired
     public JASTAnalysisWorkload(ImageRepository imageRepository, ProjectRepository projectRepository, ResultRepository resultRepository) {
@@ -123,7 +124,7 @@ public class JASTAnalysisWorkload implements BackendTaskWorkload {
 
         for (BackendTaskParameterPayload parameter : params.getPayload().getParameters()) {
             String overriddenKey = PARAMETER_OVERRIDES.get(parameter.getId());
-            if(overriddenKey != null) {
+            if (overriddenKey != null) {
                 parameterOverrides.put(overriddenKey, parameter.getValue());
             }
         }

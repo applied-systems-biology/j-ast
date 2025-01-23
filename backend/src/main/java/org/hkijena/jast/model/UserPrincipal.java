@@ -17,10 +17,9 @@ public class UserPrincipal implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        if(user.getRole() == User.Role.Guest) {
+        if (user.getRole() == User.Role.Guest) {
             return Privileges.ROLE_GUEST_PRIVILEGES;
-        }
-        else {
+        } else {
             return Privileges.ROLE_USER_PRIVILEGES;
         }
     }
@@ -37,13 +36,12 @@ public class UserPrincipal implements UserDetails {
 
     @Override
     public boolean isAccountNonExpired() {
-        if(user.getRole() == User.Role.Guest) {
-            if(user.getGuestExpire() != null) {
+        if (user.getRole() == User.Role.Guest) {
+            if (user.getGuestExpire() != null) {
                 return LocalDateTime.now().isBefore(user.getGuestExpire());
             }
             return false;
-        }
-        else {
+        } else {
             return true;
         }
     }

@@ -8,7 +8,6 @@ import java.awt.image.DataBufferInt;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.nio.file.Path;
 import java.util.Base64;
 
 public class ImageUtils {
@@ -55,7 +54,7 @@ public class ImageUtils {
     public static BufferedImage createThumbnail(BufferedImage image, int thumbnailWidth, int thumbnailHeight) {
         double thumbnailScale = Math.max(1.0 * thumbnailWidth / image.getWidth(), 1.0 * thumbnailHeight / image.getHeight());
         Image scaledImage = image.getScaledInstance((int) (image.getWidth() * thumbnailScale), (int) (image.getHeight() * thumbnailScale), Image.SCALE_SMOOTH);
-        BufferedImage thumbnail = new BufferedImage(thumbnailWidth,thumbnailHeight, BufferedImage.TYPE_INT_ARGB);
+        BufferedImage thumbnail = new BufferedImage(thumbnailWidth, thumbnailHeight, BufferedImage.TYPE_INT_ARGB);
         Graphics2D graphics2D = thumbnail.createGraphics();
         graphics2D.drawImage(scaledImage, (thumbnailWidth / 2) - scaledImage.getWidth(null) / 2, (thumbnailHeight / 2) - scaledImage.getHeight(null) / 2, null);
         graphics2D.dispose();
@@ -63,11 +62,10 @@ public class ImageUtils {
     }
 
     public static BufferedImage fromPNGBytes(byte[] bytes) {
-        if(bytes == null) return null;
-        try(ByteArrayInputStream inputStream = new ByteArrayInputStream(bytes)) {
+        if (bytes == null) return null;
+        try (ByteArrayInputStream inputStream = new ByteArrayInputStream(bytes)) {
             return ImageIO.read(inputStream);
-        }
-        catch(IOException e) {
+        } catch (IOException e) {
             return null;
         }
     }
@@ -77,7 +75,7 @@ public class ImageUtils {
     }
 
     public static byte[] toPNGByteArray(BufferedImage bufferedImage) {
-        try(ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+        try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
             ImageIO.write(bufferedImage, "PNG", baos);
             return baos.toByteArray();
         } catch (IOException e) {
@@ -121,7 +119,7 @@ public class ImageUtils {
 
     public static BufferedImage calculateGradient(BufferedImage mask) {
 
-        if(mask.getType() != BufferedImage.TYPE_BYTE_GRAY) {
+        if (mask.getType() != BufferedImage.TYPE_BYTE_GRAY) {
             mask = convertImageType(mask, BufferedImage.TYPE_BYTE_GRAY);
         }
 
@@ -178,10 +176,10 @@ public class ImageUtils {
         if (outputImage.getWidth() != mask.getWidth() || outputImage.getHeight() != mask.getHeight()) {
             throw new IllegalArgumentException("Both images must have the same dimensions");
         }
-        if(outputImage.getType() != BufferedImage.TYPE_INT_ARGB) {
+        if (outputImage.getType() != BufferedImage.TYPE_INT_ARGB) {
             throw new IllegalArgumentException("Image type is not int-ARGB");
         }
-        if(mask.getType() != BufferedImage.TYPE_BYTE_GRAY) {
+        if (mask.getType() != BufferedImage.TYPE_BYTE_GRAY) {
             mask = convertImageType(mask, BufferedImage.TYPE_BYTE_GRAY);
         }
 

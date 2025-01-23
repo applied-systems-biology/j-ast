@@ -4,7 +4,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hkijena.jast.model.AssayType;
 import org.hkijena.jast.model.entities.Image;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class ImagePayload {
     @JsonProperty

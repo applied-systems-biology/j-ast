@@ -27,7 +27,10 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
-import java.util.*;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public interface BackendTaskWorkload {
@@ -77,8 +80,8 @@ public interface BackendTaskWorkload {
     }
 
     default List<Map<String, String>> readCsv(Path fullPath) throws IOException {
-        try(FileReader reader = new FileReader(fullPath.toFile())) {
-            CSVParser parser = new CSVParser(reader,  CSVFormat.Builder.create().setHeader().setSkipHeaderRecord(true).setDelimiter(',').setQuote('"').build());
+        try (FileReader reader = new FileReader(fullPath.toFile())) {
+            CSVParser parser = new CSVParser(reader, CSVFormat.Builder.create().setHeader().setSkipHeaderRecord(true).setDelimiter(',').setQuote('"').build());
             return parser.getRecords().stream().map(CSVRecord::toMap).toList();
         }
     }
@@ -86,8 +89,8 @@ public interface BackendTaskWorkload {
     default void writeRawImages(BackendTaskWorkloadParams params, Iterable<Long> imageIds, ImageRepository repository, ProgressInfo progressInfo) throws IOException {
         Path rawPath = PathUtils.resolveAndMakeSubDirectory(params.getTmpPath(), "raw");
         Path csvPath = params.getTmpPath().resolve("metadata.csv");
-        final String[] csvHeader = new String[] { "#ImageId", "#Experiment", "#Sample", "#TimePoint", "#AssayType", "PixelSize", "GroupRow", "GroupColumn" };
-        try(FileWriter csvFileWriter = new FileWriter(csvPath.toFile())) {
+        final String[] csvHeader = new String[]{"#ImageId", "#Experiment", "#Sample", "#TimePoint", "#AssayType", "PixelSize", "GroupRow", "GroupColumn"};
+        try (FileWriter csvFileWriter = new FileWriter(csvPath.toFile())) {
             CSVPrinter csvPrinter = new CSVPrinter(csvFileWriter, CSVFormat.Builder.create().setDelimiter(',').setQuote('"').setHeader(csvHeader).build());
             for (Image image : repository.findAllById(imageIds)) {
                 progressInfo.log("Writing raw image data " + image.getId());
@@ -106,11 +109,10 @@ public interface BackendTaskWorkload {
             progressInfo.log("Writing mask annotation " + annotationTypeId + " image data " + image.getId());
             MaskImageAnnotation annotation = image.getMaskImageAnnotation(annotationTypeId);
             Path pngPath = rawPath.resolve(image.getId() + ".png");
-            if(annotation != null) {
+            if (annotation != null) {
                 Files.write(pngPath, annotation.getRawData());
-            }
-            else {
-                BufferedImage dummy= new BufferedImage(image.getImageWidth(), image.getImageHeight(), BufferedImage.TYPE_BYTE_GRAY);
+            } else {
+                BufferedImage dummy = new BufferedImage(image.getImageWidth(), image.getImageHeight(), BufferedImage.TYPE_BYTE_GRAY);
                 ImageIO.write(dummy, "PNG", pngPath.toFile());
             }
         }
@@ -125,31 +127,29 @@ public interface BackendTaskWorkload {
             progressInfo.log("Processing row " + groupRow);
             byte[] firstAnnotation = null;
             for (Image image : images) {
-                if(image.getGroupRow() != groupRow) {
+                if (image.getGroupRow() != groupRow) {
                     continue;
                 }
                 MaskImageAnnotation annotation = image.getMaskImageAnnotation(annotationTypeId);
-                if(annotation != null) {
+                if (annotation != null) {
                     progressInfo.log("Found first available annotation " + annotationTypeId + " image data " + image.getId());
                     firstAnnotation = annotation.getRawData();
                     break;
                 }
             }
             for (Image image : images) {
-                if(image.getGroupRow() != groupRow) {
+                if (image.getGroupRow() != groupRow) {
                     continue;
                 }
                 progressInfo.log("Writing first available mask annotation " + annotationTypeId + " image data " + image.getId());
                 MaskImageAnnotation annotation = image.getMaskImageAnnotation(annotationTypeId);
                 Path pngPath = rawPath.resolve(image.getId() + ".png");
-                if(firstAnnotation != null) {
+                if (firstAnnotation != null) {
                     Files.write(pngPath, firstAnnotation);
-                }
-                else if(annotation != null) {
+                } else if (annotation != null) {
                     Files.write(pngPath, annotation.getRawData());
-                }
-                else {
-                    BufferedImage dummy= new BufferedImage(image.getImageWidth(), image.getImageHeight(), BufferedImage.TYPE_BYTE_GRAY);
+                } else {
+                    BufferedImage dummy = new BufferedImage(image.getImageWidth(), image.getImageHeight(), BufferedImage.TYPE_BYTE_GRAY);
                     ImageIO.write(dummy, "PNG", pngPath.toFile());
                 }
             }
@@ -166,13 +166,13 @@ public interface BackendTaskWorkload {
                 String annotationTypeId = entry.getKey();
                 Path imageDirectory = entry.getValue();
                 Path imageFileName = imageDirectory.resolve(image.getId() + ".png");
-                if(Files.isRegularFile(imageFileName)) {
+                if (Files.isRegularFile(imageFileName)) {
                     progressInfo.log("Reading annotation from " + imageFileName);
                     try {
                         BufferedImage rawImage = ImageIO.read(imageFileName.toFile());
 
                         // Check the size
-                        if(rawImage.getWidth() != image.getImageWidth() || rawImage.getHeight() != image.getImageHeight()) {
+                        if (rawImage.getWidth() != image.getImageWidth() || rawImage.getHeight() != image.getImageHeight()) {
                             throw new IllegalArgumentException("Image dimensions do not match");
                         }
 
@@ -184,14 +184,13 @@ public interface BackendTaskWorkload {
 
                         // Mark as changed
                         changed = true;
-                    }
-                    catch (Throwable e) {
+                    } catch (Throwable e) {
                         LOGGER.error("Unable to read annotation from {}", imageFileName, e);
                     }
                 }
             }
 
-            if(changed) {
+            if (changed) {
                 // Update the image as well
                 image.rebuildThumbnail();
                 image.incrementVersion();
@@ -211,7 +210,7 @@ public interface BackendTaskWorkload {
 
         progressInfo.log("Processing result " + path + "/" + name);
 
-        if(name.endsWith(".png") || name.endsWith(".bmp") || name.endsWith(".jpg") || name.endsWith(".jpeg")) {
+        if (name.endsWith(".png") || name.endsWith(".bmp") || name.endsWith(".jpg") || name.endsWith(".jpeg")) {
             try {
                 BufferedImage bufferedImage = ImageIO.read(file.toFile());
                 resultItem.setRawData(ImageUtils.toPNGByteArray(bufferedImage));
@@ -221,8 +220,7 @@ public interface BackendTaskWorkload {
             }
             resultItem.setType(ResultItemType.Image);
             resultItem.setVisualizationType(ResultItemType.Null);
-        }
-        else if(name.endsWith(".csv")) {
+        } else if (name.endsWith(".csv")) {
             try {
                 resultItem.setRawData(Files.readAllBytes(file));
             } catch (IOException e) {
@@ -230,8 +228,7 @@ public interface BackendTaskWorkload {
             }
             resultItem.setType(ResultItemType.Table);
             resultItem.setVisualizationType(ResultItemType.Null);
-        }
-        else if(name.endsWith(".txt") || name.endsWith(".json") || name.endsWith(".xml")) {
+        } else if (name.endsWith(".txt") || name.endsWith(".json") || name.endsWith(".xml")) {
             try {
                 resultItem.setRawData(Files.readAllBytes(file));
             } catch (IOException e) {
@@ -239,8 +236,7 @@ public interface BackendTaskWorkload {
             }
             resultItem.setType(ResultItemType.Text);
             resultItem.setVisualizationType(ResultItemType.Null);
-        }
-        else {
+        } else {
             try {
                 resultItem.setRawData(Files.readAllBytes(file));
             } catch (IOException e) {
@@ -269,8 +265,7 @@ public interface BackendTaskWorkload {
                     if (item != null) {
                         result.addResultItem(item);
                     }
-                }
-                catch (Throwable e) {
+                } catch (Throwable e) {
                     progressInfo.log("Unable to read result file " + file);
                     progressInfo.log(ExceptionUtils.getStackTrace(e));
                 }
@@ -320,8 +315,8 @@ public interface BackendTaskWorkload {
 
         // Save parameter config
         Path parameterOverridesConfigJsonPath = null;
-        if(parameterOverrides != null) {
-            parameterOverridesConfigJsonPath =  params.getTmpPath().resolve(prefix + "jip-parameter-config.json");
+        if (parameterOverrides != null) {
+            parameterOverridesConfigJsonPath = params.getTmpPath().resolve(prefix + "jip-parameter-config.json");
             JsonUtils.saveToFile(parameterOverrides, parameterOverridesConfigJsonPath);
         }
 
@@ -361,7 +356,7 @@ public interface BackendTaskWorkload {
         commandLine.addArgument(outputDir.toAbsolutePath().toString());
         commandLine.addArgument("--output-results");
         commandLine.addArgument("none");
-        if(parameterOverridesConfigJsonPath != null) {
+        if (parameterOverridesConfigJsonPath != null) {
             commandLine.addArgument("--overwrite-parameters");
             commandLine.addArgument(parameterOverridesConfigJsonPath.toAbsolutePath().toString());
         }

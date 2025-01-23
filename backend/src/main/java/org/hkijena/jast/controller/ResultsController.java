@@ -1,7 +1,6 @@
 package org.hkijena.jast.controller;
 
 import jakarta.servlet.http.HttpServletResponse;
-import org.hkijena.jast.model.entities.Image;
 import org.hkijena.jast.model.entities.Project;
 import org.hkijena.jast.model.entities.Result;
 import org.hkijena.jast.model.entities.ResultItem;
@@ -66,14 +65,14 @@ public class ResultsController {
     public ResponseEntity<FullResultPayload> getFullResult(@PathVariable("id") long id, Authentication authentication) {
         userService.validateAuthentication(authentication);
         Optional<Result> result_ = resultRepository.findById(id);
-        if(result_.isEmpty()) {
+        if (result_.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
         Result result = result_.get();
-        if(!result.getProject().canAccess(authentication)) {
+        if (!result.getProject().canAccess(authentication)) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
         }
-        if(!result.isViewed()) {
+        if (!result.isViewed()) {
             result.setViewed(true);
             resultRepository.save(result);
         }
@@ -84,7 +83,7 @@ public class ResultsController {
     public void getThumbnail(HttpServletResponse response, Authentication authentication, @PathVariable long id) throws IOException {
         userService.validateAuthentication(authentication);
         Optional<ResultItem> resultItem_ = resultItemRepository.findById(id);
-        if(resultItem_.isEmpty()) {
+        if (resultItem_.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
         ResultItem resultItem = resultItem_.get();
@@ -95,7 +94,7 @@ public class ResultsController {
     public void getRaw(HttpServletResponse response, Authentication authentication, @PathVariable long id) throws IOException {
         userService.validateAuthentication(authentication);
         Optional<ResultItem> resultItem_ = resultItemRepository.findById(id);
-        if(resultItem_.isEmpty()) {
+        if (resultItem_.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
         ResultItem resultItem = resultItem_.get();
@@ -106,11 +105,11 @@ public class ResultsController {
     public void deleteResult(@PathVariable("id") long id, Authentication authentication) {
         userService.validateAuthentication(authentication);
         Optional<Result> result_ = resultRepository.findById(id);
-        if(result_.isEmpty()) {
+        if (result_.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
         Result result = result_.get();
-        if(!result.getProject().canEdit(authentication)) {
+        if (!result.getProject().canEdit(authentication)) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
         }
         resultRepository.deleteById(id);
@@ -120,11 +119,11 @@ public class ResultsController {
     public void markResultViewed(@PathVariable("id") long id, Authentication authentication) {
         userService.validateAuthentication(authentication);
         Optional<Result> result_ = resultRepository.findById(id);
-        if(result_.isEmpty()) {
+        if (result_.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
         Result result = result_.get();
-        if(!result.getProject().canEdit(authentication)) {
+        if (!result.getProject().canEdit(authentication)) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
         }
         result.setViewed(true);

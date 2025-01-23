@@ -2,11 +2,12 @@ package org.hkijena.jast.services;
 
 import org.apache.commons.lang3.math.NumberUtils;
 import org.hkijena.jast.config.AccountConfig;
-import org.hkijena.jast.model.*;
+import org.hkijena.jast.model.Privileges;
+import org.hkijena.jast.model.UserPrincipal;
 import org.hkijena.jast.model.entities.Project;
 import org.hkijena.jast.model.entities.User;
-import org.hkijena.jast.repositories.ProjectRepository;
 import org.hkijena.jast.repositories.ImageRepository;
+import org.hkijena.jast.repositories.ProjectRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
@@ -27,42 +28,39 @@ public class ProjectService {
     }
 
     public boolean canCreateProject(Authentication authentication) {
-        if(authentication != null) {
-            if(authentication.getAuthorities().contains(Privileges.PRIVILEGE_CREATE_TASKS)) {
-                if(authentication.getPrincipal() instanceof UserPrincipal) {
+        if (authentication != null) {
+            if (authentication.getAuthorities().contains(Privileges.PRIVILEGE_CREATE_TASKS)) {
+                if (authentication.getPrincipal() instanceof UserPrincipal) {
                     User user = ((UserPrincipal) authentication.getPrincipal()).getUser();
-                    if(user.getRole() == User.Role.Guest) {
+                    if (user.getRole() == User.Role.Guest) {
                         return projectRepository.findByOwner(user).size() < accountConfig.getGuestProjectLimit();
-                    }
-                    else {
+                    } else {
                         return true;
                     }
-                }
-                else {
+                } else {
                     return true;
                 }
             }
         }
         return false;
     }
+
     public void delete(Project project) {
         // Delete from database
         projectRepository.delete(project);
     }
 
     public boolean canUploadImage(Project project, Authentication authentication) {
-        if(authentication != null) {
-            if(authentication.getAuthorities().contains(Privileges.PRIVILEGE_CREATE_TASKS)) {
-                if(authentication.getPrincipal() instanceof UserPrincipal) {
+        if (authentication != null) {
+            if (authentication.getAuthorities().contains(Privileges.PRIVILEGE_CREATE_TASKS)) {
+                if (authentication.getPrincipal() instanceof UserPrincipal) {
                     User user = ((UserPrincipal) authentication.getPrincipal()).getUser();
-                    if(user.getRole() == User.Role.Guest) {
+                    if (user.getRole() == User.Role.Guest) {
                         return imageRepository.countByProject(project) < accountConfig.getGuestImageLimit();
-                    }
-                    else {
+                    } else {
                         return true;
                     }
-                }
-                else {
+                } else {
                     return true;
                 }
             }
@@ -71,25 +69,23 @@ public class ProjectService {
     }
 
     public Project getProjectByStringIdOrError(String id) {
-        if(!NumberUtils.isCreatable(id)) {
+        if (!NumberUtils.isCreatable(id)) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
         int projectId = Integer.parseInt(id);
         Optional<Project> project = projectRepository.findById((long) projectId);
-        if(project.isPresent()) {
+        if (project.isPresent()) {
             return project.get();
-        }
-        else {
+        } else {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
     }
 
     public Project getProjectByIdOrError(long projectId) {
         Optional<Project> project = projectRepository.findById((long) projectId);
-        if(project.isPresent()) {
+        if (project.isPresent()) {
             return project.get();
-        }
-        else {
+        } else {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
     }

@@ -1,38 +1,25 @@
 package org.hkijena.jast.config;
 
 import jakarta.annotation.Resource;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.apache.catalina.filters.CorsFilter;
 import org.hkijena.jast.utils.JwtTokenFilter;
-import org.hkijena.jast.utils.JwtUtil;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.Customizer;
-import org.springframework.security.config.annotation.web.WebSecurityConfigurer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.config.annotation.web.configurers.LogoutConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource;
-
-import java.io.IOException;
 
 @Configuration
 @EnableWebSecurity
@@ -72,12 +59,12 @@ public class WebSecurityConfig {
 
         // Set unauthorized requests exception handler
         http.exceptionHandling(exception -> {
-           exception.authenticationEntryPoint((request, response, authException) -> {
-               response.sendError(
-                       HttpServletResponse.SC_UNAUTHORIZED,
-                       authException.getMessage()
-               );
-           });
+            exception.authenticationEntryPoint((request, response, authException) -> {
+                response.sendError(
+                        HttpServletResponse.SC_UNAUTHORIZED,
+                        authException.getMessage()
+                );
+            });
         });
 
         // Configure permissions

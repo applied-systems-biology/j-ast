@@ -1,7 +1,6 @@
 package org.hkijena.jast.controller;
 
 import org.hkijena.jast.config.AccountConfig;
-import org.hkijena.jast.model.Privileges;
 import org.hkijena.jast.model.entities.Project;
 import org.hkijena.jast.model.entities.User;
 import org.hkijena.jast.payloads.ProjectMetadataPayload;
@@ -58,20 +57,18 @@ public class AdminController {
         userService.validateIsAdmin(authentication);
         ArrayList<ProjectMetadataPayload> result = new ArrayList<>();
 
-        if(userId <= 0) {
+        if (userId <= 0) {
             // Admin user
             for (Project project : projectRepository.findByOwnerIsNull()) {
                 result.add(ProjectMetadataPayload.create(project));
             }
-        }
-        else {
+        } else {
             Optional<User> byId = userRepository.findById(userId);
-            if(byId.isPresent()) {
+            if (byId.isPresent()) {
                 for (Project project : projectRepository.findByOwner(byId.get())) {
                     result.add(ProjectMetadataPayload.create(project));
                 }
-            }
-            else {
+            } else {
                 throw new ResponseStatusException(HttpStatus.NOT_FOUND);
             }
         }
@@ -83,13 +80,13 @@ public class AdminController {
     public ResponseEntity<String> editUser(Authentication authentication, @RequestBody UserPayload userPayload) {
         userService.validateIsAdmin(authentication);
         Optional<User> byId = userRepository.findById(userPayload.getId());
-        if(byId.isPresent()) {
+        if (byId.isPresent()) {
             User user = byId.get();
-            if(!Objects.equals(user.getEmail(), userPayload.getEmail())) {
+            if (!Objects.equals(user.getEmail(), userPayload.getEmail())) {
                 throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Inconsistent email. Cancelling!");
             }
-            if(!StringUtils.isNullOrEmpty(userPayload.getNewPassword())) {
-                if(!Objects.equals(userPayload.getNewPasswordConfirm(), userPayload.getNewPassword())) {
+            if (!StringUtils.isNullOrEmpty(userPayload.getNewPassword())) {
+                if (!Objects.equals(userPayload.getNewPasswordConfirm(), userPayload.getNewPassword())) {
                     throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Inconsistent password confirmation.");
                 }
                 user.setPassword(passwordEncoder.encode(userPayload.getNewPassword()));
@@ -104,8 +101,7 @@ public class AdminController {
             userRepository.save(user);
 
             return ResponseEntity.ok("User was successfully edited.");
-        }
-        else {
+        } else {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
     }

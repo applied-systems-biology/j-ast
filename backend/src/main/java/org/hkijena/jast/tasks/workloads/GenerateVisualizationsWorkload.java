@@ -24,9 +24,6 @@ import java.util.Map;
 @BackendTaskType(typeId = "generate-visualizations")
 public class GenerateVisualizationsWorkload implements BackendTaskWorkload {
 
-    private final ImageRepository imageRepository;
-    private final ResultRepository resultRepository;
-    private final ProjectRepository projectRepository;
     private static final List<BackendTaskWorkloadDataSlot> INPUTS = List.of(JASTDataSlot.Plate.toSlot(BackendTaskWorkloadDataSlotValidationMode.Optional),
             JASTDataSlot.ZOIShape.toSlot(BackendTaskWorkloadDataSlotValidationMode.Optional),
             JASTDataSlot.StripDisk.toSlot(BackendTaskWorkloadDataSlotValidationMode.Optional));
@@ -36,6 +33,9 @@ public class GenerateVisualizationsWorkload implements BackendTaskWorkload {
             new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotType.String, "result-description", "Result description", "Description of the generated result", "")
     );
     private static final Map<String, String> PARAMETER_OVERRIDES = new HashMap<>();
+    private final ImageRepository imageRepository;
+    private final ResultRepository resultRepository;
+    private final ProjectRepository projectRepository;
 
     @Autowired
     public GenerateVisualizationsWorkload(ImageRepository imageRepository, ResultRepository resultRepository, ProjectRepository projectRepository) {
@@ -100,7 +100,7 @@ public class GenerateVisualizationsWorkload implements BackendTaskWorkload {
         Map<String, Object> parameterOverrides = new HashMap<>();
         for (BackendTaskParameterPayload parameter : params.getPayload().getParameters()) {
             String overriddenKey = PARAMETER_OVERRIDES.get(parameter.getId());
-            if(overriddenKey != null) {
+            if (overriddenKey != null) {
                 parameterOverrides.put(overriddenKey, parameter.getValue());
             }
         }

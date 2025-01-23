@@ -10,7 +10,7 @@ import java.util.stream.Stream;
 
 public class PathUtils {
     public static List<Path> listFiles(Path directory) throws IOException {
-        try(Stream<Path> stream = Files.list(directory)) {
+        try (Stream<Path> stream = Files.list(directory)) {
             return stream.collect(Collectors.toList());
         }
     }
@@ -18,14 +18,13 @@ public class PathUtils {
     public static void trySafeDeleteFile(Path file, Path parentStoragePath) {
         file = file.normalize().toAbsolutePath();
         parentStoragePath = parentStoragePath.normalize().toAbsolutePath();
-        if(file.startsWith(parentStoragePath)) {
+        if (file.startsWith(parentStoragePath)) {
             try {
-               Files.deleteIfExists(file);
+                Files.deleteIfExists(file);
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        }
-        else {
+        } else {
             System.err.println("Tried to delete " + file + ", which is not a sub-path of " + parentStoragePath);
         }
     }
@@ -48,6 +47,7 @@ public class PathUtils {
 
     /**
      * Same as Files.createDirectories, but throws a {@link RuntimeException}
+     *
      * @param path the path
      * @return the path
      */
@@ -61,7 +61,7 @@ public class PathUtils {
     }
 
     public static void createFileIfNotExists(Path filePath) {
-        if(!Files.isRegularFile(filePath)) {
+        if (!Files.isRegularFile(filePath)) {
             try {
                 Files.createFile(filePath);
             } catch (IOException e) {

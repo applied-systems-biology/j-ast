@@ -18,11 +18,11 @@ import java.util.*;
 @BackendTaskType(typeId = "image-calibrate-pixel-size-by-plate")
 public class CalibratePixelSizeBackendTaskWorkload implements BackendTaskWorkload {
 
-    private final ImageRepository imageRepository;
     private static final List<BackendTaskWorkloadDataSlot> INPUTS = Collections.singletonList(JASTDataSlot.Plate.toSlot());
     private static final List<BackendTaskWorkloadDataSlot> OUTPUTS = Collections.singletonList(JASTDataSlot.PixelSize.toSlot());
     private static final List<BackendTaskWorkloadParameterSlot> PARAMETERS = Collections.singletonList(
             new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotType.Number, "plate-diameter-mm", "Plate diameter (mm)", "The plate diameter in millimeters", 90));
+    private final ImageRepository imageRepository;
 
     @Autowired
     public CalibratePixelSizeBackendTaskWorkload(ImageRepository imageRepository) {
@@ -85,15 +85,15 @@ public class CalibratePixelSizeBackendTaskWorkload implements BackendTaskWorkloa
         runJIPipe(params, projectFilePath, null, "", progressInfo);
 
         List<Map<String, String>> updatedMetadata = readCsv(params, Paths.get("metadata_updated.csv"));
-        List<Image> toSave= new ArrayList<>();
+        List<Image> toSave = new ArrayList<>();
         for (Map<String, String> map : updatedMetadata) {
             String imageId = map.get("#ImageId");
             String pixelSize = map.get("PixelSize");
-            if(imageId != null && pixelSize != null) {
+            if (imageId != null && pixelSize != null) {
                 long imageId_ = Long.parseLong(imageId);
                 double pixelSize_ = Double.parseDouble(pixelSize);
                 Optional<Image> image = imageRepository.findById(imageId_);
-                if(image.isPresent()) {
+                if (image.isPresent()) {
                     image.get().setPixelSizeMillimeter(pixelSize_);
                     toSave.add(image.get());
                 }
