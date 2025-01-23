@@ -200,6 +200,41 @@ public interface BackendTaskWorkload {
         imageRepository.saveAll(images);
     }
 
+    default void readRawImages(Iterable<Long> imageIds, Path imageDirectory, ImageRepository imageRepository, ProgressInfo progressInfo) throws IOException {
+        Iterable<Image> images = imageRepository.findAllById(imageIds);
+        for (Image image : images) {
+            boolean changed = false;
+
+            Path imageFileName = imageDirectory.resolve(image.getId() + ".png");
+            if (Files.isRegularFile(imageFileName)) {
+                progressInfo.log("Reading annotation from " + imageFileName);
+                try {
+                    BufferedImage rawImage = ImageIO.read(imageFileName.toFile());
+
+                    // Check the size
+                    if (rawImage.getWidth() != image.getImageWidth() || rawImage.getHeight() != image.getImageHeight()) {
+                        throw new IllegalArgumentException("Image dimensions do not match");
+                    }
+
+                    image.setRawData(ImageUtils.toPNGByteArray(rawImage));
+
+                    // Mark as changed
+                    changed = true;
+                } catch (Throwable e) {
+                    LOGGER.error("Unable to read annotation from {}", imageFileName, e);
+                }
+            }
+
+            if (changed) {
+                // Update the image as well
+                image.rebuildThumbnail();
+                image.incrementVersion();
+            }
+        }
+
+        imageRepository.saveAll(images);
+    }
+
     default ResultItem createResultItemFromPath(Path file, Path resultDirectory, ProgressInfo progressInfo) {
         String path = StringUtils.nullToEmpty(resultDirectory.relativize(file).getParent());
         String name = file.getFileName().toString();
