@@ -12,7 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.awt.image.BufferedImage;
+import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,7 +23,7 @@ import java.util.Optional;
 public class InvertRawImageBackendTaskWorkload implements BackendTaskWorkload {
 
     private static final List<BackendTaskWorkloadDataSlot> INPUTS = List.of(JASTDataSlot.Raw.toSlot());
-    private static final List<BackendTaskWorkloadDataSlot> OUTPUTS = List.of();
+    private static final List<BackendTaskWorkloadDataSlot> OUTPUTS = List.of(JASTDataSlot.Raw.toSlot());
     private static final List<BackendTaskWorkloadParameterSlot> PARAMETERS = List.of();
     private final ImageRepository imageRepository;
 
@@ -78,20 +80,12 @@ public class InvertRawImageBackendTaskWorkload implements BackendTaskWorkload {
     @Override
     @Transactional(Transactional.TxType.REQUIRES_NEW)
     public void execute(BackendTaskWorkloadParams params, ProgressInfo progressInfo) throws Throwable {
-        List<Image> toSave = new ArrayList<>();
-        for (Long imageId : params.getPayload().getImageIds()) {
-            progressInfo.log("Processing image " + imageId);
-            Optional<Image> image_ = imageRepository.findById(imageId);
-            if (image_.isPresent()) {
-                Image image = image_.get();
-                BufferedImage bufferedImage = ImageUtils.fromPNGBytes(image.getRawData());
-                BufferedImage inverted = ImageUtils.invertImage(bufferedImage);
-                image.setRawData(ImageUtils.toPNGByteArray(inverted));
-                image.setThumbnailData(ImageUtils.toPNGByteArrayThumbnail(inverted));
-                image.incrementVersion();
-                toSave.add(image);
-            }
-        }
-        imageRepository.saveAll(toSave);
+        writeRawImages(params, params.getPayload().getImageIds(), imageRepository, progressInfo);
+
+        Path projectFilePath = writeSharedFile(params, "invert-image.jip");
+        progressInfo.log("Project file is " + projectFilePath);
+        runJIPipe(params, projectFilePath, Collections.emptyMap(), "", progressInfo);
+
+        readRawImages(params.getPayload().getImageIds(), params.getTmpPath().resolve("raw_updated"), imageRepository, progressInfo);
     }
 }

@@ -10,8 +10,7 @@
         <q-scroll-area class="unsorted-scroll-area" visible>
           <div class="grid-row grid-row-unsorted bg-indigo-1">
             <div
-              v-for="(k, columnIndex) in (projectImages?.unsortedRow.images
-                .length || 0) + 1"
+              v-for="(k, columnIndex) in Math.min(maxNumRenderedUnsorted, numUnsorted) + 1"
               :key="`col-${columnIndex}`"
               class="grid-slot"
               @dragover.prevent="onDragOver(new SlotIndex(-1, columnIndex))"
@@ -31,6 +30,10 @@
                 @image-selected="onImageSelected"
               />
             </div>
+            <q-btn icon="refresh" flat class="q-ma-sm load-more-unsorted" @click="maxNumRenderedUnsorted += 5" no-caps>
+              <div class="text-uppercase">Show more items ({{ Math.max(0, numUnsorted - Math.min(maxNumRenderedUnsorted, numUnsorted)) }} left)</div>
+              <div class="text-caption">Items may be hidden for performance reasons</div>
+            </q-btn>
           </div>
         </q-scroll-area>
       </q-card-section>
@@ -176,6 +179,12 @@ const maxNumRenderedRows = ref(10);
 const numRenderedRows = computed(() => {
   return Math.min(numRows.value, maxNumRenderedRows.value);
 });
+
+const numUnsorted = computed(() => {
+ return projectImages.value?.unsortedRow.images.length || 0
+})
+const maxNumRenderedUnsorted = ref(10);
+
 const imagesWithRunningTasks = computed(() => {
   const result = new Set<number>();
   if (projectBackendTasks.value) {
@@ -469,5 +478,11 @@ $grid-column-label-height: 5rem;
   width: $grid-item-width;
   height: $grid-item-height;
   cursor: grab;
+}
+
+.load-more-unsorted {
+  width: $grid-item-width;
+  height: $grid-item-height;
+  border: 2px solid #ccc;
 }
 </style>
