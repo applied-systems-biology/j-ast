@@ -38,16 +38,16 @@ public class ResultItem {
     @ManyToOne(fetch = FetchType.LAZY)
     private Result result;
 
-    @Lob
-    @Column(name = "raw_data", columnDefinition = "BLOB")
+    
+    @Column(name = "raw_data", columnDefinition = "BYTEA")
     private byte[] rawData;
 
-    @Lob
-    @Column(name = "visualization_data", columnDefinition = "BLOB")
+    
+    @Column(name = "visualization_data", columnDefinition = "BYTEA")
     private byte[] visualizationData;
 
-    @Lob
-    @Column(name = "thumbnail_data", columnDefinition = "BLOB")
+    
+    @Column(name = "thumbnail_data", columnDefinition = "BYTEA")
     private byte[] thumbnailData;
 
     @Column(name = "type")

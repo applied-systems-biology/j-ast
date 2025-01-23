@@ -14,6 +14,12 @@ import java.util.Base64;
 public class ImageUtils {
 
     public static final int DEFAULT_THUMBNAIL_SIZE = 128;
+    public static byte[] DUMMY_THUMBNAIL_BYTES;
+
+    static {
+        BufferedImage img = new BufferedImage(DEFAULT_THUMBNAIL_SIZE, DEFAULT_THUMBNAIL_SIZE, BufferedImage.TYPE_INT_RGB);
+        DUMMY_THUMBNAIL_BYTES = toPNGByteArray(img);
+    }
 
     public static BufferedImage createThumbnail(BufferedImage image) {
         return createThumbnail(image, DEFAULT_THUMBNAIL_SIZE, DEFAULT_THUMBNAIL_SIZE);
@@ -218,4 +224,7 @@ public class ImageUtils {
         }
     }
 
+    public static byte[] getDummyThumbnailBytes() {
+        return DUMMY_THUMBNAIL_BYTES;
+    }
 }

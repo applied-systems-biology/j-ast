@@ -38,7 +38,7 @@
       <q-separator />
 
       <q-card-actions>
-        <q-btn flat @click.stop="selectAllUnsorted">Select all unsorted</q-btn>
+        <q-btn color="green" @click.stop="selectAllUnsorted" icon="select_all">Select all unsorted</q-btn>
       </q-card-actions>
 
       <q-separator />
