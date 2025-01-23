@@ -7,6 +7,7 @@ import java.util.List;
 @ConfigurationProperties(prefix = "runtime")
 public class RuntimeConfig {
     private String customTempDirectory;
+    private String dataDirectory;
     private String fijiPath;
     private String fijiExecutablePath;
     private String fijiWrapper;
@@ -77,5 +78,13 @@ public class RuntimeConfig {
 
     public void setFijiArgs(List<String> fijiArgs) {
         this.fijiArgs = fijiArgs;
+    }
+
+    public String getDataDirectory() {
+        return dataDirectory;
+    }
+
+    public void setDataDirectory(String dataDirectory) {
+        this.dataDirectory = dataDirectory;
     }
 }

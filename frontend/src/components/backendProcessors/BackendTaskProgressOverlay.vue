@@ -92,30 +92,17 @@ useIntervalFn(queryBackend, 2500);
 
 </script>
 <style scoped lang="scss">
-.log {
-  font-family: monospace;
-  text-wrap: wrap;
-  font-size: 0.65rem;
-  text-overflow: ellipsis;
-  overflow: hidden;
-  height: 150px;
-}
 
 .log-container {
   font-family: monospace;
   text-wrap: wrap;
-  font-size: 0.65rem;
+  font-size: 0.55rem;
   height: 150px;
   overflow: hidden;
-  position: relative;
-}
-
-.log-line {
-  white-space: nowrap;
 }
 
 .log-enter-active, .log-leave-active {
-  transition: transform 0.5s linear, opacity 0.5s ease;
+  transition: transform 0.3s linear, opacity 0.5s ease;
 }
 
 .log-enter-from {
@@ -124,7 +111,7 @@ useIntervalFn(queryBackend, 2500);
 }
 
 .log-leave-to {
-  transform: translateY(-100%);
+  //transform: translateY(-100%);
   opacity: 0;
 }
 </style>

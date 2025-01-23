@@ -33,7 +33,8 @@ runtime:
   fiji-wrapper-enabled: true
   fiji-wrapper: '/usr/bin/xvfb-run'
   fiji-wrapper-args: [ '-a' ]
-  custom-temp-directory: "./storage/data"
+  custom-temp-directory: "./storage/tmp"
+  data-directory: "./storage/data"
   shared-resources-directory: "./share"
 accounts:
   admin-username: 'admin@localhost'
