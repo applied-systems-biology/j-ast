@@ -225,6 +225,7 @@
           v-model:backend-tasks="projectBackendTasks"
           :show-unsorted="drawerUnsortedImages"
         />
+        <BackendTaskProgressOverlay  v-model:backend-tasks="projectBackendTasks" />
       </q-page>
     </q-page-container>
   </q-layout>
@@ -270,6 +271,7 @@ import ProjectResultsButton from 'components/layout/ProjectResultsButton.vue';
 import { ResultPayload } from "src/types/results";
 import { generateAndDownloadZip, ZipItem } from "src/types/zip";
 import { formatFileSize } from "src/types/utils";
+import BackendTaskProgressOverlay from 'components/backendProcessors/BackendTaskProgressOverlay.vue';
 
 const $q = useQuasar();
 const $route = useRoute();

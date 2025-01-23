@@ -127,6 +127,22 @@ public class TaskController {
         return ResponseEntity.ok(payload);
     }
 
+    @GetMapping("/api/task/{id}/running-log")
+    public ResponseEntity<String> getRunningTaskLog(@PathVariable long id, Authentication authentication) {
+        Optional<BackendTask> task_ = backendTaskRepository.findById(id);
+        if(task_.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
+        BackendTask task = task_.get();
+        if(!task.getProject().canAccess(authentication)) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
+        }
+        if(task.isRunning()) {
+
+        }
+        return ResponseEntity.ok("Status: " + task.getStatus());
+    }
+
     @GetMapping("/api/task/{id}/log")
     public ResponseEntity<String> getTaskLog(@PathVariable long id, Authentication authentication) {
         Optional<BackendTask> task_ = backendTaskRepository.findById(id);

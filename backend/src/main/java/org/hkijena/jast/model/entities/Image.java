@@ -63,12 +63,14 @@ public class Image {
     @Column(name = "group_column")
     private Integer groupColumn = -1;
 
-    
-    @Column(name = "raw_data", columnDefinition = "BYTEA")
+
+    @Column(name = "raw_data", columnDefinition = "BLOB")
+    @Lob
     private byte[] rawData;
 
-    
-    @Column(name = "thumbnail_data", columnDefinition = "BYTEA")
+
+    @Column(name = "thumbnail_data", columnDefinition = "BLOB")
+    @Lob
     private byte[] thumbnailData;
 
     @Column(name = "version")
@@ -114,7 +116,7 @@ public class Image {
     public List<MaskImageAnnotation> getFilteredMaskImageAnnotations() {
         Map<String, MaskImageAnnotation> result = new HashMap<>();
         for (MaskImageAnnotation annotation : maskImageAnnotations) {
-            if(!StringUtils.isNullOrEmpty(annotation.getType()) && !result.containsKey(annotation.getType())) {
+            if (!StringUtils.isNullOrEmpty(annotation.getType()) && !result.containsKey(annotation.getType())) {
                 result.put(annotation.getType(), annotation);
             }
         }
@@ -257,7 +259,7 @@ public class Image {
 
     public void rebuildThumbnail() {
         BufferedImage raw = ImageUtils.fromPNGBytes(this.rawData);
-        if(raw == null) {
+        if (raw == null) {
             return;
         }
         rebuildThumbnail(raw);
@@ -267,7 +269,7 @@ public class Image {
         BufferedImage thumbnail = ImageUtils.createThumbnail(originalImage);
         for (MaskImageAnnotation annotation : getFilteredMaskImageAnnotations()) {
             BufferedImage annotationThumbnail = ImageUtils.fromPNGBytes(annotation.getThumbnailData());
-            if(annotationThumbnail != null) {
+            if (annotationThumbnail != null) {
                 BufferedImage gradient = ImageUtils.calculateGradient(annotationThumbnail);
                 ImageUtils.overlayMask(thumbnail, gradient, ColorUtils.paletteColorFromString(annotation.getType()), 0.8);
             }
@@ -277,7 +279,7 @@ public class Image {
 
     public MaskImageAnnotation getOrCreateMaskAnnotation(String annotationTypeId, AtomicBoolean responseShouldSave) {
         for (MaskImageAnnotation annotation : getFilteredMaskImageAnnotations()) {
-            if(annotation.getType().equals(annotationTypeId)) {
+            if (annotation.getType().equals(annotationTypeId)) {
                 return annotation;
             }
         }
@@ -286,7 +288,7 @@ public class Image {
         MaskImageAnnotation annotation = new MaskImageAnnotation();
         annotation.setType(annotationTypeId);
         addMaskImageAnnotation(annotation);
-        if(responseShouldSave != null) {
+        if (responseShouldSave != null) {
             responseShouldSave.set(true);
         }
 
@@ -295,7 +297,7 @@ public class Image {
 
     public MaskImageAnnotation getMaskImageAnnotation(String annotationTypeId) {
         for (MaskImageAnnotation annotation : getFilteredMaskImageAnnotations()) {
-            if(annotation.getType().equals(annotationTypeId)) {
+            if (annotation.getType().equals(annotationTypeId)) {
                 return annotation;
             }
         }

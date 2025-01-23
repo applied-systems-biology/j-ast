@@ -39,15 +39,15 @@ public class ResultItem {
     private Result result;
 
     
-    @Column(name = "raw_data", columnDefinition = "BYTEA")
+    @Column(name = "raw_data", columnDefinition = "BLOB") @Lob
     private byte[] rawData;
 
     
-    @Column(name = "visualization_data", columnDefinition = "BYTEA")
+    @Column(name = "visualization_data", columnDefinition = "BLOB") @Lob
     private byte[] visualizationData;
 
     
-    @Column(name = "thumbnail_data", columnDefinition = "BYTEA")
+    @Column(name = "thumbnail_data", columnDefinition = "BLOB") @Lob
     private byte[] thumbnailData;
 
     @Column(name = "type")

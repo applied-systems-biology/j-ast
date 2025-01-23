@@ -31,11 +31,11 @@ public class MaskImageAnnotation {
     private String type;
 
     
-    @Column(name = "raw_data", columnDefinition = "BYTEA")
+    @Column(name = "raw_data", columnDefinition = "BLOB") @Lob
     private byte[] rawData;
 
     
-    @Column(name = "thumbnail_data", columnDefinition = "BYTEA")
+    @Column(name = "thumbnail_data", columnDefinition = "BLOB") @Lob
     private byte[] thumbnailData;
 
     public int getVersion() {
