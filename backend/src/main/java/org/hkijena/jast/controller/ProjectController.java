@@ -132,6 +132,7 @@ public class ProjectController {
         if (!project.canEdit(authentication)) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN);
         }
+        project.deleteFilesLater(fileStorageService);
         projectRepository.delete(project);
     }
 }

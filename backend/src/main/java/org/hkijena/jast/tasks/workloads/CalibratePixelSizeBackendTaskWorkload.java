@@ -81,7 +81,7 @@ public class CalibratePixelSizeBackendTaskWorkload implements BackendTaskWorkloa
     @Transactional(Transactional.TxType.REQUIRES_NEW)
     public void execute(BackendTaskWorkloadParams params, ProgressInfo progressInfo) throws Throwable {
         writeRawImages(params, params.getPayload().getImageIds(), imageRepository, fileStorageService, progressInfo);
-        writeMaskAnnotations(params, params.getPayload().getImageIds(), "plate", imageRepository, progressInfo);
+        writeMaskAnnotations(params, params.getPayload().getImageIds(), "plate", imageRepository, fileStorageService, progressInfo);
 
         Path projectFilePath = writeSharedFile(params, "image-calibrate-pixel-size-by-plate.jip");
         progressInfo.log("Project file is " + projectFilePath);

@@ -126,6 +126,7 @@ public class ImageController {
                 throw new ResponseStatusException(HttpStatus.FORBIDDEN);
             }
 
+            image.deleteFilesLater(fileStorageService);
             imageRepository.delete(image);
         } else {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);

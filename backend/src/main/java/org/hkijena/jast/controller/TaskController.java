@@ -77,7 +77,7 @@ public class TaskController {
         if (!project.canEdit(authentication)) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
         }
-        project.clearTasks();
+        project.clearTasks(fileStorageService);
         projectRepository.save(project);
     }
 

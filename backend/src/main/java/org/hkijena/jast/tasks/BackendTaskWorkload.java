@@ -103,14 +103,15 @@ public interface BackendTaskWorkload {
         }
     }
 
-    default void writeMaskAnnotations(BackendTaskWorkloadParams params, Iterable<Long> imageIds, String annotationTypeId, ImageRepository repository, ProgressInfo progressInfo) throws IOException {
+    @Transactional
+    default void writeMaskAnnotations(BackendTaskWorkloadParams params, Iterable<Long> imageIds, String annotationTypeId, ImageRepository repository, FileStorageService fileStorageService, ProgressInfo progressInfo) throws IOException {
         Path rawPath = PathUtils.resolveAndMakeSubDirectory(params.getTmpPath(), annotationTypeId);
         for (Image image : repository.findAllById(imageIds)) {
             progressInfo.log("Writing mask annotation " + annotationTypeId + " image data " + image.getId());
             MaskImageAnnotation annotation = image.getMaskImageAnnotation(annotationTypeId);
             Path pngPath = rawPath.resolve(image.getId() + ".png");
             if (annotation != null) {
-                Files.write(pngPath, annotation.getRawData());
+                Files.write(pngPath, annotation.getRawData(fileStorageService));
             } else {
                 BufferedImage dummy = new BufferedImage(image.getImageWidth(), image.getImageHeight(), BufferedImage.TYPE_BYTE_GRAY);
                 ImageIO.write(dummy, "PNG", pngPath.toFile());
@@ -118,7 +119,8 @@ public interface BackendTaskWorkload {
         }
     }
 
-    default void writeRowFirstMaskAnnotations(BackendTaskWorkloadParams params, Iterable<Long> imageIds, String annotationTypeId, ImageRepository repository, ProgressInfo progressInfo) throws IOException {
+    @Transactional
+    default void writeRowFirstMaskAnnotations(BackendTaskWorkloadParams params, Iterable<Long> imageIds, String annotationTypeId, ImageRepository repository, FileStorageService fileStorageService, ProgressInfo progressInfo) throws IOException {
         Path rawPath = PathUtils.resolveAndMakeSubDirectory(params.getTmpPath(), annotationTypeId);
         List<Image> images = Lists.newArrayList(repository.findAllById(imageIds));
         images.sort(Comparator.comparing(Image::getGroupColumn));
@@ -133,7 +135,7 @@ public interface BackendTaskWorkload {
                 MaskImageAnnotation annotation = image.getMaskImageAnnotation(annotationTypeId);
                 if (annotation != null) {
                     progressInfo.log("Found first available annotation " + annotationTypeId + " image data " + image.getId());
-                    firstAnnotation = annotation.getRawData();
+                    firstAnnotation = annotation.getRawData(fileStorageService);
                     break;
                 }
             }
@@ -147,7 +149,7 @@ public interface BackendTaskWorkload {
                 if (firstAnnotation != null) {
                     Files.write(pngPath, firstAnnotation);
                 } else if (annotation != null) {
-                    Files.write(pngPath, annotation.getRawData());
+                    Files.write(pngPath, annotation.getRawData(fileStorageService));
                 } else {
                     BufferedImage dummy = new BufferedImage(image.getImageWidth(), image.getImageHeight(), BufferedImage.TYPE_BYTE_GRAY);
                     ImageIO.write(dummy, "PNG", pngPath.toFile());
@@ -156,6 +158,7 @@ public interface BackendTaskWorkload {
         }
     }
 
+    @Transactional
     default void readMaskAnnotations(Iterable<Long> imageIds, Map<String, Path> annotationTypeIdDirectories,
                                      ImageRepository imageRepository, FileStorageService fileStorageService, ProgressInfo progressInfo) throws IOException {
         Iterable<Image> images = imageRepository.findAllById(imageIds);
@@ -178,8 +181,8 @@ public interface BackendTaskWorkload {
 
                         // Get or create annotation and increment its version
                         MaskImageAnnotation annotation = image.getOrCreateMaskAnnotation(annotationTypeId, null);
-                        annotation.setRawData(ImageUtils.toPNGByteArray(rawImage));
-                        annotation.setThumbnailData(ImageUtils.toPNGByteArrayThumbnail(rawImage));
+                        annotation.setRawData(fileStorageService, ImageUtils.toPNGByteArray(rawImage));
+                        annotation.setThumbnailData(fileStorageService, ImageUtils.toPNGByteArrayThumbnail(rawImage));
                         annotation.incrementVersion();
 
                         // Mark as changed
@@ -200,6 +203,7 @@ public interface BackendTaskWorkload {
         imageRepository.saveAll(images);
     }
 
+    @Transactional
     default void readRawImages(Iterable<Long> imageIds, Path imageDirectory, ImageRepository imageRepository, FileStorageService fileStorageService, ProgressInfo progressInfo) throws IOException {
         Iterable<Image> images = imageRepository.findAllById(imageIds);
         for (Image image : images) {
@@ -207,7 +211,7 @@ public interface BackendTaskWorkload {
 
             Path imageFileName = imageDirectory.resolve(image.getId() + ".png");
             if (Files.isRegularFile(imageFileName)) {
-                progressInfo.log("Reading annotation from " + imageFileName);
+                progressInfo.log("Reading raw image from " + imageFileName);
                 try {
                     BufferedImage rawImage = ImageIO.read(imageFileName.toFile());
 

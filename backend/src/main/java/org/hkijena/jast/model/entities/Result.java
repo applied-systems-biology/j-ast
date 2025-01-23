@@ -1,7 +1,9 @@
 package org.hkijena.jast.model.entities;
 
 import jakarta.persistence.*;
+import jakarta.transaction.Transactional;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hkijena.jast.services.FileStorageService;
 
 import java.io.Serial;
 import java.time.LocalDateTime;
@@ -95,5 +97,12 @@ public class Result {
 
     public void setProject(Project project) {
         this.project = project;
+    }
+
+    @Transactional
+    public void deleteFilesLater(FileStorageService fileStorageService) {
+        for (ResultItem resultItem : getResultItems()) {
+            resultItem.deleteFilesLater(fileStorageService);
+        }
     }
 }

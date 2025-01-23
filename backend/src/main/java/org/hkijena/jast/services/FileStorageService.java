@@ -77,11 +77,15 @@ public class FileStorageService {
      * @return True if the file was successfully deleted, false otherwise.
      */
     public boolean delete(String fileId) {
+        if(StringUtils.isNullOrEmpty(fileId)) {
+            return false;
+        }
         try {
             Path filePath = storageLocation.resolve(fileId).normalize();
             return Files.deleteIfExists(filePath);
         } catch (IOException e) {
-            throw new RuntimeException("Could not delete file", e);
+            LOGGER.error("Could not delete file", e);
+            return false;
         }
     }
 
@@ -101,6 +105,9 @@ public class FileStorageService {
      */
     @Transactional
     public void deleteLater(String fileId) {
+        if(StringUtils.isNullOrEmpty(fileId)) {
+            return;
+        }
         if (TransactionSynchronizationManager.isSynchronizationActive()) {
             TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
                 @Override

@@ -1,6 +1,7 @@
 package org.hkijena.jast.model.entities;
 
 import jakarta.persistence.*;
+import jakarta.transaction.Transactional;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hkijena.jast.model.TaskStatus;
 import org.hkijena.jast.payloads.task.BackendTaskPayload;
@@ -135,5 +136,10 @@ public class BackendTask {
 
     public void setLog(FileStorageService fileStorageService, String log) {
         logFileId = fileStorageService.store(log);
+    }
+
+    @Transactional
+    public void removeFilesLater(FileStorageService fileStorageService) {
+        fileStorageService.deleteLater(logFileId);
     }
 }

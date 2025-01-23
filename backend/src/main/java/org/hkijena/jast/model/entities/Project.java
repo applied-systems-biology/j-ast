@@ -2,17 +2,18 @@ package org.hkijena.jast.model.entities;
 
 import com.google.common.collect.ImmutableList;
 import jakarta.persistence.*;
+import jakarta.transaction.Transactional;
 import jakarta.validation.constraints.NotNull;
 import org.hkijena.jast.model.AdminPrincipal;
 import org.hkijena.jast.model.Privileges;
 import org.hkijena.jast.model.UserPrincipal;
+import org.hkijena.jast.services.FileStorageService;
 import org.hkijena.jast.utils.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
 
 import java.awt.*;
-import java.io.Serial;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -80,7 +81,8 @@ public class Project {
         task.setProject(this);
     }
 
-    public void removeTask(BackendTask task) {
+    public void removeTask(BackendTask task, FileStorageService fileStorageService) {
+        task.removeFilesLater(fileStorageService);
         tasks.remove(task);
         task.setProject(null);
     }
@@ -167,9 +169,19 @@ public class Project {
         return new ArrayList<>(result);
     }
 
-    public void clearTasks() {
+    public void clearTasks(FileStorageService fileStorageService) {
         for (BackendTask task : ImmutableList.copyOf(tasks)) {
-            removeTask(task);
+            removeTask(task, fileStorageService);
+        }
+    }
+
+    @Transactional
+    public void deleteFilesLater(FileStorageService fileStorageService) {
+        for (Image image : getImages()) {
+            image.deleteFilesLater(fileStorageService);
+        }
+        for (Result result : getResults()) {
+            result.deleteFilesLater(fileStorageService);
         }
     }
 }

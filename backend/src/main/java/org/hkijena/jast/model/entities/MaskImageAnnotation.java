@@ -1,10 +1,11 @@
 package org.hkijena.jast.model.entities;
 
 import jakarta.persistence.*;
+import jakarta.transaction.Transactional;
+import org.hkijena.jast.services.FileStorageService;
 import org.hkijena.jast.utils.ImageUtils;
 
 import java.awt.image.BufferedImage;
-import java.io.Serial;
 
 /**
  * An annotation associated to an image
@@ -27,15 +28,15 @@ public class MaskImageAnnotation {
     @Column(name = "type", columnDefinition = "TEXT")
     private String type;
 
+    @Column(name = "raw_data_file_id", columnDefinition = "TEXT")
+    private String rawDataFileId;
 
-    @Column(name = "raw_data", columnDefinition = "LONGBLOB")
-    @Lob
-    private byte[] rawData;
+    @Column(name = "raw_data_file_size")
+    private Long rawDataFileSize = 0L;
 
+    @Column(name = "thumbnail_data_file_id", columnDefinition = "TEXT")
+    private String thumbnailDataFileId;
 
-    @Column(name = "thumbnail_data", columnDefinition = "LONGBLOB")
-    @Lob
-    private byte[] thumbnailData;
 
     /**
      * Checks if a type ID is valid
@@ -83,20 +84,49 @@ public class MaskImageAnnotation {
         this.image = image;
     }
 
-    public byte[] getRawData() {
-        return rawData;
+    public String getRawDataFileId() {
+        return rawDataFileId;
     }
 
-    public void setRawData(byte[] rawData) {
-        this.rawData = rawData;
+    public void setRawDataFileId(String rawDataFileId) {
+        this.rawDataFileId = rawDataFileId;
     }
 
-    public byte[] getThumbnailData() {
-        return thumbnailData;
+    public String getThumbnailDataFileId() {
+        return thumbnailDataFileId;
     }
 
-    public void setThumbnailData(byte[] thumbnailData) {
-        this.thumbnailData = thumbnailData;
+    public void setThumbnailDataFileId(String thumbnailDataFileId) {
+        this.thumbnailDataFileId = thumbnailDataFileId;
+    }
+
+    public byte[] getRawData(FileStorageService fileStorageService) {
+        byte[] bytes = fileStorageService.loadOrNull(rawDataFileId);
+        if (bytes == null) {
+            return ImageUtils.toPNGByteArray(new BufferedImage(image.getImageWidth(), image.getImageHeight(), BufferedImage.TYPE_BYTE_GRAY));
+        }
+        return bytes;
+    }
+
+    @Transactional
+    public void setRawData(FileStorageService fileStorageService, byte[] rawData) {
+        fileStorageService.deleteLater(rawDataFileId); // Delete old version
+        rawDataFileId = fileStorageService.store(rawData);
+        rawDataFileSize = (long) rawData.length;
+    }
+
+    public byte[] getThumbnailData(FileStorageService fileStorageService) {
+        byte[] bytes = fileStorageService.loadOrNull(thumbnailDataFileId);
+        if (bytes == null) {
+            return ImageUtils.DUMMY_THUMBNAIL_BYTES;
+        }
+        return bytes;
+    }
+
+    @Transactional
+    public void setThumbnailData(FileStorageService fileStorageService, byte[] thumbnailData) {
+        fileStorageService.deleteLater(thumbnailDataFileId); // Delete old version
+        thumbnailDataFileId = fileStorageService.store(thumbnailData);
     }
 
     /**
@@ -104,13 +134,30 @@ public class MaskImageAnnotation {
      *
      * @param image the image used as size reference
      */
-    public void resetToMask(Image image) {
+    @Transactional
+    public void resetToMask(FileStorageService fileStorageService, Image image) {
+        fileStorageService.deleteLater(rawDataFileId); // Delete old version
+        fileStorageService.deleteLater(thumbnailDataFileId); // Delete old version
+
         BufferedImage img = new BufferedImage(image.getImageWidth(), image.getImageHeight(), BufferedImage.TYPE_BYTE_GRAY);
-        this.rawData = ImageUtils.toPNGByteArray(img);
-        this.thumbnailData = ImageUtils.toPNGByteArrayThumbnail(img);
+        this.rawDataFileId = fileStorageService.store(ImageUtils.toPNGByteArray(img));
+        this.thumbnailDataFileId = fileStorageService.store(ImageUtils.toPNGByteArrayThumbnail(img));
     }
 
     public void incrementVersion() {
         this.setVersion(this.getVersion() + 1);
+    }
+
+    public void deleteFilesLater(FileStorageService fileStorageService) {
+        fileStorageService.deleteLater(rawDataFileId);
+        fileStorageService.deleteLater(thumbnailDataFileId);
+    }
+
+    public long getRawDataFileSize() {
+        return rawDataFileSize != null ? rawDataFileSize : 0;
+    }
+
+    public void setRawDataFileSize(long rawDataFileLength) {
+        this.rawDataFileSize = rawDataFileLength;
     }
 }

@@ -2,6 +2,7 @@ package org.hkijena.jast.model.entities;
 
 import io.hypersistence.utils.hibernate.type.json.JsonType;
 import jakarta.persistence.*;
+import jakarta.transaction.Transactional;
 import jakarta.validation.constraints.NotNull;
 import org.hibernate.annotations.Type;
 import org.hkijena.jast.model.AssayType;
@@ -66,7 +67,7 @@ public class Image {
     private String rawDataFileId;
 
     @Column(name = "raw_data_file_size")
-    private long rawDataFileSize = 0;
+    private Long rawDataFileSize = 0L;
 
     @Column(name = "thumbnail_data_file_id", columnDefinition = "TEXT")
     private String thumbnailDataFileId;
@@ -92,7 +93,7 @@ public class Image {
     }
 
     public long getRawDataFileSize() {
-        return rawDataFileSize;
+        return rawDataFileSize != null ? rawDataFileSize : 0;
     }
 
     public void setRawDataFileSize(long rawDataFileSize) {
@@ -291,6 +292,7 @@ public class Image {
         setGroupRow(payload.getGroupRow());
     }
 
+    @Transactional
     public void rebuildThumbnail(FileStorageService fileStorageService) {
         BufferedImage raw = fileStorageService.loadPngOrNull(rawDataFileId);
         if (raw == null) {
@@ -299,15 +301,17 @@ public class Image {
         rebuildThumbnail(fileStorageService, raw);
     }
 
+    @Transactional
     public void rebuildThumbnail(FileStorageService fileStorageService, BufferedImage originalImage) {
         BufferedImage thumbnail = ImageUtils.createThumbnail(originalImage);
         for (MaskImageAnnotation annotation : getFilteredMaskImageAnnotations()) {
-            BufferedImage annotationThumbnail = ImageUtils.fromPNGBytes(annotation.getThumbnailData());
+            BufferedImage annotationThumbnail = ImageUtils.fromPNGBytes(annotation.getThumbnailData(fileStorageService));
             if (annotationThumbnail != null) {
                 BufferedImage gradient = ImageUtils.calculateGradient(annotationThumbnail);
                 ImageUtils.overlayMask(thumbnail, gradient, ColorUtils.paletteColorFromString(annotation.getType()), 0.8);
             }
         }
+        fileStorageService.deleteLater(thumbnailDataFileId); // Delete old version
         setThumbnailDataFileId(fileStorageService.store(thumbnail));
     }
 
@@ -348,8 +352,20 @@ public class Image {
         return fileStorageService.load(rawDataFileId);
     }
 
+    @Transactional
     public void setRawData(FileStorageService fileStorageService, byte[] pngByteArray) {
+        fileStorageService.deleteLater(rawDataFileId); // Delete old version
         this.rawDataFileId = fileStorageService.store(pngByteArray);
-        this.rawDataFileSize = pngByteArray.length;
+        this.rawDataFileSize = (long) pngByteArray.length;
+    }
+
+    @Transactional
+    public void deleteFilesLater(FileStorageService fileStorageService) {
+        fileStorageService.deleteLater(rawDataFileId);
+        fileStorageService.deleteLater(thumbnailDataFileId);
+        for (MaskImageAnnotation annotation : getMaskImageAnnotations()) {
+            annotation.deleteFilesLater(fileStorageService);
+        }
+
     }
 }

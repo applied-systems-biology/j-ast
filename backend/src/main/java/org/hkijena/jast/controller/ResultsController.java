@@ -115,6 +115,7 @@ public class ResultsController {
         if (!result.getProject().canEdit(authentication)) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
         }
+        result.deleteFilesLater(fileStorageService);
         resultRepository.deleteById(id);
     }
 

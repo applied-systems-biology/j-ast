@@ -2,6 +2,7 @@ package org.hkijena.jast.model.entities;
 
 import io.hypersistence.utils.hibernate.type.json.JsonType;
 import jakarta.persistence.*;
+import jakarta.transaction.Transactional;
 import org.hibernate.annotations.Type;
 import org.hkijena.jast.model.ResultItemType;
 import org.hkijena.jast.services.FileStorageService;
@@ -41,7 +42,7 @@ public class ResultItem {
     private String rawDataFileId;
 
     @Column(name = "raw_data_file_size")
-    private long rawDataFileSize = 0;
+    private Long rawDataFileSize = 0L;
 
     @Column(name = "visualization_data_file_id", columnDefinition = "TEXT")
     private String visualizationDataFileId;
@@ -106,7 +107,7 @@ public class ResultItem {
     }
 
     public long getRawDataFileSize() {
-        return rawDataFileSize;
+        return rawDataFileSize != null ? rawDataFileSize : 0L;
     }
 
     public void setRawDataFileSize(long rawDataFileSize) {
@@ -159,10 +160,17 @@ public class ResultItem {
 
     public void setRawData(FileStorageService fileStorageService, byte[] byteArray) {
         this.rawDataFileId = fileStorageService.store(byteArray);
-        this.rawDataFileSize = byteArray.length;
+        this.rawDataFileSize = (long) byteArray.length;
     }
 
     public void setThumbnailData(FileStorageService fileStorageService, byte[] byteArray) {
         this.thumbnailDataFileId = fileStorageService.store(byteArray);
+    }
+
+    @Transactional
+    public void deleteFilesLater(FileStorageService fileStorageService) {
+        fileStorageService.deleteLater(rawDataFileId);
+        fileStorageService.deleteLater(visualizationDataFileId);
+        fileStorageService.deleteLater(thumbnailDataFileId);
     }
 }

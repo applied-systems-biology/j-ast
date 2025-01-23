@@ -15,6 +15,6 @@ public record MaskImageAnnotationPayload(@JsonProperty long id,
                 annotation.getImage().getId(),
                 annotation.getImage().getProject().getId(),
                 annotation.getType(),
-                annotation.getRawData() != null ? annotation.getRawData().length : 0);
+                annotation.getRawDataFileSize());
     }
 }
