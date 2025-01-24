@@ -56,10 +56,10 @@ api.interceptors.response.use(
 
     // Prevent infinite loop
     if(originalRequest.url == "/auth/refresh") {
-      authStore.doLogout();
+      // authStore.doLogout();
       Notify.create({
         type: 'negative',
-        message: 'Session expired. Please log in again.',
+        message: 'Authentication error (account/session expired or you uploaded too many images at once).',
       });
       await router.push("/")
       return Promise.reject(error);
@@ -72,10 +72,10 @@ api.interceptors.response.use(
         await authStore.doRefreshToken();
         return api(originalRequest);
       } catch (refreshError) {
-        authStore.doLogout();
+        // authStore.doLogout();
         Notify.create({
           type: 'negative',
-          message: 'Session expired. Please log in again.',
+          message: 'Authentication error (account/session expired or you uploaded too many images at once)',
         });
         await router.push("/")
         return Promise.reject(refreshError);
