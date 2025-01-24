@@ -50,7 +50,7 @@ public class SegmentDDADiskFastBackendTaskWorkload implements BackendTaskWorkloa
 
     @Override
     public String getName() {
-        return "Auto-detect DDA disk";
+        return "Auto-detect DDA disk (fast)";
     }
 
     @Override
@@ -101,10 +101,13 @@ public class SegmentDDADiskFastBackendTaskWorkload implements BackendTaskWorkloa
 
         Map<String, Object> parameterOverrides = new HashMap<>();
         for (BackendTaskParameterPayload parameter : params.getPayload().getParameters()) {
-            parameterOverrides.put(PARAMETER_OVERRIDES.get(parameter.getId()), parameter.getValue());
+            String key = PARAMETER_OVERRIDES.get(parameter.getId());
+            if(key != null) {
+                parameterOverrides.put(key, parameter.getValue());
+            }
         }
-        parameterOverrides.put(PARAMETER_OVERRIDES.get("areaScaleX_"), params.getPayload().getParameter("areaScale"));
-        parameterOverrides.put(PARAMETER_OVERRIDES.get("areaScaleY_"), params.getPayload().getParameter("areaScale"));
+        parameterOverrides.put(PARAMETER_OVERRIDES.get("areaScaleX_"), params.getPayload().getParameter("areaScale").getValue());
+        parameterOverrides.put(PARAMETER_OVERRIDES.get("areaScaleY_"), params.getPayload().getParameter("areaScale").getValue());
 
         Path projectFilePath = writeSharedFile(params, "image-segment-dda-disk-fast.jip");
         progressInfo.log("Project file is " + projectFilePath);

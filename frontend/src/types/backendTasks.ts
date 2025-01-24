@@ -145,6 +145,42 @@ export class BackendTaskPayload {
   }
 }
 
+export interface ProgressInfo {
+  current: number;
+  total: number;
+}
+
+const iterationPattern = /Iteration (\d+)\/(\d+)/;
+const iterationPattern2 = /\[(\d+)\/(\d+)]/;
+
+export function progressInfoIsIndeterminate(progressInfo: ProgressInfo | null): boolean {
+  if(progressInfo) {
+    return progressInfo.current == progressInfo.total
+  }
+  return true;
+}
+
+export function progressInfoValue(progressInfo: ProgressInfo | null): number {
+  if(progressInfo && progressInfo.total > 0) {
+    return progressInfo.current / progressInfo.total;
+  }
+  return 0
+}
+
+export function extractProgressInfoFromLog(text: string): ProgressInfo | null {
+  const match = text.match(iterationPattern);
+  if (match) {
+    return { current:  parseInt(match[1], 10), total: parseInt(match[2], 10)}
+  }
+  else {
+    const match2 = text.match(iterationPattern2);
+    if(match2) {
+      return { current:  parseInt(match2[1], 10), total: parseInt(match2[2], 10)}
+    }
+  }
+  return null;
+}
+
 export function imageHasRunningTask(imageId: number | undefined, tasks: BackendTaskPayload[] | undefined) {
   if (!imageId) return false;
   if (tasks) {

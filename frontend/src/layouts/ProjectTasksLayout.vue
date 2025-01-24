@@ -77,7 +77,7 @@
         <q-scroll-area ref="log-scroll-area" class="log-content" v-if="currentlyDisplayedTask.id > 0">
           <pre>{{ logText || "Loading..." }}</pre>
         </q-scroll-area>
-        <q-linear-progress :indeterminate="progress == null" :value="progress && progress.total > 0 ? progress?.current / progress?.total : 0" class="log-progress" v-if="currentlyDisplayedTask.id > 0 && currentlyDisplayedTask.isRunning()"/>
+        <q-linear-progress :indeterminate="progressInfoIsIndeterminate(progress)" :value="progressInfoValue(progress)" class="log-progress" v-if="currentlyDisplayedTask.id > 0 && currentlyDisplayedTask.isRunning()"/>
       </q-page>
     </q-page-container>
   </q-layout>
@@ -89,7 +89,13 @@ import HeaderLogoButtonComponent from 'components/layout/HeaderLogoButtonCompone
 import {computed, onMounted, ref, Ref, useTemplateRef} from 'vue';
 import {downloadFromApi, loadPayloadInstanceFromApi} from 'src/types/common';
 import { ProjectMetadataPayload } from 'src/types/project';
-import { BackendTaskPayload, TaskStatus } from 'src/types/backendTasks';
+import {
+  BackendTaskPayload,
+  extractProgressInfoFromLog,
+  ProgressInfo,
+  progressInfoIsIndeterminate, progressInfoValue,
+  TaskStatus
+} from 'src/types/backendTasks';
 import { useIntervalFn } from '@vueuse/core';
 import { api } from 'boot/axios';
 import {QScrollArea, useQuasar} from 'quasar';
@@ -100,17 +106,13 @@ import { ResultPayload } from 'src/types/results';
 import ToggleButton from "components/utils/ToggleButton.vue";
 import {onDialogYes} from "src/types/dialog";
 
-interface ProgressInfo {
-  current: number;
-  total: number;
-}
 
 const logScrollAreaComponent = useTemplateRef<QScrollArea>("log-scroll-area")
 const autoScrollEnabled = ref(true);
 
 const progress = ref<ProgressInfo | null>(null);
 let lastMatchTime = 0;
-const iterationPattern = /Iteration (\d+)\/(\d+)/;
+
 
 const $route = useRoute();
 const $q = useQuasar();
@@ -172,23 +174,14 @@ function switchToTask(task : BackendTaskPayload) {
 }
 
 function parseRunningProgress(text: string) {
-  let foundIteration = false;
-  let current = 0;
-  let total = 0;
-
-  const match = text.match(iterationPattern);
-  if (match) {
-    current = parseInt(match[1], 10);
-    total = parseInt(match[2], 10);
-    foundIteration = true;
-  }
+  const newProgress = extractProgressInfoFromLog(text)
 
   // Update progress bar
-  if(foundIteration) {
-    progress.value = { current, total };
+  if(newProgress) {
+    progress.value = newProgress;
     lastMatchTime = Date.now(); // Update the last match timestamp
   }
-  if (!foundIteration && Date.now() - lastMatchTime > 10000) {
+  if (!newProgress && Date.now() - lastMatchTime > 10000) {
     // Reset progress to null if 10 seconds have elapsed without a match
     progress.value = null;
   }

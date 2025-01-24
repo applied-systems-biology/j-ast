@@ -1,5 +1,6 @@
 package org.hkijena.jast.tasks;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import jakarta.transaction.Transactional;
 import org.apache.commons.csv.CSVFormat;
@@ -92,7 +93,10 @@ public interface BackendTaskWorkload {
         final String[] csvHeader = new String[]{"#ImageId", "#Experiment", "#Sample", "#TimePoint", "#AssayType", "PixelSize", "GroupRow", "GroupColumn"};
         try (FileWriter csvFileWriter = new FileWriter(csvPath.toFile())) {
             CSVPrinter csvPrinter = new CSVPrinter(csvFileWriter, CSVFormat.Builder.create().setDelimiter(',').setQuote('"').setHeader(csvHeader).build());
-            for (Image image : repository.findAllById(imageIds)) {
+            ImmutableList<Image> images = ImmutableList.copyOf(repository.findAllById(imageIds));
+            for (int i = 0; i < images.size(); i++) {
+                progressInfo.setProgress(i, images.size());
+                Image image = images.get(i);
                 progressInfo.log("Writing raw image data " + image.getId());
                 Path pngPath = rawPath.resolve(image.getId() + ".png");
                 Files.write(pngPath, image.getRawData(fileStorageService));
@@ -106,7 +110,10 @@ public interface BackendTaskWorkload {
     @Transactional
     default void writeMaskAnnotations(BackendTaskWorkloadParams params, Iterable<Long> imageIds, String annotationTypeId, ImageRepository repository, FileStorageService fileStorageService, ProgressInfo progressInfo) throws IOException {
         Path rawPath = PathUtils.resolveAndMakeSubDirectory(params.getTmpPath(), annotationTypeId);
-        for (Image image : repository.findAllById(imageIds)) {
+        ImmutableList<Image> images = ImmutableList.copyOf(repository.findAllById(imageIds));
+        for (int i = 0; i < images.size(); i++) {
+            progressInfo.setProgress(i, images.size());
+            Image image = images.get(i);
             progressInfo.log("Writing mask annotation " + annotationTypeId + " image data " + image.getId());
             MaskImageAnnotation annotation = image.getMaskImageAnnotation(annotationTypeId);
             Path pngPath = rawPath.resolve(image.getId() + ".png");
@@ -161,8 +168,10 @@ public interface BackendTaskWorkload {
     @Transactional
     default void readMaskAnnotations(Iterable<Long> imageIds, Map<String, Path> annotationTypeIdDirectories,
                                      ImageRepository imageRepository, FileStorageService fileStorageService, ProgressInfo progressInfo) throws IOException {
-        Iterable<Image> images = imageRepository.findAllById(imageIds);
-        for (Image image : images) {
+        List<Image> images = ImmutableList.copyOf(imageRepository.findAllById(imageIds));
+        for (int i = 0; i < images.size(); i++) {
+            progressInfo.setProgress(i, images.size());
+            Image image = images.get(i);
             boolean changed = false;
 
             for (Map.Entry<String, Path> entry : annotationTypeIdDirectories.entrySet()) {
@@ -205,8 +214,10 @@ public interface BackendTaskWorkload {
 
     @Transactional
     default void readRawImages(Iterable<Long> imageIds, Path imageDirectory, ImageRepository imageRepository, FileStorageService fileStorageService, ProgressInfo progressInfo) throws IOException {
-        Iterable<Image> images = imageRepository.findAllById(imageIds);
-        for (Image image : images) {
+        List<Image> images = ImmutableList.copyOf(imageRepository.findAllById(imageIds));
+        for (int i = 0; i < images.size(); i++) {
+            progressInfo.setProgress(i, images.size());
+            Image image = images.get(i);
             boolean changed = false;
 
             Path imageFileName = imageDirectory.resolve(image.getId() + ".png");
