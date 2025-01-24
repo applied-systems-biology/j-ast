@@ -16,6 +16,7 @@ import org.hkijena.jast.tasks.BackendTaskWorkloadParams;
 import org.hkijena.jast.utils.PathUtils;
 import org.hkijena.jast.utils.ProgressInfo;
 import org.hkijena.jast.utils.StringUtils;
+import org.jobrunr.jobs.JobId;
 import org.jobrunr.jobs.context.JobContext;
 import org.jobrunr.scheduling.JobBuilder;
 import org.jobrunr.scheduling.JobScheduler;
@@ -74,7 +75,8 @@ public class BackendTaskService {
             params.setLockFilePath(params.getTmpPath().resolve("lockfile"));
             PathUtils.createFileIfNotExists(params.getLockFilePath());
 
-            jobScheduler.create(JobBuilder.aJob().withLabels("taskId-" + newTask.getId(), "projectId-" + newTask.getProject().getId()).withDetails(() -> startBackendTask(params, JobContext.Null)));
+            JobId jobId = jobScheduler.create(JobBuilder.aJob().withLabels("taskId-" + newTask.getId(), "projectId-" + newTask.getProject().getId()).withDetails(() -> startBackendTask(params, JobContext.Null)));
+            newTask.setJobId(jobId.asUUID().toString());
         }
     }
 

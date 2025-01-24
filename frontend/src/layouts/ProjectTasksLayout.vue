@@ -99,7 +99,6 @@ import ProjectResultsButton from 'components/layout/ProjectResultsButton.vue';
 import { ResultPayload } from 'src/types/results';
 import ToggleButton from "components/utils/ToggleButton.vue";
 import {onDialogYes} from "src/types/dialog";
-import {sendFailureNotification} from "src/types/notification";
 
 interface ProgressInfo {
   current: number;
