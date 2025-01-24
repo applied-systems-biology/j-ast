@@ -48,7 +48,7 @@ export const useAuthStore = defineStore('auth', {
         this.accessToken = response.data.accessToken;
         this.refreshToken = response.data.refreshToken
       } catch (error) {
-        this.doLogout();
+        // this.doLogout();
         throw error;
       }
     }

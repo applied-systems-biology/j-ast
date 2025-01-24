@@ -15,7 +15,7 @@
         </transition-group>
       </q-card-section>
       <q-card-section  v-if="!collapsed">
-        <q-linear-progress indeterminate />
+        <q-linear-progress :indeterminate="progress == null" :value="progress && progress.total > 0 ? progress?.current / progress?.total : 0" />
       </q-card-section>
     </q-card>
   </q-dialog>
@@ -26,7 +26,13 @@ import { computed, ref } from 'vue';
 import { BackendTaskPayload, TaskStatus } from 'src/types/backendTasks';
 import ToggleButton from 'components/utils/ToggleButton.vue';
 import { api } from 'boot/axios';
-// import { api } from 'boot/axios';
+interface ProgressInfo {
+  current: number;
+  total: number;
+}
+const progress = ref<ProgressInfo | null>(null);
+let lastMatchTime = 0;
+const iterationPattern = /Iteration (\d+)\/(\d+)/;
 
 const pollingInterval = 2500;
 
@@ -64,6 +70,9 @@ function fetchLogs(raw : string) {
 // Function to display logs with smooth updates
 async function updateDisplayedLogs(newLogs: { id: number; text: string }[]) {
   const delay = (pollingInterval / newLogs.length) * 0.75; // Delay per line
+  let foundIteration = false;
+  let current = 0;
+  let total = 0;
 
   for (const log of newLogs) {
     await new Promise(resolve => setTimeout(resolve, delay)); // Wait for the delay
@@ -75,6 +84,24 @@ async function updateDisplayedLogs(newLogs: { id: number; text: string }[]) {
     if (displayedLogs.value.length > maxDisplayedLogs) {
       displayedLogs.value.shift(); // Remove the oldest log
     }
+
+    // Handle progress iteration
+    const match = log.text.match(iterationPattern);
+    if (match) {
+      current = parseInt(match[1], 10);
+      total = parseInt(match[2], 10);
+      foundIteration = true;
+    }
+  }
+
+  // Update progress bar
+  if(foundIteration) {
+    progress.value = { current, total };
+    lastMatchTime = Date.now(); // Update the last match timestamp
+  }
+  if (!foundIteration && Date.now() - lastMatchTime > 10000) {
+    // Reset progress to null if 10 seconds have elapsed without a match
+    progress.value = null;
   }
 }
 
