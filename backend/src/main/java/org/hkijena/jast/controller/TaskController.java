@@ -16,6 +16,8 @@ import org.hkijena.jast.services.ProjectService;
 import org.hkijena.jast.tasks.BackendTaskWorkload;
 import org.hkijena.jast.utils.JsonUtils;
 import org.hkijena.jast.utils.StringUtils;
+import org.jobrunr.jobs.JobId;
+import org.jobrunr.scheduling.JobScheduler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -40,9 +42,10 @@ public class TaskController {
     private final BackendTaskService backendTaskService;
     private final FileStorageService fileStorageService;
     private final RuntimeConfig runtimeConfig;
+    private final JobScheduler jobScheduler;
 
     @Autowired
-    public TaskController(ProjectService projectService, ImageRepository imageRepository, BackendTaskRegistry backendTaskRegistry, ProjectRepository projectRepository, BackendTaskRepository backendTaskRepository, BackendTaskService backendTaskService, FileStorageService fileStorageService, RuntimeConfig runtimeConfig) {
+    public TaskController(ProjectService projectService, ImageRepository imageRepository, BackendTaskRegistry backendTaskRegistry, ProjectRepository projectRepository, BackendTaskRepository backendTaskRepository, BackendTaskService backendTaskService, FileStorageService fileStorageService, RuntimeConfig runtimeConfig, JobScheduler jobScheduler) {
         this.projectService = projectService;
         this.imageRepository = imageRepository;
         this.backendTaskRegistry = backendTaskRegistry;
@@ -51,6 +54,7 @@ public class TaskController {
         this.backendTaskService = backendTaskService;
         this.fileStorageService = fileStorageService;
         this.runtimeConfig = runtimeConfig;
+        this.jobScheduler = jobScheduler;
     }
 
     @GetMapping("/api/task/list-types")
@@ -127,6 +131,7 @@ public class TaskController {
 
         // Immediately schedule the job
         backendTaskService.enqueueTask(task);
+        task = backendTaskRepository.save(task);
 
         return ResponseEntity.ok(payload);
     }
@@ -167,5 +172,23 @@ public class TaskController {
         }
         String log = fileStorageService.loadStringOrNull(task.getLogFileId());
         return ResponseEntity.ok(StringUtils.orElse(log, "No log available for task " + task.getId()));
+    }
+
+    @PostMapping("/api/task/{id}/cancel")
+    public void cancelTask(@PathVariable long id, Authentication authentication) {
+        Optional<BackendTask> task_ = backendTaskRepository.findById(id);
+        if (task_.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
+        BackendTask task = task_.get();
+        if (!task.getProject().canEdit(authentication)) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
+        }
+        if(task.isRunning()) {
+            if(!StringUtils.isNullOrEmpty(task.getJobId())) {
+                JobId jobId = JobId.parse(task.getJobId());
+                jobScheduler.delete(jobId);
+            }
+        }
     }
 }

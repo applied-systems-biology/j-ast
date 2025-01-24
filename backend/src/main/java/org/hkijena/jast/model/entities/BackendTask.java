@@ -48,6 +48,9 @@ public class BackendTask {
     @Column(name = "tmp_path")
     private String tmpPath;
 
+    @Column(name = "job_id")
+    private String jobId = "";
+
     public String getTmpPath() {
         return tmpPath;
     }
@@ -141,5 +144,13 @@ public class BackendTask {
     @Transactional
     public void removeFilesLater(FileStorageService fileStorageService) {
         fileStorageService.deleteLater(logFileId);
+    }
+
+    public void setJobId(String jobId) {
+        this.jobId = jobId;
+    }
+
+    public String getJobId() {
+        return jobId;
     }
 }

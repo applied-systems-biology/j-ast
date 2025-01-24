@@ -26,6 +26,7 @@
           >Clear
         </q-btn>
         <q-btn color="green" icon="download" label="Download log" v-if="!currentlyDisplayedTask.isRunning() && currentlyDisplayedTask.id > 0" @click="downloadFullLog"/>
+        <q-btn color="red-4" icon="cancel" label="Cancel task" v-if="currentlyDisplayedTask.isRunning() && currentlyDisplayedTask.id > 0" @click="cancelTask"/>
         <ToggleButton v-model="autoScrollEnabled" color="blue-5" selected-icon="fa-solid fa-square-check" not-selected-icon="fa-solid fa-square" label="Auto scroll" v-if="currentlyDisplayedTask.isRunning() && currentlyDisplayedTask.id > 0" @click="downloadFullLog"/>
         <div class="col-grow" />
         <ProjectResultsButton :project-id="projectId[0]" v-model="resultList"/>
@@ -97,6 +98,8 @@ import AuthManagerComponent from 'components/layout/AuthManagerComponent.vue';
 import ProjectResultsButton from 'components/layout/ProjectResultsButton.vue';
 import { ResultPayload } from 'src/types/results';
 import ToggleButton from "components/utils/ToggleButton.vue";
+import {onDialogYes} from "src/types/dialog";
+import {sendFailureNotification} from "src/types/notification";
 
 interface ProgressInfo {
   current: number;
@@ -222,6 +225,13 @@ function downloadFullLog() {
   if(currentlyDisplayedTask.value.id > 0 && currentlyDisplayedTask.value.isRunning()) {
     downloadFromApi(`/task/${currentlyDisplayedTask.value.id}/log`, "log.txt")
   }
+}
+
+function cancelTask() {
+  onDialogYes("Cancel task '" + currentlyDisplayedTask.value.name + "'",
+  "Do you really want to cancel the selected task?").then(() => {
+    api.post(`/task/${currentlyDisplayedTask.value.id}/cancel`, {})
+  })
 }
 
 onMounted(() => {
