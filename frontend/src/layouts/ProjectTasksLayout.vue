@@ -122,7 +122,15 @@ const resultList = ref<ResultPayload[]>();
 const sortedTasks = computed(() => {
   return [...projectBackendTasks.value].sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
 })
-const currentlyDisplayedTask = ref(new BackendTaskPayload())
+const currentlyDisplayedTaskId = ref(-1)
+const currentlyDisplayedTask = computed(() => {
+  for(const task of projectBackendTasks.value) {
+    if(task.id == currentlyDisplayedTaskId.value) {
+      return task;
+    }
+  }
+  return new BackendTaskPayload()
+})
 const logText = ref("")
 const logNeedsUpdating = ref(false);
 
@@ -157,7 +165,7 @@ function queryResultListBackend() {
 
 function switchToTask(task : BackendTaskPayload) {
   logText.value = ""
-  currentlyDisplayedTask.value = task;
+  currentlyDisplayedTaskId.value = task.id;
   logNeedsUpdating.value = true;
 }
 
