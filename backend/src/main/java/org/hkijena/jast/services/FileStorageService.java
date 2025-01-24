@@ -18,6 +18,8 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 @Service
@@ -35,6 +37,21 @@ public class FileStorageService {
         } catch (IOException e) {
             throw new RuntimeException("Could not create storage directory", e);
         }
+    }
+
+    public Set<String> findAllStoredFileIds() {
+        Set<String> result = new HashSet<>();
+        try(var stream = Files.list(storageLocation)) {
+          stream.forEach(path -> {
+              String fileName = path.getFileName().toString();
+              if(!fileName.startsWith(".") && fileName.contains("-")) {
+                 result.add(fileName);
+             }
+          });
+        } catch (IOException e) {
+            LOGGER.error("Could not list stored files", e);
+        }
+        return result;
     }
 
     /**
