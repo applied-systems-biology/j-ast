@@ -25,6 +25,8 @@
         <q-btn color="secondary" icon="clear_all" @click="clearAll"
           >Clear
         </q-btn>
+        <q-btn color="green" icon="download" label="Download log" v-if="!currentlyDisplayedTask.isRunning() && currentlyDisplayedTask.id > 0" @click="downloadFullLog"/>
+        <ToggleButton v-model="autoScrollEnabled" color="blue-5" selected-icon="fa-solid fa-square-check" not-selected-icon="fa-solid fa-square" label="Auto scroll" v-if="currentlyDisplayedTask.isRunning() && currentlyDisplayedTask.id > 0" @click="downloadFullLog"/>
         <div class="col-grow" />
         <ProjectResultsButton :project-id="projectId[0]" v-model="resultList"/>
         <ProjectBackendTaskButton
@@ -43,8 +45,8 @@
         <q-card-section> There are currently no tasks.</q-card-section>
       </q-card>
       <q-list>
-        <q-item clickable v-ripple v-for="task in projectBackendTasks"
-                :key="task.id">
+        <q-item clickable v-ripple v-for="task in sortedTasks"
+                :key="task.id" @click="switchToTask(task)" :active="task.id == currentlyDisplayedTask.id">
           <q-item-section avatar>
             <q-icon name="check" v-if="task.status == TaskStatus.Successful" />
             <q-icon name="cancel" v-if="task.status == TaskStatus.Failed" />
@@ -65,8 +67,16 @@
       </q-list>
     </q-drawer>
     <q-page-container>
-      <q-page padding class="flex column q-gutter-sm">
-
+      <q-page padding class="flex column q-gutter-sm log">
+        <q-card v-if="currentlyDisplayedTask.id <= 0" class="bg-blue-grey-4 text-white">
+          <q-card-section>
+            No task selected.
+          </q-card-section>
+        </q-card>
+        <q-scroll-area ref="log-scroll-area" class="log-content" v-if="currentlyDisplayedTask.id > 0">
+          <pre>{{ logText || "Loading..." }}</pre>
+        </q-scroll-area>
+        <q-linear-progress :indeterminate="progress == null" :value="progress && progress.total > 0 ? progress?.current / progress?.total : 0" class="log-progress" v-if="currentlyDisplayedTask.id > 0 && currentlyDisplayedTask.isRunning()"/>
       </q-page>
     </q-page-container>
   </q-layout>
@@ -75,17 +85,30 @@
 <script setup lang="ts">
 import { useRoute } from 'vue-router';
 import HeaderLogoButtonComponent from 'components/layout/HeaderLogoButtonComponent.vue';
-import { onMounted, ref, Ref } from 'vue';
-import { loadPayloadInstanceFromApi } from 'src/types/common';
+import {computed, onMounted, ref, Ref, useTemplateRef} from 'vue';
+import {downloadFromApi, loadPayloadInstanceFromApi} from 'src/types/common';
 import { ProjectMetadataPayload } from 'src/types/project';
 import { BackendTaskPayload, TaskStatus } from 'src/types/backendTasks';
 import { useIntervalFn } from '@vueuse/core';
 import { api } from 'boot/axios';
-import { useQuasar } from 'quasar';
+import {QScrollArea, useQuasar} from 'quasar';
 import ProjectBackendTaskButton from 'components/layout/ProjectBackendTaskButton.vue';
 import AuthManagerComponent from 'components/layout/AuthManagerComponent.vue';
 import ProjectResultsButton from 'components/layout/ProjectResultsButton.vue';
 import { ResultPayload } from 'src/types/results';
+import ToggleButton from "components/utils/ToggleButton.vue";
+
+interface ProgressInfo {
+  current: number;
+  total: number;
+}
+
+const logScrollAreaComponent = useTemplateRef<QScrollArea>("log-scroll-area")
+const autoScrollEnabled = ref(true);
+
+const progress = ref<ProgressInfo | null>(null);
+let lastMatchTime = 0;
+const iterationPattern = /Iteration (\d+)\/(\d+)/;
 
 const $route = useRoute();
 const $q = useQuasar();
@@ -95,6 +118,13 @@ const projectPayload: Ref<ProjectMetadataPayload> = ref(
 );
 const projectBackendTasks = ref<Array<BackendTaskPayload>>([]);
 const resultList = ref<ResultPayload[]>();
+
+const sortedTasks = computed(() => {
+  return [...projectBackendTasks.value].sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+})
+const currentlyDisplayedTask = ref(new BackendTaskPayload())
+const logText = ref("")
+const logNeedsUpdating = ref(false);
 
 function clearAll() {
   $q.loading.show();
@@ -107,6 +137,7 @@ function clearAll() {
       $q.loading.hide();
     });
 }
+
 
 function queryTaskBackend() {
   loadPayloadInstanceFromApi(
@@ -124,6 +155,67 @@ function queryResultListBackend() {
   );
 }
 
+function switchToTask(task : BackendTaskPayload) {
+  logText.value = ""
+  currentlyDisplayedTask.value = task;
+  logNeedsUpdating.value = true;
+}
+
+function parseRunningProgress(text: string) {
+  let foundIteration = false;
+  let current = 0;
+  let total = 0;
+
+  const match = text.match(iterationPattern);
+  if (match) {
+    current = parseInt(match[1], 10);
+    total = parseInt(match[2], 10);
+    foundIteration = true;
+  }
+
+  // Update progress bar
+  if(foundIteration) {
+    progress.value = { current, total };
+    lastMatchTime = Date.now(); // Update the last match timestamp
+  }
+  if (!foundIteration && Date.now() - lastMatchTime > 10000) {
+    // Reset progress to null if 10 seconds have elapsed without a match
+    progress.value = null;
+  }
+}
+
+function updateLog() {
+  if(currentlyDisplayedTask.value.id > 0 && logNeedsUpdating.value) {
+    if(currentlyDisplayedTask.value.isRunning()) {
+      api.get(`/task/${currentlyDisplayedTask.value.id}/running-log`).then((data) => {
+        parseRunningProgress(data.data + "")
+        logText.value += (data.data + "")
+        if(autoScrollEnabled.value) {
+          logScrollAreaComponent.value?.setScrollPercentage("vertical", 1.0, 2200)
+        }
+      })
+    }
+    else {
+      // Download full log
+      api.get(`/task/${currentlyDisplayedTask.value.id}/log`).then((data) => {
+        logText.value = (data.data + "")
+      })
+        .catch(() => {
+          logText.value = "Error while loading log";
+        })
+        .finally(() => {
+          logNeedsUpdating.value = false;
+        })
+    }
+  }
+}
+
+function downloadFullLog() {
+  if(currentlyDisplayedTask.value.id > 0 && currentlyDisplayedTask.value.isRunning()) {
+    downloadFromApi(`/task/${currentlyDisplayedTask.value.id}/log`, "log.txt")
+  }
+}
+
 onMounted(() => {
   loadPayloadInstanceFromApi(
     `/project/${projectId}`,
@@ -136,5 +228,13 @@ onMounted(() => {
 
 useIntervalFn(queryTaskBackend, 2500);
 useIntervalFn(queryResultListBackend, 4000);
+useIntervalFn(updateLog, 2500);
 </script>
+<style scoped lang="scss">
+.log-content {
+  font-family: monospace;
+  flex-grow: 1;
+  height: 200px;
+}
+</style>
 
