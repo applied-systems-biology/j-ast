@@ -151,12 +151,19 @@ function clearAll() {
 }
 
 
-function queryTaskBackend() {
+function queryTaskBackend(withLoading : boolean = false) {
+  if(withLoading) {
+    $q.loading.show();
+  }
   loadPayloadInstanceFromApi(
     `/project/${projectId}/tasks`,
     BackendTaskPayload,
     projectBackendTasks
-  );
+  ).finally(() => {
+    if(withLoading) {
+      $q.loading.hide();
+    }
+  });
 }
 
 function queryResultListBackend() {
@@ -232,7 +239,7 @@ onMounted(() => {
     ProjectMetadataPayload,
     projectPayload
   );
-  queryTaskBackend();
+  queryTaskBackend(true);
   queryResultListBackend();
 });
 

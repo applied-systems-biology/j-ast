@@ -61,7 +61,7 @@ const selectionColor = computed(() => {
   const index = props.selectedImageIds.indexOf(props.currentImage.id)
   if(index >= 0) {
     if(index == props.selectedImageIds.length - 1) {
-      return "green-3"
+      return "blue-5"
     }
     else {
       return "blue-3"
