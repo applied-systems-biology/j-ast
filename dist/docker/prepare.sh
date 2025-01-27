@@ -15,3 +15,7 @@ cp -rv ../../share target/share
 ZIP_FILE="j-ast-docker-$(date +%d%m%Y).zip"
 rm $ZIP_FILE
 zip -rv $ZIP_FILE target Dockerfile README.md docker-compose.yml
+
+ZIP_FILE="j-ast-docker-update-$(date +%d%m%Y).zip"
+rm $ZIP_FILE
+zip -rv $ZIP_FILE target
