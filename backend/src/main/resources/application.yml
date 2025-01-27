@@ -35,6 +35,7 @@ runtime:
   custom-temp-directory: "./storage/tmp"
   data-directory: "./storage/data"
   shared-resources-directory: "./share"
+  keep-tmp: true
 accounts:
   admin-username: 'admin@localhost'
   admin-password: 'Ckw55ryzy1mXGxb8'

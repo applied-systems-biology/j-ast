@@ -15,6 +15,7 @@ public class RuntimeConfig {
     private List<String> fijiArgs;
     private List<String> fijiWrapperArgs;
     private String sharedResourcesDirectory;
+    private boolean keepTmp;
 
     public String getSharedResourcesDirectory() {
         return sharedResourcesDirectory;
@@ -86,5 +87,13 @@ public class RuntimeConfig {
 
     public void setDataDirectory(String dataDirectory) {
         this.dataDirectory = dataDirectory;
+    }
+
+    public boolean isKeepTmp() {
+        return keepTmp;
+    }
+
+    public void setKeepTmp(boolean keepTmp) {
+        this.keepTmp = keepTmp;
     }
 }

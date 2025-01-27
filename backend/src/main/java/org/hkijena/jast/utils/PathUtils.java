@@ -1,9 +1,8 @@
 package org.hkijena.jast.utils;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.nio.file.*;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -31,6 +30,39 @@ public class PathUtils {
 
     public static Path resolveAndMakeSubDirectory(Path directory, String name) {
         return resolveAndMakeSubDirectory(directory, Paths.get(name));
+    }
+
+    public static void deleteDirectoryRecursively(Path path, ProgressInfo progressInfo) {
+        FileVisitor<Path> visitor = new SimpleFileVisitor<Path>() {
+            @Override
+            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                progressInfo.log("Delete: " + file.toString());
+                Files.delete(file);
+                return FileVisitResult.CONTINUE;
+            }
+
+            @Override
+            public FileVisitResult visitFileFailed(Path file, IOException exc) throws IOException {
+                progressInfo.log("Delete: " + file.toString());
+                Files.delete(file);
+                return FileVisitResult.CONTINUE;
+            }
+
+            @Override
+            public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
+                if (exc != null) {
+                    throw exc;
+                }
+                progressInfo.log("Delete: " + dir.toString());
+                Files.delete(dir);
+                return FileVisitResult.CONTINUE;
+            }
+        };
+        try {
+            Files.walkFileTree(path, visitor);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public static Path resolveAndMakeSubDirectory(Path directory, Path name) {
