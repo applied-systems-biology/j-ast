@@ -1,6 +1,7 @@
 name: j-ast
 volumes:
   j_ast_data:
+  j_ast_jipipe_artifacts:
 services:
   webapp:
     build:
@@ -37,6 +38,7 @@ services:
       RUNTIME_SHARED_RESOURCES_DIRECTORY: /opt/app/share
     volumes:
       - j_ast_data:/webapp_data
+      - j_ast_jipipe_artifacts:/root/.local/share/JIPipe/artifacts
   mariadb:
     image: "mariadb:latest"
     restart: always
