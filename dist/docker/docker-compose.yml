@@ -1,6 +1,6 @@
-name: jipipe_growth_assay_webapp
+name: j-ast
 volumes:
-  jipipe_growth_assay_webapp_data:
+  j_ast_data:
 services:
   webapp:
     build: .
@@ -11,7 +11,7 @@ services:
       -  mariadb
     environment:
     # Context path (deploying the app)
-      SERVER_SERVLET_CONTEXT_PATH: '/jipipe-growth-analysis-webapp'
+      SERVER_SERVLET_CONTEXT_PATH: '/j-ast'
     # Memory for Fiji (8G = 8GB)
       RUNTIME_FIJI_ARGS_1: 8G
     # Maximum number of background jobs
@@ -28,9 +28,11 @@ services:
     #  SPRING_JPA_DATABASE_PLATFORM: "org.hibernate.dialect.MariaDBDialect"
     #  SPRING_DATASOURCE_DRIVERCLASSNAME: "org.mariadb.jdbc.Driver"
     # Data config
-      RUNTIME_CUSTOM_TEMP_DIRECTORY: /webapp_data
+      RUNTIME_DATA_DIRECTORY: /webapp_data
+      RUNTIME_CUSTOM_TEMP_DIRECTORY: /tmp
+      RUNTIME_SHARED_RESOURCES_DIRECTORY: /opt/app/share
     volumes:
-      - j-ast:/webapp_data
+      - j_ast_data:/webapp_data
   mariadb:
     image: "mariadb:latest"
     restart: always
@@ -42,5 +44,5 @@ services:
       MYSQL_PASSWORD: lBpuJweTQWGhvr0o
       MYSQL_ROOT_PASSWORD: ngek9RlN1BS3K82i
     volumes:
-      - j-ast:/var/lib/mysql
+      - j_ast_data:/var/lib/mysql
     
