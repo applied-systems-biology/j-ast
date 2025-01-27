@@ -3,7 +3,11 @@ volumes:
   j_ast_data:
 services:
   webapp:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        CACHEBUST: ${CACHEBUST} # Use environment variable or default value
     restart: always
     ports:
       - "8193:8081"

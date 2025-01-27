@@ -3,6 +3,9 @@ FROM eclipse-temurin:21-jdk-jammy
 # Install xvfb
 RUN apt update && DEBIAN_FRONTEND=noninteractive apt-get install -yq xvfb xorg r-base r-cran-jsonlite r-cran-rjson
 
+# Add a cache-busting argument
+ARG CACHEBUST=1
+
 # Copy web app & Fiji
 RUN mkdir /opt/app
 COPY target/webapp.jar /opt/app/webapp.jar
