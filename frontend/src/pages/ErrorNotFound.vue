@@ -8,7 +8,9 @@
       <div class="text-h2" style="opacity:.4">
         Error
       </div>
-
+      <div>
+        Current route: {{ $route.fullPath }}
+      </div>
       <q-btn
         class="q-mt-xl"
         color="white"
@@ -23,6 +25,9 @@
 </template>
 
 <script setup lang="ts">
+import { useRoute } from 'vue-router';
+
+const $route = useRoute()
 defineOptions({
   name: 'ErrorNotFound'
 });
