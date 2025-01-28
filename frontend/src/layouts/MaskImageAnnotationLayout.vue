@@ -141,7 +141,7 @@
           v-model="brushSize"
           :min="1"
           :step="1"
-          :max="100"
+          :max="250"
           snap
           label
           :markers="10"

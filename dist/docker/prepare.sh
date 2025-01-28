@@ -11,7 +11,7 @@ popd || exit 1
 rm -rvf package
 mkdir -p package/target
 
-cp -v ../../backend/target/j-ast-backend-*.jar package/webapp.jar
+cp -v ../../backend/target/j-ast-backend-*.jar package/target/webapp.jar
 cp -rv ../../bin package/target/bin
 cp -rv ../../share package/target/share
 cp Dockerfile package
