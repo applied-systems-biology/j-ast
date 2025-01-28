@@ -14,6 +14,8 @@ mkdir -p package/target
 cp -v ../../backend/target/j-ast-backend-*.jar package/webapp.jar
 cp -rv ../../bin package/target/bin
 cp -rv ../../share package/target/share
+cp Dockerfile package
+cp docker-compose.yml package
 
 ZIP_FILE="j-ast-docker-$(date +%d%m%Y).zip"
 rm $ZIP_FILE
