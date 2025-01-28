@@ -29,6 +29,7 @@ public class UserPayload {
         this.lastName = user.getLastName();
         this.affiliation = user.getAffiliation();
         this.allowLogin = user.isAllowLogin();
+        this.role = user.getRole();
     }
 
     @JsonGetter("affiliation")
