@@ -50,10 +50,13 @@ module.exports = configure(function (/* ctx */) {
         browser: [ 'es2019', 'edge88', 'firefox78', 'chrome87', 'safari13.1' ],
         node: 'node20'
       },
-
+      env: {
+        API_LOCATION: process.env.API_LOCATION || "/api",
+        FRONTEND_LOCATION: process.env.FRONTEND_LOCATION || "/",
+      },
       vueRouterMode: 'history', // available values: 'hash', 'history'
-      vueRouterBase: '/j-ast-new/',
-      publicPath: '/j-ast-new/',
+      vueRouterBase: process.env.FRONTEND_LOCATION || "/",
+      publicPath: process.env.FRONTEND_LOCATION || "/",
 
       // vueDevtools,
       // vueOptionsAPI: false,

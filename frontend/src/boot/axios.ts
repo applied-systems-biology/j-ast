@@ -11,7 +11,7 @@ declare module 'vue' {
   }
 }
 
-export const apiPath = "/j-ast-new/api"
+export const apiPath = process.env.API_LOCATION || "/api"
 
 // Be careful when using SSR for cross-request state pollution
 // due to creating a Singleton instance here;
