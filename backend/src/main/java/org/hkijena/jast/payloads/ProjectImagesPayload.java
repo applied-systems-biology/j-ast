@@ -5,7 +5,9 @@ import com.fasterxml.jackson.annotation.JsonSetter;
 import org.hkijena.jast.model.AssayType;
 import org.hkijena.jast.model.entities.Image;
 import org.hkijena.jast.model.entities.Project;
+import org.hkijena.jast.utils.ProgressInfo;
 
+import javax.swing.*;
 import java.util.*;
 
 /**
@@ -29,11 +31,13 @@ public class ProjectImagesPayload {
         for (Image image : project.getImages()) {
             imageIds.add(image.getId());
             imagesById.put(image.getId(), new ImagePayload(image));
+
+
             numRows = Math.max(numRows, image.getGroupRow() + 1);
 
             // Sort unsorted images
             if (image.getGroupRow() < 0 || image.getGroupColumn() < 0) {
-                unsortedRow.images.add(new ImagePayload(image));
+                unsortedRow.images.add(imagesById.get(image.getId()));
             }
         }
         unsortedRow.images.sort(Comparator.comparing(ImagePayload::getGroupColumn));
@@ -51,7 +55,7 @@ public class ProjectImagesPayload {
                 RowPayload row = new RowPayload();
                 for (Image image : project.getImages()) {
                     if (image.getGroupRow() == i && image.getGroupColumn() >= 0) {
-                        row.images.add(new ImagePayload(image));
+                        row.images.add(imagesById.get(image.getId()));
                     }
                 }
                 row.images.sort(Comparator.comparing(ImagePayload::getGroupColumn));
@@ -191,7 +195,7 @@ public class ProjectImagesPayload {
         }
     }
 
-    public void autoSort(List<ImagePayload> images, List<String> timePointOrder) {
+    public void autoSort(List<ImagePayload> images, List<String> timePointOrder, ProgressInfo progressInfo) {
         Map<String, Integer> columnIndicesPlus1 = new HashMap<>();
         int maxColumn = maxColumn();
         int minSearchColumnIndex = 0;
@@ -242,7 +246,7 @@ public class ProjectImagesPayload {
 
                     if (Objects.equals(image.getExperiment(), uniqueMetadata.get("experiment")) &&
                             Objects.equals(image.getSample(), uniqueMetadata.get("sample")) &&
-                            Objects.equals(image.getAssayType(), uniqueMetadata.get("assayType"))) {
+                            Objects.equals(image.getAssayType().name(), uniqueMetadata.get("assayType"))) {
 
                         if (columnIndex >= 0 && rowPayload.getImageByColumn(columnIndex) == null) {
                             newRow = rowIndex;
@@ -264,6 +268,8 @@ public class ProjectImagesPayload {
                 }
             }
         }
+
+        progressInfo.log("Sorting finished. " + numSuccess + " successes,  " + numFailed + " failures.");
     }
 
     /**

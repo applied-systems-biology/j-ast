@@ -155,11 +155,13 @@ function queryTaskBackend(withLoading : boolean = false) {
   if(withLoading) {
     $q.loading.show();
   }
+  // console.log("start query tasks")
   loadPayloadInstanceFromApi(
     `/project/${projectId}/tasks`,
     BackendTaskPayload,
     projectBackendTasks
   ).finally(() => {
+    // console.log("ended query tasks")
     if(withLoading) {
       $q.loading.hide();
     }

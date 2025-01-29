@@ -9,8 +9,6 @@ import org.hkijena.jast.model.TaskStatus;
 import org.hkijena.jast.model.entities.BackendTask;
 import org.hkijena.jast.payloads.task.BackendTaskPayload;
 import org.hkijena.jast.repositories.BackendTaskRepository;
-import org.hkijena.jast.repositories.ImageRepository;
-import org.hkijena.jast.repositories.ProjectRepository;
 import org.hkijena.jast.tasks.BackendTaskWorkload;
 import org.hkijena.jast.tasks.BackendTaskWorkloadParams;
 import org.hkijena.jast.utils.PathUtils;
@@ -44,14 +42,16 @@ public class BackendTaskService {
     private final BackendTaskRepository backendTaskRepository;
     private final JobScheduler jobScheduler;
     private final FileStorageService fileStorageService;
+    private final BackendTaskUtils backendTaskUtils;
 
     @Autowired
-    public BackendTaskService(RuntimeConfig runtimeConfig, BackendTaskRegistry backendTaskRegistry, BackendTaskRepository backendTaskRepository, JobScheduler jobScheduler, FileStorageService fileStorageService) {
+    public BackendTaskService(RuntimeConfig runtimeConfig, BackendTaskRegistry backendTaskRegistry, BackendTaskRepository backendTaskRepository, JobScheduler jobScheduler, FileStorageService fileStorageService, BackendTaskUtils backendTaskUtils) {
         this.runtimeConfig = runtimeConfig;
         this.backendTaskRegistry = backendTaskRegistry;
         this.backendTaskRepository = backendTaskRepository;
         this.jobScheduler = jobScheduler;
         this.fileStorageService = fileStorageService;
+        this.backendTaskUtils = backendTaskUtils;
     }
 
     @Transactional
@@ -116,14 +116,13 @@ public class BackendTaskService {
                 task.setLog(fileStorageService, progressInfo.getLog().toString());
                 backendTaskRepository.save(task);
             }
-        }
-        finally {
-            if(!runtimeConfig.isKeepTmp()) {
+        } finally {
+            if (!runtimeConfig.isKeepTmp()) {
                 logger.info("Deleting temporary directory " + params.getTmpPath());
                 try {
-                    FileSystemUtils.deleteRecursively( params.getTmpPath().toFile());
-                } catch (Exception e) {
-                    logger.error("Failed to delete temporary directory {}",  params.getTmpPath(), e);
+                    backendTaskUtils.clearTmp(params.getTmpPath(), progressInfo);
+                } catch (IOException e) {
+                    logger.error("Error cleaning temporary directory", e);
                 }
             }
         }

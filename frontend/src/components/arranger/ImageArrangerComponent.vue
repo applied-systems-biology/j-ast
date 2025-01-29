@@ -41,7 +41,12 @@
       <q-separator />
 
       <q-card-actions>
-        <q-btn color="green" @click.stop="selectAllUnsorted" icon="select_all">Select all unsorted</q-btn>
+        <q-btn color="secondary" @click.stop="selectAllUnsorted" icon="select_all">Select all unsorted</q-btn>
+        <q-btn color="green" @click.stop="quickAllInOnePreparation" icon="fa-solid fa-wand-magic-sparkles" label="All-in one preparation">
+          <q-tooltip>
+            Automatically attempts to fill in metadata, sort images, and find annotations.
+          </q-tooltip>
+        </q-btn>
       </q-card-actions>
 
       <q-separator />
@@ -139,7 +144,9 @@ import {
   ProjectImagesPayload,
   ProjectImagesPayloadRow,
 } from 'src/types/projectImages';
-import { BackendTaskPayload } from 'src/types/backendTasks';
+import { BackendTaskPayload, BackendTaskTypePayload, doBackendTask } from 'src/types/backendTasks';
+import { api } from 'boot/axios';
+import { plainToInstance } from 'class-transformer';
 
 defineProps<{
   showUnsorted: boolean;
@@ -302,10 +309,42 @@ function onImageSelected(imageId: number, exclusive: boolean) {
 
 function selectAllUnsorted() {
   if (projectImages.value) {
-    selectedImageIds.value = projectImages.value?.unsortedRow.images
+    const newSelection = projectImages.value?.unsortedRow.images
       .filter((img) => img.groupRow < 0)
-      .map((img) => img.id);
+      .map((img) => img.id)
+
+    selectedImageIds.value = newSelection;
+
+    if(newSelection.length > 0) {
+      if (newSelection && projectImages.value) {
+        api.get<BackendTaskTypePayload[]>(`/task/list-types`).then((response) => {
+          const available = plainToInstance(
+            BackendTaskTypePayload,
+            response.data
+          );
+          for(const tool of available) {
+            if(tool.taskId == "aio-prepare" && projectImages.value) {
+              // console.log(selectedImageIds.value);
+              const selectedImages = newSelection.map(id => projectImages.value!.getImageById(id)!)
+              // console.log(selectedImages)
+              doBackendTask(
+                [...selectedImages],
+                Number(projectImages.value.projectId),
+                tool,
+                projectImages.value
+              );
+              break;
+            }
+          }
+        });
+
+      }
+    }
   }
+}
+
+function quickAllInOnePreparation() {
+  selectAllUnsorted()
 }
 
 function selectColumn(columnIndex: number, event: Event) {

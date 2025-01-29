@@ -6,6 +6,7 @@ import org.hkijena.jast.model.TaskStatus;
 import org.hkijena.jast.model.entities.BackendTask;
 import org.hkijena.jast.tasks.BackendTaskWorkloadParameterSlotType;
 import org.hkijena.jast.utils.JsonUtils;
+import org.hkijena.jast.utils.StringUtils;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -139,5 +140,29 @@ public class BackendTaskPayload {
             parameters.add(parameter);
         }
         parameter.setValue(value);
+    }
+
+    public boolean getParameterAsBoolean(String key, boolean defaultValue) {
+        BackendTaskParameterPayload parameter = getParameter(key);
+        if(parameter == null) {
+            return defaultValue;
+        }
+        return (boolean) parameter.getValue();
+    }
+
+    public double getParameterAsDouble(String key, double defaultValue) {
+        BackendTaskParameterPayload parameter = getParameter(key);
+        if(parameter == null) {
+            return defaultValue;
+        }
+        return ((Number) parameter.getValue()).doubleValue();
+    }
+
+    public String getParameterAsString(String key, String defaultValue) {
+        BackendTaskParameterPayload parameter = getParameter(key);
+        if(parameter == null) {
+            return defaultValue;
+        }
+        return StringUtils.orElse(parameter.getValue(), defaultValue);
     }
 }

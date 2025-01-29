@@ -93,6 +93,13 @@ public class StringUtils {
         return input;
     }
 
+    public static String replaceAllIgnoreCase(String str, String text, String replacement) {
+        if (str == null || text == null || text.isEmpty()) {
+            return str;
+        }
+        return str.replaceAll("(?i)" + java.util.regex.Pattern.quote(text), java.util.regex.Matcher.quoteReplacement(replacement));
+    }
+
     /**
      * Converts a range string of format [range];[range];... to a list of integers
      *

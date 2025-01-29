@@ -1,10 +1,18 @@
 import { Dialog } from 'quasar';
-import ImageAutofillMetadataDialog, { ImageAutofillMetadataDialogFieldPayloadMode, ImageAutofillMetadataDialogPayload } from 'components/frontendProcessors/ImageAutofillMetadataDialog.vue';
+import ImageAutofillMetadataDialog, {
+  ImageAutofillMetadataDialogFieldPayloadMode,
+  ImageAutofillMetadataDialogPayload,
+} from 'components/frontendProcessors/ImageAutofillMetadataDialog.vue';
 import { removeExtensionIfPresent } from 'src/types/common';
 import { onDialogYes } from 'src/types/dialog';
-import ImageAutoSortByMetadataDialog, { ImageAutoSortByMetadataDialogPayload } from 'components/frontendProcessors/ImageAutoSortByMetadataDialog.vue';
-import { sendFailureNotification, sendSuccessNotification } from 'src/types/notification';
-import { parseAssayType } from 'src/types/assayType';
+import ImageAutoSortByMetadataDialog, {
+  ImageAutoSortByMetadataDialogPayload,
+} from 'components/frontendProcessors/ImageAutoSortByMetadataDialog.vue';
+import {
+  sendFailureNotification,
+  sendSuccessNotification,
+} from 'src/types/notification';
+import { AssayType, parseAssayType } from 'src/types/assayType';
 import { ImagePayload } from 'src/types/image';
 import { ProjectImagesPayload } from 'src/types/projectImages';
 import { splitByDelimiters } from 'src/types/utils';
@@ -228,6 +236,42 @@ export function doImageRemoveFileNameExtension(
   });
 }
 
+export function doImageEraseMetadata(images: ImagePayload[]): Promise<FrontEndImageProcessorResponse> {
+  return new Promise<FrontEndImageProcessorResponse>((resolve, reject) => {
+    onDialogYes(
+      'Remove all metadata',
+      "The following metadata values will be removed: assay type, experiment, sample, time point."
+    )
+      .then(() => {
+        for (const image of images) {
+          image.assayType = AssayType.Unknown
+          image.experiment = ""
+          image.sample = ""
+          image.timePoint = ""
+        }
+        resolve({needsUpload: true, needsFullReload: false, images: images});
+      })
+      .catch(reject);
+  })
+}
+
+export function doImageUnsort(images: ImagePayload[]): Promise<FrontEndImageProcessorResponse> {
+  return new Promise<FrontEndImageProcessorResponse>((resolve, reject) => {
+    onDialogYes(
+      'Unsort selected images',
+      "The selected images will be moved back into the 'Unsorted' drawer."
+    )
+      .then(() => {
+        for (const image of images) {
+          image.groupColumn = -1
+          image.groupRow = -1
+        }
+        resolve({needsUpload: true, needsFullReload: true, images: images});
+      })
+      .catch(reject);
+  })
+}
+
 export const frontEndImageProcessors: Array<FrontEndImageProcessor> = [
   {
     label: 'Remove file name extensions',
@@ -246,5 +290,17 @@ export const frontEndImageProcessors: Array<FrontEndImageProcessor> = [
     icon: 'fa-solid fa-shuffle',
     tooltip: 'Moves unsorted images into a slot that fits best',
     fn: doImageAutoSortByMetadata,
+  },
+  {
+    label: 'Clear metadata',
+    icon: 'fa-solid fa-eraser',
+    tooltip: 'Clears all metadata except the file name',
+    fn: doImageEraseMetadata,
+  },
+  {
+    label: 'Move to unsorted',
+    icon: 'fa-solid fa-eraser',
+    tooltip: 'Moves the selected images back into the "Unsorted" drawer',
+    fn: doImageUnsort,
   },
 ];

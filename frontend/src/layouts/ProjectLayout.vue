@@ -307,7 +307,7 @@ const availableBackendTasksCategories = computed(() => {
     return a.localeCompare(b); // Sort alphabetically for items not in the predefined order
   });
 
-  return sortedList;
+  return sortedList.filter((item) => !!item);
 });
 
 // Computed values

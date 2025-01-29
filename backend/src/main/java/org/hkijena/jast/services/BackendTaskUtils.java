@@ -26,6 +26,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
+import org.springframework.util.FileSystemUtils;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -36,6 +37,7 @@ import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 public class BackendTaskUtils {
@@ -459,6 +461,23 @@ public class BackendTaskUtils {
         // Immediately schedule the job
         backendTaskService.enqueueTask(task);
         task = backendTaskRepository.save(task);
+    }
+
+    public void clearTmp(Path tmpPath, ProgressInfo progressInfo) throws IOException {
+        try (Stream<Path> files = Files.walk(tmpPath)) {
+            files
+                    .sorted(Comparator.reverseOrder()) // Ensure files are deleted before directories
+                    .filter(path -> !path.getFileName().toString().equals("lockfile")) // Exclude lockfile
+                    .filter(path -> !path.equals(tmpPath)) // Avoid deleting the tempDir itself
+                    .forEach(path -> {
+                        progressInfo.log("Deleting: " + path);
+                        try {
+                            Files.delete(path);
+                        } catch (IOException e) {
+                            progressInfo.log("Failed to delete: " + path + " - " + e.getMessage());
+                        }
+                    });
+        }
     }
 
 //    /**
