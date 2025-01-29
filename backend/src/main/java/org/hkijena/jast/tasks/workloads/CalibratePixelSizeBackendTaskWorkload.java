@@ -4,11 +4,14 @@ import jakarta.transaction.Transactional;
 import org.hkijena.jast.model.AssayType;
 import org.hkijena.jast.model.entities.Image;
 import org.hkijena.jast.repositories.ImageRepository;
+import org.hkijena.jast.services.BackendTaskRegistry;
+import org.hkijena.jast.services.BackendTaskUtils;
 import org.hkijena.jast.services.FileStorageService;
 import org.hkijena.jast.tasks.*;
 import org.hkijena.jast.utils.JASTDataSlot;
 import org.hkijena.jast.utils.ProgressInfo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 import java.nio.file.Path;
@@ -23,13 +26,21 @@ public class CalibratePixelSizeBackendTaskWorkload implements BackendTaskWorkloa
     private static final List<BackendTaskWorkloadDataSlot> OUTPUTS = Collections.singletonList(JASTDataSlot.PixelSize.toSlot());
     private static final List<BackendTaskWorkloadParameterSlot> PARAMETERS = Collections.singletonList(
             new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotType.Number, "plate-diameter-mm", "Plate diameter (mm)", "The plate diameter in millimeters", 90));
+    private final BackendTaskUtils taskUtils;
     private final ImageRepository imageRepository;
     private final FileStorageService fileStorageService;
+    private BackendTaskRegistry registry;
 
     @Autowired
-    public CalibratePixelSizeBackendTaskWorkload(ImageRepository imageRepository, FileStorageService fileStorageService) {
+    public CalibratePixelSizeBackendTaskWorkload(BackendTaskUtils taskUtils, ImageRepository imageRepository, FileStorageService fileStorageService) {
+        this.taskUtils = taskUtils;
         this.imageRepository = imageRepository;
         this.fileStorageService = fileStorageService;
+    }
+
+    @Override
+    public void setRegistry(@Lazy BackendTaskRegistry registry) {
+        this.registry = registry;
     }
 
     @Override
@@ -80,14 +91,14 @@ public class CalibratePixelSizeBackendTaskWorkload implements BackendTaskWorkloa
     @Override
     @Transactional(Transactional.TxType.REQUIRES_NEW)
     public void execute(BackendTaskWorkloadParams params, ProgressInfo progressInfo) throws Throwable {
-        writeRawImages(params, params.getPayload().getImageIds(), imageRepository, fileStorageService, progressInfo);
-        writeMaskAnnotations(params, params.getPayload().getImageIds(), "plate", imageRepository, fileStorageService, progressInfo);
+        taskUtils.writeRawImages(params, params.getPayload().getImageIds(), imageRepository, fileStorageService, progressInfo);
+        taskUtils.writeMaskAnnotations(params, params.getPayload().getImageIds(), "plate", imageRepository, fileStorageService, progressInfo);
 
-        Path projectFilePath = writeSharedFile(params, "image-calibrate-pixel-size-by-plate.jip");
+        Path projectFilePath = taskUtils.writeSharedFile(params, "image-calibrate-pixel-size-by-plate.jip");
         progressInfo.log("Project file is " + projectFilePath);
-        runJIPipe(params, projectFilePath, null, "", progressInfo);
+        taskUtils.runJIPipe(params, projectFilePath, null, "", progressInfo);
 
-        List<Map<String, String>> updatedMetadata = readCsv(params, Paths.get("metadata_updated.csv"));
+        List<Map<String, String>> updatedMetadata = taskUtils.readCsv(params, Paths.get("metadata_updated.csv"));
         List<Image> toSave = new ArrayList<>();
         for (Map<String, String> map : updatedMetadata) {
             String imageId = map.get("#ImageId");

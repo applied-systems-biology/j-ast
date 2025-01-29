@@ -37,6 +37,7 @@ services:
       RUNTIME_DATA_DIRECTORY: /webapp_data
       RUNTIME_CUSTOM_TEMP_DIRECTORY: /tmp
       RUNTIME_SHARED_RESOURCES_DIRECTORY: /opt/app/share
+      RUNTIME_KEEP_TMP: false
     volumes:
       - j_ast_data:/webapp_data
       - j_ast_jipipe_artifacts:/root/.local/share/JIPipe/artifacts

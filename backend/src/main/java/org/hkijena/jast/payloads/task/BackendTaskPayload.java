@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.hkijena.jast.model.TaskStatus;
 import org.hkijena.jast.model.entities.BackendTask;
+import org.hkijena.jast.tasks.BackendTaskWorkloadParameterSlotType;
 import org.hkijena.jast.utils.JsonUtils;
 
 import java.time.LocalDateTime;
@@ -127,5 +128,16 @@ public class BackendTaskPayload {
             }
         }
         return null;
+    }
+
+    public void setParameter(String key, BackendTaskWorkloadParameterSlotType slotType, Object value) {
+        BackendTaskParameterPayload parameter = getParameter(key);
+        if(parameter == null) {
+            parameter = new BackendTaskParameterPayload();
+            parameter.setId(key);
+            parameter.setType(slotType);
+            parameters.add(parameter);
+        }
+        parameter.setValue(value);
     }
 }

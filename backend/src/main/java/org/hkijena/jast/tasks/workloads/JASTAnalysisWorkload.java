@@ -7,12 +7,15 @@ import org.hkijena.jast.payloads.task.BackendTaskParameterPayload;
 import org.hkijena.jast.repositories.ImageRepository;
 import org.hkijena.jast.repositories.ProjectRepository;
 import org.hkijena.jast.repositories.ResultRepository;
+import org.hkijena.jast.services.BackendTaskRegistry;
+import org.hkijena.jast.services.BackendTaskUtils;
 import org.hkijena.jast.services.FileStorageService;
 import org.hkijena.jast.tasks.*;
 import org.hkijena.jast.utils.JASTDataSlot;
 import org.hkijena.jast.utils.ProgressInfo;
 import org.hkijena.jast.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 import java.nio.file.Path;
@@ -45,13 +48,21 @@ public class JASTAnalysisWorkload implements BackendTaskWorkload {
     private final ProjectRepository projectRepository;
     private final ResultRepository resultRepository;
     private final FileStorageService fileStorageService;
+    private final BackendTaskUtils taskUtils;
+    private BackendTaskRegistry registry;
 
     @Autowired
-    public JASTAnalysisWorkload(ImageRepository imageRepository, ProjectRepository projectRepository, ResultRepository resultRepository, FileStorageService fileStorageService) {
+    public JASTAnalysisWorkload(ImageRepository imageRepository, ProjectRepository projectRepository, ResultRepository resultRepository, FileStorageService fileStorageService, BackendTaskUtils taskUtils) {
         this.imageRepository = imageRepository;
         this.projectRepository = projectRepository;
         this.resultRepository = resultRepository;
         this.fileStorageService = fileStorageService;
+        this.taskUtils = taskUtils;
+    }
+
+    @Override
+    public void setRegistry(@Lazy BackendTaskRegistry registry) {
+        this.registry = registry;
     }
 
     @Override
@@ -120,10 +131,10 @@ public class JASTAnalysisWorkload implements BackendTaskWorkload {
         List<Integer> thresholds = StringUtils.getIntegersFromRangeString(rawThresholds);
         parameterOverrides.put(PARAMETER_OVERRIDES.get("__thresholds"), thresholds.stream().map(t -> t / 100.0).toList());
 
-        writeRawImages(params, params.getPayload().getImageIds(), imageRepository, fileStorageService, progressInfo);
-        writeMaskAnnotations(params, params.getPayload().getImageIds(), "plate", imageRepository, fileStorageService, progressInfo);
-        writeMaskAnnotations(params, params.getPayload().getImageIds(), "strip-disk", imageRepository, fileStorageService, progressInfo);
-        writeRowFirstMaskAnnotations(params, params.getPayload().getImageIds(), "zoi-shape", imageRepository, fileStorageService, progressInfo);
+        taskUtils.writeRawImages(params, params.getPayload().getImageIds(), imageRepository, fileStorageService, progressInfo);
+        taskUtils.writeMaskAnnotations(params, params.getPayload().getImageIds(), "plate", imageRepository, fileStorageService, progressInfo);
+        taskUtils.writeMaskAnnotations(params, params.getPayload().getImageIds(), "strip-disk", imageRepository, fileStorageService, progressInfo);
+        taskUtils.writeRowFirstMaskAnnotations(params, params.getPayload().getImageIds(), "zoi-shape", imageRepository, fileStorageService, progressInfo);
 
         for (BackendTaskParameterPayload parameter : params.getPayload().getParameters()) {
             String overriddenKey = PARAMETER_OVERRIDES.get(parameter.getId());
@@ -132,14 +143,14 @@ public class JASTAnalysisWorkload implements BackendTaskWorkload {
             }
         }
 
-        Path projectFilePath = writeSharedFile(params, "j-ast-analysis.jip");
+        Path projectFilePath = taskUtils.writeSharedFile(params, "j-ast-analysis.jip");
         progressInfo.log("Project file is " + projectFilePath);
-        runJIPipe(params, projectFilePath, parameterOverrides, "", progressInfo);
+        taskUtils.runJIPipe(params, projectFilePath, parameterOverrides, "", progressInfo);
 
         String resultName = StringUtils.orElse(params.getPayload().getParameter("result-name").getValue(), "Visualization");
         String resultDescription = StringUtils.nullToEmpty(params.getPayload().getParameter("result-description").getValue());
         Project project = projectRepository.findById(params.getPayload().getProjectId()).get();
 
-        readResultsDirectory(resultName, resultDescription, params.getTmpPath().resolve("results"), project, projectRepository, fileStorageService, progressInfo);
+        taskUtils.readResultsDirectory(resultName, resultDescription, params.getTmpPath().resolve("results"), project, projectRepository, fileStorageService, progressInfo);
     }
 }

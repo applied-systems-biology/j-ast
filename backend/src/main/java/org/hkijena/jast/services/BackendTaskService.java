@@ -40,18 +40,14 @@ public class BackendTaskService {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
     private final RuntimeConfig runtimeConfig;
-    private final ImageRepository imageRepository;
-    private final ProjectRepository projectRepository;
     private final BackendTaskRegistry backendTaskRegistry;
     private final BackendTaskRepository backendTaskRepository;
     private final JobScheduler jobScheduler;
     private final FileStorageService fileStorageService;
 
     @Autowired
-    public BackendTaskService(RuntimeConfig runtimeConfig, ImageRepository imageRepository, ProjectRepository projectRepository, BackendTaskRegistry backendTaskRegistry, BackendTaskRepository backendTaskRepository, JobScheduler jobScheduler, FileStorageService fileStorageService) {
+    public BackendTaskService(RuntimeConfig runtimeConfig, BackendTaskRegistry backendTaskRegistry, BackendTaskRepository backendTaskRepository, JobScheduler jobScheduler, FileStorageService fileStorageService) {
         this.runtimeConfig = runtimeConfig;
-        this.projectRepository = projectRepository;
-        this.imageRepository = imageRepository;
         this.backendTaskRegistry = backendTaskRegistry;
         this.backendTaskRepository = backendTaskRepository;
         this.jobScheduler = jobScheduler;

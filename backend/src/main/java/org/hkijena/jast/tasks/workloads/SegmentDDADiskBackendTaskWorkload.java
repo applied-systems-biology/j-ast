@@ -4,11 +4,14 @@ import jakarta.transaction.Transactional;
 import org.hkijena.jast.model.AssayType;
 import org.hkijena.jast.payloads.task.BackendTaskParameterPayload;
 import org.hkijena.jast.repositories.ImageRepository;
+import org.hkijena.jast.services.BackendTaskRegistry;
+import org.hkijena.jast.services.BackendTaskUtils;
 import org.hkijena.jast.services.FileStorageService;
 import org.hkijena.jast.tasks.*;
 import org.hkijena.jast.utils.JASTDataSlot;
 import org.hkijena.jast.utils.ProgressInfo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 import java.nio.file.Path;
@@ -42,16 +45,24 @@ public class SegmentDDADiskBackendTaskWorkload implements BackendTaskWorkload {
 
     private final ImageRepository imageRepository;
     private final FileStorageService fileStorageService;
+    private final BackendTaskUtils taskUtils;
+    private BackendTaskRegistry registry;
 
     @Autowired
-    public SegmentDDADiskBackendTaskWorkload(ImageRepository imageRepository, FileStorageService fileStorageService) {
+    public SegmentDDADiskBackendTaskWorkload(ImageRepository imageRepository, FileStorageService fileStorageService, BackendTaskUtils taskUtils) {
         this.imageRepository = imageRepository;
         this.fileStorageService = fileStorageService;
+        this.taskUtils = taskUtils;
+    }
+
+    @Override
+    public void setRegistry(@Lazy BackendTaskRegistry registry) {
+        this.registry = registry;
     }
 
     @Override
     public String getName() {
-        return "Auto-detect DDA disk (fast)";
+        return "Auto-detect DDA disk";
     }
 
     @Override
@@ -97,8 +108,8 @@ public class SegmentDDADiskBackendTaskWorkload implements BackendTaskWorkload {
     @Override
     @Transactional(Transactional.TxType.REQUIRES_NEW)
     public void execute(BackendTaskWorkloadParams params, ProgressInfo progressInfo) throws Throwable {
-        writeRawImages(params, params.getPayload().getImageIds(), imageRepository, fileStorageService, progressInfo);
-        writeMaskAnnotations(params, params.getPayload().getImageIds(), "plate", imageRepository, fileStorageService, progressInfo);
+        taskUtils.writeRawImages(params, params.getPayload().getImageIds(), imageRepository, fileStorageService, progressInfo);
+        taskUtils.writeMaskAnnotations(params, params.getPayload().getImageIds(), "plate", imageRepository, fileStorageService, progressInfo);
 
         boolean fastAlgorithm = (boolean) params.getPayload().getParameter("fastAlgorithm").getValue();
 
@@ -115,12 +126,12 @@ public class SegmentDDADiskBackendTaskWorkload implements BackendTaskWorkload {
             parameterOverrides.put(PARAMETER_OVERRIDES.get("areaScaleY_"), params.getPayload().getParameter("areaScale").getValue());
         }
 
-        Path projectFilePath = writeSharedFile(params, fastAlgorithm ? "image-segment-dda-disk-fast.jip" : "image-segment-dda-disk.jip");
+        Path projectFilePath = taskUtils.writeSharedFile(params, fastAlgorithm ? "image-segment-dda-disk-fast.jip" : "image-segment-dda-disk.jip");
         progressInfo.log("Project file is " + projectFilePath);
-        runJIPipe(params, projectFilePath, parameterOverrides, "", progressInfo);
+        taskUtils.runJIPipe(params, projectFilePath, parameterOverrides, "", progressInfo);
 
         Map<String, Path> maskAnnotationsConfig = new HashMap<>();
         maskAnnotationsConfig.put("strip-disk", params.getTmpPath().resolve("strip-disk"));
-        readMaskAnnotations(params.getPayload().getImageIds(), maskAnnotationsConfig, imageRepository, fileStorageService, progressInfo);
+        taskUtils.readMaskAnnotations(params.getPayload().getImageIds(), maskAnnotationsConfig, imageRepository, fileStorageService, progressInfo);
     }
 }

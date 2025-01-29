@@ -7,12 +7,15 @@ import org.hkijena.jast.payloads.task.BackendTaskParameterPayload;
 import org.hkijena.jast.repositories.ImageRepository;
 import org.hkijena.jast.repositories.ProjectRepository;
 import org.hkijena.jast.repositories.ResultRepository;
+import org.hkijena.jast.services.BackendTaskRegistry;
+import org.hkijena.jast.services.BackendTaskUtils;
 import org.hkijena.jast.services.FileStorageService;
 import org.hkijena.jast.tasks.*;
 import org.hkijena.jast.utils.JASTDataSlot;
 import org.hkijena.jast.utils.ProgressInfo;
 import org.hkijena.jast.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 import java.nio.file.Path;
@@ -38,13 +41,21 @@ public class GenerateVisualizationsWorkload implements BackendTaskWorkload {
     private final ResultRepository resultRepository;
     private final ProjectRepository projectRepository;
     private final FileStorageService fileStorageService;
+    private final BackendTaskUtils taskUtils;
+    private BackendTaskRegistry registry;
 
     @Autowired
-    public GenerateVisualizationsWorkload(ImageRepository imageRepository, ResultRepository resultRepository, ProjectRepository projectRepository, FileStorageService fileStorageService) {
+    public GenerateVisualizationsWorkload(ImageRepository imageRepository, ResultRepository resultRepository, ProjectRepository projectRepository, FileStorageService fileStorageService, BackendTaskUtils taskUtils) {
         this.imageRepository = imageRepository;
         this.resultRepository = resultRepository;
         this.projectRepository = projectRepository;
         this.fileStorageService = fileStorageService;
+        this.taskUtils = taskUtils;
+    }
+
+    @Override
+    public void setRegistry(@Lazy BackendTaskRegistry registry) {
+        this.registry = registry;
     }
 
     @Override
@@ -95,10 +106,10 @@ public class GenerateVisualizationsWorkload implements BackendTaskWorkload {
     @Override
     @Transactional(Transactional.TxType.REQUIRES_NEW)
     public void execute(BackendTaskWorkloadParams params, ProgressInfo progressInfo) throws Throwable {
-        writeRawImages(params, params.getPayload().getImageIds(), imageRepository, fileStorageService, progressInfo);
-        writeMaskAnnotations(params, params.getPayload().getImageIds(), "strip-disk", imageRepository, fileStorageService, progressInfo);
-        writeMaskAnnotations(params, params.getPayload().getImageIds(), "zoi-shape", imageRepository, fileStorageService, progressInfo);
-        writeMaskAnnotations(params, params.getPayload().getImageIds(), "plate", imageRepository, fileStorageService, progressInfo);
+        taskUtils.writeRawImages(params, params.getPayload().getImageIds(), imageRepository, fileStorageService, progressInfo);
+        taskUtils.writeMaskAnnotations(params, params.getPayload().getImageIds(), "strip-disk", imageRepository, fileStorageService, progressInfo);
+        taskUtils.writeMaskAnnotations(params, params.getPayload().getImageIds(), "zoi-shape", imageRepository, fileStorageService, progressInfo);
+        taskUtils.writeMaskAnnotations(params, params.getPayload().getImageIds(), "plate", imageRepository, fileStorageService, progressInfo);
 
         Map<String, Object> parameterOverrides = new HashMap<>();
         for (BackendTaskParameterPayload parameter : params.getPayload().getParameters()) {
@@ -108,14 +119,14 @@ public class GenerateVisualizationsWorkload implements BackendTaskWorkload {
             }
         }
 
-        Path projectFilePath = writeSharedFile(params, "generate-visualizations.jip");
+        Path projectFilePath = taskUtils.writeSharedFile(params, "generate-visualizations.jip");
         progressInfo.log("Project file is " + projectFilePath);
-        runJIPipe(params, projectFilePath, parameterOverrides, "", progressInfo);
+        taskUtils.runJIPipe(params, projectFilePath, parameterOverrides, "", progressInfo);
 
         String resultName = StringUtils.orElse(params.getPayload().getParameter("result-name").getValue(), "Visualization");
         String resultDescription = StringUtils.nullToEmpty(params.getPayload().getParameter("result-description").getValue());
         Project project = projectRepository.findById(params.getPayload().getProjectId()).get();
 
-        readResultsDirectory(resultName, resultDescription, params.getTmpPath().resolve("results"), project, projectRepository, fileStorageService, progressInfo);
+        taskUtils.readResultsDirectory(resultName, resultDescription, params.getTmpPath().resolve("results"), project, projectRepository, fileStorageService, progressInfo);
     }
 }

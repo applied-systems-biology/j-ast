@@ -3,11 +3,14 @@ package org.hkijena.jast.tasks.workloads;
 import jakarta.transaction.Transactional;
 import org.hkijena.jast.model.AssayType;
 import org.hkijena.jast.repositories.ImageRepository;
+import org.hkijena.jast.services.BackendTaskRegistry;
+import org.hkijena.jast.services.BackendTaskUtils;
 import org.hkijena.jast.services.FileStorageService;
 import org.hkijena.jast.tasks.*;
 import org.hkijena.jast.utils.JASTDataSlot;
 import org.hkijena.jast.utils.ProgressInfo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 import java.nio.file.Path;
@@ -23,11 +26,19 @@ public class InvertRawImageBackendTaskWorkload implements BackendTaskWorkload {
     private static final List<BackendTaskWorkloadParameterSlot> PARAMETERS = List.of();
     private final ImageRepository imageRepository;
     private final FileStorageService fileStorageService;
+    private final BackendTaskUtils taskUtils;
+    private BackendTaskRegistry registry;
 
     @Autowired
-    public InvertRawImageBackendTaskWorkload(ImageRepository imageRepository, FileStorageService fileStorageService) {
+    public InvertRawImageBackendTaskWorkload(ImageRepository imageRepository, FileStorageService fileStorageService, BackendTaskUtils taskUtils) {
         this.imageRepository = imageRepository;
         this.fileStorageService = fileStorageService;
+        this.taskUtils = taskUtils;
+    }
+
+    @Override
+    public void setRegistry(@Lazy BackendTaskRegistry registry) {
+        this.registry = registry;
     }
 
     @Override
@@ -78,12 +89,12 @@ public class InvertRawImageBackendTaskWorkload implements BackendTaskWorkload {
     @Override
     @Transactional(Transactional.TxType.REQUIRES_NEW)
     public void execute(BackendTaskWorkloadParams params, ProgressInfo progressInfo) throws Throwable {
-        writeRawImages(params, params.getPayload().getImageIds(), imageRepository, fileStorageService, progressInfo);
+        taskUtils.writeRawImages(params, params.getPayload().getImageIds(), imageRepository, fileStorageService, progressInfo);
 
-        Path projectFilePath = writeSharedFile(params, "invert-image.jip");
+        Path projectFilePath = taskUtils.writeSharedFile(params, "invert-image.jip");
         progressInfo.log("Project file is " + projectFilePath);
-        runJIPipe(params, projectFilePath, Collections.emptyMap(), "", progressInfo);
+        taskUtils.runJIPipe(params, projectFilePath, Collections.emptyMap(), "", progressInfo);
 
-        readRawImages(params.getPayload().getImageIds(), params.getTmpPath().resolve("raw_updated"), imageRepository, fileStorageService, progressInfo);
+        taskUtils.readRawImages(params.getPayload().getImageIds(), params.getTmpPath().resolve("raw_updated"), imageRepository, fileStorageService, progressInfo);
     }
 }

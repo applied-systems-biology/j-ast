@@ -34,6 +34,7 @@ public class BackendTaskRegistry {
                     BackendTaskType annotation = taskClass.getAnnotation(BackendTaskType.class);
 
                     BackendTaskWorkload task = (BackendTaskWorkload) applicationContext.getBean(taskClass);
+                    task.setRegistry(this);
                     logger.info("Registering task {} as {}", task.getClass().getSimpleName(), annotation.typeId());
                     registeredTasks.put(annotation.typeId(), task);
                 } catch (Exception e) {
