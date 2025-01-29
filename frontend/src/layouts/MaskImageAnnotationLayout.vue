@@ -30,6 +30,7 @@
           </q-btn>
         </q-toolbar-title>
         <LoginButtonComponent />
+        <DocumentationComponent/>
       </q-toolbar>
       <q-toolbar class="bg-primary text-white edit-toolbar">
         <q-btn-toggle
@@ -262,6 +263,7 @@ import { AssayType } from 'src/types/assayType';
 import { ImagePayload, MaskImageAnnotationPayload } from 'src/types/image';
 import { mirrorImageData, MirrorOperationMode } from 'src/types/drawingMirror';
 import { KonvaEvent, MouseEventType, Position } from 'src/types/konva';
+import DocumentationComponent from "components/layout/DocumentationComponent.vue";
 
 const $q = useQuasar();
 const $route = useRoute();

@@ -42,7 +42,7 @@
 
       <q-card-actions>
         <q-btn color="secondary" @click.stop="selectAllUnsorted" icon="select_all">Select all unsorted</q-btn>
-        <q-btn color="green" @click.stop="quickAllInOnePreparation" icon="fa-solid fa-wand-magic-sparkles" label="All-in one preparation">
+        <q-btn color="green" @click.stop="quickAllInOnePreparation" icon="fa-solid fa-wand-magic-sparkles" label="All-in-one preparation">
           <q-tooltip>
             Automatically attempts to fill in metadata, sort images, and find annotations.
           </q-tooltip>

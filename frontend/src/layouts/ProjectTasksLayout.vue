@@ -20,6 +20,7 @@
           <div>Tasks</div>
         </q-toolbar-title>
         <AuthManagerComponent />
+        <DocumentationComponent/>
       </q-toolbar>
       <q-toolbar class="bg-primary text-white edit-toolbar">
         <q-btn color="secondary" icon="clear_all" @click="clearAll"
@@ -105,6 +106,7 @@ import ProjectResultsButton from 'components/layout/ProjectResultsButton.vue';
 import { ResultPayload } from 'src/types/results';
 import ToggleButton from "components/utils/ToggleButton.vue";
 import {onDialogYes} from "src/types/dialog";
+import DocumentationComponent from "components/layout/DocumentationComponent.vue";
 
 
 const logScrollAreaComponent = useTemplateRef<QScrollArea>("log-scroll-area")

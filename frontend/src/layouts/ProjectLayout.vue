@@ -17,6 +17,7 @@
           </q-btn-group>
         </q-toolbar-title>
         <AuthManagerComponent />
+        <DocumentationComponent/>
       </q-toolbar>
       <q-toolbar class="bg-primary text-white edit-toolbar">
         <ToggleButton
@@ -272,6 +273,7 @@ import { ResultPayload } from "src/types/results";
 import { generateAndDownloadZip, ZipItem } from "src/types/zip";
 import { formatFileSize } from "src/types/utils";
 import BackendTaskProgressOverlay from 'components/backendProcessors/BackendTaskProgressOverlay.vue';
+import DocumentationComponent from "components/layout/DocumentationComponent.vue";
 
 const $q = useQuasar();
 const $route = useRoute();

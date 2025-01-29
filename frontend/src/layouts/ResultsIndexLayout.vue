@@ -20,6 +20,7 @@
           <div>Results</div>
         </q-toolbar-title>
         <AuthManagerComponent />
+        <DocumentationComponent/>
       </q-toolbar>
       <q-toolbar class="bg-primary text-white edit-toolbar">
         <div class="col-grow" />
@@ -70,6 +71,7 @@ import { onDialogYes } from 'src/types/dialog';
 import { api } from 'boot/axios';
 import { sendFailureNotification, sendSuccessNotification } from 'src/types/notification';
 import { QTableColumn } from 'quasar';
+import DocumentationComponent from "components/layout/DocumentationComponent.vue";
 
 const $route = useRoute();
 const $router = useRouter();

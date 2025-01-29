@@ -6,6 +6,7 @@
           <HeaderLogoButtonComponent/>
         </q-toolbar-title>
         <LoginButtonComponent/>
+        <DocumentationComponent/>
       </q-toolbar>
     </q-header>
     <q-page-container>
@@ -21,6 +22,7 @@
 import ImprintComponent from "components/layout/ImprintComponent.vue";
 import LoginButtonComponent from "components/layout/AuthManagerComponent.vue";
 import HeaderLogoButtonComponent from "components/layout/HeaderLogoButtonComponent.vue";
+import DocumentationComponent from "components/layout/DocumentationComponent.vue";
 
 defineOptions({
   name: 'DefaultLayout'

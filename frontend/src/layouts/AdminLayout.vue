@@ -6,6 +6,7 @@
           <HeaderLogoButtonComponent/>
         </q-toolbar-title>
         <AuthManagerComponent/>
+        <DocumentationComponent/>
       </q-toolbar>
     </q-header>
     <q-drawer
@@ -160,6 +161,7 @@ import {sendFailureNotification, sendSuccessNotification} from "src/types/notifi
 import {api} from "boot/axios";
 import {instanceToPlain} from "class-transformer";
 import {ProjectMetadataPayload} from "src/types/project";
+import DocumentationComponent from "components/layout/DocumentationComponent.vue";
 
 const userList = ref<UserPayload[]>([])
 const projectList = ref<ProjectMetadataPayload[]>([])

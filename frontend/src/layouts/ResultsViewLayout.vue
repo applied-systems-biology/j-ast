@@ -31,6 +31,7 @@
           <div v-else>{{ resultPayload.name }}</div>
         </q-toolbar-title>
         <AuthManagerComponent/>
+        <DocumentationComponent/>
       </q-toolbar>
       <q-toolbar class="bg-primary text-white edit-toolbar">
         <q-btn-dropdown color="green" icon="download" label="Download">
@@ -110,6 +111,7 @@ import { formatFileSize, sortPathsByHierarchy } from "src/types/utils";
 import {QSpinnerHourglass, QTableColumn, useQuasar} from "quasar";
 import ResultItemThumbnailComponent from "components/results/ResultItemThumbnailComponent.vue";
 import {sendFailureNotification} from "src/types/notification";
+import DocumentationComponent from "components/layout/DocumentationComponent.vue";
 
 const filesViewPagination = {
   rowsPerPage: 100
