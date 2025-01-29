@@ -24,6 +24,15 @@ export function splitByDelimiters(input: string, delimiters: string): string[] {
   return input.split(delimiterRegex);
 }
 
+export function formatNumberPlural(number: number, singular : string): string {
+  if(number == 1) {
+    return number + " " + singular;
+  }
+  else {
+    return number + " " + singular + "s";
+  }
+}
+
 export function formatExpirationTime(seconds : number) {
   const expirationDate = new Date(Date.now() + seconds * 1000);
   return expirationDate.toLocaleString(); // Adjusts to the user's local timezone

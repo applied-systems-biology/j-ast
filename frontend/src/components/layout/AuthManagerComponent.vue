@@ -1,18 +1,21 @@
 <template>
   <div class="q-gutter-sm flex row flex-center">
-    <q-circular-progress
-      v-if="authStore.isGuest"
-      reverse
-      :min="0"
-      :max="authStore.limits.guestMaxExpireSeconds"
-      :value="authStore.limits.guestExpireSeconds"
-      size="32px"
-      track-color="blue-grey"
-      color="light-blue"
-      show-value
-    >
+    <q-btn v-if="authStore.isGuest" color="orange-5" no-caps @click="displayGuestInfoDialog = true" >
+      <q-icon name="warning" class="q-mr-sm"/>
+      <div class="q-mr-md">Limited account</div>
+      <q-circular-progress
+        reverse
+        :min="0"
+        :max="authStore.limits.guestMaxExpireSeconds"
+        :value="authStore.limits.guestExpireSeconds"
+        size="22px"
+        track-color="white"
+        color="red"
+      >
+      </q-circular-progress>
       <q-tooltip>This account will expire on {{ formatExpirationTime(authStore.limits.guestExpireSeconds) }}.</q-tooltip>
-    </q-circular-progress>
+    </q-btn>
+
     <q-btn
       v-if="authStore.role == 'Admin'"
       to="/admin"
@@ -43,6 +46,53 @@
       >Logout
     </q-btn>
   </div>
+
+  <!-- Guest info dialog -->
+  <q-dialog v-model="displayGuestInfoDialog">
+    <q-card>
+      <q-card-section class="row items-center q-pb-none">
+        <div class="text-h6">Guest account limitations</div>
+        <q-space />
+        <q-btn icon="close" flat round dense v-close-popup />
+      </q-card-section>
+
+      <q-card-section>
+        <p>You account is only a guest account and has the following limitations:</p>
+        <q-list bordered separator>
+          <q-item>
+            <q-item-section avatar>
+              <q-icon color="red" name="fa-solid fa-clock" />
+            </q-item-section>
+            <q-item-section>
+              <q-item-label> This account will expire on {{ formatExpirationTime(authStore.limits.guestExpireSeconds) }}</q-item-label>
+              <q-item-label caption>You will lose all data stored in this account!</q-item-label>
+             </q-item-section>
+          </q-item>
+          <q-item>
+            <q-item-section avatar>
+              <q-icon color="red" name="fa-solid fa-folder" />
+            </q-item-section>
+            <q-item-section>
+              <q-item-label> You can have at most {{ formatNumberPlural(registrationFeatures.guestProjectLimit, "project") }}</q-item-label>
+              <q-item-label caption>J-AST will refuse to add more projects if you reached the limit</q-item-label>
+            </q-item-section>
+          </q-item>
+          <q-item>
+            <q-item-section avatar>
+              <q-icon color="red" name="fa-solid fa-image" />
+            </q-item-section>
+            <q-item-section>
+              <q-item-label> You can have at most {{ formatNumberPlural(registrationFeatures.guestImageLimit, "image") }} per project</q-item-label>
+              <q-item-label caption>J-AST will reject the upload of additional images</q-item-label>
+            </q-item-section>
+          </q-item>
+        </q-list>
+      </q-card-section>
+      <q-card-section>
+        An administrator can upgrade your guest account into a regular account. Please contact {{ registrationFeatures.adminContact }}.
+      </q-card-section>
+    </q-card>
+  </q-dialog>
 
   <!-- Login dialog -->
   <q-dialog v-model="displayLoginDialog" persistent>
@@ -193,12 +243,13 @@ import { loadPayloadInstanceFromApi } from 'src/types/common';
 import * as EmailValidator from 'email-validator';
 import { instanceToPlain, plainToInstance } from 'class-transformer';
 import { UserAuthenticationLoginResponse } from 'src/types/auth';
-import { formatExpirationTime } from 'src/types/utils';
+import { formatExpirationTime, formatNumberPlural } from 'src/types/utils';
 
 const $q = useQuasar();
 const $router = useRouter();
 const displayLoginDialog = ref(false);
 const displayRegisterDialog = ref(false);
+const displayGuestInfoDialog = ref(false);
 const loginName = ref<string>('');
 const loginPassword = ref<string>('');
 const authStore = useAuthStore();
