@@ -144,7 +144,7 @@
           :max="250"
           snap
           label
-          :markers="10"
+          :markers="50"
           marker-labels
           switch-label-side
         ></q-slider>
