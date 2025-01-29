@@ -26,6 +26,7 @@ services:
     # Root admin credentials
       ACCOUNTS_ADMIN_USERNAME: 'admin@webapp'
       ACCOUNTS_ADMIN_PASSWORD: 'TZ6ZM2nmREUNyfya'
+      ACCOUNTS_ADMIN_CONTACT: 'thilo.figge@leibniz-hki.de'
     # Database config
       SPRING_DATASOURCE_URL: "jdbc:mariadb://mariadb:3306/j-ast"
       SPRING_DATASOURCE_USERNAME: j-ast
