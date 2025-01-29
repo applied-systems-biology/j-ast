@@ -1,6 +1,8 @@
 package org.hkijena.jast.controller;
 
 import org.hkijena.jast.config.AccountConfig;
+import org.hkijena.jast.model.AdminPrincipal;
+import org.hkijena.jast.model.UserPrincipal;
 import org.hkijena.jast.model.entities.User;
 import org.hkijena.jast.payloads.UserPayload;
 import org.hkijena.jast.payloads.register.UserRegistrationAllowedFeaturesPayload;
@@ -22,9 +24,10 @@ import org.springframework.web.server.ResponseStatusException;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Objects;
+import java.util.Optional;
 
 @RestController
-public class AccountController {
+public class AuthController {
 
     private final ProjectRepository projectRepository;
     private final UserRepository userRepository;
@@ -34,7 +37,7 @@ public class AccountController {
 
 
     @Autowired
-    public AccountController(ProjectRepository projectRepository, UserRepository userRepository, AccountConfig accountConfig, PasswordEncoder passwordEncoder, UserService userService) {
+    public AuthController(ProjectRepository projectRepository, UserRepository userRepository, AccountConfig accountConfig, PasswordEncoder passwordEncoder, UserService userService) {
         this.projectRepository = projectRepository;
         this.userRepository = userRepository;
         this.accountConfig = accountConfig;
