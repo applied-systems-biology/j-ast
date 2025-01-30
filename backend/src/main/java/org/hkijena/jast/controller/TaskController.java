@@ -18,6 +18,8 @@ import org.hkijena.jast.utils.JsonUtils;
 import org.hkijena.jast.utils.StringUtils;
 import org.jobrunr.jobs.JobId;
 import org.jobrunr.scheduling.JobScheduler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,6 +36,7 @@ import java.util.Optional;
 
 @RestController
 public class TaskController {
+    public static final Logger LOGGER = LoggerFactory.getLogger(TaskController.class);
     private final ProjectService projectService;
     private final ImageRepository imageRepository;
     private final BackendTaskRegistry backendTaskRegistry;
@@ -188,6 +191,14 @@ public class TaskController {
             if(!StringUtils.isNullOrEmpty(task.getJobId())) {
                 JobId jobId = JobId.parse(task.getJobId());
                 jobScheduler.delete(jobId);
+
+                // Delete the lockfile
+                try {
+                    Files.delete(Paths.get(task.getTmpPath()).resolve("lockfile"));
+                }
+                catch (Exception e) {
+                    LOGGER.error("Error while deleting task " + task.getId() + " lockfile", e);
+                }
             }
         }
     }
