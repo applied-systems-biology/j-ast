@@ -93,8 +93,7 @@ import { sendFailureNotification } from 'src/types/notification';
 import { AssayType } from 'src/types/assayType';
 import { ImagePayload, imageSupportsMaskAnnotation } from 'src/types/image';
 import {
-  BackendTaskPayload,
-  imageHasRunningTask,
+  BackendTaskPayload
 } from 'src/types/backendTasks';
 import { computed } from 'vue';
 import {
@@ -109,7 +108,15 @@ const projectBackendTasks = defineModel<BackendTaskPayload[]>(
   'projectBackendTasks'
 );
 const hasTaskRunning = computed(() => {
-  return imageHasRunningTask(model.value?.id, projectBackendTasks.value);
+  if (projectBackendTasks.value) {
+    for (const task of projectBackendTasks.value) {
+      if (task.isRunning()) {
+        return true
+      }
+    }
+    return false
+  }
+  return true; // Waiting still for info
 });
 const uploadToBackend = debounce(uploadToBackend_, 300);
 

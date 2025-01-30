@@ -20,7 +20,6 @@
             >
               <ProjectImageButton
                 v-if="getUnsortedImage(columnIndex)"
-                :has-running-task="imagesWithRunningTasks.has(getUnsortedImage(columnIndex)!.id)"
                 :current-image="getUnsortedImage(columnIndex)!"
                 :selected-image-ids="selectedImageIds"
                 class="draggable-item"
@@ -28,6 +27,7 @@
                 @dragstart="onDragStart(new SlotIndex(-1, columnIndex))"
                 @dragend="onDragEnd"
                 @image-selected="onImageSelected"
+                :disabled="hasTaskRunning"
               />
             </div>
             <q-btn icon="refresh" flat class="q-ma-sm load-more-unsorted" @click="maxNumRenderedUnsorted += 5" no-caps>
@@ -120,12 +120,12 @@
             v-if="getImageBySlot(rowIndex, columnIndex)"
             :current-image="getImageBySlot(rowIndex, columnIndex)!"
             :selected-image-ids="selectedImageIds"
-            :has-running-task="imagesWithRunningTasks.has(getImageBySlot(rowIndex, columnIndex)!.id)"
             class="draggable-item"
             draggable="true"
             @dragstart="onDragStart(new SlotIndex(rowIndex, columnIndex))"
             @dragend="onDragEnd"
             @image-selected="onImageSelected"
+            :disabled="hasTaskRunning"
           />
         </div>
       </div>
@@ -192,16 +192,16 @@ const numUnsorted = computed(() => {
 })
 const maxNumRenderedUnsorted = ref(10);
 
-const imagesWithRunningTasks = computed(() => {
-  const result = new Set<number>();
+const hasTaskRunning = computed(() => {
   if (projectBackendTasks.value) {
     for (const task of projectBackendTasks.value) {
       if (task.isRunning()) {
-        task.imageIds.forEach(result.add, result);
+        return true
       }
     }
+    return false
   }
-  return result;
+  return true; // Waiting still for info
 });
 const lastProjectId = ref(-1);
 
@@ -273,6 +273,10 @@ function onDrop(targetSlot: SlotIndex) {
     return;
   }
   if (!projectImages.value) {
+    return;
+  }
+  if(hasTaskRunning.value) {
+    sendFailureNotification("No changes are allowed while a task is running")
     return;
   }
 

@@ -9,14 +9,12 @@
       <q-img
         v-if="thumbnail"
         class="thumbnail"
-        :style="{ opacity: props.hasRunningTask ? 0.6 : 1 }"
         :src="thumbnail"
         fit="contain"
       />
       <q-skeleton v-else type="rect" class="thumbnail" />
       <div class="label text-left">
         <div class="filename text-caption ellipsis">
-          <q-icon name="lock" v-if="props.hasRunningTask"/>
           {{ currentImage.fileName }}
         </div>
         <div class="badges">
@@ -28,9 +26,6 @@
             <q-icon :name="badge.icon" />
             <span class="q-ml-sm">{{ renderMaskAnnotationId(props.currentImage, badge.text)}}</span>
           </q-badge>
-        </div>
-        <div v-if="props.hasRunningTask" class="progress text-indigo" >
-          <span class="text-caption text-bold">Currently being processed ...</span>
         </div>
       </div>
     </div>
@@ -49,7 +44,6 @@ const thumbnailStore = useProjectImageThumbnailStore();
 const props = defineProps<{
   currentImage: ImagePayload;
   selectedImageIds: Array<number>;
-  hasRunningTask: boolean
 }>();
 const emit = defineEmits<{
   (e: 'imageSelected', imageId: number, exclusive: boolean): void;

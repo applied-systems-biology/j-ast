@@ -8,10 +8,10 @@
           <q-skeleton v-if="!projectName" type="text" style="width: 200px" />
           <div v-else>{{ projectName }}</div>
           <q-btn-group flat>
-            <q-btn flat @click="editProjectName">
+            <q-btn flat @click="editProjectName" :disable="hasTaskRunning">
               <q-icon name="edit" />
             </q-btn>
-            <q-btn flat @click="deleteProject">
+            <q-btn flat @click="deleteProject" :disable="hasTaskRunning">
               <q-icon name="delete" />
             </q-btn>
           </q-btn-group>
@@ -98,6 +98,7 @@
           label="Process"
           icon="fa-solid fa-gear"
           v-if="selectedImageIds.length > 0"
+          :disable="hasTaskRunning"
         >
           <q-menu>
             <q-list style="min-width: 100px">
@@ -167,6 +168,7 @@
           color="red-4"
           v-if="selectedImageIds.length > 0"
           @click="deleteSelectedImages"
+          :disable="hasTaskRunning"
         >
           <q-tooltip> Deletes the selected image(s)</q-tooltip>
         </q-btn>
@@ -174,6 +176,7 @@
           icon="refresh"
           color="primary"
           @click="queryBackend"
+          :disable="hasTaskRunning"
         >
           <q-tooltip>Reloads the view</q-tooltip>
         </q-btn>
@@ -275,6 +278,12 @@ import { formatFileSize } from "src/types/utils";
 import BackendTaskProgressOverlay from 'components/backendProcessors/BackendTaskProgressOverlay.vue';
 import DocumentationComponent from "components/layout/DocumentationComponent.vue";
 
+function createDummyBackendTask() {
+  const task = new BackendTaskPayload()
+  task.name = "Waiting for server ..."
+  return task
+}
+
 const $q = useQuasar();
 const $route = useRoute();
 const router = useRouter();
@@ -288,8 +297,20 @@ const projectPayload: Ref<ProjectMetadataPayload> = ref(
 const projectImages = ref<ProjectImagesPayload>(new ProjectImagesPayload());
 const selectedImageIds = ref<Array<number>>([]);
 const availableBackendTasks = ref<Array<BackendTaskTypePayload>>([]);
-const projectBackendTasks = ref<Array<BackendTaskPayload>>([]);
+const projectBackendTasks = ref<Array<BackendTaskPayload>>([ createDummyBackendTask() ]);
 const resultList = ref<ResultPayload[]>();
+
+const hasTaskRunning = computed(() => {
+  if (projectBackendTasks.value) {
+    for (const task of projectBackendTasks.value) {
+      if (task.isRunning()) {
+        return true
+      }
+    }
+    return false
+  }
+  return true; // Waiting still for info
+});
 
 const availableBackendTasksCategories = computed(() => {
   const predefinedOrder = ["Preprocessing", "Plate", "DDA", "E-Test", "Analyze"];
