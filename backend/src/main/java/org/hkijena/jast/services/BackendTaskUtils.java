@@ -468,6 +468,7 @@ public class BackendTaskUtils {
             files
                     .sorted(Comparator.reverseOrder()) // Ensure files are deleted before directories
                     .filter(path -> !path.getFileName().toString().equals("lockfile")) // Exclude lockfile
+                    .filter(path -> !path.getFileName().toString().equals("job_started")) // Exclude lockfile
                     .filter(path -> !path.equals(tmpPath)) // Avoid deleting the tempDir itself
                     .forEach(path -> {
                         progressInfo.log("Deleting: " + path);

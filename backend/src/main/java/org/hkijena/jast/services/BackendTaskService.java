@@ -82,6 +82,13 @@ public class BackendTaskService {
         long taskId = payload.getId();
         BackendTaskWorkload workload = backendTaskRegistry.getTask(payload.getTaskId());
 
+        // Create a job_started guard file
+        try {
+            Files.createFile(params.getTmpPath().resolve("job_started"));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
         Path logFilePath = params.getTmpPath().resolve("log.txt");
         ProgressInfo progressInfo = new ProgressInfo();
         progressInfo.setLogToStdOut(true);
