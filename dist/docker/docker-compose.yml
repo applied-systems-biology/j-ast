@@ -27,6 +27,12 @@ services:
       ACCOUNTS_ADMIN_USERNAME: 'admin@webapp'
       ACCOUNTS_ADMIN_PASSWORD: 'TZ6ZM2nmREUNyfya'
       ACCOUNTS_ADMIN_CONTACT: 'thilo.figge@leibniz-hki.de'
+    # Account config
+      ACCOUNTS_ALLOW_SELF_REGISTER: false
+      ACCOUNTS_ALLOW_GUEST_ACCOUNTS: true
+      ACCOUNTS_GUEST_PROJECT_LIMIT: 1
+      ACCOUNTS_GUEST_IMAGE_LIMIT: 10
+      ACCOUNTS_GUEST_ACCOUNT_EXPIRES_MINUTES: 4320
     # Database config
       SPRING_DATASOURCE_URL: "jdbc:mariadb://mariadb:3306/j-ast"
       SPRING_DATASOURCE_USERNAME: j-ast
