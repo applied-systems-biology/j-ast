@@ -188,18 +188,20 @@ public class TaskController {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
         }
         if(task.isRunning()) {
-            if(!StringUtils.isNullOrEmpty(task.getJobId())) {
-                JobId jobId = JobId.parse(task.getJobId());
-                jobScheduler.delete(jobId);
+            // Delete the lockfile
+            try {
+                Files.delete(Paths.get(task.getTmpPath()).resolve("lockfile"));
+            }
+            catch (Exception e) {
+                LOGGER.error("Error while deleting task " + task.getId() + " lockfile", e);
 
-                // Delete the lockfile
-                try {
-                    Files.delete(Paths.get(task.getTmpPath()).resolve("lockfile"));
-                }
-                catch (Exception e) {
-                    LOGGER.error("Error while deleting task " + task.getId() + " lockfile", e);
+                // Try it another way
+                if(!StringUtils.isNullOrEmpty(task.getJobId())) {
+                    JobId jobId = JobId.parse(task.getJobId());
+                    jobScheduler.delete(jobId);
                 }
             }
+
         }
     }
 }
