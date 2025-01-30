@@ -225,7 +225,7 @@
   </q-dialog>
 </template>
 <script setup lang="ts">
-import { computed, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import { useQuasar } from 'quasar';
 import { useAuthStore } from 'stores/auth-store';
 import { api } from 'boot/axios';
@@ -371,6 +371,14 @@ function doRegister() {
       $q.loading.hide();
     });
 }
+
+onMounted(() => {
+  loadPayloadInstanceFromApi(
+    '/auth/registration-features',
+    UserRegistrationAllowedFeaturesPayload,
+    registrationFeatures
+  )
+})
 
 </script>
 <style scoped lang="scss">

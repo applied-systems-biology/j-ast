@@ -1,7 +1,7 @@
 #!/bin/bash
 
-export API_LOCATION=/j-ast-new/api/
-export FRONTEND_LOCATION=/j-ast-new/
+export API_LOCATION=/j-ast/api/
+export FRONTEND_LOCATION=/j-ast/
 
 pushd ../.. || exit 1
 mvn clean || exit 1

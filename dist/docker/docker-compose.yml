@@ -16,7 +16,7 @@ services:
       -  mariadb
     environment:
     # Context path (deploying the app)
-      SERVER_SERVLET_CONTEXT_PATH: '/j-ast-new'
+      SERVER_SERVLET_CONTEXT_PATH: '/j-ast'
     # Memory for Fiji (8G = 8GB)
       RUNTIME_FIJI_ARGS_1: 8G
     # Maximum number of background jobs
