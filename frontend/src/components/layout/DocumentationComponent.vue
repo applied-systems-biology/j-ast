@@ -224,6 +224,23 @@
                 </q-card-section>
               </q-card>
             </q-expansion-item>
+            <q-expansion-item
+              expand-separator
+              icon="help"
+              label="Managing tasks"
+              caption="Reviewing/cancelling tasks"
+              group="documentation"
+            >
+              <q-card>
+                <q-card-section>
+                  On starting a longer process via the <strong>Process</strong> menu, J-AST will lock the whole project and display information about the currently running task at the bottom of the window.
+                </q-card-section>
+                <q-card-section>
+                  To review past tasks or cancel the current task, click the <q-btn label="All Tasks Finished" icon="check" color="cyan"/> / <q-btn label="x tasks are running" icon="fa-solid fa-circle-notch" color="cyan"/> button and select
+                  the task in the list. Here you can download the log or cancel an existing task.
+                </q-card-section>
+              </q-card>
+            </q-expansion-item>
           </q-list>
         </q-scroll-area>
       </q-card-section>
