@@ -50,7 +50,7 @@ public class ImageAnnotationService {
             MaskImageAnnotation maskImageAnnotation = new MaskImageAnnotation();
             maskImageAnnotation.setImage(image);
             maskImageAnnotation.setType(annotationType);
-            maskImageAnnotation.resetToMask(fileStorageService, image);
+            maskImageAnnotation.resetToEmptyMask(fileStorageService, image);
 
             image.addMaskImageAnnotation(maskImageAnnotation);
             return maskImageAnnotationRepository.save(maskImageAnnotation);

@@ -272,6 +272,7 @@
           v-model="projectImages"
           v-model:selected-image-ids="selectedImageIds"
           v-model:backend-tasks="projectBackendTasks"
+          v-model:filter-text="filterText"
           :show-unsorted="drawerUnsortedImages"
         />
         <BackendTaskProgressOverlay  v-model:backend-tasks="projectBackendTasks" />

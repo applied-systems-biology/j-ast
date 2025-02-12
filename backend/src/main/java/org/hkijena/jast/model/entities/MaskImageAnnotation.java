@@ -135,7 +135,7 @@ public class MaskImageAnnotation {
      * @param image the image used as size reference
      */
     @Transactional
-    public void resetToMask(FileStorageService fileStorageService, Image image) {
+    public void resetToEmptyMask(FileStorageService fileStorageService, Image image) {
         fileStorageService.deleteLater(rawDataFileId); // Delete old version
         fileStorageService.deleteLater(thumbnailDataFileId); // Delete old version
 
@@ -160,4 +160,5 @@ public class MaskImageAnnotation {
     public void setRawDataFileSize(long rawDataFileLength) {
         this.rawDataFileSize = rawDataFileLength;
     }
+
 }

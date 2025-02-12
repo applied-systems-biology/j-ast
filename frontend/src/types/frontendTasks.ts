@@ -292,9 +292,9 @@ export const frontEndImageProcessors: Array<FrontEndImageProcessor> = [
     fn: doImageAutoSortByMetadata,
   },
   {
-    label: 'Clear metadata',
+    label: 'Clear text metadata',
     icon: 'fa-solid fa-eraser',
-    tooltip: 'Clears all metadata except the file name',
+    tooltip: 'Clears all text metadata except the file name. Does not affect mask/annotation metadata!',
     fn: doImageEraseMetadata,
   },
   {

@@ -20,6 +20,23 @@ public class ImageUtils {
         DUMMY_THUMBNAIL_BYTES = toPNGByteArray(img);
     }
 
+    public static boolean isImageNotEmpty(BufferedImage image) {
+        if (image == null) {
+            return false;
+        }
+
+        int width = image.getWidth();
+        int height = image.getHeight();
+        int[] pixels = image.getRGB(0, 0, width, height, null, 0, width);
+
+        for (int pixel : pixels) {
+            if ((pixel & 0x00FFFFFF) != 0) {  // if any pixel is not black
+                return true;
+            }
+        }
+        return false;
+    }
+
     public static BufferedImage createThumbnail(BufferedImage image) {
         return createThumbnail(image, DEFAULT_THUMBNAIL_SIZE, DEFAULT_THUMBNAIL_SIZE);
     }

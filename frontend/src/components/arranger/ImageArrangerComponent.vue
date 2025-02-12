@@ -10,7 +10,10 @@
         <q-scroll-area class="unsorted-scroll-area" visible>
           <div class="grid-row grid-row-unsorted bg-indigo-1">
             <div
-              v-for="(k, columnIndex) in Math.min(maxNumRenderedUnsorted, numUnsorted) + 1"
+              v-for="(k, columnIndex) in Math.min(
+                maxNumRenderedUnsorted,
+                numUnsorted
+              ) + 1"
               :key="`col-${columnIndex}`"
               class="grid-slot"
               @dragover.prevent="onDragOver(new SlotIndex(-1, columnIndex))"
@@ -30,9 +33,25 @@
                 :disabled="hasTaskRunning"
               />
             </div>
-            <q-btn icon="refresh" flat class="q-ma-sm load-more-unsorted" @click="maxNumRenderedUnsorted += 5" no-caps>
-              <div class="text-uppercase">Show more items ({{ Math.max(0, numUnsorted - Math.min(maxNumRenderedUnsorted, numUnsorted)) }} left)</div>
-              <div class="text-caption">Items may be hidden for performance reasons</div>
+            <q-btn
+              icon="refresh"
+              flat
+              class="q-ma-sm load-more-unsorted"
+              @click="maxNumRenderedUnsorted += 5"
+              no-caps
+            >
+              <div class="text-uppercase">
+                Show more items ({{
+                  Math.max(
+                    0,
+                    numUnsorted - Math.min(maxNumRenderedUnsorted, numUnsorted)
+                  )
+                }}
+                left)
+              </div>
+              <div class="text-caption">
+                Items may be hidden for performance reasons
+              </div>
             </q-btn>
           </div>
         </q-scroll-area>
@@ -41,10 +60,21 @@
       <q-separator />
 
       <q-card-actions>
-        <q-btn color="secondary" @click.stop="selectAllUnsorted" icon="select_all">Select all unsorted</q-btn>
-        <q-btn color="green" @click.stop="quickAllInOnePreparation" icon="fa-solid fa-wand-magic-sparkles" label="All-in-one preparation">
+        <q-btn
+          color="secondary"
+          @click.stop="selectAllUnsorted"
+          icon="select_all"
+          >Select all unsorted
+        </q-btn>
+        <q-btn
+          color="green"
+          @click.stop="quickAllInOnePreparation"
+          icon="fa-solid fa-wand-magic-sparkles"
+          label="All-in-one preparation"
+        >
           <q-tooltip>
-            Automatically attempts to fill in metadata, sort images, and find annotations.
+            Automatically attempts to fill in metadata, sort images, and find
+            annotations.
           </q-tooltip>
         </q-btn>
       </q-card-actions>
@@ -54,7 +84,6 @@
 
     <!-- Sorted -->
     <q-infinite-scroll class="table-scroll-area q-mt-md" @load="loadNextRows">
-
       <div class="grid-column-header">
         <div class="grid-row-label"></div>
         <div
@@ -82,57 +111,67 @@
           </q-btn>
         </div>
       </div>
-      <div
+      <template
         v-for="(i, rowIndex) in numRenderedRows + 1"
         :key="`row-${rowIndex}`"
-        class="grid-row bg-indigo-1"
       >
-        <div class="grid-row-label">
-          <q-scroll-area class="row-label-scroll-area">
-            <q-badge
-              v-for="badge in getRowBadges(rowIndex)"
-              :key="`${badge.type}-${badge.text}`"
-              :style="{ backgroundColor: badge.color }"
+        <div class="grid-row bg-indigo-1" v-if="filterAppliesToRow(rowIndex)">
+          <div class="grid-row-label">
+            <q-scroll-area class="row-label-scroll-area">
+              <q-badge
+                v-for="badge in getRowBadges(rowIndex)"
+                :key="`${badge.type}-${badge.text}`"
+                :style="{ backgroundColor: badge.color }"
+              >
+                <q-icon :name="badge.icon" />
+                <span class="q-ml-sm">{{ badge.text }}</span>
+              </q-badge>
+            </q-scroll-area>
+            <q-btn
+              flat
+              size="xs"
+              icon="fa-solid fa-chevron-right"
+              class="select-all-button"
+              @click.stop="selectRow(rowIndex, $event)"
             >
-              <q-icon :name="badge.icon" />
-              <span class="q-ml-sm">{{ badge.text }}</span>
-            </q-badge>
-          </q-scroll-area>
-          <q-btn
-            flat
-            size="xs"
-            icon="fa-solid fa-chevron-right"
-            class="select-all-button"
-            @click.stop="selectRow(rowIndex, $event)"
+              <q-tooltip>Select the whole row</q-tooltip>
+            </q-btn>
+          </div>
+          <div
+            v-for="(j, columnIndex) in numCols + 1"
+            :key="`col-${columnIndex}`"
+            class="grid-slot"
+            @dragover.prevent="onDragOver(new SlotIndex(rowIndex, columnIndex))"
+            @dragenter.prevent="
+              onDragEnter(new SlotIndex(rowIndex, columnIndex))
+            "
+            @dragleave.prevent="
+              onDragLeave(new SlotIndex(rowIndex, columnIndex))
+            "
+            @drop="onDrop(new SlotIndex(rowIndex, columnIndex))"
           >
-            <q-tooltip>Select the whole row</q-tooltip>
-          </q-btn>
+            <ProjectImageButton
+              v-if="getImageBySlot(rowIndex, columnIndex)"
+              :current-image="getImageBySlot(rowIndex, columnIndex)!"
+              :selected-image-ids="selectedImageIds"
+              class="draggable-item"
+              draggable="true"
+              @dragstart="onDragStart(new SlotIndex(rowIndex, columnIndex))"
+              @dragend="onDragEnd"
+              @image-selected="onImageSelected"
+              :disabled="hasTaskRunning"
+            />
+          </div>
         </div>
-        <div
-          v-for="(j, columnIndex) in numCols + 1"
-          :key="`col-${columnIndex}`"
-          class="grid-slot"
-          @dragover.prevent="onDragOver(new SlotIndex(rowIndex, columnIndex))"
-          @dragenter.prevent="onDragEnter(new SlotIndex(rowIndex, columnIndex))"
-          @dragleave.prevent="onDragLeave(new SlotIndex(rowIndex, columnIndex))"
-          @drop="onDrop(new SlotIndex(rowIndex, columnIndex))"
-        >
-          <ProjectImageButton
-            v-if="getImageBySlot(rowIndex, columnIndex)"
-            :current-image="getImageBySlot(rowIndex, columnIndex)!"
-            :selected-image-ids="selectedImageIds"
-            class="draggable-item"
-            draggable="true"
-            @dragstart="onDragStart(new SlotIndex(rowIndex, columnIndex))"
-            @dragend="onDragEnd"
-            @image-selected="onImageSelected"
-            :disabled="hasTaskRunning"
-          />
-        </div>
-      </div>
-     <q-btn icon="refresh" flat class="q-ma-sm" @click="maxNumRenderedRows += 5" >
-       Load more rows ({{ Math.max(0, numRows - numRenderedRows) }} left)
-     </q-btn>
+      </template>
+      <q-btn
+        icon="refresh"
+        flat
+        class="q-ma-sm"
+        @click="maxNumRenderedRows += 5"
+      >
+        Load more rows ({{ Math.max(0, numRows - numRenderedRows) }} left)
+      </q-btn>
     </q-infinite-scroll>
   </div>
 </template>
@@ -145,9 +184,14 @@ import {
   ProjectImagesPayload,
   ProjectImagesPayloadRow,
 } from 'src/types/projectImages';
-import { BackendTaskPayload, BackendTaskTypePayload, doBackendTask } from 'src/types/backendTasks';
+import {
+  BackendTaskPayload,
+  BackendTaskTypePayload,
+  doBackendTask,
+} from 'src/types/backendTasks';
 import { api } from 'boot/axios';
 import { plainToInstance } from 'class-transformer';
+import { AssayType } from 'src/types/assayType';
 
 defineProps<{
   showUnsorted: boolean;
@@ -175,8 +219,9 @@ const selectedImageIds = defineModel<Array<number>>('selectedImageIds', {
   required: true,
 });
 const projectBackendTasks = defineModel<BackendTaskPayload[]>('backendTasks');
-
 const projectImages = defineModel<ProjectImagesPayload>();
+const filterText = defineModel<string>('filterText');
+
 const numCols = computed(() =>
   projectImages.value ? projectImages.value.maxColumn() + 1 : 0
 );
@@ -189,18 +234,18 @@ const numRenderedRows = computed(() => {
 });
 
 const numUnsorted = computed(() => {
- return projectImages.value?.unsortedRow.images.length || 0
-})
+  return projectImages.value?.unsortedRow.images.length || 0;
+});
 const maxNumRenderedUnsorted = ref(10);
 
 const hasTaskRunning = computed(() => {
   if (projectBackendTasks.value) {
     for (const task of projectBackendTasks.value) {
       if (task.isRunning()) {
-        return true
+        return true;
       }
     }
-    return false
+    return false;
   }
   return true; // Waiting still for info
 });
@@ -209,6 +254,56 @@ const lastProjectId = ref(-1);
 const isDragging = ref(false);
 const dragSlot = ref<SlotIndex | null>(null);
 const dragOverSlot = ref<SlotIndex | null>(null);
+
+function filterAppliesToRow(rowIndex: number) {
+  if (filterText.value && filterText.value.length > 0 && projectImages.value) {
+    const row = projectImages.value.groupRows[rowIndex];
+    if (!row) {
+      return true;
+    }
+    const tags = new Set<string>();
+    for (const image of row.images) {
+      if (image.experiment) {
+        tags.add('experiment:' + image.experiment);
+      }
+      if (image.sample) {
+        tags.add('sample:' + image.sample);
+      }
+      if (image.assayType != AssayType.Unknown) {
+        tags.add('assayType:' + image.assayType);
+      }
+      tags.add(image.fileName);
+
+      let hasPlate = false;
+      let hasDiskStrip = false;
+      let hasZOIShape = false;
+
+      for (const annotation of image.maskImageAnnotations) {
+        if (annotation.version > 0) {
+          if (annotation.annotationTypeId == 'plate') {
+            hasPlate = true;
+          } else if (annotation.annotationTypeId == 'strip-disk') {
+            hasDiskStrip = true;
+          } else if (annotation.annotationTypeId == 'zoi-shape') {
+            hasZOIShape = true;
+          }
+        }
+      }
+
+      tags.add('hasPlate:' + (hasPlate ? 'yes' : 'no'));
+      tags.add('hasDiskStrip:' + (hasDiskStrip ? 'yes' : 'no'));
+      if (image.assayType == AssayType.ETest) {
+        tags.add('hasZOIShape:' + (hasZOIShape ? 'yes' : 'no'));
+      }
+    }
+
+    // Tags to string
+    const searchString = [...tags].join(' ');
+    return searchString.includes(filterText.value);
+  } else {
+    return true;
+  }
+}
 
 function getUnsortedImage(index: number) {
   return projectImages.value?.unsortedRow.images[index] || undefined;
@@ -276,8 +371,8 @@ function onDrop(targetSlot: SlotIndex) {
   if (!projectImages.value) {
     return;
   }
-  if(hasTaskRunning.value) {
-    sendFailureNotification("No changes are allowed while a task is running")
+  if (hasTaskRunning.value) {
+    sendFailureNotification('No changes are allowed while a task is running');
     return;
   }
 
@@ -316,27 +411,28 @@ function selectAllUnsorted() {
   if (projectImages.value) {
     const newSelection = projectImages.value?.unsortedRow.images
       .filter((img) => img.groupRow < 0)
-      .map((img) => img.id)
+      .map((img) => img.id);
 
     selectedImageIds.value = newSelection;
   }
 }
 
 function quickAllInOnePreparation() {
+  selectAllUnsorted();
 
-  selectAllUnsorted()
-
-  if(selectedImageIds.value.length > 0) {
+  if (selectedImageIds.value.length > 0) {
     if (selectedImageIds.value && projectImages.value) {
       api.get<BackendTaskTypePayload[]>(`/task/list-types`).then((response) => {
         const available = plainToInstance(
           BackendTaskTypePayload,
           response.data
         );
-        for(const tool of available) {
-          if(tool.taskId == "aio-prepare" && projectImages.value) {
+        for (const tool of available) {
+          if (tool.taskId == 'aio-prepare' && projectImages.value) {
             // console.log(selectedImageIds.value);
-            const selectedImages = selectedImageIds.value.map(id => projectImages.value!.getImageById(id)!)
+            const selectedImages = selectedImageIds.value.map(
+              (id) => projectImages.value!.getImageById(id)!
+            );
             // console.log(selectedImages)
             doBackendTask(
               [...selectedImages],
@@ -348,7 +444,6 @@ function quickAllInOnePreparation() {
           }
         }
       });
-
     }
   }
 }
@@ -395,9 +490,9 @@ function selectRow(rowIndex: number, event: Event) {
 
 onMounted(() => {
   watch(projectImages, () => {
-    console.log("new project images:" + projectImages.value?.projectId)
-    if(projectImages.value?.projectId != lastProjectId.value) {
-      maxNumRenderedRows.value = 10
+    console.log('new project images:' + projectImages.value?.projectId);
+    if (projectImages.value?.projectId != lastProjectId.value) {
+      maxNumRenderedRows.value = 10;
     }
   });
 });
@@ -419,6 +514,7 @@ $grid-column-label-height: 5rem;
   padding: 4px;
   display: flex;
   flex-direction: row;
+
   .q-badge {
     margin: 2px;
   }
@@ -439,6 +535,7 @@ $grid-column-label-height: 5rem;
   border-top-left-radius: 3px;
   border-top-right-radius: 3px;
   padding: 4px;
+
   .q-badge {
     margin: 2px;
   }

@@ -183,14 +183,21 @@ public class BackendTaskUtils {
                             throw new IllegalArgumentException("Image dimensions do not match");
                         }
 
-                        // Get or create annotation and increment its version
-                        MaskImageAnnotation annotation = image.getOrCreateMaskAnnotation(annotationTypeId, null);
-                        annotation.setRawData(fileStorageService, ImageUtils.toPNGByteArray(rawImage));
-                        annotation.setThumbnailData(fileStorageService, ImageUtils.toPNGByteArrayThumbnail(rawImage));
-                        annotation.incrementVersion();
+                        // Check if it's not empty
+                        if(ImageUtils.isImageNotEmpty(rawImage)) {
+                            // Get or create annotation and increment its version
+                            MaskImageAnnotation annotation = image.getOrCreateMaskAnnotation(annotationTypeId, null);
+                            annotation.setRawData(fileStorageService, ImageUtils.toPNGByteArray(rawImage));
+                            annotation.setThumbnailData(fileStorageService, ImageUtils.toPNGByteArrayThumbnail(rawImage));
+                            annotation.incrementVersion();
 
-                        // Mark as changed
-                        changed = true;
+                            // Mark as changed
+                            changed = true;
+                        }
+                        else {
+                            progressInfo.log("Refusing to read annotation from " + imageFileName + ", as the image is empty!");
+                        }
+
                     } catch (Throwable e) {
                         LOGGER.error("Unable to read annotation from {}", imageFileName, e);
                     }
