@@ -52,8 +52,9 @@
       <q-separator />
     </q-card>
 
+    <!-- Sorted -->
     <q-infinite-scroll class="table-scroll-area q-mt-md" @load="loadNextRows">
-      <!-- Sorted -->
+
       <div class="grid-column-header">
         <div class="grid-row-label"></div>
         <div

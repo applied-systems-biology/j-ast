@@ -74,6 +74,13 @@
             >All images that have not yet been organized are stored here.
           </q-tooltip>
         </ToggleButton>
+        <ToggleButton
+          selected-icon="fa-solid fa-filter-circle-xmark"
+          not-selected-icon="fa-solid fa-filter"
+          class="bg-secondary"
+          v-model="toolbarFilter"
+        >
+        </ToggleButton>
         <q-btn
           icon="select_all"
           color="blue"
@@ -190,6 +197,44 @@
           @on-task-finished="onTaskFinished"
         />
       </q-toolbar>
+      <q-toolbar class="bg-white text-black edit-toolbar" v-if="toolbarFilter">
+        <q-input style="width: 500px; max-width: 50vw;" v-model="filterText" dense outlined clearable class="q-ma-sm" debounce="1000">
+          <template v-slot:prepend>
+            <q-icon name="search" />
+          </template>
+        </q-input>
+        <q-btn label="No plate" no-caps flat icon="filter_alt" @click="filterText = 'hasPlate:no'" dense />
+        <q-btn label="No disk/strip" no-caps flat icon="filter_alt" @click="filterText = 'hasDiskStrip:no'" dense />
+        <q-btn label="No ZOI shape" no-caps flat icon="filter_alt" @click="filterText = 'hasZOIShape:no'" dense />
+        <q-btn label="More ..." no-caps flat icon="filter_alt" dense>
+          <q-menu>
+            <q-item clickable @click="filterText = 'experiment:'" v-close-popup>
+              <q-item-section avatar>
+                <q-icon name="fa-solid fa-vial-virus" />
+              </q-item-section>
+              <q-item-section>Search for experiment</q-item-section>
+            </q-item>
+            <q-item clickable @click="filterText = 'sample:'" v-close-popup>
+              <q-item-section avatar>
+                <q-icon name="fa-solid fa-flask" />
+              </q-item-section>
+              <q-item-section>Search for sample</q-item-section>
+            </q-item>
+            <q-item clickable @click="filterText = 'assayType:DDA'" v-close-popup>
+              <q-item-section avatar>
+                <q-icon name="fa-solid fa-filter" />
+              </q-item-section>
+              <q-item-section>Only DDA</q-item-section>
+            </q-item>
+            <q-item clickable @click="filterText = 'assayType:ETest'" v-close-popup>
+              <q-item-section avatar>
+                <q-icon name="fa-solid fa-filter" />
+              </q-item-section>
+              <q-item-section>Only E-Test</q-item-section>
+            </q-item>
+          </q-menu>
+        </q-btn>
+      </q-toolbar>
     </q-header>
     <q-drawer elevated side="left" bordered v-model="drawerLeft">
       <ImageUploaderComponent
@@ -289,6 +334,7 @@ const $route = useRoute();
 const router = useRouter();
 const drawerLeft: Ref<boolean> = ref(false);
 const drawerUnsortedImages = ref(false);
+const toolbarFilter = ref(false)
 const projectName = computed(() => projectPayload.value?.name ?? undefined);
 const projectId = $route.params.id + ""
 const projectPayload: Ref<ProjectMetadataPayload> = ref(
@@ -299,6 +345,7 @@ const selectedImageIds = ref<Array<number>>([]);
 const availableBackendTasks = ref<Array<BackendTaskTypePayload>>([]);
 const projectBackendTasks = ref<Array<BackendTaskPayload>>([ createDummyBackendTask() ]);
 const resultList = ref<ResultPayload[]>();
+const filterText = ref("")
 
 const hasTaskRunning = computed(() => {
   if (projectBackendTasks.value) {
