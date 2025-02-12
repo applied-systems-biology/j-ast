@@ -291,7 +291,7 @@ export function doBackendTask(
   }
 
   if(images.length == 0) {
-    sendFailureNotification("Tool not applicable to any of the selected images.")
+    sendFailureNotification("Tool not applicable to any of the selected images. (Did are the correct assay types assigned and are the images sorted?)")
     return
   }
 
