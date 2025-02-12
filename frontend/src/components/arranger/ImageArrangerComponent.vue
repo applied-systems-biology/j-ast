@@ -318,37 +318,38 @@ function selectAllUnsorted() {
       .map((img) => img.id)
 
     selectedImageIds.value = newSelection;
-
-    if(newSelection.length > 0) {
-      if (newSelection && projectImages.value) {
-        api.get<BackendTaskTypePayload[]>(`/task/list-types`).then((response) => {
-          const available = plainToInstance(
-            BackendTaskTypePayload,
-            response.data
-          );
-          for(const tool of available) {
-            if(tool.taskId == "aio-prepare" && projectImages.value) {
-              // console.log(selectedImageIds.value);
-              const selectedImages = newSelection.map(id => projectImages.value!.getImageById(id)!)
-              // console.log(selectedImages)
-              doBackendTask(
-                [...selectedImages],
-                Number(projectImages.value.projectId),
-                tool,
-                projectImages.value
-              );
-              break;
-            }
-          }
-        });
-
-      }
-    }
   }
 }
 
 function quickAllInOnePreparation() {
+
   selectAllUnsorted()
+
+  if(selectedImageIds.value.length > 0) {
+    if (selectedImageIds.value && projectImages.value) {
+      api.get<BackendTaskTypePayload[]>(`/task/list-types`).then((response) => {
+        const available = plainToInstance(
+          BackendTaskTypePayload,
+          response.data
+        );
+        for(const tool of available) {
+          if(tool.taskId == "aio-prepare" && projectImages.value) {
+            // console.log(selectedImageIds.value);
+            const selectedImages = selectedImageIds.value.map(id => projectImages.value!.getImageById(id)!)
+            // console.log(selectedImages)
+            doBackendTask(
+              [...selectedImages],
+              Number(projectImages.value.projectId),
+              tool,
+              projectImages.value
+            );
+            break;
+          }
+        }
+      });
+
+    }
+  }
 }
 
 function selectColumn(columnIndex: number, event: Event) {
