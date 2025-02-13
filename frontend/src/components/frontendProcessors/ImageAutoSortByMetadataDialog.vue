@@ -15,6 +15,9 @@
           The column is determined by the time point order.
           Images that are already sorted into the table will be not affected by this operation.
         </div>
+        <div class="text-red">
+          Please ensure that the time point order is correct. J-AST will not check for you if your order is in any way sensible!
+        </div>
       </q-card-section>
       <q-separator />
       <q-card-section class="q-gutter-sm">

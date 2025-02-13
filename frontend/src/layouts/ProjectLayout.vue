@@ -52,7 +52,34 @@
             </q-item>
           </q-list>
         </q-btn-dropdown>
+        <q-btn-dropdown color="blue" :label="currentViewMode" :icon="currentViewMode == ViewMode.Timeline ? 'fa-solid fa-timeline' : 'fa-solid fa-grip'">
+          <q-list>
+            <q-item clickable v-close-popup @click="currentViewMode = ViewMode.Timeline">
+              <q-item-section avatar>
+                <q-icon name="fa-solid fa-timeline" />
+              </q-item-section>
+              <q-item-section>
+                <q-item-label>Timeline</q-item-label>
+              </q-item-section>
+              <q-tooltip>
+                Use this view for projects that have a time component. You will need to sort the images into timelines.
+              </q-tooltip>
+            </q-item>
+            <q-item clickable v-close-popup @click="currentViewMode = ViewMode.Grid">
+              <q-item-section avatar>
+                <q-icon name="fa-solid fa-grip" />
+              </q-item-section>
+              <q-item-section>
+                <q-item-label>Grid</q-item-label>
+              </q-item-section>
+              <q-tooltip>
+                Use this view for projects where each image is independent.
+              </q-tooltip>
+            </q-item>
+          </q-list>
+        </q-btn-dropdown>
         <ToggleButton
+          v-if="currentViewMode == ViewMode.Timeline"
           selected-icon="close"
           not-selected-icon="sort"
           :class="
@@ -110,19 +137,21 @@
           <q-menu>
             <q-list style="min-width: 100px">
               <!-- Front-end processors -->
-              <q-item
-                v-for="tool in frontEndImageProcessors"
-                :key="tool.label"
-                clickable
-                v-close-popup
-                @click="doFrontEndProcessor(tool)"
-              >
-                <q-item-section avatar>
-                  <q-icon :name="tool.icon" />
-                </q-item-section>
-                <q-item-section>{{ tool.label }}</q-item-section>
-                <q-tooltip>{{ tool.tooltip }}</q-tooltip>
-              </q-item>
+              <template  v-for="tool in frontEndImageProcessors"
+                         :key="tool.label">
+                <q-item
+                  v-if="tool.viewMode == undefined || tool.viewMode == currentViewMode"
+                  clickable
+                  v-close-popup
+                  @click="doFrontEndProcessor(tool)"
+                >
+                  <q-item-section avatar>
+                    <q-icon :name="tool.icon" />
+                  </q-item-section>
+                  <q-item-section>{{ tool.label }}</q-item-section>
+                  <q-tooltip>{{ tool.tooltip }}</q-tooltip>
+                </q-item>
+              </template>
               <q-separator />
               <q-item
                 v-for="category in availableBackendTasksCategories"
@@ -236,7 +265,7 @@
         </q-btn>
       </q-toolbar>
     </q-header>
-    <q-drawer elevated side="left" bordered v-model="drawerLeft">
+    <q-drawer elevated side="left" bordered v-model="drawerLeft" overlay>
       <ImageUploaderComponent
         :project-id="projectId"
         @finished="queryBackend"
@@ -268,12 +297,20 @@
     </q-drawer>
     <q-page-container>
       <q-page class="flex column q-gutter-sm">
-        <ImageArrangerComponent
+        <TimelineViewComponent
+          v-if="currentViewMode == ViewMode.Timeline"
           v-model="projectImages"
           v-model:selected-image-ids="selectedImageIds"
           v-model:backend-tasks="projectBackendTasks"
           v-model:filter-text="filterText"
           :show-unsorted="drawerUnsortedImages"
+        />
+        <GridViewComponent
+          v-if="currentViewMode == ViewMode.Grid"
+          v-model="projectImages"
+          v-model:selected-image-ids="selectedImageIds"
+          v-model:backend-tasks="projectBackendTasks"
+          v-model:filter-text="filterText"
         />
         <BackendTaskProgressOverlay  v-model:backend-tasks="projectBackendTasks" />
       </q-page>
@@ -294,7 +331,7 @@ import { api } from 'boot/axios';
 import { downloadFromApi, ensureExtension, loadPayloadInstanceFromApi, removeExtensionIfPresent } from "src/types/common";
 import ProjectImageEditor from 'components/drawers/ProjectImageEditor.vue';
 import { plainToInstance } from 'class-transformer';
-import ImageArrangerComponent from 'components/arranger/ImageArrangerComponent.vue';
+import TimelineViewComponent from 'components/arranger/TimelineViewComponent.vue';
 import ProjectMultiImageEditor from 'components/drawers/ProjectMultiImageEditor.vue';
 import {
   FrontEndImageProcessor,
@@ -323,6 +360,8 @@ import { generateAndDownloadZip, ZipItem } from "src/types/zip";
 import { formatFileSize } from "src/types/utils";
 import BackendTaskProgressOverlay from 'components/backendProcessors/BackendTaskProgressOverlay.vue';
 import DocumentationComponent from "components/layout/DocumentationComponent.vue";
+import { ViewMode } from 'src/types/view';
+import GridViewComponent from 'components/arranger/GridViewComponent.vue';
 
 function createDummyBackendTask() {
   const task = new BackendTaskPayload()
@@ -347,6 +386,7 @@ const availableBackendTasks = ref<Array<BackendTaskTypePayload>>([]);
 const projectBackendTasks = ref<Array<BackendTaskPayload>>([ createDummyBackendTask() ]);
 const resultList = ref<ResultPayload[]>();
 const filterText = ref("")
+const currentViewMode = ref(ViewMode.Timeline);
 
 const hasTaskRunning = computed(() => {
   if (projectBackendTasks.value) {

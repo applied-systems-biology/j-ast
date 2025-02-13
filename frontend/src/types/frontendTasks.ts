@@ -16,6 +16,7 @@ import { AssayType, parseAssayType } from 'src/types/assayType';
 import { ImagePayload } from 'src/types/image';
 import { ProjectImagesPayload } from 'src/types/projectImages';
 import { splitByDelimiters } from 'src/types/utils';
+import { ViewMode } from 'src/types/view';
 
 export interface FrontEndImageProcessorResponse {
   images: ImagePayload[];
@@ -27,6 +28,7 @@ export interface FrontEndImageProcessor {
   label: string;
   icon: string;
   tooltip: string;
+  viewMode: ViewMode | undefined;
   fn: (images: ImagePayload[], state: ProjectImagesPayload) => Promise<FrontEndImageProcessorResponse>;
 }
 
@@ -277,30 +279,35 @@ export const frontEndImageProcessors: Array<FrontEndImageProcessor> = [
     label: 'Remove file name extensions',
     icon: 'fa-solid fa-gear',
     tooltip: 'Removes extensions from the file name metadata',
+    viewMode: undefined,
     fn: doImageRemoveFileNameExtension,
   },
   {
     label: 'Auto-fill metadata',
     icon: 'fa-solid fa-pen-to-square',
     tooltip: 'Auto-fills metadata from the file name',
+    viewMode: undefined,
     fn: doImageAutofillMetadata,
   },
   {
     label: 'Auto-sort by metadata',
     icon: 'fa-solid fa-shuffle',
     tooltip: 'Moves unsorted images into a slot that fits best',
+    viewMode: ViewMode.Timeline,
     fn: doImageAutoSortByMetadata,
   },
   {
     label: 'Clear text metadata',
     icon: 'fa-solid fa-eraser',
     tooltip: 'Clears all text metadata except the file name. Does not affect mask/annotation metadata!',
+    viewMode: undefined,
     fn: doImageEraseMetadata,
   },
   {
     label: 'Move to unsorted',
     icon: 'fa-solid fa-eraser',
     tooltip: 'Moves the selected images back into the "Unsorted" drawer',
+    viewMode: ViewMode.Timeline,
     fn: doImageUnsort,
   },
 ];
