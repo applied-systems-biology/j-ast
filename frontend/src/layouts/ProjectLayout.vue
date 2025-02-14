@@ -467,9 +467,15 @@ function deleteProject() {
     'Delete project',
     'Do your really want to delete the current project?'
   ).then(() => {
+    $q.loading.show({
+      message: 'This may take some time for large projects ...'
+    })
     api.post(`/project/${projectId}/delete`, {}).then(() => {
       router.push('/');
-    });
+    })
+    .finally(() => {
+      $q.loading.hide()
+    })
   });
 }
 

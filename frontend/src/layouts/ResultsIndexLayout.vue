@@ -45,7 +45,7 @@
             <q-td :props="props">
               <div class="q-gutter-sm" v-if="props.row.id >= 0">
                 <q-btn icon="search" @click.stop="goToResult(props.row.id)"/>
-                <q-btn icon="delete" @click.stop="deleteResult(props.row.id)"/>
+                <q-btn icon="delete" @click.stop="deleteResult(props.row)"/>
               </div>
             </q-td>
           </template>
@@ -121,6 +121,13 @@ const resultsTableColumns : QTableColumn[] = [
     align: 'left',
   },
   {
+    name: "id",
+    label: "ID",
+    field: "id",
+    sortable: true,
+    align: 'left',
+  },
+  {
     name: "actions",
     label: "",
     field: "id",
@@ -152,6 +159,8 @@ function deleteResult(result: ResultPayload) {
     'Delete result',
     `Do you really want to delete the result "${result.name}"?`
   ).then(() => {
+    console.log(result);
+    console.log(`/result/${result.id}/delete`)
     api
       .post(`/result/${result.id}/delete`)
       .then(() => {
