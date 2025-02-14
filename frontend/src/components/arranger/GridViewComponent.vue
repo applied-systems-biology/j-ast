@@ -153,6 +153,18 @@ function onImageSelected(imageId: number, exclusive: boolean) {
   }
 }
 
+function selectAll() {
+  const newSelected : Array<number> = []
+  if(projectImages.value) {
+    for(const imageId of projectImages.value.imageIds) {
+      if(filterAppliesToImage(imageId)) {
+        newSelected.push(imageId);
+      }
+    }
+  }
+  selectedImageIds.value = newSelected
+}
+
 onMounted(() => {
   watch(projectImages, () => {
     if (projectImages.value?.projectId != lastProjectId.value) {
@@ -160,6 +172,9 @@ onMounted(() => {
     }
   });
 });
+
+defineExpose({ selectAll })
+
 </script>
 <style scoped lang="scss">
 $grid-item-width: 18rem;
