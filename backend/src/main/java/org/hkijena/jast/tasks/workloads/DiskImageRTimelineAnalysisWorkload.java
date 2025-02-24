@@ -26,8 +26,8 @@ import java.util.List;
 import java.util.Map;
 
 @Component
-@BackendTaskType(typeId = "disk-image-r-analysis")
-public class JASTAnalysisWorkload implements BackendTaskWorkload {
+@BackendTaskType(typeId = "disk-image-r-analysis-timeline")
+public class DiskImageRTimelineAnalysisWorkload implements BackendTaskWorkload {
 
     private static final List<BackendTaskWorkloadDataSlot> INPUTS = List.of(
             JASTDataSlot.Plate.toSlot(),
@@ -53,7 +53,7 @@ public class JASTAnalysisWorkload implements BackendTaskWorkload {
     private BackendTaskRegistry registry;
 
     @Autowired
-    public JASTAnalysisWorkload(ImageRepository imageRepository, ProjectRepository projectRepository, ResultRepository resultRepository, FileStorageService fileStorageService, BackendTaskUtils taskUtils) {
+    public DiskImageRTimelineAnalysisWorkload(ImageRepository imageRepository, ProjectRepository projectRepository, ResultRepository resultRepository, FileStorageService fileStorageService, BackendTaskUtils taskUtils) {
         this.imageRepository = imageRepository;
         this.projectRepository = projectRepository;
         this.resultRepository = resultRepository;
@@ -149,7 +149,7 @@ public class JASTAnalysisWorkload implements BackendTaskWorkload {
             }
         }
 
-        Path projectFilePath = taskUtils.writeSharedFile(params, "j-ast-analysis.jip");
+        Path projectFilePath = taskUtils.writeSharedFile(params, "disk-image-r-analysis-timeline.jip");
         progressInfo.log("Project file is " + projectFilePath);
         taskUtils.runJIPipe(params, projectFilePath, parameterOverrides, "", progressInfo);
 
