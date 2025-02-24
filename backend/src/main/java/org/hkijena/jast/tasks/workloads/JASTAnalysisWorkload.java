@@ -2,6 +2,7 @@ package org.hkijena.jast.tasks.workloads;
 
 import jakarta.transaction.Transactional;
 import org.hkijena.jast.model.AssayType;
+import org.hkijena.jast.model.ViewMode;
 import org.hkijena.jast.model.entities.Project;
 import org.hkijena.jast.payloads.task.BackendTaskParameterPayload;
 import org.hkijena.jast.repositories.ImageRepository;
@@ -25,7 +26,7 @@ import java.util.List;
 import java.util.Map;
 
 @Component
-@BackendTaskType(typeId = "j-ast-analysis")
+@BackendTaskType(typeId = "disk-image-r-analysis")
 public class JASTAnalysisWorkload implements BackendTaskWorkload {
 
     private static final List<BackendTaskWorkloadDataSlot> INPUTS = List.of(
@@ -58,6 +59,11 @@ public class JASTAnalysisWorkload implements BackendTaskWorkload {
         this.resultRepository = resultRepository;
         this.fileStorageService = fileStorageService;
         this.taskUtils = taskUtils;
+    }
+
+    @Override
+    public ViewMode getViewModeRestriction() {
+        return ViewMode.Timeline;
     }
 
     @Override

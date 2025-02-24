@@ -2,6 +2,7 @@ package org.hkijena.jast.tasks.workloads;
 
 import jakarta.transaction.Transactional;
 import org.hkijena.jast.model.AssayType;
+import org.hkijena.jast.model.ViewMode;
 import org.hkijena.jast.repositories.ImageRepository;
 import org.hkijena.jast.services.BackendTaskRegistry;
 import org.hkijena.jast.services.BackendTaskUtils;
@@ -84,6 +85,11 @@ public class InvertRawImageBackendTaskWorkload implements BackendTaskWorkload {
     @Override
     public boolean isOutputsResult() {
         return false;
+    }
+
+    @Override
+    public ViewMode getViewModeRestriction() {
+        return null;
     }
 
     @Override

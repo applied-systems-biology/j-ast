@@ -1,6 +1,7 @@
 package org.hkijena.jast.tasks;
 
 import org.hkijena.jast.model.AssayType;
+import org.hkijena.jast.model.ViewMode;
 import org.hkijena.jast.services.BackendTaskRegistry;
 import org.hkijena.jast.utils.*;
 import org.slf4j.Logger;
@@ -32,6 +33,8 @@ public interface BackendTaskWorkload {
     List<BackendTaskWorkloadParameterSlot> getParameters();
 
     AssayType getAssayTypeRestriction();
+
+    ViewMode getViewModeRestriction();
 
     boolean isOutputsResult();
 

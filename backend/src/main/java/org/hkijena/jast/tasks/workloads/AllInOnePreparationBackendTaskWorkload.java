@@ -3,6 +3,7 @@ package org.hkijena.jast.tasks.workloads;
 import com.google.common.collect.ImmutableList;
 import jakarta.transaction.Transactional;
 import org.hkijena.jast.model.AssayType;
+import org.hkijena.jast.model.ViewMode;
 import org.hkijena.jast.model.entities.Image;
 import org.hkijena.jast.model.entities.Project;
 import org.hkijena.jast.payloads.ImagePayload;
@@ -106,6 +107,11 @@ public class AllInOnePreparationBackendTaskWorkload implements BackendTaskWorklo
     @Override
     public AssayType getAssayTypeRestriction() {
         return AssayType.Unknown;
+    }
+
+    @Override
+    public ViewMode getViewModeRestriction() {
+        return null;
     }
 
     @Override

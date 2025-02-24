@@ -2,6 +2,7 @@ package org.hkijena.jast.tasks.workloads;
 
 import jakarta.transaction.Transactional;
 import org.hkijena.jast.model.AssayType;
+import org.hkijena.jast.model.ViewMode;
 import org.hkijena.jast.payloads.task.BackendTaskParameterPayload;
 import org.hkijena.jast.repositories.ImageRepository;
 import org.hkijena.jast.services.BackendTaskRegistry;
@@ -90,6 +91,11 @@ public class ETestCopyRegisteredZOIShapeWorkload implements BackendTaskWorkload 
     @Override
     public boolean isOutputsResult() {
         return false;
+    }
+
+    @Override
+    public ViewMode getViewModeRestriction() {
+        return ViewMode.Timeline;
     }
 
     @Override

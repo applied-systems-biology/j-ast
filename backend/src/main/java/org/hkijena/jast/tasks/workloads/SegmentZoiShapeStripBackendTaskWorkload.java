@@ -2,6 +2,7 @@ package org.hkijena.jast.tasks.workloads;
 
 import jakarta.transaction.Transactional;
 import org.hkijena.jast.model.AssayType;
+import org.hkijena.jast.model.ViewMode;
 import org.hkijena.jast.payloads.task.BackendTaskParameterPayload;
 import org.hkijena.jast.repositories.ImageRepository;
 import org.hkijena.jast.services.BackendTaskRegistry;
@@ -60,6 +61,11 @@ public class SegmentZoiShapeStripBackendTaskWorkload implements BackendTaskWorkl
     public String getDescription() {
         return "Automatically detects the ZOI shape in E-tests (Experimental). " +
                 "You only need to provide it for one time point (usually the first one)";
+    }
+
+    @Override
+    public ViewMode getViewModeRestriction() {
+        return null;
     }
 
     @Override

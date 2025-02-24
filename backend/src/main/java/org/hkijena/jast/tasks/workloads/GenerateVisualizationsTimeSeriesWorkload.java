@@ -2,6 +2,7 @@ package org.hkijena.jast.tasks.workloads;
 
 import jakarta.transaction.Transactional;
 import org.hkijena.jast.model.AssayType;
+import org.hkijena.jast.model.ViewMode;
 import org.hkijena.jast.model.entities.Project;
 import org.hkijena.jast.payloads.task.BackendTaskParameterPayload;
 import org.hkijena.jast.repositories.ImageRepository;
@@ -25,8 +26,8 @@ import java.util.List;
 import java.util.Map;
 
 @Component
-@BackendTaskType(typeId = "generate-visualizations")
-public class GenerateVisualizationsWorkload implements BackendTaskWorkload {
+@BackendTaskType(typeId = "generate-visualizations-time-series")
+public class GenerateVisualizationsTimeSeriesWorkload implements BackendTaskWorkload {
 
     private static final List<BackendTaskWorkloadDataSlot> INPUTS = List.of(JASTDataSlot.Plate.toSlot(BackendTaskWorkloadDataSlotValidationMode.Optional),
             JASTDataSlot.ZOIShape.toSlot(BackendTaskWorkloadDataSlotValidationMode.Optional),
@@ -45,7 +46,7 @@ public class GenerateVisualizationsWorkload implements BackendTaskWorkload {
     private BackendTaskRegistry registry;
 
     @Autowired
-    public GenerateVisualizationsWorkload(ImageRepository imageRepository, ResultRepository resultRepository, ProjectRepository projectRepository, FileStorageService fileStorageService, BackendTaskUtils taskUtils) {
+    public GenerateVisualizationsTimeSeriesWorkload(ImageRepository imageRepository, ResultRepository resultRepository, ProjectRepository projectRepository, FileStorageService fileStorageService, BackendTaskUtils taskUtils) {
         this.imageRepository = imageRepository;
         this.resultRepository = resultRepository;
         this.projectRepository = projectRepository;
@@ -60,12 +61,12 @@ public class GenerateVisualizationsWorkload implements BackendTaskWorkload {
 
     @Override
     public String getName() {
-        return "Generate visualizations";
+        return "Generate visualizations (time series)";
     }
 
     @Override
     public String getDescription() {
-        return "Generates visualizations of the images and annotations (plate, strip/disk, ZOI shape)";
+        return "Generates visualizations of the images and annotations (plate, strip/disk, ZOI shape). This algorithm requires that images are properly organized into time series.";
     }
 
     @Override
@@ -101,6 +102,11 @@ public class GenerateVisualizationsWorkload implements BackendTaskWorkload {
     @Override
     public boolean isOutputsResult() {
         return true;
+    }
+
+    @Override
+    public ViewMode getViewModeRestriction() {
+        return ViewMode.Timeline;
     }
 
     @Override

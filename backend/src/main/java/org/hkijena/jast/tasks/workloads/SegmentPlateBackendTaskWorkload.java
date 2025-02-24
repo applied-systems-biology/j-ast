@@ -2,6 +2,7 @@ package org.hkijena.jast.tasks.workloads;
 
 import jakarta.transaction.Transactional;
 import org.hkijena.jast.model.AssayType;
+import org.hkijena.jast.model.ViewMode;
 import org.hkijena.jast.payloads.task.BackendTaskPayload;
 import org.hkijena.jast.repositories.ImageRepository;
 import org.hkijena.jast.services.BackendTaskRegistry;
@@ -81,6 +82,11 @@ public class SegmentPlateBackendTaskWorkload implements BackendTaskWorkload {
     @Override
     public AssayType getAssayTypeRestriction() {
         return AssayType.Unknown;
+    }
+
+    @Override
+    public ViewMode getViewModeRestriction() {
+        return null;
     }
 
     @Override

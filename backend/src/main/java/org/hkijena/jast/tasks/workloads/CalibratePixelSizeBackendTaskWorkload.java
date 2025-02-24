@@ -2,6 +2,7 @@ package org.hkijena.jast.tasks.workloads;
 
 import jakarta.transaction.Transactional;
 import org.hkijena.jast.model.AssayType;
+import org.hkijena.jast.model.ViewMode;
 import org.hkijena.jast.model.entities.Image;
 import org.hkijena.jast.repositories.ImageRepository;
 import org.hkijena.jast.services.BackendTaskRegistry;
@@ -86,6 +87,11 @@ public class CalibratePixelSizeBackendTaskWorkload implements BackendTaskWorkloa
     @Override
     public boolean isOutputsResult() {
         return false;
+    }
+
+    @Override
+    public ViewMode getViewModeRestriction() {
+        return null;
     }
 
     @Override

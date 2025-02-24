@@ -10,6 +10,7 @@ import {
 } from 'src/types/notification';
 import { AssayType } from 'src/types/assayType';
 import {showLoadingWithTimeout} from "src/types/common";
+import { ViewMode } from 'src/types/view';
 
 export enum TaskStatus {
   Ready = 'Ready',
@@ -108,6 +109,9 @@ export class BackendTaskTypePayload {
 
   @Expose()
   outputsResult: boolean = false;
+
+  @Expose()
+  viewModeRestriction: ViewMode | null = null;
 }
 
 export class BackendTaskPayload {

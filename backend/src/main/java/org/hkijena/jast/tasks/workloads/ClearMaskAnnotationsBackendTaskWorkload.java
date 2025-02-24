@@ -2,6 +2,7 @@ package org.hkijena.jast.tasks.workloads;
 
 import jakarta.transaction.Transactional;
 import org.hkijena.jast.model.AssayType;
+import org.hkijena.jast.model.ViewMode;
 import org.hkijena.jast.model.entities.Image;
 import org.hkijena.jast.model.entities.MaskImageAnnotation;
 import org.hkijena.jast.repositories.ImageRepository;
@@ -92,6 +93,11 @@ public class ClearMaskAnnotationsBackendTaskWorkload implements BackendTaskWorkl
     @Override
     public boolean isOutputsResult() {
         return false;
+    }
+
+    @Override
+    public ViewMode getViewModeRestriction() {
+        return null;
     }
 
     @Override

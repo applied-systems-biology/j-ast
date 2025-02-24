@@ -2,6 +2,7 @@ package org.hkijena.jast.payloads.task;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hkijena.jast.model.AssayType;
+import org.hkijena.jast.model.ViewMode;
 import org.hkijena.jast.tasks.BackendTaskWorkload;
 import org.hkijena.jast.tasks.BackendTaskWorkloadDataSlot;
 import org.hkijena.jast.tasks.BackendTaskWorkloadMode;
@@ -33,6 +34,8 @@ public class BackendTaskTypePayload {
     private List<BackendTaskParameterPayload> parameters = new ArrayList<>();
     @JsonProperty
     private boolean outputsResult = false;
+    @JsonProperty
+    private ViewMode viewModeRestriction = null;
 
     public BackendTaskTypePayload() {
     }
@@ -49,6 +52,15 @@ public class BackendTaskTypePayload {
         setAssayTypeRestriction(workload.getAssayTypeRestriction());
         setParameters(workload.getParameters().stream().map(BackendTaskParameterPayload::new).collect(Collectors.toList()));
         setOutputsResult(workload.isOutputsResult());
+        setViewModeRestriction(workload.getViewModeRestriction());
+    }
+
+    public ViewMode getViewModeRestriction() {
+        return viewModeRestriction;
+    }
+
+    public void setViewModeRestriction(ViewMode viewModeRestriction) {
+        this.viewModeRestriction = viewModeRestriction;
     }
 
     public String getShortDescription() {

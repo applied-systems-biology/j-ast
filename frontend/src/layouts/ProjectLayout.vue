@@ -169,6 +169,7 @@
                       (task) => task.category == category
                     )"
                     :key="tool.taskId"
+                    :disable="tool.viewModeRestriction != currentViewMode && tool.viewModeRestriction != null"
                     clickable
                     v-close-popup
                     @click="doBackendTaskClicked(tool)"
@@ -185,6 +186,7 @@
                 v-for="tool in availableBackendTasks.filter(
                   (task) => !task.category
                 )"
+                :disable="tool.viewModeRestriction != currentViewMode && tool.viewModeRestriction != null"
                 :key="tool.taskId"
                 clickable
                 v-close-popup
