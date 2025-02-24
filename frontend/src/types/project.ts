@@ -1,4 +1,5 @@
 import { Expose } from 'class-transformer';
+import { ViewMode } from 'src/types/view';
 
 /**
  * Message that contains basic infos about a project
@@ -13,11 +14,18 @@ export class ProjectMetadataPayload {
 
   @Expose()
   owner: string = '';
+
+  @Expose()
+  viewMode: ViewMode = ViewMode.Timeline;
 }
 
 /**
  * Sent to the backend to create a project
  */
-export interface CreateEditProjectRequest {
-  name: string;
+export class CreateEditProjectRequest {
+  @Expose()
+  name: string = "";
+
+  @Expose()
+  viewMode: ViewMode = ViewMode.Timeline;
 }

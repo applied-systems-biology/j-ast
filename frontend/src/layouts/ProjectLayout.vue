@@ -54,7 +54,7 @@
         </q-btn-dropdown>
         <q-btn-dropdown color="blue" :label="currentViewMode" :icon="currentViewMode == ViewMode.Timeline ? 'fa-solid fa-timeline' : 'fa-solid fa-grip'">
           <q-list>
-            <q-item clickable v-close-popup @click="currentViewMode = ViewMode.Timeline">
+            <q-item clickable v-close-popup @click="changeViewMode(ViewMode.Timeline)">
               <q-item-section avatar>
                 <q-icon name="fa-solid fa-timeline" />
               </q-item-section>
@@ -65,7 +65,7 @@
                 Use this view for projects that have a time component. You will need to sort the images into timelines.
               </q-tooltip>
             </q-item>
-            <q-item clickable v-close-popup @click="currentViewMode = ViewMode.Grid">
+            <q-item clickable v-close-popup @click="changeViewMode(ViewMode.Grid)">
               <q-item-section avatar>
                 <q-icon name="fa-solid fa-grip" />
               </q-item-section>
@@ -452,6 +452,7 @@ function editProjectName() {
     api
       .post<CreateEditProjectRequest>(`/project/${projectId}/edit`, {
         name: data,
+        viewMode: currentViewMode.value
       } as CreateEditProjectRequest)
       .then((response) => {
         projectPayload.value = plainToInstance(
@@ -459,6 +460,21 @@ function editProjectName() {
           response.data
         );
       });
+  });
+}
+
+function changeViewMode(newViewMode: ViewMode){
+  currentViewMode.value = newViewMode
+  api
+    .post<CreateEditProjectRequest>(`/project/${projectId}/edit`, {
+      name: projectPayload.value.name,
+      viewMode: newViewMode
+    } as CreateEditProjectRequest)
+    .then((response) => {
+      projectPayload.value = plainToInstance(
+        ProjectMetadataPayload,
+        response.data
+      );
   });
 }
 
@@ -621,6 +637,7 @@ function queryBackend() {
       ProjectMetadataPayload,
       response.data
     );
+    currentViewMode.value = projectPayload.value.viewMode
   });
   api
     .get<ProjectImagesPayload>(`/project/${projectId}/images`)

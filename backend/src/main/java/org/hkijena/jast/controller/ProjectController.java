@@ -2,6 +2,7 @@ package org.hkijena.jast.controller;
 
 import org.hkijena.jast.config.AccountConfig;
 import org.hkijena.jast.model.UserPrincipal;
+import org.hkijena.jast.model.ViewMode;
 import org.hkijena.jast.model.entities.Image;
 import org.hkijena.jast.model.entities.Project;
 import org.hkijena.jast.payloads.CreateEditProjectRequest;
@@ -56,7 +57,7 @@ public class ProjectController {
         userService.validateAuthentication(authentication);
         ArrayList<ProjectMetadataPayload> result = new ArrayList<>();
         for (Project project : projectRepository.getByAuthentication(authentication)) {
-            result.add(ProjectMetadataPayload.create(project));
+            result.add(new ProjectMetadataPayload(project));
         }
         return ResponseEntity.ok(result);
     }
@@ -64,7 +65,7 @@ public class ProjectController {
     @GetMapping("/api/project/{id}")
     public ResponseEntity<ProjectMetadataPayload> getProject(Authentication authentication, @PathVariable("id") long id) {
         userService.validateAuthentication(authentication);
-        return ResponseEntity.ok(ProjectMetadataPayload.create(projectService.getProjectByIdOrError(id)));
+        return ResponseEntity.ok(new ProjectMetadataPayload(projectService.getProjectByIdOrError(id)));
     }
 
     @PostMapping("/api/project/{id}/edit")
@@ -73,8 +74,9 @@ public class ProjectController {
         Project project = projectService.getProjectByIdOrError(id);
         if (project.canEdit(authentication)) {
             project.setName(StringUtils.orElse(request.getName(), "Unnamed project"));
+            project.setViewMode(request.getViewMode() != null ? request.getViewMode() : ViewMode.Timeline);
             projectRepository.save(project);
-            return ResponseEntity.ok(ProjectMetadataPayload.create(project));
+            return ResponseEntity.ok(new ProjectMetadataPayload(project));
         } else {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN);
         }
@@ -88,11 +90,12 @@ public class ProjectController {
         }
         Project project = new Project();
         project.setName(StringUtils.orElse(request.getName(), "Unnamed project"));
+        project.setViewMode(request.getViewMode());
         if (authentication.getPrincipal() instanceof UserPrincipal) {
             project.setOwner(((UserPrincipal) authentication.getPrincipal()).getUser());
         }
         project = projectRepository.save(project);
-        return ResponseEntity.ok(ProjectMetadataPayload.create(project));
+        return ResponseEntity.ok(new ProjectMetadataPayload(project));
     }
 
     @PostMapping("/api/project/{id}/upload-raw-image")

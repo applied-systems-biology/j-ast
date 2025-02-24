@@ -7,6 +7,7 @@ import jakarta.validation.constraints.NotNull;
 import org.hkijena.jast.model.AdminPrincipal;
 import org.hkijena.jast.model.Privileges;
 import org.hkijena.jast.model.UserPrincipal;
+import org.hkijena.jast.model.ViewMode;
 import org.hkijena.jast.services.FileStorageService;
 import org.hkijena.jast.utils.StringUtils;
 import org.slf4j.Logger;
@@ -45,6 +46,9 @@ public class Project {
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true, mappedBy = "project")
     private List<Result> results = new ArrayList<>();
+
+    @Column(name ="view_mode")
+    private ViewMode viewMode = ViewMode.Timeline;
 
     public Long getId() {
         return id;
@@ -183,5 +187,16 @@ public class Project {
         for (Result result : getResults()) {
             result.deleteFilesLater(fileStorageService);
         }
+    }
+
+    public ViewMode getViewMode() {
+        if(viewMode == null) {
+            viewMode = ViewMode.Timeline;
+        }
+        return viewMode;
+    }
+
+    public void setViewMode(ViewMode viewMode) {
+        this.viewMode = viewMode;
     }
 }

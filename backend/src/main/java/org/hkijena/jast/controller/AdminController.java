@@ -60,13 +60,13 @@ public class AdminController {
         if (userId <= 0) {
             // Admin user
             for (Project project : projectRepository.findByOwnerIsNull()) {
-                result.add(ProjectMetadataPayload.create(project));
+                result.add(new ProjectMetadataPayload(project));
             }
         } else {
             Optional<User> byId = userRepository.findById(userId);
             if (byId.isPresent()) {
                 for (Project project : projectRepository.findByOwner(byId.get())) {
-                    result.add(ProjectMetadataPayload.create(project));
+                    result.add(new ProjectMetadataPayload(project));
                 }
             } else {
                 throw new ResponseStatusException(HttpStatus.NOT_FOUND);
