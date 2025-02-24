@@ -19,7 +19,7 @@
           icon="refresh"
           flat
           class="q-ma-sm"
-          @click="maxNumRenderedImages += 5"
+          @click="maxNumRenderedImages += 30"
         >
           Load more images ({{ Math.max(0, numImages - numRenderedImages) }} left)
         </q-btn>
