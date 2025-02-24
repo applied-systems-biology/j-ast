@@ -298,6 +298,7 @@
     <q-page-container>
       <q-page class="flex column q-gutter-sm">
         <TimelineViewComponent
+          ref="timelineViewComponent"
           v-if="currentViewMode == ViewMode.Timeline"
           v-model="projectImages"
           v-model:selected-image-ids="selectedImageIds"
@@ -306,6 +307,7 @@
           :show-unsorted="drawerUnsortedImages"
         />
         <GridViewComponent
+          ref="gridViewComponent"
           v-if="currentViewMode == ViewMode.Grid"
           v-model="projectImages"
           v-model:selected-image-ids="selectedImageIds"
@@ -321,7 +323,7 @@
 <script setup lang="ts">
 import AuthManagerComponent from 'components/layout/AuthManagerComponent.vue';
 import HeaderLogoButtonComponent from 'components/layout/HeaderLogoButtonComponent.vue';
-import { computed, onMounted, ref, Ref } from 'vue';
+import {computed, onMounted, ref, Ref, useTemplateRef} from 'vue';
 import ToggleButton from 'components/utils/ToggleButton.vue';
 import ImageUploaderComponent from 'components/drawers/ImageUploaderComponent.vue';
 import { QSpinnerHourglass, useQuasar } from "quasar";
@@ -387,6 +389,9 @@ const projectBackendTasks = ref<Array<BackendTaskPayload>>([ createDummyBackendT
 const resultList = ref<ResultPayload[]>();
 const filterText = ref("")
 const currentViewMode = ref(ViewMode.Timeline);
+
+const timelineViewComponent = useTemplateRef<any>("timelineViewComponent");
+const gridViewComponent = useTemplateRef<any>("gridViewComponent");
 
 const hasTaskRunning = computed(() => {
   if (projectBackendTasks.value) {
@@ -483,9 +488,15 @@ function deleteProject() {
     'Delete project',
     'Do your really want to delete the current project?'
   ).then(() => {
+    $q.loading.show({
+      message: 'This may take some time for large projects ...'
+    })
     api.post(`/project/${projectId}/delete`, {}).then(() => {
       router.push('/');
-    });
+    })
+    .finally(() => {
+      $q.loading.hide()
+    })
   });
 }
 
@@ -580,15 +591,27 @@ function downloadZip(imageIds : Array<number> | null) {
 }
 
 function selectAll() {
-  if (drawerUnsortedImages.value) {
-    selectedImageIds.value = [...projectImages.value.imageIds];
-  } else {
-    selectedImageIds.value = [
-      ...projectImages.value.imageIds.filter(
-        (id) => projectImages.value.getImageById(id).groupColumn >= 0
-      ),
-    ];
+
+  if(currentViewMode.value == ViewMode.Timeline) {
+    if(timelineViewComponent.value) {
+      timelineViewComponent.value.selectAll()
+    }
   }
+  else if(currentViewMode.value == ViewMode.Grid) {
+    if(gridViewComponent.value) {
+      gridViewComponent.value.selectAll()
+    }
+  }
+
+  // if (drawerUnsortedImages.value) {
+  //   selectedImageIds.value = [...projectImages.value.imageIds];
+  // } else {
+  //   selectedImageIds.value = [
+  //     ...projectImages.value.imageIds.filter(
+  //       (id) => projectImages.value.getImageById(id).groupColumn >= 0
+  //     ),
+  //   ];
+  // }
 }
 
 function doFrontEndProcessor(tool: FrontEndImageProcessor) {

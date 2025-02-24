@@ -193,7 +193,7 @@ import { api } from 'boot/axios';
 import { plainToInstance } from 'class-transformer';
 import { AssayType } from 'src/types/assayType';
 
-defineProps<{
+const props = defineProps<{
   showUnsorted: boolean;
 }>();
 
@@ -488,6 +488,25 @@ function selectRow(rowIndex: number, event: Event) {
   }
 }
 
+function selectAll() {
+  const newSelected : Array<number> = []
+  if(projectImages.value) {
+    if(props.showUnsorted) {
+      for(const image of projectImages.value.unsortedRow.images) {
+        newSelected.push(image.id);
+      }
+    }
+    for (let rowIndex = 0; rowIndex < projectImages.value.groupRows.length; rowIndex++) {
+      if(filterAppliesToRow(rowIndex)) {
+        for(const image of projectImages.value.groupRows[rowIndex].images) {
+          newSelected.push(image.id);
+        }
+      }
+    }
+  }
+  selectedImageIds.value = newSelected
+}
+
 onMounted(() => {
   watch(projectImages, () => {
     console.log('new project images:' + projectImages.value?.projectId);
@@ -496,6 +515,9 @@ onMounted(() => {
     }
   });
 });
+
+defineExpose({ selectAll })
+
 </script>
 <style scoped lang="scss">
 $grid-item-width: 18rem;

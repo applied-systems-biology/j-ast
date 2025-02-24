@@ -34,7 +34,7 @@ import {
 import { computed, onMounted, ref, watch } from 'vue';
 import { Dialog, useQuasar } from 'quasar';
 import { useMaskImageAnnotationThumbnailStore } from 'stores/mask-image-annotation-thumbnail-store';
-import { ImagePayload, MaskImageAnnotationPayload } from 'src/types/image';
+import {ImagePayload, incrementImageMaskAnnotationVersion, MaskImageAnnotationPayload} from 'src/types/image';
 import MaskImageAnnotationEditorDialog from '../annotationEditors/MaskImageAnnotationEditorDialog.vue';
 
 const $q = useQuasar();
@@ -69,6 +69,7 @@ function openEditor() {
     .onOk(() => {
       if(image.value) {
         image.value.version++
+        incrementImageMaskAnnotationVersion(image.value, props.annotationTypeId);
         queryBackend()
       }
     })

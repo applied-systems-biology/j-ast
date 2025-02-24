@@ -121,6 +121,25 @@ export class ImagePayload {
     }
     return result;
   }
+
+
+}
+
+export function incrementImageMaskAnnotationVersion(image: ImagePayload, annotationType: string) {
+  let found : MaskImageAnnotationPayload | null = null
+  for(const annotation of image.maskImageAnnotations) {
+    if(annotation.annotationTypeId == annotationType) {
+      found = annotation;
+    }
+  }
+  if(!found) {
+    found = new MaskImageAnnotationPayload()
+    found.annotationTypeId = annotationType
+    found.imageId = image.id
+    found.version = 0
+    found.projectId = image.projectId;
+  }
+  found.version++
 }
 
 export function imageSupportsMaskAnnotation(img: ImagePayload, name: string): boolean {
