@@ -136,25 +136,6 @@
   },
   "dependencies" : [ {
     "metadata" : {
-      "name" : "Core",
-      "description" : "<html><head></head><body>A JIPipe project</body></html>",
-      "summary" : "<html><head></head><body></body></html>",
-      "authors" : [ ],
-      "acknowledgements" : [ ],
-      "website" : "",
-      "license" : "",
-      "citation" : "",
-      "dependency-citations" : [ ],
-      "categories" : [ ]
-    },
-    "id" : "org.hkijena.jipipe:core",
-    "version" : "5.0.0",
-    "provides" : [ ],
-    "ij:update-site-dependencies" : [ ],
-    "dependencies" : [ ],
-    "ij:update-site-providers" : [ ]
-  }, {
-    "metadata" : {
       "name" : "Utilities",
       "description" : "<html><head></head><body>Utility algorithms</body></html>",
       "summary" : "<html><head></head><body>Utility algorithms</body></html>",
@@ -200,6 +181,58 @@
       "categories" : [ "Data processing", "Scripting" ]
     },
     "id" : "org.hkijena.jipipe:utils",
+    "version" : "5.0.0",
+    "provides" : [ ],
+    "ij:update-site-dependencies" : [ ],
+    "dependencies" : [ ],
+    "ij:update-site-providers" : [ ]
+  }, {
+    "metadata" : {
+      "name" : "R integration",
+      "description" : "<html><head></head><body>Integrates R scripts into JIPipe</body></html>",
+      "summary" : "<html><head></head><body>Integrates R scripts into JIPipe</body></html>",
+      "authors" : [ {
+        "title" : null,
+        "first-name" : "Zoltán",
+        "last-name" : "Cseresnyés",
+        "affiliations-list" : [ "Applied Systems Biology, Leibniz Institute for Natural Product Research and Infection Biology – Hans-Knöll-Institute, Jena, Germany" ],
+        "website" : "https://www.leibniz-hki.de/en/staff-details.html?member=144",
+        "contact" : "zoltan.cseresnyes@leibniz-hki.de",
+        "first-author" : true,
+        "corresponding-author" : false,
+        "orcid" : "https://orcid.org/0000-0002-6574-2588",
+        "custom-text" : "<html><head></head><body></body></html>"
+      }, {
+        "title" : null,
+        "first-name" : "Ruman",
+        "last-name" : "Gerst",
+        "affiliations-list" : [ "Applied Systems Biology, Leibniz Institute for Natural Product Research and Infection Biology – Hans-Knöll-Institute, Jena, Germany", "Faculty of Biological Sciences, Friedrich Schiller University Jena, Germany" ],
+        "website" : "https://www.leibniz-hki.de/en/staff-details.html?member=1027",
+        "contact" : "ruman.gerst@leibniz-hki.de",
+        "first-author" : true,
+        "corresponding-author" : false,
+        "orcid" : "https://orcid.org/0000-0002-0723-6038",
+        "custom-text" : "<html><head></head><body></body></html>"
+      }, {
+        "title" : null,
+        "first-name" : "Marc Thilo",
+        "last-name" : "Figge",
+        "affiliations-list" : [ "Applied Systems Biology, Leibniz Institute for Natural Product Research and Infection Biology – Hans-Knöll-Institute, Jena, Germany", "Institute of Microbiology, Faculty of Biological Sciences, Friedrich Schiller University Jena, Germany" ],
+        "website" : "https://www.leibniz-hki.de/en/staff-details.html?member=81",
+        "contact" : "thilo.figge@leibniz-hki.de",
+        "first-author" : false,
+        "corresponding-author" : true,
+        "orcid" : "https://orcid.org/0000-0002-4044-9166",
+        "custom-text" : "<html><head></head><body></body></html>"
+      } ],
+      "acknowledgements" : [ ],
+      "website" : "https://www.jipipe.org/",
+      "license" : "MIT",
+      "citation" : "Gerst, R., Cseresnyés, Z. & Figge, M.T. JIPipe: visual batch processing for ImageJ. Nat Methods (2023). https://doi.org/10.1038/s41592-022-01744-4",
+      "dependency-citations" : [ "R Core Team (2017). R: A language and environment for statistical computing. R Foundation for Statistical Computing, Vienna, Austria. URL https://www.R-project.org/." ],
+      "categories" : [ "Scripting" ]
+    },
+    "id" : "org.hkijena.jipipe:r",
     "version" : "5.0.0",
     "provides" : [ ],
     "ij:update-site-dependencies" : [ ],
@@ -311,6 +344,44 @@
     "ij:update-site-providers" : [ ]
   }, {
     "metadata" : {
+      "name" : "Core",
+      "description" : "<html><head></head><body>A JIPipe project</body></html>",
+      "summary" : "<html><head></head><body></body></html>",
+      "authors" : [ ],
+      "acknowledgements" : [ ],
+      "website" : "",
+      "license" : "",
+      "citation" : "",
+      "dependency-citations" : [ ],
+      "categories" : [ ]
+    },
+    "id" : "org.hkijena.jipipe:core",
+    "version" : "5.0.0",
+    "provides" : [ ],
+    "ij:update-site-dependencies" : [ ],
+    "dependencies" : [ ],
+    "ij:update-site-providers" : [ ]
+  }, {
+    "metadata" : {
+      "name" : "Filesystem types and algorithms",
+      "description" : "<html><head></head><body>A JIPipe project</body></html>",
+      "summary" : "<html><head></head><body></body></html>",
+      "authors" : [ ],
+      "acknowledgements" : [ ],
+      "website" : "",
+      "license" : "",
+      "citation" : "",
+      "dependency-citations" : [ ],
+      "categories" : [ ]
+    },
+    "id" : "org.hkijena.jipipe:filesystem",
+    "version" : "5.0.0",
+    "provides" : [ ],
+    "ij:update-site-dependencies" : [ ],
+    "dependencies" : [ ],
+    "ij:update-site-providers" : [ ]
+  }, {
+    "metadata" : {
       "name" : "JFreeChart plots",
       "description" : "<html><head></head><body>JFreeChart plot support</body></html>",
       "summary" : "<html><head></head><body>JFreeChart plot support</body></html>",
@@ -363,7 +434,7 @@
     "ij:update-site-providers" : [ ]
   }, {
     "metadata" : {
-      "name" : "Filesystem types and algorithms",
+      "name" : "ImageJ integration",
       "description" : "<html><head></head><body>A JIPipe project</body></html>",
       "summary" : "<html><head></head><body></body></html>",
       "authors" : [ ],
@@ -374,7 +445,7 @@
       "dependency-citations" : [ ],
       "categories" : [ ]
     },
-    "id" : "org.hkijena.jipipe:filesystem",
+    "id" : "org.hkijena.jipipe:imagej-integration",
     "version" : "5.0.0",
     "provides" : [ ],
     "ij:update-site-dependencies" : [ ],
@@ -382,7 +453,7 @@
     "ij:update-site-providers" : [ ]
   }, {
     "metadata" : {
-      "name" : "Annotation data types and algorithms",
+      "name" : "Multi parameter algorithms",
       "description" : "<html><head></head><body>A JIPipe project</body></html>",
       "summary" : "<html><head></head><body></body></html>",
       "authors" : [ ],
@@ -393,7 +464,7 @@
       "dependency-citations" : [ ],
       "categories" : [ ]
     },
-    "id" : "org.hkijena.jipipe:annotations",
+    "id" : "org.hkijena.jipipe:multi-parameters-algorithms",
     "version" : "5.0.0",
     "provides" : [ ],
     "ij:update-site-dependencies" : [ ],
@@ -453,58 +524,6 @@
     "ij:update-site-providers" : [ ]
   }, {
     "metadata" : {
-      "name" : "Strings",
-      "description" : "<html><head></head><body>Provides support for string data types</body></html>",
-      "summary" : "<html><head></head><body>Provides support for string data types</body></html>",
-      "authors" : [ {
-        "title" : null,
-        "first-name" : "Zoltán",
-        "last-name" : "Cseresnyés",
-        "affiliations-list" : [ "Applied Systems Biology, Leibniz Institute for Natural Product Research and Infection Biology – Hans-Knöll-Institute, Jena, Germany" ],
-        "website" : "https://www.leibniz-hki.de/en/staff-details.html?member=144",
-        "contact" : "zoltan.cseresnyes@leibniz-hki.de",
-        "first-author" : true,
-        "corresponding-author" : false,
-        "orcid" : "https://orcid.org/0000-0002-6574-2588",
-        "custom-text" : "<html><head></head><body></body></html>"
-      }, {
-        "title" : null,
-        "first-name" : "Ruman",
-        "last-name" : "Gerst",
-        "affiliations-list" : [ "Applied Systems Biology, Leibniz Institute for Natural Product Research and Infection Biology – Hans-Knöll-Institute, Jena, Germany", "Faculty of Biological Sciences, Friedrich Schiller University Jena, Germany" ],
-        "website" : "https://www.leibniz-hki.de/en/staff-details.html?member=1027",
-        "contact" : "ruman.gerst@leibniz-hki.de",
-        "first-author" : true,
-        "corresponding-author" : false,
-        "orcid" : "https://orcid.org/0000-0002-0723-6038",
-        "custom-text" : "<html><head></head><body></body></html>"
-      }, {
-        "title" : null,
-        "first-name" : "Marc Thilo",
-        "last-name" : "Figge",
-        "affiliations-list" : [ "Applied Systems Biology, Leibniz Institute for Natural Product Research and Infection Biology – Hans-Knöll-Institute, Jena, Germany", "Institute of Microbiology, Faculty of Biological Sciences, Friedrich Schiller University Jena, Germany" ],
-        "website" : "https://www.leibniz-hki.de/en/staff-details.html?member=81",
-        "contact" : "thilo.figge@leibniz-hki.de",
-        "first-author" : false,
-        "corresponding-author" : true,
-        "orcid" : "https://orcid.org/0000-0002-4044-9166",
-        "custom-text" : "<html><head></head><body></body></html>"
-      } ],
-      "acknowledgements" : [ ],
-      "website" : "https://www.jipipe.org/",
-      "license" : "MIT",
-      "citation" : "Gerst, R., Cseresnyés, Z. & Figge, M.T. JIPipe: visual batch processing for ImageJ. Nat Methods (2023). https://doi.org/10.1038/s41592-022-01744-4",
-      "dependency-citations" : [ ],
-      "categories" : [ "Scripting" ]
-    },
-    "id" : "org.hkijena.jipipe:strings",
-    "version" : "5.0.0",
-    "provides" : [ ],
-    "ij:update-site-dependencies" : [ ],
-    "dependencies" : [ ],
-    "ij:update-site-providers" : [ ]
-  }, {
-    "metadata" : {
       "name" : "Forms",
       "description" : "<html><head></head><body>A JIPipe project</body></html>",
       "summary" : "<html><head></head><body></body></html>",
@@ -524,51 +543,37 @@
     "ij:update-site-providers" : [ ]
   }, {
     "metadata" : {
-      "name" : "R integration",
-      "description" : "<html><head></head><body>Integrates R scripts into JIPipe</body></html>",
-      "summary" : "<html><head></head><body>Integrates R scripts into JIPipe</body></html>",
-      "authors" : [ {
-        "title" : null,
-        "first-name" : "Zoltán",
-        "last-name" : "Cseresnyés",
-        "affiliations-list" : [ "Applied Systems Biology, Leibniz Institute for Natural Product Research and Infection Biology – Hans-Knöll-Institute, Jena, Germany" ],
-        "website" : "https://www.leibniz-hki.de/en/staff-details.html?member=144",
-        "contact" : "zoltan.cseresnyes@leibniz-hki.de",
-        "first-author" : true,
-        "corresponding-author" : false,
-        "orcid" : "https://orcid.org/0000-0002-6574-2588",
-        "custom-text" : "<html><head></head><body></body></html>"
-      }, {
-        "title" : null,
-        "first-name" : "Ruman",
-        "last-name" : "Gerst",
-        "affiliations-list" : [ "Applied Systems Biology, Leibniz Institute for Natural Product Research and Infection Biology – Hans-Knöll-Institute, Jena, Germany", "Faculty of Biological Sciences, Friedrich Schiller University Jena, Germany" ],
-        "website" : "https://www.leibniz-hki.de/en/staff-details.html?member=1027",
-        "contact" : "ruman.gerst@leibniz-hki.de",
-        "first-author" : true,
-        "corresponding-author" : false,
-        "orcid" : "https://orcid.org/0000-0002-0723-6038",
-        "custom-text" : "<html><head></head><body></body></html>"
-      }, {
-        "title" : null,
-        "first-name" : "Marc Thilo",
-        "last-name" : "Figge",
-        "affiliations-list" : [ "Applied Systems Biology, Leibniz Institute for Natural Product Research and Infection Biology – Hans-Knöll-Institute, Jena, Germany", "Institute of Microbiology, Faculty of Biological Sciences, Friedrich Schiller University Jena, Germany" ],
-        "website" : "https://www.leibniz-hki.de/en/staff-details.html?member=81",
-        "contact" : "thilo.figge@leibniz-hki.de",
-        "first-author" : false,
-        "corresponding-author" : true,
-        "orcid" : "https://orcid.org/0000-0002-4044-9166",
-        "custom-text" : "<html><head></head><body></body></html>"
-      } ],
+      "name" : "Annotation data types and algorithms",
+      "description" : "<html><head></head><body>A JIPipe project</body></html>",
+      "summary" : "<html><head></head><body></body></html>",
+      "authors" : [ ],
       "acknowledgements" : [ ],
-      "website" : "https://www.jipipe.org/",
-      "license" : "MIT",
-      "citation" : "Gerst, R., Cseresnyés, Z. & Figge, M.T. JIPipe: visual batch processing for ImageJ. Nat Methods (2023). https://doi.org/10.1038/s41592-022-01744-4",
-      "dependency-citations" : [ "R Core Team (2017). R: A language and environment for statistical computing. R Foundation for Statistical Computing, Vienna, Austria. URL https://www.R-project.org/." ],
-      "categories" : [ "Scripting" ]
+      "website" : "",
+      "license" : "",
+      "citation" : "",
+      "dependency-citations" : [ ],
+      "categories" : [ ]
     },
-    "id" : "org.hkijena.jipipe:r",
+    "id" : "org.hkijena.jipipe:annotations",
+    "version" : "5.0.0",
+    "provides" : [ ],
+    "ij:update-site-dependencies" : [ ],
+    "dependencies" : [ ],
+    "ij:update-site-providers" : [ ]
+  }, {
+    "metadata" : {
+      "name" : "Strings",
+      "description" : "<html><head></head><body>A JIPipe project</body></html>",
+      "summary" : "<html><head></head><body></body></html>",
+      "authors" : [ ],
+      "acknowledgements" : [ ],
+      "website" : "",
+      "license" : "",
+      "citation" : "",
+      "dependency-citations" : [ ],
+      "categories" : [ ]
+    },
+    "id" : "org.hkijena.jipipe:strings",
     "version" : "5.0.0",
     "provides" : [ ],
     "ij:update-site-dependencies" : [ ],
@@ -1061,44 +1066,6 @@
       "categories" : [ "Image analysis", "Image Annotation", "Analysis", "Annotation", "Segmentation", "Filtering", "Montage", "Import-Export", "Fiji", "ImageScience", "Noise", "Transform", "Binary", "Object Detection", "Feature Extraction", "Visualization" ]
     },
     "id" : "org.hkijena.jipipe:imagej-algorithms",
-    "version" : "5.0.0",
-    "provides" : [ ],
-    "ij:update-site-dependencies" : [ ],
-    "dependencies" : [ ],
-    "ij:update-site-providers" : [ ]
-  }, {
-    "metadata" : {
-      "name" : "ImageJ integration",
-      "description" : "<html><head></head><body>A JIPipe project</body></html>",
-      "summary" : "<html><head></head><body></body></html>",
-      "authors" : [ ],
-      "acknowledgements" : [ ],
-      "website" : "",
-      "license" : "",
-      "citation" : "",
-      "dependency-citations" : [ ],
-      "categories" : [ ]
-    },
-    "id" : "org.hkijena.jipipe:imagej-integration",
-    "version" : "5.0.0",
-    "provides" : [ ],
-    "ij:update-site-dependencies" : [ ],
-    "dependencies" : [ ],
-    "ij:update-site-providers" : [ ]
-  }, {
-    "metadata" : {
-      "name" : "Multi parameter algorithms",
-      "description" : "<html><head></head><body>A JIPipe project</body></html>",
-      "summary" : "<html><head></head><body></body></html>",
-      "authors" : [ ],
-      "acknowledgements" : [ ],
-      "website" : "",
-      "license" : "",
-      "citation" : "",
-      "dependency-citations" : [ ],
-      "categories" : [ ]
-    },
-    "id" : "org.hkijena.jipipe:multi-parameters-algorithms",
     "version" : "5.0.0",
     "provides" : [ ],
     "ij:update-site-dependencies" : [ ],
@@ -1679,8 +1646,8 @@
     "org.hkijena.jipipe.ui:project-tabs" : {
       "jipipe:type" : "jipipe:desktop:project-tabs",
       "data" : {
-        "open-tabs" : [ "singleton:PROJECT_OVERVIEW", "singleton:COMPARTMENT_EDITOR", "graph-compartment:3f650b91-90d0-46d7-84ca-acf8a613a949", "graph-compartment:bb9d672f-b023-402d-afa8-7666959dd087", "singleton:LOG" ],
-        "selected-tab" : "graph-compartment:bb9d672f-b023-402d-afa8-7666959dd087"
+        "open-tabs" : [ "singleton:PROJECT_OVERVIEW", "singleton:COMPARTMENT_EDITOR", "graph-compartment:3f650b91-90d0-46d7-84ca-acf8a613a949", "graph-compartment:bb9d672f-b023-402d-afa8-7666959dd087", "singleton:LOG", "graph-compartment:0de8d423-6d5c-4ee6-b477-b9aec65429ff" ],
+        "selected-tab" : "graph-compartment:0de8d423-6d5c-4ee6-b477-b9aec65429ff"
       }
     }
   },
@@ -1849,8 +1816,8 @@
           }
         },
         "jipipe:node-info-id" : "path-to-annotation-simple",
-        "remove-extensions" : true,
         "annotation-merge-strategy" : "OverwriteExisting",
+        "remove-extensions" : true,
         "jipipe:algorithm:enabled" : true,
         "jipipe:node:ui-locked" : false,
         "jipipe:node:bookmarked" : false,
@@ -2142,8 +2109,8 @@
           }
         },
         "jipipe:node-info-id" : "path-to-annotation-simple",
-        "remove-extensions" : true,
         "annotation-merge-strategy" : "OverwriteExisting",
+        "remove-extensions" : true,
         "jipipe:algorithm:enabled" : true,
         "jipipe:node:ui-locked" : false,
         "jipipe:node:bookmarked" : false,
@@ -2746,8 +2713,8 @@
           }
         },
         "jipipe:node-info-id" : "path-to-annotation-simple",
-        "remove-extensions" : true,
         "annotation-merge-strategy" : "OverwriteExisting",
+        "remove-extensions" : true,
         "jipipe:algorithm:enabled" : true,
         "jipipe:node:ui-locked" : false,
         "jipipe:node:bookmarked" : false,
@@ -3237,8 +3204,8 @@
           }
         },
         "jipipe:node-info-id" : "path-to-annotation-simple",
-        "remove-extensions" : true,
         "annotation-merge-strategy" : "OverwriteExisting",
+        "remove-extensions" : true,
         "jipipe:algorithm:enabled" : true,
         "jipipe:node:ui-locked" : false,
         "jipipe:node:bookmarked" : false,
@@ -4086,11 +4053,11 @@
           "content" : "Original depth",
           "enabled" : false
         },
+        "equal-width-and-height" : true,
         "original-height-annotation" : {
           "content" : "oH",
           "enabled" : true
         },
-        "equal-width-and-height" : true,
         "jipipe:algorithm:custom-expression-variables" : {
           "parameters" : { }
         },
@@ -7363,7 +7330,7 @@
         "exclude-edges" : false,
         "max-particle-size" : "Infinity",
         "measurements" : {
-          "values" : [ "BoundingRectangle", "PixelValueMedian", "Centroid", "Perimeter", "FeretDiameter", "IntegratedDensity", "ShapeDescriptors", "PixelValueStandardDeviation", "PixelValueModal", "PixelValueMinMax", "FitEllipse", "PixelValueSkewness", "PixelValueMean", "AreaFraction", "StackPosition", "Area", "CenterOfMass", "PixelValueKurtosis" ],
+          "values" : [ "Perimeter", "PixelValueMinMax", "PixelValueStandardDeviation", "FeretDiameter", "IntegratedDensity", "Centroid", "CenterOfMass", "PixelValueMedian", "PixelValueKurtosis", "StackPosition", "AreaFraction", "FitEllipse", "PixelValueSkewness", "Area", "PixelValueModal", "PixelValueMean", "BoundingRectangle", "ShapeDescriptors" ],
           "collapsed" : true
         },
         "jipipe:algorithm:custom-expression-variables" : {
@@ -9854,7 +9821,7 @@
         "jipipe:node:bookmarked" : false,
         "jipipe:algorithm:pass-through" : false,
         "script" : {
-          "code" : "df.early <- JIPipe.GetInputAsDataFrame(\"Early\")\ndf.late <- JIPipe.GetInputAsDataFrame(\"Late\")\n\n# Remove zero mean\ndf.early <- df.early[df.early$mean > 0,]\n\n# Remove everything after reaching max\n#df.early.peak <- which(df.early$mean == max(df.early$mean))[1]\n#df.early <- df.early[seq_len(df.early.peak),]\n\n# Choose relative mean value\n#df.early$rmean <- df.early$rel_diff\n#df.late$rmean <- df.late$rel_intensity_max\n\nfor(threshold in thresholds) {\n    print(paste(\"Growth reduction\", threshold))\n\n\t# Instead of using reduction, we use rmean and find the first radius where the rmean is larger than (1-threshold)\n\t# Easier to get than getting the last of the inverse\n    rad_mm <- df.early[df.early$rmean >= (1 - threshold),]$r_mm[1]\n    rad_px <- df.early[df.early$rmean >= (1 - threshold),]$r_px[1]\n\n    # Create a function for the integration\n    f <- approxfun(x = df.late$r_px, y = df.late$rmean, method=\"linear\", rule=2, yright=0)\n    f.early <- approxfun(x = df.early$r_px, y = df.early$rmean, method=\"linear\", rule=2, yright=0)\n\n    df.late.filtered <- df.late[df.late$r_px <= rad_px,]\n    mri <- max(df.late.filtered$rmean)\n\n\n    auc <- integrate(f, lower=0, upper=rad_px, subdivisions = 2000)$value\n    amax <- rad_px * mri\n    fog <- auc / amax\n\n    # Create output data table\n    df.out <- data.frame(AUC=auc, FoG=fog, t=threshold, RAD_px=rad_px, RAD_mm=rad_mm)\n    JIPipe.AddOutputDataFrame(slot=\"Output\", data=df.out, annotations=list(\"#Threshold\"=as.character(growth_reduction)))\n}",
+          "code" : "df.early <- JIPipe.GetInputAsDataFrame(\"Early\")\ndf.late <- JIPipe.GetInputAsDataFrame(\"Late\")\n\n# Remove zero mean\ndf.early <- df.early[df.early$mean > 0,]\n\n# Remove everything after reaching max\n#df.early.peak <- which(df.early$mean == max(df.early$mean))[1]\n#df.early <- df.early[seq_len(df.early.peak),]\n\n# Choose relative mean value\n#df.early$rmean <- df.early$rel_diff\n#df.late$rmean <- df.late$rel_intensity_max\n\nfor(threshold in thresholds) {\n    print(paste(\"Growth reduction\", threshold))\n\n\t# Instead of using reduction, we use rmean and find the first radius where the rmean is larger than (1-threshold)\n\t# Easier to get than getting the last of the inverse\n    rad_mm <- df.early[df.early$rmean >= (1 - threshold),]$r_mm[1]\n    rad_px <- df.early[df.early$rmean >= (1 - threshold),]$r_px[1]\n\n    # Create a function for the integration\n    f <- approxfun(x = df.late$r_px, y = df.late$rmean, method=\"linear\", rule=2, yright=0)\n    f.early <- approxfun(x = df.early$r_px, y = df.early$rmean, method=\"linear\", rule=2, yright=0)\n\n    df.late.filtered <- df.late[df.late$r_px <= rad_px,]\n    mri <- max(df.late.filtered$rmean)\n\n\n    auc <- integrate(f, lower=0, upper=rad_px, subdivisions = 2000)$value\n    amax <- rad_px * mri\n    fog <- auc / amax\n\n    # Create output data table\n    df.out <- data.frame(AUC=auc, FoG=fog, t=threshold, RAD_px=rad_px, RAD_mm=rad_mm)\n    JIPipe.AddOutputDataFrame(slot=\"Output\", data=df.out, annotations=list(\"#Threshold\"=as.character(threshold)))\n}",
           "collapsed" : false,
           "external-script-file" : {
             "content" : "",
@@ -10462,8 +10429,8 @@
         "jipipe:node-info-id" : "ij1-threshold-expression2d-32f-v2",
         "jipipe:algorithm:enabled" : true,
         "jipipe:node:ui-locked" : false,
-        "slice-threshold-mode" : "ApplyPerSlice",
         "access-pixels" : true,
+        "slice-threshold-mode" : "ApplyPerSlice",
         "jipipe:node:bookmarked" : false,
         "threshold-annotation-strategy" : "OverwriteExisting",
         "jipipe:algorithm:pass-through" : false,
@@ -10479,12 +10446,12 @@
         "max-threshold/threshold-combine-expression" : {
           "expression" : "MIN(thresholds)"
         },
+        "max-threshold/thresholding-function" : {
+          "expression" : "NUM(rad_px)"
+        },
         "max-threshold/threshold-annotation" : {
           "content" : "Max Threshold",
           "enabled" : false
-        },
-        "max-threshold/thresholding-function" : {
-          "expression" : "NUM(rad_px)"
         },
         "jipipe:adaptive-parameters/attach-parameter-annotations" : true,
         "jipipe:adaptive-parameters/attach-only-non-default-parameter-annotations" : true,
@@ -10500,12 +10467,12 @@
         "min-threshold/threshold-combine-expression" : {
           "expression" : "MIN(thresholds)"
         },
+        "min-threshold/thresholding-function" : {
+          "expression" : "1"
+        },
         "min-threshold/threshold-annotation" : {
           "content" : "Min Threshold",
           "enabled" : false
-        },
-        "min-threshold/thresholding-function" : {
-          "expression" : "1"
         },
         "jipipe:data-batch-generation/annotation-merge-strategy" : "Merge",
         "jipipe:data-batch-generation/column-matching" : "PrefixHashUnion",
@@ -10899,8 +10866,8 @@
         "jipipe:node-info-id" : "ij1-threshold-expression2d-32f-v2",
         "jipipe:algorithm:enabled" : true,
         "jipipe:node:ui-locked" : false,
-        "slice-threshold-mode" : "ApplyPerSlice",
         "access-pixels" : true,
+        "slice-threshold-mode" : "ApplyPerSlice",
         "jipipe:node:bookmarked" : false,
         "threshold-annotation-strategy" : "OverwriteExisting",
         "jipipe:algorithm:pass-through" : false,
@@ -10916,12 +10883,12 @@
         "max-threshold/threshold-combine-expression" : {
           "expression" : "MIN(thresholds)"
         },
+        "max-threshold/thresholding-function" : {
+          "expression" : "NUM(rad_px)"
+        },
         "max-threshold/threshold-annotation" : {
           "content" : "Max Threshold",
           "enabled" : false
-        },
-        "max-threshold/thresholding-function" : {
-          "expression" : "NUM(rad_px)"
         },
         "jipipe:adaptive-parameters/attach-parameter-annotations" : true,
         "jipipe:adaptive-parameters/attach-only-non-default-parameter-annotations" : true,
@@ -10937,12 +10904,12 @@
         "min-threshold/threshold-combine-expression" : {
           "expression" : "MIN(thresholds)"
         },
+        "min-threshold/thresholding-function" : {
+          "expression" : "1"
+        },
         "min-threshold/threshold-annotation" : {
           "content" : "Min Threshold",
           "enabled" : false
-        },
-        "min-threshold/thresholding-function" : {
-          "expression" : "1"
         },
         "jipipe:data-batch-generation/annotation-merge-strategy" : "Merge",
         "jipipe:data-batch-generation/column-matching" : "PrefixHashUnion",
@@ -11467,7 +11434,7 @@
         "exclude-edges" : false,
         "max-particle-size" : "Infinity",
         "measurements" : {
-          "values" : [ "BoundingRectangle", "PixelValueMedian", "Centroid", "Perimeter", "FeretDiameter", "IntegratedDensity", "ShapeDescriptors", "PixelValueStandardDeviation", "PixelValueModal", "PixelValueMinMax", "FitEllipse", "PixelValueSkewness", "PixelValueMean", "AreaFraction", "StackPosition", "Area", "CenterOfMass", "PixelValueKurtosis" ],
+          "values" : [ "Perimeter", "PixelValueMinMax", "PixelValueStandardDeviation", "FeretDiameter", "IntegratedDensity", "Centroid", "CenterOfMass", "PixelValueMedian", "PixelValueKurtosis", "StackPosition", "AreaFraction", "FitEllipse", "PixelValueSkewness", "Area", "PixelValueModal", "PixelValueMean", "BoundingRectangle", "ShapeDescriptors" ],
           "collapsed" : true
         },
         "jipipe:algorithm:custom-expression-variables" : {
@@ -12438,9 +12405,9 @@
         },
         "montage-parameters/label-parameters/label-font-size" : 22,
         "montage-parameters/label-parameters/label-location" : "BottomCenter",
+        "montage-parameters/label-parameters/limit-with-ellipsis" : true,
         "montage-parameters/label-parameters/label-font-family" : "Dialog",
-        "montage-parameters/label-parameters/label-foreground" : "#FFFFFF",
-        "montage-parameters/label-parameters/limit-with-ellipsis" : true
+        "montage-parameters/label-parameters/label-foreground" : "#FFFFFF"
       },
       "d5940538-468b-43c9-a791-9941544714ef" : {
         "jipipe:graph-compartment" : "bb9d672f-b023-402d-afa8-7666959dd087",
@@ -12602,7 +12569,6 @@
           "enabled" : false
         },
         "angle" : 0.0,
-        "font-family" : "Dialog",
         "location" : {
           "left" : {
             "expression" : "0"
@@ -12618,6 +12584,7 @@
           },
           "anchor" : "TopRight"
         },
+        "font-family" : "Dialog",
         "text" : {
           "expression" : "STRING_FORMAT(\"RAD%d (mm): %s; FoG%d: %s\", \nTO_INTEGER(NUM(#Threshold) * 100),\nrad_mm,\nTO_INTEGER(NUM(#Threshold) * 100),\nD2S(NUM(FoG), 3))"
         },
@@ -13365,7 +13332,6 @@
           "enabled" : false
         },
         "angle" : 0.0,
-        "font-family" : "Dialog",
         "location" : {
           "left" : {
             "expression" : "0"
@@ -13381,6 +13347,7 @@
           },
           "anchor" : "TopRight"
         },
+        "font-family" : "Dialog",
         "text" : {
           "expression" : "STRING_FORMAT(\"RAD%d (mm): %s; FoG%d: %s\", \nTO_INTEGER(NUM(#Threshold) * 100),\nrad_mm,\nTO_INTEGER(NUM(#Threshold) * 100),\nD2S(NUM(FoG), 3))"
         },
@@ -14021,9 +13988,9 @@
         },
         "montage-parameters/label-parameters/label-font-size" : 22,
         "montage-parameters/label-parameters/label-location" : "BottomCenter",
+        "montage-parameters/label-parameters/limit-with-ellipsis" : true,
         "montage-parameters/label-parameters/label-font-family" : "Dialog",
-        "montage-parameters/label-parameters/label-foreground" : "#FFFFFF",
-        "montage-parameters/label-parameters/limit-with-ellipsis" : true
+        "montage-parameters/label-parameters/label-foreground" : "#FFFFFF"
       },
       "ffa05fa7-eb3e-45ac-8e54-6d9435fe2718" : {
         "jipipe:graph-compartment" : "0de8d423-6d5c-4ee6-b477-b9aec65429ff",
@@ -16266,10 +16233,10 @@
         "jipipe:algorithm:enabled" : true,
         "jipipe:node:ui-locked" : false,
         "jipipe:node:bookmarked" : false,
+        "skip-empty-target" : true,
         "column-filter" : {
           "expression" : "value != \"PixelSize\""
         },
-        "skip-empty-target" : true,
         "jipipe:algorithm:pass-through" : false,
         "row-normalization" : "ZeroOrEmpty",
         "restore-original-annotations" : true,
@@ -17161,104 +17128,6 @@
         "jipipe:data-batch-generation/annotation-matching-method" : "ExactMatch",
         "jipipe:data-batch-generation/force-flow-graph-solver" : false
       },
-      "8adee8d5-7a21-40ff-83ff-ea782b84e5e2" : {
-        "jipipe:graph-compartment" : "3f650b91-90d0-46d7-84ca-acf8a613a949",
-        "jipipe:alias-id" : "fast-image-arithmetics-3",
-        "jipipe:slot-configuration" : {
-          "input" : {
-            "I1" : {
-              "slot-data-type" : "imagej-imgplus-greyscale",
-              "slot-type" : "Input",
-              "name" : "I1",
-              "custom-name" : null,
-              "description" : "",
-              "is-virtual" : false,
-              "save-outputs" : true,
-              "is-optional" : true
-            },
-            "I2" : {
-              "slot-data-type" : "imagej-imgplus-greyscale",
-              "slot-type" : "Input",
-              "name" : "I2",
-              "custom-name" : null,
-              "description" : "",
-              "is-virtual" : false,
-              "save-outputs" : true,
-              "is-optional" : true
-            }
-          },
-          "output" : {
-            "Output" : {
-              "slot-data-type" : "imagej-imgplus-greyscale",
-              "slot-type" : "Output",
-              "name" : "Output",
-              "custom-name" : null,
-              "description" : "",
-              "is-virtual" : false,
-              "save-outputs" : true,
-              "is-optional" : false
-            }
-          }
-        },
-        "jipipe:ui-grid-location" : {
-          "3f650b91-90d0-46d7-84ca-acf8a613a949" : {
-            "VerticalCompact" : {
-              "x" : 28,
-              "y" : 24
-            }
-          }
-        },
-        "jipipe:node-info-id" : "ij1-math-fast-image-arithmetics",
-        "jipipe:algorithm:enabled" : true,
-        "jipipe:node:ui-locked" : false,
-        "expression" : {
-          "expression" : "I1 - I2"
-        },
-        "jipipe:node:bookmarked" : false,
-        "jipipe:algorithm:pass-through" : false,
-        "jipipe:node:name" : "Fast image arithmetics",
-        "jipipe:algorithm:runtime-partition" : {
-          "index" : 0
-        },
-        "jipipe:node:description" : "<html><head></head><body></body></html>",
-        "bit-depth" : "Grayscale32f",
-        "jipipe:algorithm:custom-expression-variables" : {
-          "parameters" : { }
-        },
-        "jipipe:adaptive-parameters/attach-parameter-annotations" : true,
-        "jipipe:adaptive-parameters/attach-only-non-default-parameter-annotations" : true,
-        "jipipe:adaptive-parameters/parameter-annotations-prefix" : "",
-        "jipipe:adaptive-parameters/overridden-parameters" : [ ],
-        "jipipe:adaptive-parameters/enabled" : true,
-        "jipipe:adaptive-parameters/parameter-annotations-use-internal-names" : false,
-        "jipipe:parameter-slot-algorithm/has-parameter-slot" : false,
-        "jipipe:parameter-slot-algorithm/attach-parameter-annotations" : true,
-        "jipipe:parameter-slot-algorithm/attach-only-non-default-parameter-annotations" : true,
-        "jipipe:parameter-slot-algorithm/parameter-annotations-prefix" : "",
-        "jipipe:parameter-slot-algorithm/parameter-annotations-use-internal-names" : false,
-        "jipipe:data-batch-generation/annotation-merge-strategy" : "Merge",
-        "jipipe:data-batch-generation/column-matching" : "PrefixHashUnion",
-        "jipipe:data-batch-generation/data-annotation-merge-strategy" : "MergeTables",
-        "jipipe:data-batch-generation/custom-matched-columns-expression" : {
-          "expression" : ""
-        },
-        "jipipe:data-batch-generation/skip-incomplete" : false,
-        "jipipe:data-batch-generation/custom-annotation-matching" : {
-          "expression" : "exact_match_results"
-        },
-        "jipipe:data-batch-generation/limit" : {
-          "content" : {
-            "value" : "0-9",
-            "is-expression" : false,
-            "expression" : {
-              "expression" : "MAKE_SEQUENCE(0, 10)"
-            }
-          },
-          "enabled" : false
-        },
-        "jipipe:data-batch-generation/annotation-matching-method" : "ExactMatch",
-        "jipipe:data-batch-generation/force-flow-graph-solver" : false
-      },
       "9f238027-6cd2-4727-89ff-8316532c9a62" : {
         "jipipe:graph-compartment" : "3f650b91-90d0-46d7-84ca-acf8a613a949",
         "jipipe:alias-id" : "group-box-9",
@@ -17849,8 +17718,8 @@
           "content" : "-Infinity",
           "enabled" : false
         },
-        "plot-parameters/export-height" : 768,
         "plot-parameters/use-custom-color-map" : false,
+        "plot-parameters/export-height" : 768,
         "plot-parameters/background-color" : "#FFFFFF",
         "plot-parameters/color-map" : "Pastel1",
         "plot-parameters/y-axis-minimum" : {
@@ -18038,9 +17907,9 @@
         },
         "montage-parameters/label-parameters/label-font-size" : 12,
         "montage-parameters/label-parameters/label-location" : "BottomCenter",
+        "montage-parameters/label-parameters/limit-with-ellipsis" : true,
         "montage-parameters/label-parameters/label-font-family" : "Dialog",
-        "montage-parameters/label-parameters/label-foreground" : "#FFFFFF",
-        "montage-parameters/label-parameters/limit-with-ellipsis" : true
+        "montage-parameters/label-parameters/label-foreground" : "#FFFFFF"
       },
       "be8a15c0-da19-424d-9ff7-eeb66aac58a5" : {
         "jipipe:graph-compartment" : "3f650b91-90d0-46d7-84ca-acf8a613a949",
@@ -18172,9 +18041,9 @@
         },
         "montage-parameters/label-parameters/label-font-size" : 12,
         "montage-parameters/label-parameters/label-location" : "BottomCenter",
+        "montage-parameters/label-parameters/limit-with-ellipsis" : true,
         "montage-parameters/label-parameters/label-font-family" : "Dialog",
-        "montage-parameters/label-parameters/label-foreground" : "#FFFFFF",
-        "montage-parameters/label-parameters/limit-with-ellipsis" : true
+        "montage-parameters/label-parameters/label-foreground" : "#FFFFFF"
       },
       "3d195b27-7cbd-43b2-a226-79d8228f85ee" : {
         "jipipe:graph-compartment" : "3f650b91-90d0-46d7-84ca-acf8a613a949",
@@ -18249,8 +18118,8 @@
           "content" : "-Infinity",
           "enabled" : false
         },
-        "plot-parameters/export-height" : 768,
         "plot-parameters/use-custom-color-map" : false,
+        "plot-parameters/export-height" : 768,
         "plot-parameters/background-color" : "#FFFFFF",
         "plot-parameters/color-map" : "Pastel1",
         "plot-parameters/y-axis-minimum" : {
@@ -18313,92 +18182,83 @@
         "jipipe:data-batch-generation/force-na-is-any" : false,
         "jipipe:data-batch-generation/annotation-matching-method" : "ExactMatch",
         "jipipe:data-batch-generation/force-flow-graph-solver" : false
+      },
+      "be9a557d-e6bd-4ee1-822d-b16d166ac44b" : {
+        "jipipe:graph-compartment" : "3f650b91-90d0-46d7-84ca-acf8a613a949",
+        "jipipe:alias-id" : "binarize-1",
+        "jipipe:slot-configuration" : {
+          "input" : {
+            "Input" : {
+              "slot-data-type" : "imagej-imgplus-greyscale",
+              "slot-type" : "Input",
+              "name" : "Input",
+              "custom-name" : null,
+              "description" : "",
+              "is-virtual" : false,
+              "save-outputs" : true,
+              "is-optional" : false
+            }
+          },
+          "output" : {
+            "Output" : {
+              "slot-data-type" : "imagej-imgplus-greyscale-mask",
+              "slot-type" : "Output",
+              "name" : "Output",
+              "custom-name" : null,
+              "description" : "",
+              "is-virtual" : false,
+              "save-outputs" : true,
+              "is-optional" : false
+            }
+          }
+        },
+        "jipipe:ui-grid-location" : {
+          "3f650b91-90d0-46d7-84ca-acf8a613a949" : {
+            "VerticalCompact" : {
+              "x" : 28,
+              "y" : 24
+            }
+          }
+        },
+        "jipipe:node-info-id" : "ij1-binary-binarize",
+        "jipipe:algorithm:enabled" : true,
+        "jipipe:node:ui-locked" : false,
+        "jipipe:node:bookmarked" : false,
+        "jipipe:algorithm:pass-through" : false,
+        "jipipe:node:name" : "Binarize",
+        "jipipe:algorithm:runtime-partition" : {
+          "index" : 0
+        },
+        "jipipe:node:description" : "<html><head></head><body></body></html>",
+        "jipipe:adaptive-parameters/attach-parameter-annotations" : true,
+        "jipipe:adaptive-parameters/attach-only-non-default-parameter-annotations" : true,
+        "jipipe:adaptive-parameters/parameter-annotations-prefix" : "",
+        "jipipe:adaptive-parameters/overridden-parameters" : [ ],
+        "jipipe:adaptive-parameters/enabled" : true,
+        "jipipe:adaptive-parameters/parameter-annotations-use-internal-names" : false,
+        "jipipe:algorithm:custom-expression-variables" : {
+          "parameters" : { }
+        },
+        "jipipe:parameter-slot-algorithm/has-parameter-slot" : false,
+        "jipipe:parameter-slot-algorithm/attach-parameter-annotations" : true,
+        "jipipe:parameter-slot-algorithm/attach-only-non-default-parameter-annotations" : true,
+        "jipipe:parameter-slot-algorithm/parameter-annotations-prefix" : "",
+        "jipipe:parameter-slot-algorithm/parameter-annotations-use-internal-names" : false,
+        "jipipe:data-batch-generation/limit" : {
+          "content" : {
+            "value" : "0-9",
+            "is-expression" : false,
+            "expression" : {
+              "expression" : "MAKE_SEQUENCE(0, 10)"
+            }
+          },
+          "enabled" : false
+        }
       }
     },
     "edges" : [ {
-      "source-node" : "c6eabaa1-2620-4f89-995b-753a18614d16",
-      "target-node" : "b6cac43c-0738-4ca9-8f2a-0b9bd25c4a7c",
-      "source-slot" : "Output",
-      "target-slot" : "Mask",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "af973a43-4e6e-4afa-9455-03801e99946e",
-      "target-node" : "be188ce3-24aa-4d35-ae53-84b7439027a1",
-      "source-slot" : "Annotated paths",
-      "target-slot" : "Data",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "98d343ba-9ca2-4578-8712-00ea6344ce23",
-      "target-node" : "aae99ae5-a299-4a86-a94a-b4567d248f71",
-      "source-slot" : "Output",
-      "target-slot" : "Data",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "f9f9653d-0234-40ca-bb01-c9eb70707a48",
-      "target-node" : "991433b5-eb8e-4dc6-bee6-6569a686af08",
-      "source-slot" : "Output",
-      "target-slot" : "I1",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "fadf3165-5f59-4c49-b513-b777efe4daf3",
-      "target-node" : "daa71df2-5ebc-40e4-b7f6-72762b3ab2c8",
-      "source-slot" : "Shape",
-      "target-slot" : "Input",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "fadf3165-5f59-4c49-b513-b777efe4daf3",
-      "target-node" : "8907b84a-cf7d-4bc5-b2e3-7552535125eb",
-      "source-slot" : "Strip",
-      "target-slot" : "Input",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "d5940538-468b-43c9-a791-9941544714ef",
-      "target-node" : "aae99ae5-a299-4a86-a94a-b4567d248f71",
-      "source-slot" : "Output",
-      "target-slot" : "Table",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "75df7376-6f83-4a17-b987-850f1596fb93",
-      "target-node" : "1874bd07-7f25-4d68-9649-74b814c62322",
-      "source-slot" : "RAW",
-      "target-slot" : "RAW",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "b85761aa-7ea4-45f9-8e29-c1c659c582d9",
-      "target-node" : "485650c5-bdda-4df3-9726-0911bc3bd80c",
-      "source-slot" : "RawMeasurements",
-      "target-slot" : "Input",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "d616dc8e-c543-42bb-b15a-bcaee50eea4c",
-      "target-node" : "b7c77a51-0c19-4007-82af-260edae96018",
+      "source-node" : "85fedc2f-180a-4f61-a292-0a18e355be86",
+      "target-node" : "56e894b4-602e-4d0d-875c-6481a2a37f3c",
       "source-slot" : "Output",
       "target-slot" : "Input",
       "metadata" : {
@@ -18406,26 +18266,17 @@
         "ui-shape" : "Elbow"
       }
     }, {
-      "source-node" : "52879293-af3a-412f-a6a9-ad3af5cff972",
-      "target-node" : "0c9b9d5b-5d60-4ba6-90ec-2a8936cfa693",
-      "source-slot" : "ROI",
-      "target-slot" : "ROI",
+      "source-node" : "94a4b3c8-6747-42aa-8b9b-8f4d8146ced5",
+      "target-node" : "5daedc06-5c59-40f5-9620-8c348ea1f766",
+      "source-slot" : "Matched",
+      "target-slot" : "Input",
       "metadata" : {
         "ui-visibility" : "Smart",
         "ui-shape" : "Elbow"
       }
     }, {
-      "source-node" : "4be2d0ca-e5a3-43b1-8fdc-2f82f2bda424",
-      "target-node" : "9dfbccbe-6f20-4801-92a4-250af5c5ed99",
-      "source-slot" : "Annotated paths",
-      "target-slot" : "Data",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "b6cac43c-0738-4ca9-8f2a-0b9bd25c4a7c",
-      "target-node" : "65aee404-39ae-40be-b9f1-7afd35fb66c3",
+      "source-node" : "78035358-1dd6-4db1-b98e-d296e226e61f",
+      "target-node" : "373862a4-1986-4d05-8625-14d8988ce778",
       "source-slot" : "Output",
       "target-slot" : "Input",
       "metadata" : {
@@ -18433,71 +18284,17 @@
         "ui-shape" : "Elbow"
       }
     }, {
-      "source-node" : "342b62f1-b6f7-4b6c-90d8-dc6129dac19b",
-      "target-node" : "3282eef7-6dac-41c0-83bb-6acddaa3425d",
-      "source-slot" : "Output",
-      "target-slot" : "Mappings",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "9d71b89e-57cb-4ecf-9652-9098ac4ba727",
-      "target-node" : "40bd5388-0a6a-4c66-8e14-f228e43c10bf",
-      "source-slot" : "Output",
-      "target-slot" : "Annotations",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "8875c836-cbea-4749-acee-f2d18ff2d092",
-      "target-node" : "f52913fe-e0c7-41d8-b1c9-6eb2443657ae",
-      "source-slot" : "Output",
-      "target-slot" : "Image",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "75df7376-6f83-4a17-b987-850f1596fb93",
-      "target-node" : "1874bd07-7f25-4d68-9649-74b814c62322",
-      "source-slot" : "SD",
-      "target-slot" : "SD",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "a6338fe7-45dc-4e9c-9314-d6d5ca997aec",
-      "target-node" : "6ba980c9-15fa-4c67-937d-952b379023e6",
-      "source-slot" : "Labels",
+      "source-node" : "8907b84a-cf7d-4bc5-b2e3-7552535125eb",
+      "target-node" : "ccbaf721-4a82-4156-8599-1dd018ee81b2",
+      "source-slot" : "Matched",
       "target-slot" : "Input",
       "metadata" : {
         "ui-visibility" : "Smart",
         "ui-shape" : "Elbow"
       }
     }, {
-      "source-node" : "5cc73725-0204-4fd0-afda-9f3d1fe51751",
-      "target-node" : "d616dc8e-c543-42bb-b15a-bcaee50eea4c",
-      "source-slot" : "Output",
-      "target-slot" : "Target",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "045de778-6d44-440a-b26f-394e52a48837",
-      "target-node" : "f52913fe-e0c7-41d8-b1c9-6eb2443657ae",
-      "source-slot" : "Output",
-      "target-slot" : "ROI",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "1996ab61-d282-4977-bb6e-9fd04e879ebb",
-      "target-node" : "d193701a-147b-465e-9871-fb2776424500",
+      "source-node" : "c0399de6-eb8e-4359-b33b-4c3ac86e25cc",
+      "target-node" : "54cf93c9-832b-471b-913b-cbbea95cc756",
       "source-slot" : "Output",
       "target-slot" : "Input",
       "metadata" : {
@@ -18505,35 +18302,8 @@
         "ui-shape" : "Elbow"
       }
     }, {
-      "source-node" : "c52a846e-f06f-469d-af4c-69dbb23b6506",
-      "target-node" : "342b62f1-b6f7-4b6c-90d8-dc6129dac19b",
-      "source-slot" : "Output",
-      "target-slot" : "Image",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "75df7376-6f83-4a17-b987-850f1596fb93",
-      "target-node" : "e9973495-1bb7-4b70-8dad-ba1585e3e6f7",
-      "source-slot" : "SD",
-      "target-slot" : "Input",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "75df7376-6f83-4a17-b987-850f1596fb93",
-      "target-node" : "4cc60257-1dc2-4d6b-922d-7455f76a220a",
-      "source-slot" : "ZS",
-      "target-slot" : "ZS",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "c5e1b060-4022-4d3a-91f9-544c2730764a",
-      "target-node" : "c3f86b37-b86d-47da-baf3-3e35955e8e09",
+      "source-node" : "d4d27aaa-e6f8-4d83-be97-f27f9e099df6",
+      "target-node" : "37e16fa0-4eaf-47a2-888e-f67a653f1eac",
       "source-slot" : "Output",
       "target-slot" : "Input",
       "metadata" : {
@@ -18541,35 +18311,17 @@
         "ui-shape" : "Elbow"
       }
     }, {
-      "source-node" : "a908f33e-bfe8-4500-a334-83ca30984f40",
-      "target-node" : "eb3e41be-5e9f-4494-b8e9-73646691e190",
-      "source-slot" : "Boundaries",
-      "target-slot" : "Input",
+      "source-node" : "ac0fc80c-6e36-4b6e-ba06-64cfad83b2f3",
+      "target-node" : "fadf3165-5f59-4c49-b513-b777efe4daf3",
+      "source-slot" : "Matched",
+      "target-slot" : "Strip",
       "metadata" : {
         "ui-visibility" : "Smart",
         "ui-shape" : "Elbow"
       }
     }, {
-      "source-node" : "919d6b38-cef7-4008-82eb-fc8ea4b5a907",
-      "target-node" : "ed757310-b739-4527-8d83-98ff5f5e4a14",
-      "source-slot" : "Image",
-      "target-slot" : "SD",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "f36582ae-18ad-44cb-bc44-217083720b93",
-      "target-node" : "ff44442e-35bb-4a72-93b5-9120ac784474",
-      "source-slot" : "Folder paths",
-      "target-slot" : "Folders",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "ff44442e-35bb-4a72-93b5-9120ac784474",
-      "target-node" : "4fe0f2d8-040b-4097-82ed-5dd931f1a347",
+      "source-node" : "ac1ef081-4812-4223-9bcb-7cecb0cb7bfd",
+      "target-node" : "4be2d0ca-e5a3-43b1-8fdc-2f82f2bda424",
       "source-slot" : "Files",
       "target-slot" : "Paths",
       "metadata" : {
@@ -18577,234 +18329,9 @@
         "ui-shape" : "Elbow"
       }
     }, {
-      "source-node" : "e90ea27a-ddbb-493d-97b4-91b7f5df31f4",
-      "target-node" : "99c8e4d0-f32c-4d52-b03d-2195fdf6b38f",
-      "source-slot" : "Output",
-      "target-slot" : "Input",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "c14047e8-94ba-414c-b9c1-47f6a690eb40",
-      "target-node" : "ba13cc75-af39-4093-a640-70ddb776e1e0",
-      "source-slot" : "Output",
-      "target-slot" : "Top",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "ff38bcfb-a619-494e-8776-ee1488465807",
-      "target-node" : "15472c51-ad37-496c-a740-5e2636143f7a",
-      "source-slot" : "Target",
-      "target-slot" : "Input",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "d2f1aad5-635f-4708-adba-1439fdbd144a",
-      "target-node" : "8875c836-cbea-4749-acee-f2d18ff2d092",
-      "source-slot" : "Output",
-      "target-slot" : "Input",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "ba13cc75-af39-4093-a640-70ddb776e1e0",
-      "target-node" : "178ecd99-75ae-4d3e-acd2-15d374db2956",
-      "source-slot" : "Output",
-      "target-slot" : "Image",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "e52435cd-e40e-458d-9999-2f6698581b6b",
-      "target-node" : "827e3e36-70e8-46fc-9319-ffa4879df174",
-      "source-slot" : "RAW",
-      "target-slot" : "Files",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "f52913fe-e0c7-41d8-b1c9-6eb2443657ae",
-      "target-node" : "bf6c3c5b-719c-4ff0-addd-5197fbdaa1ff",
-      "source-slot" : "Output",
-      "target-slot" : "Input",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "17ec0a5f-2dac-4006-b31e-710d978aa2a4",
-      "target-node" : "1042d5e6-412b-4d6e-a757-bb06d786dc19",
-      "source-slot" : "Output",
-      "target-slot" : "Input",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "b85761aa-7ea4-45f9-8e29-c1c659c582d9",
-      "target-node" : "a5b648d3-5ed7-47bf-b384-592dd39ff159",
-      "source-slot" : "FinalLabels",
-      "target-slot" : "Input",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "d616dc8e-c543-42bb-b15a-bcaee50eea4c",
-      "target-node" : "4a0b69af-5282-42dc-9a40-352ac9ac27e8",
-      "source-slot" : "Output",
-      "target-slot" : "Input",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "e9973495-1bb7-4b70-8dad-ba1585e3e6f7",
-      "target-node" : "6ba980c9-15fa-4c67-937d-952b379023e6",
-      "source-slot" : "Output",
-      "target-slot" : "Mask",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "b85761aa-7ea4-45f9-8e29-c1c659c582d9",
-      "target-node" : "6224751b-5906-4917-9ca0-1201f2d3990d",
-      "source-slot" : "FinalLabels",
-      "target-slot" : "I1",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "412312ed-095d-4a2e-8710-71e08b8ca4ec",
-      "target-node" : "cf45f48d-7fbb-4f1c-983d-dcd65280c578",
-      "source-slot" : "Output",
-      "target-slot" : "Input",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "ffa05fa7-eb3e-45ac-8e54-6d9435fe2718",
-      "target-node" : "aa2b5a91-f513-433d-8a97-d7ca23d1e49c",
-      "source-slot" : "Output",
-      "target-slot" : "Reference",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "9d71b89e-57cb-4ecf-9652-9098ac4ba727",
-      "target-node" : "be188ce3-24aa-4d35-ae53-84b7439027a1",
-      "source-slot" : "Output",
-      "target-slot" : "Annotations",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "0a2e624a-855e-46ae-94f1-a7361e70868e",
-      "target-node" : "6255f49e-4177-479c-86d5-94fa54130e12",
-      "source-slot" : "Output",
-      "target-slot" : "Input",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "75df7376-6f83-4a17-b987-850f1596fb93",
-      "target-node" : "4cc60257-1dc2-4d6b-922d-7455f76a220a",
-      "source-slot" : "SD",
-      "target-slot" : "SD",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "07ba4c3e-4352-499f-b84c-0dbeeadb9194",
-      "target-node" : "e52435cd-e40e-458d-9999-2f6698581b6b",
-      "source-slot" : "Annotated data",
-      "target-slot" : "PL",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
       "source-node" : "ed757310-b739-4527-8d83-98ff5f5e4a14",
-      "target-node" : "ac0fc80c-6e36-4b6e-ba06-64cfad83b2f3",
-      "source-slot" : "SD",
-      "target-slot" : "Input",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "32ed1b6d-bf56-47f3-8498-15fb00d0f42b",
-      "target-node" : "9b456697-7fef-4020-9615-1e2c26ab9ce8",
-      "source-slot" : "Folder paths",
-      "target-slot" : "Folders",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "c3f86b37-b86d-47da-baf3-3e35955e8e09",
-      "target-node" : "0dc4e4d9-c1e6-4848-a04d-bcb32f766c9e",
-      "source-slot" : "Output",
-      "target-slot" : "Input",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "a6338fe7-45dc-4e9c-9314-d6d5ca997aec",
-      "target-node" : "98d343ba-9ca2-4578-8712-00ea6344ce23",
-      "source-slot" : "Labels",
-      "target-slot" : "Input",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "15472c51-ad37-496c-a740-5e2636143f7a",
-      "target-node" : "412312ed-095d-4a2e-8710-71e08b8ca4ec",
-      "source-slot" : "Output",
-      "target-slot" : "Input",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "e9973495-1bb7-4b70-8dad-ba1585e3e6f7",
-      "target-node" : "d290eca9-d531-42ca-beb5-9400e4cebd1c",
-      "source-slot" : "Output",
-      "target-slot" : "Mask",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "4fe0f2d8-040b-4097-82ed-5dd931f1a347",
-      "target-node" : "40bd5388-0a6a-4c66-8e14-f228e43c10bf",
-      "source-slot" : "Annotated paths",
-      "target-slot" : "Data",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "c18362b7-10e2-40d5-820d-ea17a2c21761",
-      "target-node" : "c1c12a5f-3f33-4a06-be53-c616d639780e",
-      "source-slot" : "Output",
+      "target-node" : "94a4b3c8-6747-42aa-8b9b-8f4d8146ced5",
+      "source-slot" : "ZS",
       "target-slot" : "Input",
       "metadata" : {
         "ui-visibility" : "Smart",
@@ -18820,17 +18347,8 @@
         "ui-shape" : "Elbow"
       }
     }, {
-      "source-node" : "7a9a9793-0492-4382-a58d-12d9c311b354",
-      "target-node" : "608afdb7-d78a-4814-8116-fc6cce5075ec",
-      "source-slot" : "Results table",
-      "target-slot" : "Input",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "c9c8dbfb-38d8-4a56-8d25-34b45399a35b",
-      "target-node" : "d2f1aad5-635f-4708-adba-1439fdbd144a",
+      "source-node" : "6255f49e-4177-479c-86d5-94fa54130e12",
+      "target-node" : "ffa05fa7-eb3e-45ac-8e54-6d9435fe2718",
       "source-slot" : "Output",
       "target-slot" : "Input",
       "metadata" : {
@@ -18838,260 +18356,8 @@
         "ui-shape" : "Elbow"
       }
     }, {
-      "source-node" : "aa2b5a91-f513-433d-8a97-d7ca23d1e49c",
-      "target-node" : "4b95c0b1-89db-4e3d-94c6-f5e116de68ca",
-      "source-slot" : "ROI",
-      "target-slot" : "ROI",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "d4a57be1-e272-48e9-bde7-a9da75ad2974",
-      "target-node" : "ed757310-b739-4527-8d83-98ff5f5e4a14",
-      "source-slot" : "Image",
-      "target-slot" : "PL",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "c9dc4001-9477-4ada-83bf-4f7674ab48b2",
-      "target-node" : "b1e52ddb-f657-401c-a7a4-78d21f2808e8",
-      "source-slot" : "Output",
-      "target-slot" : "Input",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "d5940538-468b-43c9-a791-9941544714ef",
-      "target-node" : "79b6ea21-4da6-4240-852e-9157871fd7fc",
-      "source-slot" : "Output",
-      "target-slot" : "Statistics",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "8907b84a-cf7d-4bc5-b2e3-7552535125eb",
-      "target-node" : "ccbaf721-4a82-4156-8599-1dd018ee81b2",
-      "source-slot" : "Matched",
-      "target-slot" : "Input",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "ed757310-b739-4527-8d83-98ff5f5e4a14",
-      "target-node" : "0c9b9d5b-5d60-4ba6-90ec-2a8936cfa693",
-      "source-slot" : "RAW",
-      "target-slot" : "Image",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "4b95c0b1-89db-4e3d-94c6-f5e116de68ca",
-      "target-node" : "c6be512a-8250-4e25-bd8c-7833b194d69f",
-      "source-slot" : "Output",
-      "target-slot" : "Input",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "1874bd07-7f25-4d68-9649-74b814c62322",
-      "target-node" : "6abfa5ab-1496-44a5-bca1-9aead04a1a94",
-      "source-slot" : "SD",
-      "target-slot" : "Input",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "94a4b3c8-6747-42aa-8b9b-8f4d8146ced5",
-      "target-node" : "fadf3165-5f59-4c49-b513-b777efe4daf3",
-      "source-slot" : "Matched",
-      "target-slot" : "Shape",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "37b524ce-a4a1-44dd-8e6f-81f9a526d09c",
-      "target-node" : "045de778-6d44-440a-b26f-394e52a48837",
-      "source-slot" : "Output",
-      "target-slot" : "Input",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "41b6ae74-5111-457e-9d19-2168107897e9",
-      "target-node" : "ff38bcfb-a619-494e-8776-ee1488465807",
-      "source-slot" : "Output",
-      "target-slot" : "Source",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "9d71b89e-57cb-4ecf-9652-9098ac4ba727",
-      "target-node" : "036406c0-5d1b-4d92-afc7-3ca99685da13",
-      "source-slot" : "Output",
-      "target-slot" : "Input",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "df083757-cb3f-44fd-9734-53703f7e8b1e",
-      "target-node" : "27b8db2a-e7b3-4dff-8512-3bcdf12185eb",
-      "source-slot" : "Files",
-      "target-slot" : "Paths",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "37e13a0e-c7e1-4144-83ca-c0a95e61b123",
-      "target-node" : "b6cac43c-0738-4ca9-8f2a-0b9bd25c4a7c",
-      "source-slot" : "LB",
-      "target-slot" : "Input",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "ed757310-b739-4527-8d83-98ff5f5e4a14",
-      "target-node" : "75df7376-6f83-4a17-b987-850f1596fb93",
-      "source-slot" : "RAW",
-      "target-slot" : "RAW",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "40bd5388-0a6a-4c66-8e14-f228e43c10bf",
-      "target-node" : "e52435cd-e40e-458d-9999-2f6698581b6b",
-      "source-slot" : "Annotated data",
-      "target-slot" : "SD",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "cc60905d-15d0-4233-a8b4-037069e42d30",
-      "target-node" : "79b6ea21-4da6-4240-852e-9157871fd7fc",
-      "source-slot" : "Output",
-      "target-slot" : "ZOIMask",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "b85761aa-7ea4-45f9-8e29-c1c659c582d9",
-      "target-node" : "77946d1f-c94a-45f2-9d1c-c79500ca8f2e",
-      "source-slot" : "RawMeasurements",
-      "target-slot" : "Input",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "ed757310-b739-4527-8d83-98ff5f5e4a14",
-      "target-node" : "ba13cc75-af39-4093-a640-70ddb776e1e0",
-      "source-slot" : "RAW",
-      "target-slot" : "Bottom",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "e52435cd-e40e-458d-9999-2f6698581b6b",
-      "target-node" : "919d6b38-cef7-4008-82eb-fc8ea4b5a907",
-      "source-slot" : "SD",
-      "target-slot" : "Files",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "e52435cd-e40e-458d-9999-2f6698581b6b",
-      "target-node" : "d4a57be1-e272-48e9-bde7-a9da75ad2974",
-      "source-slot" : "PL",
-      "target-slot" : "Files",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "0c9b9d5b-5d60-4ba6-90ec-2a8936cfa693",
-      "target-node" : "b5cfd24a-1fdc-454c-9e70-08292899a9e7",
-      "source-slot" : "Output",
-      "target-slot" : "Input",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "8907b84a-cf7d-4bc5-b2e3-7552535125eb",
-      "target-node" : "ff28acf5-a947-4fd9-b518-577947c38612",
-      "source-slot" : "Unmatched",
-      "target-slot" : "C1",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "bf6c3c5b-719c-4ff0-addd-5197fbdaa1ff",
-      "target-node" : "c52a846e-f06f-469d-af4c-69dbb23b6506",
-      "source-slot" : "Output",
-      "target-slot" : "Input",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "8875c836-cbea-4749-acee-f2d18ff2d092",
-      "target-node" : "1f04093c-c835-46fb-9452-a551f8b0d60d",
-      "source-slot" : "Output",
-      "target-slot" : "Mask",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "608afdb7-d78a-4814-8116-fc6cce5075ec",
-      "target-node" : "9d71b89e-57cb-4ecf-9652-9098ac4ba727",
-      "source-slot" : "Output",
-      "target-slot" : "Input",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "de81c748-60e6-4276-950e-7b4f5ef62a7c",
-      "target-node" : "79b6ea21-4da6-4240-852e-9157871fd7fc",
-      "source-slot" : "Output",
-      "target-slot" : "ZOIMask",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "52879293-af3a-412f-a6a9-ad3af5cff972",
-      "target-node" : "178ecd99-75ae-4d3e-acd2-15d374db2956",
-      "source-slot" : "ROI",
-      "target-slot" : "ROI",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "888bf6d8-14fa-407a-82f5-1cd1e6f03de9",
-      "target-node" : "1996ab61-d282-4977-bb6e-9fd04e879ebb",
+      "source-node" : "6c856698-1664-49b5-b9e7-d924c5ead092",
+      "target-node" : "09ec3b97-028c-47ea-985a-7ff8b45b74e6",
       "source-slot" : "Output",
       "target-slot" : "Input",
       "metadata" : {
@@ -19108,99 +18374,27 @@
         "ui-shape" : "Elbow"
       }
     }, {
-      "source-node" : "ca5754e7-52d6-49a0-addb-5ef417e7d9a4",
-      "target-node" : "e90ea27a-ddbb-493d-97b4-91b7f5df31f4",
+      "source-node" : "9d71b89e-57cb-4ecf-9652-9098ac4ba727",
+      "target-node" : "40bd5388-0a6a-4c66-8e14-f228e43c10bf",
       "source-slot" : "Output",
-      "target-slot" : "Input",
+      "target-slot" : "Annotations",
       "metadata" : {
         "ui-visibility" : "Smart",
         "ui-shape" : "Elbow"
       }
     }, {
-      "source-node" : "507ece72-c21f-4f6e-a7b5-091f3aaadd0b",
-      "target-node" : "b85761aa-7ea4-45f9-8e29-c1c659c582d9",
+      "source-node" : "c6eabaa1-2620-4f89-995b-753a18614d16",
+      "target-node" : "b6cac43c-0738-4ca9-8f2a-0b9bd25c4a7c",
       "source-slot" : "Output",
-      "target-slot" : "RawMeasurements",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "8adee8d5-7a21-40ff-83ff-ea782b84e5e2",
-      "target-node" : "833b2b66-ffaa-4fec-a447-2b02ff608410",
-      "source-slot" : "Output",
-      "target-slot" : "Labels",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "a6338fe7-45dc-4e9c-9314-d6d5ca997aec",
-      "target-node" : "3737dd2f-93a5-4ee7-a09a-93b7e92a748e",
-      "source-slot" : "Labels",
-      "target-slot" : "Labels",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "75df7376-6f83-4a17-b987-850f1596fb93",
-      "target-node" : "c6eabaa1-2620-4f89-995b-753a18614d16",
-      "source-slot" : "PL",
-      "target-slot" : "Input",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "0dc4e4d9-c1e6-4848-a04d-bcb32f766c9e",
-      "target-node" : "85fedc2f-180a-4f61-a292-0a18e355be86",
-      "source-slot" : "Output",
-      "target-slot" : "I1",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "4cc60257-1dc2-4d6b-922d-7455f76a220a",
-      "target-node" : "6b3210d1-90e7-4654-8f3b-befc3e3a1105",
-      "source-slot" : "SD",
       "target-slot" : "Mask",
       "metadata" : {
         "ui-visibility" : "Smart",
         "ui-shape" : "Elbow"
       }
     }, {
-      "source-node" : "6b3210d1-90e7-4654-8f3b-befc3e3a1105",
-      "target-node" : "342b62f1-b6f7-4b6c-90d8-dc6129dac19b",
+      "source-node" : "f52913fe-e0c7-41d8-b1c9-6eb2443657ae",
+      "target-node" : "bf6c3c5b-719c-4ff0-addd-5197fbdaa1ff",
       "source-slot" : "Output",
-      "target-slot" : "Labels",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "827e3e36-70e8-46fc-9319-ffa4879df174",
-      "target-node" : "ed757310-b739-4527-8d83-98ff5f5e4a14",
-      "source-slot" : "Image",
-      "target-slot" : "RAW",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "a7972570-7e5a-4479-88c8-8069ee844b25",
-      "target-node" : "7a9a9793-0492-4382-a58d-12d9c311b354",
-      "source-slot" : "Filename",
-      "target-slot" : "Files",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "b85761aa-7ea4-45f9-8e29-c1c659c582d9",
-      "target-node" : "173cbbf0-e28d-452b-9526-27c2a86f75c7",
-      "source-slot" : "RawMeasurements",
       "target-slot" : "Input",
       "metadata" : {
         "ui-visibility" : "Smart",
@@ -19216,181 +18410,10 @@
         "ui-shape" : "Elbow"
       }
     }, {
-      "source-node" : "991433b5-eb8e-4dc6-bee6-6569a686af08",
-      "target-node" : "37e13a0e-c7e1-4144-83ca-c0a95e61b123",
-      "source-slot" : "Output",
-      "target-slot" : "LB",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "d5940538-468b-43c9-a791-9941544714ef",
-      "target-node" : "eb5cb77b-0b26-4ac8-befd-cc60ab74a7ca",
-      "source-slot" : "Output",
-      "target-slot" : "Table",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
       "source-node" : "507ece72-c21f-4f6e-a7b5-091f3aaadd0b",
-      "target-node" : "6c856698-1664-49b5-b9e7-d924c5ead092",
+      "target-node" : "3d195b27-7cbd-43b2-a226-79d8228f85ee",
       "source-slot" : "Output",
       "target-slot" : "Input",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "3737dd2f-93a5-4ee7-a09a-93b7e92a748e",
-      "target-node" : "435fa4c6-e43e-4f40-8846-379043444e2a",
-      "source-slot" : "Output",
-      "target-slot" : "Input",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "79b6ea21-4da6-4240-852e-9157871fd7fc",
-      "target-node" : "888bf6d8-14fa-407a-82f5-1cd1e6f03de9",
-      "source-slot" : "Statistics",
-      "target-slot" : "Input",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "0122ba46-190f-4c05-982d-9b6b709d84d7",
-      "target-node" : "ac1ef081-4812-4223-9bcb-7cecb0cb7bfd",
-      "source-slot" : "Folder paths",
-      "target-slot" : "Folders",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "eb5a046d-68f4-48fa-b96f-b0d71222cf92",
-      "target-node" : "f9f9653d-0234-40ca-bb01-c9eb70707a48",
-      "source-slot" : "Output",
-      "target-slot" : "Input",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "1012a274-2493-4930-8988-e26cf91c2ea7",
-      "target-node" : "1486a7fa-7059-4e6a-879b-1a92eff885df",
-      "source-slot" : "Output",
-      "target-slot" : "Input",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "d28634a4-d756-47ac-ab0c-9793e00f61ec",
-      "target-node" : "aa4dd71b-118c-48d6-91c3-78ace661a646",
-      "source-slot" : "Output",
-      "target-slot" : "Input",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "3d3aba6c-2688-47bd-94af-aef3ebf058bf",
-      "target-node" : "d5940538-468b-43c9-a791-9941544714ef",
-      "source-slot" : "Output",
-      "target-slot" : "Input",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "dc161bcb-0220-46b2-b3be-85f7bd4f5e53",
-      "target-node" : "479255ae-1dbe-491e-a564-25061e886b85",
-      "source-slot" : "Output",
-      "target-slot" : "Input",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "c9c8dbfb-38d8-4a56-8d25-34b45399a35b",
-      "target-node" : "fd764dd0-8313-4a47-ac54-9ab6edf6e07c",
-      "source-slot" : "Output",
-      "target-slot" : "Input",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "b1e52ddb-f657-401c-a7a4-78d21f2808e8",
-      "target-node" : "1042d5e6-412b-4d6e-a757-bb06d786dc19",
-      "source-slot" : "Output",
-      "target-slot" : "Input",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "d290eca9-d531-42ca-beb5-9400e4cebd1c",
-      "target-node" : "3737dd2f-93a5-4ee7-a09a-93b7e92a748e",
-      "source-slot" : "Output",
-      "target-slot" : "Image",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "25cf4080-49c8-4988-b640-9892cc09917e",
-      "target-node" : "d616dc8e-c543-42bb-b15a-bcaee50eea4c",
-      "source-slot" : "Output",
-      "target-slot" : "Source",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "65aee404-39ae-40be-b9f1-7afd35fb66c3",
-      "target-node" : "a6338fe7-45dc-4e9c-9314-d6d5ca997aec",
-      "source-slot" : "Output",
-      "target-slot" : "Labels",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "1f04093c-c835-46fb-9452-a551f8b0d60d",
-      "target-node" : "37b524ce-a4a1-44dd-8e6f-81f9a526d09c",
-      "source-slot" : "ROI",
-      "target-slot" : "Input",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "75df7376-6f83-4a17-b987-850f1596fb93",
-      "target-node" : "1874bd07-7f25-4d68-9649-74b814c62322",
-      "source-slot" : "ZS",
-      "target-slot" : "ZS",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "27b8db2a-e7b3-4dff-8512-3bcdf12185eb",
-      "target-node" : "07ba4c3e-4352-499f-b84c-0dbeeadb9194",
-      "source-slot" : "Annotated paths",
-      "target-slot" : "Data",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "4e2b11db-9046-48fa-936a-5c5d4e8905ea",
-      "target-node" : "ba13cc75-af39-4093-a640-70ddb776e1e0",
-      "source-slot" : "Output",
-      "target-slot" : "Middle",
       "metadata" : {
         "ui-visibility" : "Smart",
         "ui-shape" : "Elbow"
@@ -19405,260 +18428,44 @@
         "ui-shape" : "Elbow"
       }
     }, {
-      "source-node" : "eafa3663-4147-4f90-8cd9-ca6e9da1d580",
-      "target-node" : "d290eca9-d531-42ca-beb5-9400e4cebd1c",
-      "source-slot" : "Output",
-      "target-slot" : "Input",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "ffa05fa7-eb3e-45ac-8e54-6d9435fe2718",
-      "target-node" : "4b95c0b1-89db-4e3d-94c6-f5e116de68ca",
-      "source-slot" : "Output",
-      "target-slot" : "Image",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "833b2b66-ffaa-4fec-a447-2b02ff608410",
-      "target-node" : "c9dc4001-9477-4ada-83bf-4f7674ab48b2",
-      "source-slot" : "Output",
-      "target-slot" : "Input",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "abad8c0f-6c3e-475d-a6c8-6644e2d69a91",
-      "target-node" : "ff38bcfb-a619-494e-8776-ee1488465807",
-      "source-slot" : "Output",
-      "target-slot" : "Target",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "325ae40a-7520-48d7-a8fd-08308c23a2b5",
-      "target-node" : "75df7376-6f83-4a17-b987-850f1596fb93",
-      "source-slot" : "Output",
+      "source-node" : "3b70eae2-58ed-42f7-990d-7c19260df0f4",
+      "target-node" : "ed757310-b739-4527-8d83-98ff5f5e4a14",
+      "source-slot" : "Image",
       "target-slot" : "ZS",
       "metadata" : {
         "ui-visibility" : "Smart",
         "ui-shape" : "Elbow"
       }
     }, {
-      "source-node" : "9dfbccbe-6f20-4801-92a4-250af5c5ed99",
+      "source-node" : "17ec0a5f-2dac-4006-b31e-710d978aa2a4",
+      "target-node" : "1042d5e6-412b-4d6e-a757-bb06d786dc19",
+      "source-slot" : "Output",
+      "target-slot" : "Input",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "4fe0f2d8-040b-4097-82ed-5dd931f1a347",
+      "target-node" : "40bd5388-0a6a-4c66-8e14-f228e43c10bf",
+      "source-slot" : "Annotated paths",
+      "target-slot" : "Data",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "07ba4c3e-4352-499f-b84c-0dbeeadb9194",
       "target-node" : "e52435cd-e40e-458d-9999-2f6698581b6b",
       "source-slot" : "Annotated data",
-      "target-slot" : "RAW",
+      "target-slot" : "PL",
       "metadata" : {
         "ui-visibility" : "Smart",
         "ui-shape" : "Elbow"
       }
     }, {
-      "source-node" : "1042d5e6-412b-4d6e-a757-bb06d786dc19",
-      "target-node" : "c0399de6-eb8e-4359-b33b-4c3ac86e25cc",
-      "source-slot" : "Output",
-      "target-slot" : "Input",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "ed757310-b739-4527-8d83-98ff5f5e4a14",
-      "target-node" : "94a4b3c8-6747-42aa-8b9b-8f4d8146ced5",
-      "source-slot" : "ZS",
-      "target-slot" : "Input",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "6abfa5ab-1496-44a5-bca1-9aead04a1a94",
-      "target-node" : "eb5a046d-68f4-48fa-b96f-b0d71222cf92",
-      "source-slot" : "Output",
-      "target-slot" : "Input",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "9d71b89e-57cb-4ecf-9652-9098ac4ba727",
-      "target-node" : "07ba4c3e-4352-499f-b84c-0dbeeadb9194",
-      "source-slot" : "Output",
-      "target-slot" : "Annotations",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "6c856698-1664-49b5-b9e7-d924c5ead092",
-      "target-node" : "09ec3b97-028c-47ea-985a-7ff8b45b74e6",
-      "source-slot" : "Output",
-      "target-slot" : "Input",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "c8fed4a2-ea2b-4430-93ec-334680c114f9",
-      "target-node" : "41b6ae74-5111-457e-9d19-2168107897e9",
-      "source-slot" : "Unmatched",
-      "target-slot" : "Input",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "04fa18ac-0f85-458e-8f90-bc1e749e0359",
-      "target-node" : "3d3aba6c-2688-47bd-94af-aef3ebf058bf",
-      "source-slot" : "Output",
-      "target-slot" : "Early",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "1cc8443c-f452-4b72-9387-34b47d26b3c3",
-      "target-node" : "df083757-cb3f-44fd-9734-53703f7e8b1e",
-      "source-slot" : "Folder paths",
-      "target-slot" : "Folders",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "aae99ae5-a299-4a86-a94a-b4567d248f71",
-      "target-node" : "de81c748-60e6-4276-950e-7b4f5ef62a7c",
-      "source-slot" : "Annotated data",
-      "target-slot" : "Input",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "3e03d029-335c-4b84-a717-044677334030",
-      "target-node" : "4e2b11db-9046-48fa-936a-5c5d4e8905ea",
-      "source-slot" : "Output",
-      "target-slot" : "Input",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "ccbaf721-4a82-4156-8599-1dd018ee81b2",
-      "target-node" : "ff28acf5-a947-4fd9-b518-577947c38612",
-      "source-slot" : "Output",
-      "target-slot" : "C0",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "75df7376-6f83-4a17-b987-850f1596fb93",
-      "target-node" : "4cc60257-1dc2-4d6b-922d-7455f76a220a",
-      "source-slot" : "RAW",
-      "target-slot" : "RAW",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "6224751b-5906-4917-9ca0-1201f2d3990d",
-      "target-node" : "3e03d029-335c-4b84-a717-044677334030",
-      "source-slot" : "Output",
-      "target-slot" : "Input",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "9d71b89e-57cb-4ecf-9652-9098ac4ba727",
-      "target-node" : "9dfbccbe-6f20-4801-92a4-250af5c5ed99",
-      "source-slot" : "Output",
-      "target-slot" : "Annotations",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "3d195b27-7cbd-43b2-a226-79d8228f85ee",
-      "target-node" : "be8a15c0-da19-424d-9ff7-eeb66aac58a5",
-      "source-slot" : "Output",
-      "target-slot" : "Input",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "c8fed4a2-ea2b-4430-93ec-334680c114f9",
-      "target-node" : "abad8c0f-6c3e-475d-a6c8-6644e2d69a91",
-      "source-slot" : "Matched",
-      "target-slot" : "Input",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "9b456697-7fef-4020-9615-1e2c26ab9ce8",
-      "target-node" : "af973a43-4e6e-4afa-9455-03801e99946e",
-      "source-slot" : "Files",
-      "target-slot" : "Paths",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "f8f12b87-07bc-49b3-be38-024f1f181ea7",
-      "target-node" : "6b3210d1-90e7-4654-8f3b-befc3e3a1105",
-      "source-slot" : "Output",
-      "target-slot" : "Input",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "fe1727ba-cb2e-45e2-98fe-7de16b4bb20f",
-      "target-node" : "0a2e624a-855e-46ae-94f1-a7361e70868e",
-      "source-slot" : "Output",
-      "target-slot" : "Input",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "b85761aa-7ea4-45f9-8e29-c1c659c582d9",
-      "target-node" : "78035358-1dd6-4db1-b98e-d296e226e61f",
-      "source-slot" : "RawMeasurements",
-      "target-slot" : "Input",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "6ba980c9-15fa-4c67-937d-952b379023e6",
-      "target-node" : "b85761aa-7ea4-45f9-8e29-c1c659c582d9",
-      "source-slot" : "Output",
-      "target-slot" : "FinalLabels",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "eafa3663-4147-4f90-8cd9-ca6e9da1d580",
-      "target-node" : "833b2b66-ffaa-4fec-a447-2b02ff608410",
-      "source-slot" : "Output",
-      "target-slot" : "Image",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "aa4dd71b-118c-48d6-91c3-78ace661a646",
-      "target-node" : "c9bccfce-e972-4d90-94d1-f6535fe153ce",
+      "source-node" : "b6cac43c-0738-4ca9-8f2a-0b9bd25c4a7c",
+      "target-node" : "65aee404-39ae-40be-b9f1-7afd35fb66c3",
       "source-slot" : "Output",
       "target-slot" : "Input",
       "metadata" : {
@@ -19675,17 +18482,8 @@
         "ui-shape" : "Elbow"
       }
     }, {
-      "source-node" : "75df7376-6f83-4a17-b987-850f1596fb93",
-      "target-node" : "eafa3663-4147-4f90-8cd9-ca6e9da1d580",
-      "source-slot" : "RAW",
-      "target-slot" : "Input",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "77946d1f-c94a-45f2-9d1c-c79500ca8f2e",
-      "target-node" : "04fa18ac-0f85-458e-8f90-bc1e749e0359",
+      "source-node" : "833b2b66-ffaa-4fec-a447-2b02ff608410",
+      "target-node" : "c9dc4001-9477-4ada-83bf-4f7674ab48b2",
       "source-slot" : "Output",
       "target-slot" : "Input",
       "metadata" : {
@@ -19693,118 +18491,10 @@
         "ui-shape" : "Elbow"
       }
     }, {
-      "source-node" : "85fedc2f-180a-4f61-a292-0a18e355be86",
-      "target-node" : "56e894b4-602e-4d0d-875c-6481a2a37f3c",
+      "source-node" : "6ba980c9-15fa-4c67-937d-952b379023e6",
+      "target-node" : "b85761aa-7ea4-45f9-8e29-c1c659c582d9",
       "source-slot" : "Output",
-      "target-slot" : "Input",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "5daedc06-5c59-40f5-9620-8c348ea1f766",
-      "target-node" : "75df7376-6f83-4a17-b987-850f1596fb93",
-      "source-slot" : "Matched",
-      "target-slot" : "ZS",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "aa4dd71b-118c-48d6-91c3-78ace661a646",
-      "target-node" : "53cba4bc-ae87-47b4-99f8-5b60a2017fd2",
-      "source-slot" : "Output",
-      "target-slot" : "Input",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "752dd5da-ef30-4467-a130-bd7067882ab7",
-      "target-node" : "325ae40a-7520-48d7-a8fd-08308c23a2b5",
-      "source-slot" : "Output",
-      "target-slot" : "Input",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "daa71df2-5ebc-40e4-b7f6-72762b3ab2c8",
-      "target-node" : "b48c8589-39a7-437f-bd7d-13638f06dbc2",
-      "source-slot" : "Unmatched",
-      "target-slot" : "Input",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "622ad4ca-904e-48e5-bbc8-751dd657b2f8",
-      "target-node" : "eb5cb77b-0b26-4ac8-befd-cc60ab74a7ca",
-      "source-slot" : "Output",
-      "target-slot" : "Data",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "e52435cd-e40e-458d-9999-2f6698581b6b",
-      "target-node" : "3b70eae2-58ed-42f7-990d-7c19260df0f4",
-      "source-slot" : "ZS",
-      "target-slot" : "Files",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "9bc4b279-ff3f-492d-b91e-388e92a2deb7",
-      "target-node" : "25cf4080-49c8-4988-b640-9892cc09917e",
-      "source-slot" : "Output",
-      "target-slot" : "Input",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "b85761aa-7ea4-45f9-8e29-c1c659c582d9",
-      "target-node" : "a908f33e-bfe8-4500-a334-83ca30984f40",
-      "source-slot" : "FinalLabels",
-      "target-slot" : "Labels",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "37e16fa0-4eaf-47a2-888e-f67a653f1eac",
-      "target-node" : "9bd87f1f-686d-42cc-994b-9f66d52c47b4",
-      "source-slot" : "Output",
-      "target-slot" : "Input",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "4cc60257-1dc2-4d6b-922d-7455f76a220a",
-      "target-node" : "c9c8dbfb-38d8-4a56-8d25-34b45399a35b",
-      "source-slot" : "ZS",
-      "target-slot" : "Input",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "9bd87f1f-686d-42cc-994b-9f66d52c47b4",
-      "target-node" : "752dd5da-ef30-4467-a130-bd7067882ab7",
-      "source-slot" : "Output",
-      "target-slot" : "Input",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "c0399de6-eb8e-4359-b33b-4c3ac86e25cc",
-      "target-node" : "54cf93c9-832b-471b-913b-cbbea95cc756",
-      "source-slot" : "Output",
-      "target-slot" : "Input",
+      "target-slot" : "FinalLabels",
       "metadata" : {
         "ui-visibility" : "Smart",
         "ui-shape" : "Elbow"
@@ -19819,8 +18509,17 @@
         "ui-shape" : "Elbow"
       }
     }, {
-      "source-node" : "d28634a4-d756-47ac-ab0c-9793e00f61ec",
-      "target-node" : "8ca4a1fc-73e6-46ea-bbf4-fb38d57abe84",
+      "source-node" : "75df7376-6f83-4a17-b987-850f1596fb93",
+      "target-node" : "4cc60257-1dc2-4d6b-922d-7455f76a220a",
+      "source-slot" : "SD",
+      "target-slot" : "SD",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "d616dc8e-c543-42bb-b15a-bcaee50eea4c",
+      "target-node" : "b7c77a51-0c19-4007-82af-260edae96018",
       "source-slot" : "Output",
       "target-slot" : "Input",
       "metadata" : {
@@ -19828,17 +18527,8 @@
         "ui-shape" : "Elbow"
       }
     }, {
-      "source-node" : "ba71ad7f-95ed-4a88-aabd-efdb31b0028d",
-      "target-node" : "f74d816b-49b8-4dd2-9f88-f6ead6d3e36d",
-      "source-slot" : "Output",
-      "target-slot" : "Reference",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "d4d27aaa-e6f8-4d83-be97-f27f9e099df6",
-      "target-node" : "37e16fa0-4eaf-47a2-888e-f67a653f1eac",
+      "source-node" : "479255ae-1dbe-491e-a564-25061e886b85",
+      "target-node" : "ba71ad7f-95ed-4a88-aabd-efdb31b0028d",
       "source-slot" : "Output",
       "target-slot" : "Input",
       "metadata" : {
@@ -19846,8 +18536,8 @@
         "ui-shape" : "Elbow"
       }
     }, {
-      "source-node" : "d193701a-147b-465e-9871-fb2776424500",
-      "target-node" : "d28634a4-d756-47ac-ab0c-9793e00f61ec",
+      "source-node" : "888bf6d8-14fa-407a-82f5-1cd1e6f03de9",
+      "target-node" : "1996ab61-d282-4977-bb6e-9fd04e879ebb",
       "source-slot" : "Output",
       "target-slot" : "Input",
       "metadata" : {
@@ -19855,62 +18545,26 @@
         "ui-shape" : "Elbow"
       }
     }, {
-      "source-node" : "373862a4-1986-4d05-8625-14d8988ce778",
-      "target-node" : "3d3aba6c-2688-47bd-94af-aef3ebf058bf",
-      "source-slot" : "Output",
-      "target-slot" : "Late",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "ac1ef081-4812-4223-9bcb-7cecb0cb7bfd",
-      "target-node" : "4be2d0ca-e5a3-43b1-8fdc-2f82f2bda424",
-      "source-slot" : "Files",
-      "target-slot" : "Paths",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "ac0fc80c-6e36-4b6e-ba06-64cfad83b2f3",
-      "target-node" : "fadf3165-5f59-4c49-b513-b777efe4daf3",
-      "source-slot" : "Matched",
-      "target-slot" : "Strip",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "be188ce3-24aa-4d35-ae53-84b7439027a1",
-      "target-node" : "e52435cd-e40e-458d-9999-2f6698581b6b",
-      "source-slot" : "Annotated data",
+      "source-node" : "75df7376-6f83-4a17-b987-850f1596fb93",
+      "target-node" : "1874bd07-7f25-4d68-9649-74b814c62322",
+      "source-slot" : "ZS",
       "target-slot" : "ZS",
       "metadata" : {
         "ui-visibility" : "Smart",
         "ui-shape" : "Elbow"
       }
     }, {
-      "source-node" : "b85761aa-7ea4-45f9-8e29-c1c659c582d9",
-      "target-node" : "c8fed4a2-ea2b-4430-93ec-334680c114f9",
-      "source-slot" : "RawMeasurements",
-      "target-slot" : "Input",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "b48c8589-39a7-437f-bd7d-13638f06dbc2",
-      "target-node" : "ff28acf5-a947-4fd9-b518-577947c38612",
+      "source-node" : "507ece72-c21f-4f6e-a7b5-091f3aaadd0b",
+      "target-node" : "b85761aa-7ea4-45f9-8e29-c1c659c582d9",
       "source-slot" : "Output",
-      "target-slot" : "C2",
+      "target-slot" : "RawMeasurements",
       "metadata" : {
         "ui-visibility" : "Smart",
         "ui-shape" : "Elbow"
       }
     }, {
-      "source-node" : "f74d816b-49b8-4dd2-9f88-f6ead6d3e36d",
-      "target-node" : "c18362b7-10e2-40d5-820d-ea17a2c21761",
+      "source-node" : "52879293-af3a-412f-a6a9-ad3af5cff972",
+      "target-node" : "0c9b9d5b-5d60-4ba6-90ec-2a8936cfa693",
       "source-slot" : "ROI",
       "target-slot" : "ROI",
       "metadata" : {
@@ -19918,26 +18572,71 @@
         "ui-shape" : "Elbow"
       }
     }, {
-      "source-node" : "ed757310-b739-4527-8d83-98ff5f5e4a14",
-      "target-node" : "75df7376-6f83-4a17-b987-850f1596fb93",
-      "source-slot" : "PL",
-      "target-slot" : "PL",
+      "source-node" : "54cf93c9-832b-471b-913b-cbbea95cc756",
+      "target-node" : "507ece72-c21f-4f6e-a7b5-091f3aaadd0b",
+      "source-slot" : "Output",
+      "target-slot" : "Input",
       "metadata" : {
         "ui-visibility" : "Smart",
         "ui-shape" : "Elbow"
       }
     }, {
-      "source-node" : "3b70eae2-58ed-42f7-990d-7c19260df0f4",
-      "target-node" : "ed757310-b739-4527-8d83-98ff5f5e4a14",
-      "source-slot" : "Image",
+      "source-node" : "75df7376-6f83-4a17-b987-850f1596fb93",
+      "target-node" : "1874bd07-7f25-4d68-9649-74b814c62322",
+      "source-slot" : "SD",
+      "target-slot" : "SD",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "ed757310-b739-4527-8d83-98ff5f5e4a14",
+      "target-node" : "75df7376-6f83-4a17-b987-850f1596fb93",
+      "source-slot" : "RAW",
+      "target-slot" : "RAW",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "9dfbccbe-6f20-4801-92a4-250af5c5ed99",
+      "target-node" : "e52435cd-e40e-458d-9999-2f6698581b6b",
+      "source-slot" : "Annotated data",
+      "target-slot" : "RAW",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "65aee404-39ae-40be-b9f1-7afd35fb66c3",
+      "target-node" : "a6338fe7-45dc-4e9c-9314-d6d5ca997aec",
+      "source-slot" : "Output",
+      "target-slot" : "Labels",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "94a4b3c8-6747-42aa-8b9b-8f4d8146ced5",
+      "target-node" : "75df7376-6f83-4a17-b987-850f1596fb93",
+      "source-slot" : "Unmatched",
       "target-slot" : "ZS",
       "metadata" : {
         "ui-visibility" : "Smart",
         "ui-shape" : "Elbow"
       }
     }, {
-      "source-node" : "78035358-1dd6-4db1-b98e-d296e226e61f",
-      "target-node" : "373862a4-1986-4d05-8625-14d8988ce778",
+      "source-node" : "9d71b89e-57cb-4ecf-9652-9098ac4ba727",
+      "target-node" : "036406c0-5d1b-4d92-afc7-3ca99685da13",
+      "source-slot" : "Output",
+      "target-slot" : "Input",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "bf6c3c5b-719c-4ff0-addd-5197fbdaa1ff",
+      "target-node" : "c52a846e-f06f-469d-af4c-69dbb23b6506",
       "source-slot" : "Output",
       "target-slot" : "Input",
       "metadata" : {
@@ -19954,17 +18653,557 @@
         "ui-shape" : "Elbow"
       }
     }, {
-      "source-node" : "75df7376-6f83-4a17-b987-850f1596fb93",
-      "target-node" : "8adee8d5-7a21-40ff-83ff-ea782b84e5e2",
-      "source-slot" : "PL",
-      "target-slot" : "I1",
+      "source-node" : "1874bd07-7f25-4d68-9649-74b814c62322",
+      "target-node" : "6abfa5ab-1496-44a5-bca1-9aead04a1a94",
+      "source-slot" : "SD",
+      "target-slot" : "Input",
       "metadata" : {
         "ui-visibility" : "Smart",
         "ui-shape" : "Elbow"
       }
     }, {
-      "source-node" : "99c8e4d0-f32c-4d52-b03d-2195fdf6b38f",
-      "target-node" : "d4d27aaa-e6f8-4d83-be97-f27f9e099df6",
+      "source-node" : "ba71ad7f-95ed-4a88-aabd-efdb31b0028d",
+      "target-node" : "f74d816b-49b8-4dd2-9f88-f6ead6d3e36d",
+      "source-slot" : "Output",
+      "target-slot" : "Reference",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "eb5a046d-68f4-48fa-b96f-b0d71222cf92",
+      "target-node" : "f9f9653d-0234-40ca-bb01-c9eb70707a48",
+      "source-slot" : "Output",
+      "target-slot" : "Input",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "9b456697-7fef-4020-9615-1e2c26ab9ce8",
+      "target-node" : "af973a43-4e6e-4afa-9455-03801e99946e",
+      "source-slot" : "Files",
+      "target-slot" : "Paths",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "c9c8dbfb-38d8-4a56-8d25-34b45399a35b",
+      "target-node" : "d2f1aad5-635f-4708-adba-1439fdbd144a",
+      "source-slot" : "Output",
+      "target-slot" : "Input",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "37e16fa0-4eaf-47a2-888e-f67a653f1eac",
+      "target-node" : "9bd87f1f-686d-42cc-994b-9f66d52c47b4",
+      "source-slot" : "Output",
+      "target-slot" : "Input",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "98d343ba-9ca2-4578-8712-00ea6344ce23",
+      "target-node" : "aae99ae5-a299-4a86-a94a-b4567d248f71",
+      "source-slot" : "Output",
+      "target-slot" : "Data",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "a6338fe7-45dc-4e9c-9314-d6d5ca997aec",
+      "target-node" : "3737dd2f-93a5-4ee7-a09a-93b7e92a748e",
+      "source-slot" : "Labels",
+      "target-slot" : "Labels",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "1f04093c-c835-46fb-9452-a551f8b0d60d",
+      "target-node" : "37b524ce-a4a1-44dd-8e6f-81f9a526d09c",
+      "source-slot" : "ROI",
+      "target-slot" : "Input",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "ba71ad7f-95ed-4a88-aabd-efdb31b0028d",
+      "target-node" : "c18362b7-10e2-40d5-820d-ea17a2c21761",
+      "source-slot" : "Output",
+      "target-slot" : "Image",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "e52435cd-e40e-458d-9999-2f6698581b6b",
+      "target-node" : "d4a57be1-e272-48e9-bde7-a9da75ad2974",
+      "source-slot" : "PL",
+      "target-slot" : "Files",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "325ae40a-7520-48d7-a8fd-08308c23a2b5",
+      "target-node" : "75df7376-6f83-4a17-b987-850f1596fb93",
+      "source-slot" : "Output",
+      "target-slot" : "ZS",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "f74d816b-49b8-4dd2-9f88-f6ead6d3e36d",
+      "target-node" : "c18362b7-10e2-40d5-820d-ea17a2c21761",
+      "source-slot" : "ROI",
+      "target-slot" : "ROI",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "75df7376-6f83-4a17-b987-850f1596fb93",
+      "target-node" : "1874bd07-7f25-4d68-9649-74b814c62322",
+      "source-slot" : "RAW",
+      "target-slot" : "RAW",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "b85761aa-7ea4-45f9-8e29-c1c659c582d9",
+      "target-node" : "a908f33e-bfe8-4500-a334-83ca30984f40",
+      "source-slot" : "FinalLabels",
+      "target-slot" : "Labels",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "de81c748-60e6-4276-950e-7b4f5ef62a7c",
+      "target-node" : "79b6ea21-4da6-4240-852e-9157871fd7fc",
+      "source-slot" : "Output",
+      "target-slot" : "ZOIMask",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "7a9a9793-0492-4382-a58d-12d9c311b354",
+      "target-node" : "608afdb7-d78a-4814-8116-fc6cce5075ec",
+      "source-slot" : "Results table",
+      "target-slot" : "Input",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "4b95c0b1-89db-4e3d-94c6-f5e116de68ca",
+      "target-node" : "c6be512a-8250-4e25-bd8c-7833b194d69f",
+      "source-slot" : "Output",
+      "target-slot" : "Input",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "a908f33e-bfe8-4500-a334-83ca30984f40",
+      "target-node" : "eb3e41be-5e9f-4494-b8e9-73646691e190",
+      "source-slot" : "Boundaries",
+      "target-slot" : "Input",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "04fa18ac-0f85-458e-8f90-bc1e749e0359",
+      "target-node" : "3d3aba6c-2688-47bd-94af-aef3ebf058bf",
+      "source-slot" : "Output",
+      "target-slot" : "Early",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "3d195b27-7cbd-43b2-a226-79d8228f85ee",
+      "target-node" : "be8a15c0-da19-424d-9ff7-eeb66aac58a5",
+      "source-slot" : "Output",
+      "target-slot" : "Input",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "75df7376-6f83-4a17-b987-850f1596fb93",
+      "target-node" : "c6eabaa1-2620-4f89-995b-753a18614d16",
+      "source-slot" : "PL",
+      "target-slot" : "Input",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "c9dc4001-9477-4ada-83bf-4f7674ab48b2",
+      "target-node" : "b1e52ddb-f657-401c-a7a4-78d21f2808e8",
+      "source-slot" : "Output",
+      "target-slot" : "Input",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "045de778-6d44-440a-b26f-394e52a48837",
+      "target-node" : "f52913fe-e0c7-41d8-b1c9-6eb2443657ae",
+      "source-slot" : "Output",
+      "target-slot" : "ROI",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "4cc60257-1dc2-4d6b-922d-7455f76a220a",
+      "target-node" : "6b3210d1-90e7-4654-8f3b-befc3e3a1105",
+      "source-slot" : "SD",
+      "target-slot" : "Mask",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "eafa3663-4147-4f90-8cd9-ca6e9da1d580",
+      "target-node" : "833b2b66-ffaa-4fec-a447-2b02ff608410",
+      "source-slot" : "Output",
+      "target-slot" : "Image",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "5cc73725-0204-4fd0-afda-9f3d1fe51751",
+      "target-node" : "d616dc8e-c543-42bb-b15a-bcaee50eea4c",
+      "source-slot" : "Output",
+      "target-slot" : "Target",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "8875c836-cbea-4749-acee-f2d18ff2d092",
+      "target-node" : "1f04093c-c835-46fb-9452-a551f8b0d60d",
+      "source-slot" : "Output",
+      "target-slot" : "Mask",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "daa71df2-5ebc-40e4-b7f6-72762b3ab2c8",
+      "target-node" : "b48c8589-39a7-437f-bd7d-13638f06dbc2",
+      "source-slot" : "Unmatched",
+      "target-slot" : "Input",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "c52a846e-f06f-469d-af4c-69dbb23b6506",
+      "target-node" : "342b62f1-b6f7-4b6c-90d8-dc6129dac19b",
+      "source-slot" : "Output",
+      "target-slot" : "Image",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "d5940538-468b-43c9-a791-9941544714ef",
+      "target-node" : "aae99ae5-a299-4a86-a94a-b4567d248f71",
+      "source-slot" : "Output",
+      "target-slot" : "Table",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "fe1727ba-cb2e-45e2-98fe-7de16b4bb20f",
+      "target-node" : "0a2e624a-855e-46ae-94f1-a7361e70868e",
+      "source-slot" : "Output",
+      "target-slot" : "Input",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "b85761aa-7ea4-45f9-8e29-c1c659c582d9",
+      "target-node" : "173cbbf0-e28d-452b-9526-27c2a86f75c7",
+      "source-slot" : "RawMeasurements",
+      "target-slot" : "Input",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "a6338fe7-45dc-4e9c-9314-d6d5ca997aec",
+      "target-node" : "be9a557d-e6bd-4ee1-822d-b16d166ac44b",
+      "source-slot" : "Labels",
+      "target-slot" : "Input",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "ed757310-b739-4527-8d83-98ff5f5e4a14",
+      "target-node" : "ac0fc80c-6e36-4b6e-ba06-64cfad83b2f3",
+      "source-slot" : "SD",
+      "target-slot" : "Input",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "d5940538-468b-43c9-a791-9941544714ef",
+      "target-node" : "79b6ea21-4da6-4240-852e-9157871fd7fc",
+      "source-slot" : "Output",
+      "target-slot" : "Statistics",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "9bd87f1f-686d-42cc-994b-9f66d52c47b4",
+      "target-node" : "752dd5da-ef30-4467-a130-bd7067882ab7",
+      "source-slot" : "Output",
+      "target-slot" : "Input",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "3737dd2f-93a5-4ee7-a09a-93b7e92a748e",
+      "target-node" : "435fa4c6-e43e-4f40-8846-379043444e2a",
+      "source-slot" : "Output",
+      "target-slot" : "Input",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "342b62f1-b6f7-4b6c-90d8-dc6129dac19b",
+      "target-node" : "3282eef7-6dac-41c0-83bb-6acddaa3425d",
+      "source-slot" : "Output",
+      "target-slot" : "Mappings",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "c5e1b060-4022-4d3a-91f9-544c2730764a",
+      "target-node" : "c3f86b37-b86d-47da-baf3-3e35955e8e09",
+      "source-slot" : "Output",
+      "target-slot" : "Input",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "b85761aa-7ea4-45f9-8e29-c1c659c582d9",
+      "target-node" : "c8fed4a2-ea2b-4430-93ec-334680c114f9",
+      "source-slot" : "RawMeasurements",
+      "target-slot" : "Input",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "d290eca9-d531-42ca-beb5-9400e4cebd1c",
+      "target-node" : "3737dd2f-93a5-4ee7-a09a-93b7e92a748e",
+      "source-slot" : "Output",
+      "target-slot" : "Image",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "9d71b89e-57cb-4ecf-9652-9098ac4ba727",
+      "target-node" : "9dfbccbe-6f20-4801-92a4-250af5c5ed99",
+      "source-slot" : "Output",
+      "target-slot" : "Annotations",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "e9973495-1bb7-4b70-8dad-ba1585e3e6f7",
+      "target-node" : "d290eca9-d531-42ca-beb5-9400e4cebd1c",
+      "source-slot" : "Output",
+      "target-slot" : "Mask",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "eb3e41be-5e9f-4494-b8e9-73646691e190",
+      "target-node" : "c14047e8-94ba-414c-b9c1-47f6a690eb40",
+      "source-slot" : "Output",
+      "target-slot" : "Input",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "e52435cd-e40e-458d-9999-2f6698581b6b",
+      "target-node" : "919d6b38-cef7-4008-82eb-fc8ea4b5a907",
+      "source-slot" : "SD",
+      "target-slot" : "Files",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "507ece72-c21f-4f6e-a7b5-091f3aaadd0b",
+      "target-node" : "6c856698-1664-49b5-b9e7-d924c5ead092",
+      "source-slot" : "Output",
+      "target-slot" : "Input",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "cc60905d-15d0-4233-a8b4-037069e42d30",
+      "target-node" : "79b6ea21-4da6-4240-852e-9157871fd7fc",
+      "source-slot" : "Output",
+      "target-slot" : "ZOIMask",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "e90ea27a-ddbb-493d-97b4-91b7f5df31f4",
+      "target-node" : "99c8e4d0-f32c-4d52-b03d-2195fdf6b38f",
+      "source-slot" : "Output",
+      "target-slot" : "Input",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "aa4dd71b-118c-48d6-91c3-78ace661a646",
+      "target-node" : "53cba4bc-ae87-47b4-99f8-5b60a2017fd2",
+      "source-slot" : "Output",
+      "target-slot" : "Input",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "9d71b89e-57cb-4ecf-9652-9098ac4ba727",
+      "target-node" : "cfd24b0f-61e9-485a-a24c-58e5dfd141f1",
+      "source-slot" : "Output",
+      "target-slot" : "Input",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "9bc4b279-ff3f-492d-b91e-388e92a2deb7",
+      "target-node" : "25cf4080-49c8-4988-b640-9892cc09917e",
+      "source-slot" : "Output",
+      "target-slot" : "Input",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "c8fed4a2-ea2b-4430-93ec-334680c114f9",
+      "target-node" : "abad8c0f-6c3e-475d-a6c8-6644e2d69a91",
+      "source-slot" : "Matched",
+      "target-slot" : "Input",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "1996ab61-d282-4977-bb6e-9fd04e879ebb",
+      "target-node" : "d193701a-147b-465e-9871-fb2776424500",
+      "source-slot" : "Output",
+      "target-slot" : "Input",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "c14047e8-94ba-414c-b9c1-47f6a690eb40",
+      "target-node" : "ba13cc75-af39-4093-a640-70ddb776e1e0",
+      "source-slot" : "Output",
+      "target-slot" : "Top",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "1cc8443c-f452-4b72-9387-34b47d26b3c3",
+      "target-node" : "df083757-cb3f-44fd-9734-53703f7e8b1e",
+      "source-slot" : "Folder paths",
+      "target-slot" : "Folders",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "ed757310-b739-4527-8d83-98ff5f5e4a14",
+      "target-node" : "75df7376-6f83-4a17-b987-850f1596fb93",
+      "source-slot" : "SD",
+      "target-slot" : "SD",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "aa2b5a91-f513-433d-8a97-d7ca23d1e49c",
+      "target-node" : "4b95c0b1-89db-4e3d-94c6-f5e116de68ca",
+      "source-slot" : "ROI",
+      "target-slot" : "ROI",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "e52435cd-e40e-458d-9999-2f6698581b6b",
+      "target-node" : "827e3e36-70e8-46fc-9319-ffa4879df174",
+      "source-slot" : "RAW",
+      "target-slot" : "Files",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "1042d5e6-412b-4d6e-a757-bb06d786dc19",
+      "target-node" : "c0399de6-eb8e-4359-b33b-4c3ac86e25cc",
+      "source-slot" : "Output",
+      "target-slot" : "Input",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "d193701a-147b-465e-9871-fb2776424500",
+      "target-node" : "d28634a4-d756-47ac-ab0c-9793e00f61ec",
+      "source-slot" : "Output",
+      "target-slot" : "Input",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "3d3aba6c-2688-47bd-94af-aef3ebf058bf",
+      "target-node" : "d5940538-468b-43c9-a791-9941544714ef",
       "source-slot" : "Output",
       "target-slot" : "Input",
       "metadata" : {
@@ -19983,17 +19222,80 @@
     }, {
       "source-node" : "ed757310-b739-4527-8d83-98ff5f5e4a14",
       "target-node" : "75df7376-6f83-4a17-b987-850f1596fb93",
-      "source-slot" : "SD",
-      "target-slot" : "SD",
+      "source-slot" : "PL",
+      "target-slot" : "PL",
       "metadata" : {
         "ui-visibility" : "Smart",
         "ui-shape" : "Elbow"
       }
     }, {
-      "source-node" : "e9973495-1bb7-4b70-8dad-ba1585e3e6f7",
-      "target-node" : "8adee8d5-7a21-40ff-83ff-ea782b84e5e2",
+      "source-node" : "d28634a4-d756-47ac-ab0c-9793e00f61ec",
+      "target-node" : "aa4dd71b-118c-48d6-91c3-78ace661a646",
       "source-slot" : "Output",
-      "target-slot" : "I2",
+      "target-slot" : "Input",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "8907b84a-cf7d-4bc5-b2e3-7552535125eb",
+      "target-node" : "ff28acf5-a947-4fd9-b518-577947c38612",
+      "source-slot" : "Unmatched",
+      "target-slot" : "C1",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "9d71b89e-57cb-4ecf-9652-9098ac4ba727",
+      "target-node" : "07ba4c3e-4352-499f-b84c-0dbeeadb9194",
+      "source-slot" : "Output",
+      "target-slot" : "Annotations",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "c18362b7-10e2-40d5-820d-ea17a2c21761",
+      "target-node" : "c1c12a5f-3f33-4a06-be53-c616d639780e",
+      "source-slot" : "Output",
+      "target-slot" : "Input",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "f9f9653d-0234-40ca-bb01-c9eb70707a48",
+      "target-node" : "991433b5-eb8e-4dc6-bee6-6569a686af08",
+      "source-slot" : "Output",
+      "target-slot" : "I1",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "fadf3165-5f59-4c49-b513-b777efe4daf3",
+      "target-node" : "8907b84a-cf7d-4bc5-b2e3-7552535125eb",
+      "source-slot" : "Strip",
+      "target-slot" : "Input",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "d2f1aad5-635f-4708-adba-1439fdbd144a",
+      "target-node" : "8875c836-cbea-4749-acee-f2d18ff2d092",
+      "source-slot" : "Output",
+      "target-slot" : "Input",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "a6338fe7-45dc-4e9c-9314-d6d5ca997aec",
+      "target-node" : "6ba980c9-15fa-4c67-937d-952b379023e6",
+      "source-slot" : "Labels",
+      "target-slot" : "Input",
       "metadata" : {
         "ui-visibility" : "Smart",
         "ui-shape" : "Elbow"
@@ -20008,17 +19310,143 @@
         "ui-shape" : "Elbow"
       }
     }, {
-      "source-node" : "94a4b3c8-6747-42aa-8b9b-8f4d8146ced5",
-      "target-node" : "5daedc06-5c59-40f5-9620-8c348ea1f766",
-      "source-slot" : "Matched",
+      "source-node" : "be9a557d-e6bd-4ee1-822d-b16d166ac44b",
+      "target-node" : "833b2b66-ffaa-4fec-a447-2b02ff608410",
+      "source-slot" : "Output",
+      "target-slot" : "Labels",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "4cc60257-1dc2-4d6b-922d-7455f76a220a",
+      "target-node" : "c9c8dbfb-38d8-4a56-8d25-34b45399a35b",
+      "source-slot" : "ZS",
       "target-slot" : "Input",
       "metadata" : {
         "ui-visibility" : "Smart",
         "ui-shape" : "Elbow"
       }
     }, {
-      "source-node" : "54cf93c9-832b-471b-913b-cbbea95cc756",
-      "target-node" : "507ece72-c21f-4f6e-a7b5-091f3aaadd0b",
+      "source-node" : "abad8c0f-6c3e-475d-a6c8-6644e2d69a91",
+      "target-node" : "ff38bcfb-a619-494e-8776-ee1488465807",
+      "source-slot" : "Output",
+      "target-slot" : "Target",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "ca5754e7-52d6-49a0-addb-5ef417e7d9a4",
+      "target-node" : "e90ea27a-ddbb-493d-97b4-91b7f5df31f4",
+      "source-slot" : "Output",
+      "target-slot" : "Input",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "25cf4080-49c8-4988-b640-9892cc09917e",
+      "target-node" : "d616dc8e-c543-42bb-b15a-bcaee50eea4c",
+      "source-slot" : "Output",
+      "target-slot" : "Source",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "37e13a0e-c7e1-4144-83ca-c0a95e61b123",
+      "target-node" : "b6cac43c-0738-4ca9-8f2a-0b9bd25c4a7c",
+      "source-slot" : "LB",
+      "target-slot" : "Input",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "622ad4ca-904e-48e5-bbc8-751dd657b2f8",
+      "target-node" : "eb5cb77b-0b26-4ac8-befd-cc60ab74a7ca",
+      "source-slot" : "Output",
+      "target-slot" : "Data",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "32ed1b6d-bf56-47f3-8498-15fb00d0f42b",
+      "target-node" : "9b456697-7fef-4020-9615-1e2c26ab9ce8",
+      "source-slot" : "Folder paths",
+      "target-slot" : "Folders",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "6abfa5ab-1496-44a5-bca1-9aead04a1a94",
+      "target-node" : "eb5a046d-68f4-48fa-b96f-b0d71222cf92",
+      "source-slot" : "Output",
+      "target-slot" : "Input",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "412312ed-095d-4a2e-8710-71e08b8ca4ec",
+      "target-node" : "cf45f48d-7fbb-4f1c-983d-dcd65280c578",
+      "source-slot" : "Output",
+      "target-slot" : "Input",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "b1e52ddb-f657-401c-a7a4-78d21f2808e8",
+      "target-node" : "1042d5e6-412b-4d6e-a757-bb06d786dc19",
+      "source-slot" : "Output",
+      "target-slot" : "Input",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "ed757310-b739-4527-8d83-98ff5f5e4a14",
+      "target-node" : "0c9b9d5b-5d60-4ba6-90ec-2a8936cfa693",
+      "source-slot" : "RAW",
+      "target-slot" : "Image",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "6b3210d1-90e7-4654-8f3b-befc3e3a1105",
+      "target-node" : "342b62f1-b6f7-4b6c-90d8-dc6129dac19b",
+      "source-slot" : "Output",
+      "target-slot" : "Labels",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "75df7376-6f83-4a17-b987-850f1596fb93",
+      "target-node" : "4cc60257-1dc2-4d6b-922d-7455f76a220a",
+      "source-slot" : "ZS",
+      "target-slot" : "ZS",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "75df7376-6f83-4a17-b987-850f1596fb93",
+      "target-node" : "e9973495-1bb7-4b70-8dad-ba1585e3e6f7",
+      "source-slot" : "SD",
+      "target-slot" : "Input",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "0c9b9d5b-5d60-4ba6-90ec-2a8936cfa693",
+      "target-node" : "b5cfd24a-1fdc-454c-9e70-08292899a9e7",
       "source-slot" : "Output",
       "target-slot" : "Input",
       "metadata" : {
@@ -20035,55 +19463,82 @@
         "ui-shape" : "Elbow"
       }
     }, {
-      "source-node" : "94a4b3c8-6747-42aa-8b9b-8f4d8146ced5",
-      "target-node" : "75df7376-6f83-4a17-b987-850f1596fb93",
-      "source-slot" : "Unmatched",
-      "target-slot" : "ZS",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "6255f49e-4177-479c-86d5-94fa54130e12",
-      "target-node" : "ffa05fa7-eb3e-45ac-8e54-6d9435fe2718",
-      "source-slot" : "Output",
-      "target-slot" : "Input",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "cf45f48d-7fbb-4f1c-983d-dcd65280c578",
-      "target-node" : "5cc73725-0204-4fd0-afda-9f3d1fe51751",
-      "source-slot" : "Output",
-      "target-slot" : "Input",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "479255ae-1dbe-491e-a564-25061e886b85",
-      "target-node" : "ba71ad7f-95ed-4a88-aabd-efdb31b0028d",
-      "source-slot" : "Output",
-      "target-slot" : "Input",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "eb3e41be-5e9f-4494-b8e9-73646691e190",
-      "target-node" : "c14047e8-94ba-414c-b9c1-47f6a690eb40",
-      "source-slot" : "Output",
-      "target-slot" : "Input",
+      "source-node" : "d4a57be1-e272-48e9-bde7-a9da75ad2974",
+      "target-node" : "ed757310-b739-4527-8d83-98ff5f5e4a14",
+      "source-slot" : "Image",
+      "target-slot" : "PL",
       "metadata" : {
         "ui-visibility" : "Smart",
         "ui-shape" : "Elbow"
       }
     }, {
       "source-node" : "9d71b89e-57cb-4ecf-9652-9098ac4ba727",
-      "target-node" : "cfd24b0f-61e9-485a-a24c-58e5dfd141f1",
+      "target-node" : "be188ce3-24aa-4d35-ae53-84b7439027a1",
+      "source-slot" : "Output",
+      "target-slot" : "Annotations",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "dc161bcb-0220-46b2-b3be-85f7bd4f5e53",
+      "target-node" : "479255ae-1dbe-491e-a564-25061e886b85",
       "source-slot" : "Output",
       "target-slot" : "Input",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "df083757-cb3f-44fd-9734-53703f7e8b1e",
+      "target-node" : "27b8db2a-e7b3-4dff-8512-3bcdf12185eb",
+      "source-slot" : "Files",
+      "target-slot" : "Paths",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "d616dc8e-c543-42bb-b15a-bcaee50eea4c",
+      "target-node" : "4a0b69af-5282-42dc-9a40-352ac9ac27e8",
+      "source-slot" : "Output",
+      "target-slot" : "Input",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "52879293-af3a-412f-a6a9-ad3af5cff972",
+      "target-node" : "178ecd99-75ae-4d3e-acd2-15d374db2956",
+      "source-slot" : "ROI",
+      "target-slot" : "ROI",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "77946d1f-c94a-45f2-9d1c-c79500ca8f2e",
+      "target-node" : "04fa18ac-0f85-458e-8f90-bc1e749e0359",
+      "source-slot" : "Output",
+      "target-slot" : "Input",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "b48c8589-39a7-437f-bd7d-13638f06dbc2",
+      "target-node" : "ff28acf5-a947-4fd9-b518-577947c38612",
+      "source-slot" : "Output",
+      "target-slot" : "C2",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "e52435cd-e40e-458d-9999-2f6698581b6b",
+      "target-node" : "3b70eae2-58ed-42f7-990d-7c19260df0f4",
+      "source-slot" : "ZS",
+      "target-slot" : "Files",
       "metadata" : {
         "ui-visibility" : "Smart",
         "ui-shape" : "Elbow"
@@ -20098,6 +19553,132 @@
         "ui-shape" : "Elbow"
       }
     }, {
+      "source-node" : "cf45f48d-7fbb-4f1c-983d-dcd65280c578",
+      "target-node" : "5cc73725-0204-4fd0-afda-9f3d1fe51751",
+      "source-slot" : "Output",
+      "target-slot" : "Input",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "15472c51-ad37-496c-a740-5e2636143f7a",
+      "target-node" : "412312ed-095d-4a2e-8710-71e08b8ca4ec",
+      "source-slot" : "Output",
+      "target-slot" : "Input",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "827e3e36-70e8-46fc-9319-ffa4879df174",
+      "target-node" : "ed757310-b739-4527-8d83-98ff5f5e4a14",
+      "source-slot" : "Image",
+      "target-slot" : "RAW",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "ccbaf721-4a82-4156-8599-1dd018ee81b2",
+      "target-node" : "ff28acf5-a947-4fd9-b518-577947c38612",
+      "source-slot" : "Output",
+      "target-slot" : "C0",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "6224751b-5906-4917-9ca0-1201f2d3990d",
+      "target-node" : "3e03d029-335c-4b84-a717-044677334030",
+      "source-slot" : "Output",
+      "target-slot" : "Input",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "e9973495-1bb7-4b70-8dad-ba1585e3e6f7",
+      "target-node" : "6ba980c9-15fa-4c67-937d-952b379023e6",
+      "source-slot" : "Output",
+      "target-slot" : "Mask",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "eafa3663-4147-4f90-8cd9-ca6e9da1d580",
+      "target-node" : "d290eca9-d531-42ca-beb5-9400e4cebd1c",
+      "source-slot" : "Output",
+      "target-slot" : "Input",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "5daedc06-5c59-40f5-9620-8c348ea1f766",
+      "target-node" : "75df7376-6f83-4a17-b987-850f1596fb93",
+      "source-slot" : "Matched",
+      "target-slot" : "ZS",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "d5940538-468b-43c9-a791-9941544714ef",
+      "target-node" : "eb5cb77b-0b26-4ac8-befd-cc60ab74a7ca",
+      "source-slot" : "Output",
+      "target-slot" : "Table",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "aae99ae5-a299-4a86-a94a-b4567d248f71",
+      "target-node" : "de81c748-60e6-4276-950e-7b4f5ef62a7c",
+      "source-slot" : "Annotated data",
+      "target-slot" : "Input",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "79b6ea21-4da6-4240-852e-9157871fd7fc",
+      "target-node" : "888bf6d8-14fa-407a-82f5-1cd1e6f03de9",
+      "source-slot" : "Statistics",
+      "target-slot" : "Input",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "0dc4e4d9-c1e6-4848-a04d-bcb32f766c9e",
+      "target-node" : "85fedc2f-180a-4f61-a292-0a18e355be86",
+      "source-slot" : "Output",
+      "target-slot" : "I1",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "373862a4-1986-4d05-8625-14d8988ce778",
+      "target-node" : "3d3aba6c-2688-47bd-94af-aef3ebf058bf",
+      "source-slot" : "Output",
+      "target-slot" : "Late",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "aa4dd71b-118c-48d6-91c3-78ace661a646",
+      "target-node" : "c9bccfce-e972-4d90-94d1-f6535fe153ce",
+      "source-slot" : "Output",
+      "target-slot" : "Input",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
       "source-node" : "eb5cb77b-0b26-4ac8-befd-cc60ab74a7ca",
       "target-node" : "cc60905d-15d0-4233-a8b4-037069e42d30",
       "source-slot" : "Annotated data",
@@ -20107,9 +19688,90 @@
         "ui-shape" : "Elbow"
       }
     }, {
-      "source-node" : "507ece72-c21f-4f6e-a7b5-091f3aaadd0b",
-      "target-node" : "3d195b27-7cbd-43b2-a226-79d8228f85ee",
+      "source-node" : "0122ba46-190f-4c05-982d-9b6b709d84d7",
+      "target-node" : "ac1ef081-4812-4223-9bcb-7cecb0cb7bfd",
+      "source-slot" : "Folder paths",
+      "target-slot" : "Folders",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "37b524ce-a4a1-44dd-8e6f-81f9a526d09c",
+      "target-node" : "045de778-6d44-440a-b26f-394e52a48837",
       "source-slot" : "Output",
+      "target-slot" : "Input",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "991433b5-eb8e-4dc6-bee6-6569a686af08",
+      "target-node" : "37e13a0e-c7e1-4144-83ca-c0a95e61b123",
+      "source-slot" : "Output",
+      "target-slot" : "LB",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "0a2e624a-855e-46ae-94f1-a7361e70868e",
+      "target-node" : "6255f49e-4177-479c-86d5-94fa54130e12",
+      "source-slot" : "Output",
+      "target-slot" : "Input",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "40bd5388-0a6a-4c66-8e14-f228e43c10bf",
+      "target-node" : "e52435cd-e40e-458d-9999-2f6698581b6b",
+      "source-slot" : "Annotated data",
+      "target-slot" : "SD",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "ff44442e-35bb-4a72-93b5-9120ac784474",
+      "target-node" : "4fe0f2d8-040b-4097-82ed-5dd931f1a347",
+      "source-slot" : "Files",
+      "target-slot" : "Paths",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "fadf3165-5f59-4c49-b513-b777efe4daf3",
+      "target-node" : "daa71df2-5ebc-40e4-b7f6-72762b3ab2c8",
+      "source-slot" : "Shape",
+      "target-slot" : "Input",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "ffa05fa7-eb3e-45ac-8e54-6d9435fe2718",
+      "target-node" : "aa2b5a91-f513-433d-8a97-d7ca23d1e49c",
+      "source-slot" : "Output",
+      "target-slot" : "Reference",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "ff38bcfb-a619-494e-8776-ee1488465807",
+      "target-node" : "15472c51-ad37-496c-a740-5e2636143f7a",
+      "source-slot" : "Target",
+      "target-slot" : "Input",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "b85761aa-7ea4-45f9-8e29-c1c659c582d9",
+      "target-node" : "a5b648d3-5ed7-47bf-b384-592dd39ff159",
+      "source-slot" : "FinalLabels",
       "target-slot" : "Input",
       "metadata" : {
         "ui-visibility" : "Smart",
@@ -20125,10 +19787,280 @@
         "ui-shape" : "Elbow"
       }
     }, {
-      "source-node" : "ba71ad7f-95ed-4a88-aabd-efdb31b0028d",
-      "target-node" : "c18362b7-10e2-40d5-820d-ea17a2c21761",
+      "source-node" : "be188ce3-24aa-4d35-ae53-84b7439027a1",
+      "target-node" : "e52435cd-e40e-458d-9999-2f6698581b6b",
+      "source-slot" : "Annotated data",
+      "target-slot" : "ZS",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "94a4b3c8-6747-42aa-8b9b-8f4d8146ced5",
+      "target-node" : "fadf3165-5f59-4c49-b513-b777efe4daf3",
+      "source-slot" : "Matched",
+      "target-slot" : "Shape",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "27b8db2a-e7b3-4dff-8512-3bcdf12185eb",
+      "target-node" : "07ba4c3e-4352-499f-b84c-0dbeeadb9194",
+      "source-slot" : "Annotated paths",
+      "target-slot" : "Data",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "752dd5da-ef30-4467-a130-bd7067882ab7",
+      "target-node" : "325ae40a-7520-48d7-a8fd-08308c23a2b5",
+      "source-slot" : "Output",
+      "target-slot" : "Input",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "b85761aa-7ea4-45f9-8e29-c1c659c582d9",
+      "target-node" : "485650c5-bdda-4df3-9726-0911bc3bd80c",
+      "source-slot" : "RawMeasurements",
+      "target-slot" : "Input",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "ffa05fa7-eb3e-45ac-8e54-6d9435fe2718",
+      "target-node" : "4b95c0b1-89db-4e3d-94c6-f5e116de68ca",
       "source-slot" : "Output",
       "target-slot" : "Image",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "b85761aa-7ea4-45f9-8e29-c1c659c582d9",
+      "target-node" : "78035358-1dd6-4db1-b98e-d296e226e61f",
+      "source-slot" : "RawMeasurements",
+      "target-slot" : "Input",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "f8f12b87-07bc-49b3-be38-024f1f181ea7",
+      "target-node" : "6b3210d1-90e7-4654-8f3b-befc3e3a1105",
+      "source-slot" : "Output",
+      "target-slot" : "Input",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "b85761aa-7ea4-45f9-8e29-c1c659c582d9",
+      "target-node" : "6224751b-5906-4917-9ca0-1201f2d3990d",
+      "source-slot" : "FinalLabels",
+      "target-slot" : "I1",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "f36582ae-18ad-44cb-bc44-217083720b93",
+      "target-node" : "ff44442e-35bb-4a72-93b5-9120ac784474",
+      "source-slot" : "Folder paths",
+      "target-slot" : "Folders",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "c8fed4a2-ea2b-4430-93ec-334680c114f9",
+      "target-node" : "41b6ae74-5111-457e-9d19-2168107897e9",
+      "source-slot" : "Unmatched",
+      "target-slot" : "Input",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "608afdb7-d78a-4814-8116-fc6cce5075ec",
+      "target-node" : "9d71b89e-57cb-4ecf-9652-9098ac4ba727",
+      "source-slot" : "Output",
+      "target-slot" : "Input",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "c9c8dbfb-38d8-4a56-8d25-34b45399a35b",
+      "target-node" : "fd764dd0-8313-4a47-ac54-9ab6edf6e07c",
+      "source-slot" : "Output",
+      "target-slot" : "Input",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "1012a274-2493-4930-8988-e26cf91c2ea7",
+      "target-node" : "1486a7fa-7059-4e6a-879b-1a92eff885df",
+      "source-slot" : "Output",
+      "target-slot" : "Input",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "75df7376-6f83-4a17-b987-850f1596fb93",
+      "target-node" : "eafa3663-4147-4f90-8cd9-ca6e9da1d580",
+      "source-slot" : "RAW",
+      "target-slot" : "Input",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "75df7376-6f83-4a17-b987-850f1596fb93",
+      "target-node" : "4cc60257-1dc2-4d6b-922d-7455f76a220a",
+      "source-slot" : "RAW",
+      "target-slot" : "RAW",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "af973a43-4e6e-4afa-9455-03801e99946e",
+      "target-node" : "be188ce3-24aa-4d35-ae53-84b7439027a1",
+      "source-slot" : "Annotated paths",
+      "target-slot" : "Data",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "b85761aa-7ea4-45f9-8e29-c1c659c582d9",
+      "target-node" : "77946d1f-c94a-45f2-9d1c-c79500ca8f2e",
+      "source-slot" : "RawMeasurements",
+      "target-slot" : "Input",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "d28634a4-d756-47ac-ab0c-9793e00f61ec",
+      "target-node" : "8ca4a1fc-73e6-46ea-bbf4-fb38d57abe84",
+      "source-slot" : "Output",
+      "target-slot" : "Input",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "a7972570-7e5a-4479-88c8-8069ee844b25",
+      "target-node" : "7a9a9793-0492-4382-a58d-12d9c311b354",
+      "source-slot" : "Filename",
+      "target-slot" : "Files",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "ed757310-b739-4527-8d83-98ff5f5e4a14",
+      "target-node" : "ba13cc75-af39-4093-a640-70ddb776e1e0",
+      "source-slot" : "RAW",
+      "target-slot" : "Bottom",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "4e2b11db-9046-48fa-936a-5c5d4e8905ea",
+      "target-node" : "ba13cc75-af39-4093-a640-70ddb776e1e0",
+      "source-slot" : "Output",
+      "target-slot" : "Middle",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "8875c836-cbea-4749-acee-f2d18ff2d092",
+      "target-node" : "f52913fe-e0c7-41d8-b1c9-6eb2443657ae",
+      "source-slot" : "Output",
+      "target-slot" : "Image",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "4be2d0ca-e5a3-43b1-8fdc-2f82f2bda424",
+      "target-node" : "9dfbccbe-6f20-4801-92a4-250af5c5ed99",
+      "source-slot" : "Annotated paths",
+      "target-slot" : "Data",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "a6338fe7-45dc-4e9c-9314-d6d5ca997aec",
+      "target-node" : "98d343ba-9ca2-4578-8712-00ea6344ce23",
+      "source-slot" : "Labels",
+      "target-slot" : "Input",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "919d6b38-cef7-4008-82eb-fc8ea4b5a907",
+      "target-node" : "ed757310-b739-4527-8d83-98ff5f5e4a14",
+      "source-slot" : "Image",
+      "target-slot" : "SD",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "ba13cc75-af39-4093-a640-70ddb776e1e0",
+      "target-node" : "178ecd99-75ae-4d3e-acd2-15d374db2956",
+      "source-slot" : "Output",
+      "target-slot" : "Image",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "3e03d029-335c-4b84-a717-044677334030",
+      "target-node" : "4e2b11db-9046-48fa-936a-5c5d4e8905ea",
+      "source-slot" : "Output",
+      "target-slot" : "Input",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "c3f86b37-b86d-47da-baf3-3e35955e8e09",
+      "target-node" : "0dc4e4d9-c1e6-4848-a04d-bcb32f766c9e",
+      "source-slot" : "Output",
+      "target-slot" : "Input",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "99c8e4d0-f32c-4d52-b03d-2195fdf6b38f",
+      "target-node" : "d4d27aaa-e6f8-4d83-be97-f27f9e099df6",
+      "source-slot" : "Output",
+      "target-slot" : "Input",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "41b6ae74-5111-457e-9d19-2168107897e9",
+      "target-node" : "ff38bcfb-a619-494e-8776-ee1488465807",
+      "source-slot" : "Output",
+      "target-slot" : "Source",
       "metadata" : {
         "ui-visibility" : "Smart",
         "ui-shape" : "Elbow"
@@ -20451,6 +20383,24 @@
         }
       },
       "edges" : [ {
+        "source-node" : "bb9d672f-b023-402d-afa8-7666959dd087",
+        "target-node" : "0de8d423-6d5c-4ee6-b477-b9aec65429ff",
+        "source-slot" : "Output",
+        "target-slot" : "Input",
+        "metadata" : {
+          "ui-visibility" : "Smart",
+          "ui-shape" : "Elbow"
+        }
+      }, {
+        "source-node" : "fb3bfe3a-c9c1-4ec4-908b-3f1b7380a851",
+        "target-node" : "0de8d423-6d5c-4ee6-b477-b9aec65429ff",
+        "source-slot" : "Output",
+        "target-slot" : "Input",
+        "metadata" : {
+          "ui-visibility" : "Smart",
+          "ui-shape" : "Elbow"
+        }
+      }, {
         "source-node" : "f0dde905-9717-45b7-a195-8d2c327afcb3",
         "target-node" : "bb9d672f-b023-402d-afa8-7666959dd087",
         "source-slot" : "Output",
@@ -20469,8 +20419,17 @@
           "ui-shape" : "Elbow"
         }
       }, {
+        "source-node" : "f0dde905-9717-45b7-a195-8d2c327afcb3",
+        "target-node" : "3f650b91-90d0-46d7-84ca-acf8a613a949",
+        "source-slot" : "Output",
+        "target-slot" : "Input",
+        "metadata" : {
+          "ui-visibility" : "Smart",
+          "ui-shape" : "Elbow"
+        }
+      }, {
         "source-node" : "3f650b91-90d0-46d7-84ca-acf8a613a949",
-        "target-node" : "2c6b3938-f977-4b7b-99c3-521340e1aa81",
+        "target-node" : "0de8d423-6d5c-4ee6-b477-b9aec65429ff",
         "source-slot" : "Output",
         "target-slot" : "Input",
         "metadata" : {
@@ -20480,6 +20439,24 @@
       }, {
         "source-node" : "9a06741a-cabc-4ba4-866e-5e971dca5e5d",
         "target-node" : "3f650b91-90d0-46d7-84ca-acf8a613a949",
+        "source-slot" : "Output",
+        "target-slot" : "Input",
+        "metadata" : {
+          "ui-visibility" : "Smart",
+          "ui-shape" : "Elbow"
+        }
+      }, {
+        "source-node" : "3f650b91-90d0-46d7-84ca-acf8a613a949",
+        "target-node" : "bb9d672f-b023-402d-afa8-7666959dd087",
+        "source-slot" : "Output",
+        "target-slot" : "Input",
+        "metadata" : {
+          "ui-visibility" : "Smart",
+          "ui-shape" : "Elbow"
+        }
+      }, {
+        "source-node" : "3f650b91-90d0-46d7-84ca-acf8a613a949",
+        "target-node" : "2c6b3938-f977-4b7b-99c3-521340e1aa81",
         "source-slot" : "Output",
         "target-slot" : "Input",
         "metadata" : {
@@ -20496,53 +20473,8 @@
           "ui-shape" : "Elbow"
         }
       }, {
-        "source-node" : "f0dde905-9717-45b7-a195-8d2c327afcb3",
-        "target-node" : "3f650b91-90d0-46d7-84ca-acf8a613a949",
-        "source-slot" : "Output",
-        "target-slot" : "Input",
-        "metadata" : {
-          "ui-visibility" : "Smart",
-          "ui-shape" : "Elbow"
-        }
-      }, {
         "source-node" : "fb3bfe3a-c9c1-4ec4-908b-3f1b7380a851",
         "target-node" : "9a06741a-cabc-4ba4-866e-5e971dca5e5d",
-        "source-slot" : "Output",
-        "target-slot" : "Input",
-        "metadata" : {
-          "ui-visibility" : "Smart",
-          "ui-shape" : "Elbow"
-        }
-      }, {
-        "source-node" : "bb9d672f-b023-402d-afa8-7666959dd087",
-        "target-node" : "0de8d423-6d5c-4ee6-b477-b9aec65429ff",
-        "source-slot" : "Output",
-        "target-slot" : "Input",
-        "metadata" : {
-          "ui-visibility" : "Smart",
-          "ui-shape" : "Elbow"
-        }
-      }, {
-        "source-node" : "3f650b91-90d0-46d7-84ca-acf8a613a949",
-        "target-node" : "0de8d423-6d5c-4ee6-b477-b9aec65429ff",
-        "source-slot" : "Output",
-        "target-slot" : "Input",
-        "metadata" : {
-          "ui-visibility" : "Smart",
-          "ui-shape" : "Elbow"
-        }
-      }, {
-        "source-node" : "3f650b91-90d0-46d7-84ca-acf8a613a949",
-        "target-node" : "bb9d672f-b023-402d-afa8-7666959dd087",
-        "source-slot" : "Output",
-        "target-slot" : "Input",
-        "metadata" : {
-          "ui-visibility" : "Smart",
-          "ui-shape" : "Elbow"
-        }
-      }, {
-        "source-node" : "fb3bfe3a-c9c1-4ec4-908b-3f1b7380a851",
-        "target-node" : "0de8d423-6d5c-4ee6-b477-b9aec65429ff",
         "source-slot" : "Output",
         "target-slot" : "Input",
         "metadata" : {
