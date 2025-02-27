@@ -37,7 +37,8 @@ public class DiskImageRTimelineAnalysisWorkload implements BackendTaskWorkload {
     private static final List<BackendTaskWorkloadParameterSlot> PARAMETERS = List.of(
             new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotType.String, "result-name", "Result name", "The name of the generated result folder", "DiskImageR-style result"),
             new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotType.String, "result-description", "Result description", "Description of the generated result", "RAD/FoG/ZOI"),
-            new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotType.String, "thresholds", "Thresholds (%)", "The thresholds in percent (separate items with a semicolon)", "20; 50; 80")
+            new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotType.String, "thresholds", "Thresholds (%)", "The thresholds in percent (separate items with a semicolon)", "20; 50; 80"),
+            new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotType.Number, "global-plate-shave-off-mm", "Plate edge thickness (mm)", "The thickness of the plate edge, which is subtracted from the plate area. If not set appropriately, the measurements will be skewed by the bright plate edge.", 10)
     );
     private static final Map<String, String> PARAMETER_OVERRIDES = new HashMap<>();
 
@@ -73,7 +74,7 @@ public class DiskImageRTimelineAnalysisWorkload implements BackendTaskWorkload {
 
     @Override
     public String getName() {
-        return "DiskImageR-style analysis (RAD/FoG/ZOI)";
+        return "DiskImageR-style analysis (RAD/FoG/ZOI) - Timeline only";
     }
 
     @Override
@@ -148,6 +149,8 @@ public class DiskImageRTimelineAnalysisWorkload implements BackendTaskWorkload {
                 parameterOverrides.put(overriddenKey, parameter.getValue());
             }
         }
+
+        parameterOverrides.put("/plateShaveOffMillimeters", params.getPayload().getParameterAsDouble("global-plate-shave-off-mm", 10));
 
         Path projectFilePath = taskUtils.writeSharedFile(params, "disk-image-r-analysis-timeline.jip");
         progressInfo.log("Project file is " + projectFilePath);
