@@ -25,7 +25,7 @@ public class Result {
     @Column(name = "description")
     private String description = "";
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
     private Project project;
 
     @CreationTimestamp
@@ -34,7 +34,7 @@ public class Result {
     @Column(name = "viewed")
     private boolean viewed = false;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true, mappedBy = "result")
+    @OneToMany(cascade = { CascadeType.ALL }, fetch = FetchType.LAZY, orphanRemoval = true, mappedBy = "result")
     private List<ResultItem> resultItems = new ArrayList<>();
 
     public boolean isViewed() {

@@ -18,6 +18,7 @@ import org.hkijena.jast.payloads.task.BackendTaskPayload;
 import org.hkijena.jast.repositories.BackendTaskRepository;
 import org.hkijena.jast.repositories.ImageRepository;
 import org.hkijena.jast.repositories.ProjectRepository;
+import org.hkijena.jast.repositories.ResultRepository;
 import org.hkijena.jast.tasks.BackendTaskWorkload;
 import org.hkijena.jast.tasks.BackendTaskWorkloadParams;
 import org.hkijena.jast.utils.*;
@@ -46,13 +47,15 @@ public class BackendTaskUtils {
 
     private final EntityManager entityManager;
     private final ProjectRepository projectRepository;
+    private final ResultRepository resultRepository;
     private final BackendTaskService backendTaskService;
     private final BackendTaskRepository backendTaskRepository;
 
     @Autowired
-    public BackendTaskUtils(EntityManager entityManager, ProjectRepository projectRepository, @Lazy BackendTaskService backendTaskService, BackendTaskRepository backendTaskRepository) {
+    public BackendTaskUtils(EntityManager entityManager, ProjectRepository projectRepository, ResultRepository resultRepository, @Lazy BackendTaskService backendTaskService, BackendTaskRepository backendTaskRepository) {
         this.entityManager = entityManager;
         this.projectRepository = projectRepository;
+        this.resultRepository = resultRepository;
         this.backendTaskService = backendTaskService;
         this.backendTaskRepository = backendTaskRepository;
     }
@@ -307,9 +310,9 @@ public class BackendTaskUtils {
     public void readResultsDirectory(String resultName, String resultDescription, Path resultDirectory, Project project, ProjectRepository projectRepository, FileStorageService fileStorageService, ProgressInfo progressInfo) throws IOException {
 
         Result result = new Result();
+        result.setProject(project);
         result.setName(StringUtils.orElse(resultName, "Result"));
         result.setDescription(StringUtils.nullToEmpty(resultDescription));
-
 
         FileVisitor<Path> visitor = new SimpleFileVisitor<>() {
             @Override
@@ -349,9 +352,10 @@ public class BackendTaskUtils {
 
         progressInfo.log("-> Discovered " + result.getResultItems().size() + " result items");
         progressInfo.log("Saving to database ...");
-//        Result savedResult = resultRepository.save(result);
-        project.addResult(result);
-        projectRepository.save(project);
+
+        Result savedResult = resultRepository.save(result);
+//        project.addResult(savedResult);
+//        projectRepository.save(project);
     }
 
     public void runJIPipe(BackendTaskWorkloadParams params, Path projectFile, Map<String, Object> parameterOverrides, String prefix, ProgressInfo progressInfo) {
