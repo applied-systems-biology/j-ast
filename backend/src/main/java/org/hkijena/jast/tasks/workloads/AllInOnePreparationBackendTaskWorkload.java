@@ -49,7 +49,8 @@ public class AllInOnePreparationBackendTaskWorkload implements BackendTaskWorklo
             new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotType.String, "metadata-key-etest", "Keywords (E-Test)", "List of possible key words that identify an E-Test. Separate with a space", "E-Test ETest"),
             new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotType.String, "metadata-default-assay-type", "Default assay type (DDA/ETest)", "Set to DDA or ETest", "DDA"),
             new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotType.String, "filename-delimiters", "File name delimiters", "For automated metadata filling.", "-_;."),
-            new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotType.Number, "plate-diameter-mm", "Plate diameter (mm)", "The plate diameter in millimeters. Used for calibrating the pixel size.", 90));
+            new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotType.Number, "plate-diameter-mm", "Plate diameter (mm)", "The plate diameter in millimeters. Used for calibrating the pixel size.", 90),
+            new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotType.Number, "dda-disk-diameter-mm", "DDA disk diameter (mm)", "The diameter of the DDA disk.", 6));
     private final BackendTaskUtils taskUtils;
     private final ImageRepository imageRepository;
     private final ProjectRepository projectRepository;
@@ -225,9 +226,11 @@ public class AllInOnePreparationBackendTaskWorkload implements BackendTaskWorklo
                 taskUtils.writeRawImages(params, idsToProcess, imageRepository, fileStorageService, ddaProgress);
                 taskUtils.writeMaskAnnotations(params, idsToProcess, "plate", imageRepository, fileStorageService, ddaProgress);
 
-                Path projectFilePath = taskUtils.writeSharedFile(params, "image-segment-dda-disk-fast.jip");
+                Path projectFilePath = taskUtils.writeSharedFile(params, "image-segment-dda-disk-v2.jip");
                 ddaProgress.log("Project file is " + projectFilePath);
-                taskUtils.runJIPipe(params, projectFilePath, Collections.emptyMap(), "", ddaProgress);
+                Map<String, Object> ddaParameters = new HashMap<>();
+                ddaParameters.put("/expectedDiskDiameter", params.getPayload().getParameterAsDouble("dda-disk-diameter-mm", 6));
+                taskUtils.runJIPipe(params, projectFilePath, ddaParameters, "", ddaProgress);
 
                 Map<String, Path> maskAnnotationsConfig = new HashMap<>();
                 maskAnnotationsConfig.put("strip-disk", params.getTmpPath().resolve("strip-disk"));
