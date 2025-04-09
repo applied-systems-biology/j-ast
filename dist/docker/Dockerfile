@@ -13,6 +13,7 @@ COPY target/bin /opt/app/bin
 COPY target/share /opt/app/share
 ENV RUNTIME_FIJI_PATH=/opt/app/bin/jipipe-linux
 ENV RUNTIME_FIJI_EXECUTABLE_PATH=/opt/app/bin/jipipe-linux/ImageJ-linux64
+RUN chmod a+x /opt/app/bin/jipipe-linux/ImageJ-linux64
 
 # Fiji memory configuration
 ENV RUNTIME_FIJI_ARGS_0=--memory
