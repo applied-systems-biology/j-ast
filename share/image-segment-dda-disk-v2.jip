@@ -1186,7 +1186,7 @@
         "always-export-compartment-outputs" : true
       },
       "continue-on-failure-settings" : {
-        "continue-on-failure" : false,
+        "continue-on-failure" : true,
         "export-failed-loop-inputs" : true,
         "export-failed-partition-inputs" : false,
         "disable-on-update-cache" : false
