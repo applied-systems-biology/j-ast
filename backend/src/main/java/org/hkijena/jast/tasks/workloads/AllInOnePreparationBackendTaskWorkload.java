@@ -226,7 +226,7 @@ public class AllInOnePreparationBackendTaskWorkload implements BackendTaskWorklo
                 taskUtils.writeRawImages(params, idsToProcess, imageRepository, fileStorageService, ddaProgress);
                 taskUtils.writeMaskAnnotations(params, idsToProcess, "plate", imageRepository, fileStorageService, ddaProgress);
 
-                Path projectFilePath = taskUtils.writeSharedFile(params, "image-segment-dda-disk-v2.jip");
+                Path projectFilePath = taskUtils.writeSharedFile(params, "image-segment-dda-disk-v3.jip");
                 ddaProgress.log("Project file is " + projectFilePath);
                 Map<String, Object> ddaParameters = new HashMap<>();
                 ddaParameters.put("/expectedDiskDiameter", params.getPayload().getParameterAsDouble("dda-disk-diameter-mm", 6));
