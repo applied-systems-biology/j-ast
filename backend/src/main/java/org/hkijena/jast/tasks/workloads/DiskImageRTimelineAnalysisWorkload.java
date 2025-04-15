@@ -152,7 +152,7 @@ public class DiskImageRTimelineAnalysisWorkload implements BackendTaskWorkload {
 
         parameterOverrides.put("/plateShaveOffMillimeters", params.getPayload().getParameterAsDouble("global-plate-shave-off-mm", 10));
 
-        Path projectFilePath = taskUtils.writeSharedFile(params, "disk-image-r-analysis-timeline.jip");
+        Path projectFilePath = taskUtils.writeSharedFile(params, "disk-image-r-analysis-timeline-v2.jip");
         progressInfo.log("Project file is " + projectFilePath);
         taskUtils.runJIPipe(params, projectFilePath, parameterOverrides, "", progressInfo);
 
