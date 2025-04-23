@@ -29,7 +29,7 @@ public class SegmentDDADiskV3BackendTaskWorkload implements BackendTaskWorkload 
     private static final List<BackendTaskWorkloadDataSlot> OUTPUTS = Collections.singletonList(JASTDataSlot.StripDisk.toSlot());
     private static final List<BackendTaskWorkloadParameterSlot> PARAMETERS = List.of(
             new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotType.Number, "expectedDiameter", "Expected diameter (mm)", "Expected disk diameter in millimeters", 6),
-            new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotType.Number, "expectedDiskDiameterMaxDiffPerc", "Allowed diamerter difference (%)", "How much the detected objects can deviate from the expected diameter", 0.3),
+            new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotType.Number, "expectedDiskDiameterMaxDiffPerc", "Allowed diameter difference (%)", "How much the detected objects can deviate from the expected diameter", 0.3),
             new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotType.Number, "minCirc", "Minimum circularity (%)", "Minimum circularity for object filtering", 0.5)
     );
     private static final Map<String, String> PARAMETER_OVERRIDES = new HashMap<>();

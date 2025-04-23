@@ -15,6 +15,7 @@ import org.hkijena.jast.services.FileStorageService;
 import org.hkijena.jast.services.ProjectService;
 import org.hkijena.jast.tasks.BackendTaskWorkload;
 import org.hkijena.jast.utils.JsonUtils;
+import org.hkijena.jast.utils.NaturalOrderComparator;
 import org.hkijena.jast.utils.StringUtils;
 import org.jobrunr.jobs.JobId;
 import org.jobrunr.scheduling.JobScheduler;
@@ -30,6 +31,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -65,7 +67,7 @@ public class TaskController {
         return ResponseEntity.ok(backendTaskRegistry.getRegisteredTasks().entrySet().stream().map(entry -> {
             BackendTaskWorkload workload = entry.getValue();
             return new BackendTaskTypePayload(workload, entry.getKey());
-        }).toList());
+        }).sorted(Comparator.comparing(BackendTaskTypePayload::getName, NaturalOrderComparator.INSTANCE)).toList());
     }
 
     @GetMapping("/api/project/{id}/tasks")
