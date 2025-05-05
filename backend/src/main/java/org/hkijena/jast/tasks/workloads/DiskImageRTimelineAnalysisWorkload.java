@@ -38,7 +38,8 @@ public class DiskImageRTimelineAnalysisWorkload implements BackendTaskWorkload {
             new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotType.String, "result-name", "Result name", "The name of the generated result folder", "DiskImageR-style result"),
             new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotType.String, "result-description", "Result description", "Description of the generated result", "RAD/FoG/ZOI"),
             new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotType.String, "thresholds", "Thresholds (%)", "The thresholds in percent (separate items with a semicolon)", "20; 50; 80"),
-            new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotType.Number, "global-plate-shave-off-mm", "Plate edge thickness (mm)", "The thickness of the plate edge, which is subtracted from the plate area. If not set appropriately, the measurements will be skewed by the bright plate edge.", 10)
+            new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotType.Number, "global-plate-shave-off-mm", "Plate edge thickness (mm)", "The thickness of the plate edge, which is subtracted from the plate area. If not set appropriately, the measurements will be skewed by the bright plate edge.", 10),
+            new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotType.Boolean, "num-diff", "Numeric differentiation", "If enabled, use less accurate numeric differentiation for calculating the AUC. Otherwise, a function is fitted to the measurements, which may yield to crashes", true)
     );
     private static final Map<String, String> PARAMETER_OVERRIDES = new HashMap<>();
 
@@ -152,7 +153,9 @@ public class DiskImageRTimelineAnalysisWorkload implements BackendTaskWorkload {
 
         parameterOverrides.put("/plateShaveOffMillimeters", params.getPayload().getParameterAsDouble("global-plate-shave-off-mm", 10));
 
-        Path projectFilePath = taskUtils.writeSharedFile(params, "disk-image-r-analysis-timeline-v2.jip");
+        boolean useNumDiff = params.getPayload().getParameterAsBoolean("num-diff", true);
+
+        Path projectFilePath = taskUtils.writeSharedFile(params, useNumDiff ? "disk-image-r-analysis-timeline-v2-numdiff.jip" : "disk-image-r-analysis-timeline-v2.jip");
         progressInfo.log("Project file is " + projectFilePath);
         taskUtils.runJIPipe(params, projectFilePath, parameterOverrides, "", progressInfo);
 
