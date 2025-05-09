@@ -7,14 +7,41 @@
           <div>/</div>
           <q-skeleton v-if="!projectName" type="text" style="width: 200px" />
           <div v-else>{{ projectName }}</div>
-          <q-btn-group flat>
-            <q-btn flat @click="editProjectName" :disable="hasTaskRunning">
+          <q-btn-group>
+            <q-btn color="blue" @click="editProjectName" :disable="hasTaskRunning">
               <q-icon name="edit" />
             </q-btn>
-            <q-btn flat @click="deleteProject" :disable="hasTaskRunning">
+            <q-btn color="red-4" @click="deleteProject" :disable="hasTaskRunning">
               <q-icon name="delete" />
             </q-btn>
           </q-btn-group>
+          <q-btn-dropdown color="blue" :label="currentViewMode" :icon="currentViewMode == ViewMode.Timeline ? 'fa-solid fa-timeline' : 'fa-solid fa-grip'">
+            <q-list>
+              <q-item clickable v-close-popup @click="changeViewMode(ViewMode.Timeline)">
+                <q-item-section avatar>
+                  <q-icon name="fa-solid fa-timeline" />
+                </q-item-section>
+                <q-item-section>
+                  <q-item-label>Timeline</q-item-label>
+                </q-item-section>
+                <q-tooltip>
+                  Use this view for projects that have a time component. You will need to sort the images into timelines.
+                </q-tooltip>
+              </q-item>
+              <q-item clickable v-close-popup @click="changeViewMode(ViewMode.Grid)">
+                <q-item-section avatar>
+                  <q-icon name="fa-solid fa-grip" />
+                </q-item-section>
+                <q-item-section>
+                  <q-item-label>Grid</q-item-label>
+                </q-item-section>
+                <q-tooltip>
+                  Use this view for projects where each image is independent.
+                </q-tooltip>
+              </q-item>
+            </q-list>
+          </q-btn-dropdown>
+          <q-btn color="blue" @click="goToBrowser" label="Browse" no-caps icon="fa-solid fa-magnifying-glass"/>
         </q-toolbar-title>
         <AuthManagerComponent />
         <DocumentationComponent/>
@@ -49,32 +76,6 @@
               <q-item-section>
                 <q-item-label>Download everything (*.zip)</q-item-label>
               </q-item-section>
-            </q-item>
-          </q-list>
-        </q-btn-dropdown>
-        <q-btn-dropdown color="blue" :label="currentViewMode" :icon="currentViewMode == ViewMode.Timeline ? 'fa-solid fa-timeline' : 'fa-solid fa-grip'">
-          <q-list>
-            <q-item clickable v-close-popup @click="changeViewMode(ViewMode.Timeline)">
-              <q-item-section avatar>
-                <q-icon name="fa-solid fa-timeline" />
-              </q-item-section>
-              <q-item-section>
-                <q-item-label>Timeline</q-item-label>
-              </q-item-section>
-              <q-tooltip>
-                Use this view for projects that have a time component. You will need to sort the images into timelines.
-              </q-tooltip>
-            </q-item>
-            <q-item clickable v-close-popup @click="changeViewMode(ViewMode.Grid)">
-              <q-item-section avatar>
-                <q-icon name="fa-solid fa-grip" />
-              </q-item-section>
-              <q-item-section>
-                <q-item-label>Grid</q-item-label>
-              </q-item-section>
-              <q-tooltip>
-                Use this view for projects where each image is independent.
-              </q-tooltip>
             </q-item>
           </q-list>
         </q-btn-dropdown>
@@ -483,6 +484,10 @@ function changeViewMode(newViewMode: ViewMode){
         response.data
       );
   });
+}
+
+function goToBrowser() {
+  router.push(`/browse/${projectId}`);
 }
 
 function deleteProject() {

@@ -22,6 +22,11 @@ const routes: RouteRecordRaw[] = [
     children: [],
   },
   {
+    path: "/browse/:id",
+    component: () => import('layouts/BrowserLayout.vue'),
+    children: [],
+  },
+  {
     path: "/tasks/:id",
     component: () => import('layouts/ProjectTasksLayout.vue'),
     children: [],
