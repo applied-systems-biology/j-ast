@@ -64,6 +64,15 @@
     type="number"
     @update:model-value="onUpdatePixelSize"
   />
+  <q-input
+    class="w-100"
+    :model-value="model?.mic"
+    :disable="hasTaskRunning"
+    filled
+    label="MIC"
+    type="number"
+    @update:model-value="onUpdateMIC"
+  />
   <MaskImageAnnotationButton
     class="w-100"
     :disable="hasTaskRunning"
@@ -176,6 +185,13 @@ function onUpdateAssayType(newValue: SelectValue) {
 function onUpdatePixelSize(newValue: SelectValue) {
   if (model.value) {
     model.value.pixelSizeMillimeter = Number(newValue);
+    uploadToBackend();
+  }
+}
+
+function onUpdateMIC(newValue: SelectValue) {
+  if (model.value) {
+    model.value.mic = Number(newValue);
     uploadToBackend();
   }
 }

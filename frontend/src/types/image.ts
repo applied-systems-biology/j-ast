@@ -56,6 +56,9 @@ export class ImagePayload {
   assayType: AssayType = AssayType.Unknown;
 
   @Expose()
+  mic: number = 0;
+
+  @Expose()
   groupRow: number = -1;
 
   @Expose()

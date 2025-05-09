@@ -53,6 +53,9 @@ public class Image {
     @Enumerated(EnumType.STRING)
     private AssayType assayType = AssayType.Unknown;
 
+    @Column(name = "mic")
+    private Double mic = 0d;
+
     @ManyToOne(fetch = FetchType.LAZY)
     private Project project;
 
@@ -90,6 +93,17 @@ public class Image {
             this.metadata = new HashMap<>();
         }
         return metadata;
+    }
+
+    public double getMic() {
+        if(mic == null) {
+            mic = 0d;
+        }
+        return mic;
+    }
+
+    public void setMic(double mic) {
+        this.mic = mic;
     }
 
     public long getRawDataFileSize() {
@@ -286,6 +300,7 @@ public class Image {
         setOriginalFileName(payload.getFileName());
         setExperiment(payload.getExperiment());
         setAssayType(payload.getAssayType());
+        setMic(payload.getMic());
         setSample(payload.getSample());
         setTimePoint(payload.getTimePoint());
         setGroupColumn(payload.getGroupColumn());

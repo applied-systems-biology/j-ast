@@ -31,6 +31,8 @@ public class ImagePayload {
     @JsonProperty
     private AssayType assayType;
     @JsonProperty
+    private double mic;
+    @JsonProperty
     private int version;
     @JsonProperty
     private double pixelSizeMillimeter;
@@ -49,6 +51,7 @@ public class ImagePayload {
         this.id = image.getId();
         this.projectId = image.getProject().getId();
         this.assayType = image.getAssayType();
+        this.mic = image.getMic();
         this.fileName = image.getOriginalFileName();
         this.experiment = image.getExperiment();
         this.sample = image.getSample();
@@ -60,6 +63,14 @@ public class ImagePayload {
         this.maskImageAnnotations = image.getFilteredMaskImageAnnotations().stream().map(MaskImageAnnotationPayload::create).toList();
         this.metadata = new HashMap<>(image.getMetadata());
         this.size = image.getRawDataFileSize();
+    }
+
+    public double getMic() {
+        return mic;
+    }
+
+    public void setMic(double mic) {
+        this.mic = mic;
     }
 
     public Map<String, Object> getMetadata() {
