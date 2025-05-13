@@ -18,63 +18,22 @@
         <AuthManagerComponent />
         <DocumentationComponent />
       </q-toolbar>
-      <!--      <q-toolbar class="bg-primary text-white edit-toolbar">-->
-      <!--        <q-btn-dropdown color="green" icon="download" label="Download">-->
-      <!--          <q-list>-->
-      <!--            <q-item v-if="selectedImageId > 0" clickable v-close-popup @click="downloadZip([selectedImageId])">-->
-      <!--              <q-item-section>-->
-      <!--                <q-item-label>Download selected images and annotations (*.zip)</q-item-label>-->
-      <!--              </q-item-section>-->
-      <!--            </q-item>-->
-      <!--            <q-item v-if="selectedImageId > 0" clickable v-close-popup @click="downloadSelectedImage">-->
-      <!--              <q-item-section>-->
-      <!--                <q-item-label>Download selected raw images (*.png)</q-item-label>-->
-      <!--              </q-item-section>-->
-      <!--            </q-item>-->
-      <!--            <q-separator v-if="selectedImageId > 0"/>-->
-      <!--            <q-item clickable v-close-popup @click="downloadZip(null)">-->
-      <!--              <q-item-section>-->
-      <!--                <q-item-label>Download everything (*.zip)</q-item-label>-->
-      <!--              </q-item-section>-->
-      <!--            </q-item>-->
-      <!--          </q-list>-->
-      <!--        </q-btn-dropdown>-->
-      <!--&lt;!&ndash;        <q-btn&ndash;&gt;-->
-      <!--&lt;!&ndash;          icon="delete"&ndash;&gt;-->
-      <!--&lt;!&ndash;          color="red-4"&ndash;&gt;-->
-      <!--&lt;!&ndash;          v-if="selectedImageIds.length > 0"&ndash;&gt;-->
-      <!--&lt;!&ndash;          @click="deleteCurrentImage"&ndash;&gt;-->
-      <!--&lt;!&ndash;          :disable="hasTaskRunning"&ndash;&gt;-->
-      <!--&lt;!&ndash;        >&ndash;&gt;-->
-      <!--&lt;!&ndash;          <q-tooltip> Deletes the selected image(s)</q-tooltip>&ndash;&gt;-->
-      <!--&lt;!&ndash;        </q-btn>&ndash;&gt;-->
-      <!--        <q-btn-->
-      <!--          icon="refresh"-->
-      <!--          color="primary"-->
-      <!--          @click="queryBackend"-->
-      <!--          :disable="hasTaskRunning"-->
-      <!--        >-->
-      <!--          <q-tooltip>Reloads the view</q-tooltip>-->
-      <!--        </q-btn>-->
-      <!--        <div class="col-grow" />-->
-      <!--        <ProjectResultsButton-->
-      <!--          :project-id="projectId"-->
-      <!--          v-model="resultList"/>-->
-      <!--        <ProjectBackendTaskButton-->
-      <!--          :project-id="projectId"-->
-      <!--          v-model="projectBackendTasks"-->
-      <!--          @on-task-finished="onTaskFinished"-->
-      <!--        />-->
-      <!--      </q-toolbar>-->
     </q-header>
-    <q-drawer side="left" bordered :model-value="true">
-      <ProjectImageButtonFlat
-        :current-image="projectImages.getImageById(imageId)"
-        :selected-image-ids="[selectedImageId]"
-        v-for="imageId in projectImages.imageIds"
-        :key="imageId"
-        @image-selected="onImageSelected"
-      />
+    <q-drawer side="left" bordered :model-value="true" class="image-list">
+      <q-input v-model="filterText" dense outlined clearable class="q-ma-sm" debounce="1000">
+        <template v-slot:prepend>
+          <q-icon name="search" />
+        </template>
+      </q-input>
+      <q-scroll-area class="w-100 image-list-items">
+        <ProjectImageButtonFlat
+          :current-image="projectImages.getImageById(imageId)"
+          :selected-image-ids="[selectedImageId]"
+          v-for="imageId in projectImages.imageIds"
+          :key="imageId"
+          @image-selected="onImageSelected"
+        />
+      </q-scroll-area>
     </q-drawer>
     <q-drawer
       side="right"
@@ -149,18 +108,7 @@ const projectBackendTasks = ref<Array<BackendTaskPayload>>([
   createDummyBackendTask(),
 ]);
 const resultList = ref<ResultPayload[]>();
-
-// const hasTaskRunning = computed(() => {
-//   if (projectBackendTasks.value) {
-//     for (const task of projectBackendTasks.value) {
-//       if (task.isRunning()) {
-//         return true
-//       }
-//     }
-//     return false
-//   }
-//   return true; // Waiting still for info
-// });
+const filterText = ref("")
 
 defineOptions({
   name: 'ProjectLayout',
@@ -170,81 +118,6 @@ function goToProject() {
   router.push(`/project/${projectId}`);
 }
 
-// function downloadSelectedImage() {
-//   downloadFromApi(
-//     `/image/${selectedImageId.value}/raw`,
-//     ensureExtension(projectImages.value.getImageById(selectedImageId.value).fileName, ['.png'])
-//   );
-// }
-//
-// function downloadZip(imageIds : Array<number> | null) {
-//   if(imageIds == null) {
-//     imageIds = projectImages.value.imageIds
-//   }
-//
-//   // Map to images
-//   const items = imageIds.map(id => projectImages.value.getImageById(id));
-//
-//   // Create Zip items
-//   const zipItems : Array<ZipItem>  = []
-//   const usedFileNames = new Set<string>()
-//   let downloadSizeBytes = 0
-//   for(const item of items) {
-//     let fileName = item.fileName || `${item.assayType}_${item.experiment}_${item.sample}_${item.timePoint}`
-//     fileName = removeExtensionIfPresent(fileName)
-//     if(usedFileNames.has(fileName)) {
-//       fileName = fileName + "_" + item.id
-//     }
-//     usedFileNames.add(fileName)
-//     zipItems.push({ entryName: ensureExtension(fileName), url: `/image/${item.id}/raw`, content: null })
-//     downloadSizeBytes += item.size
-//
-//     // Add annotations
-//     for(const annotation of item.maskImageAnnotations) {
-//       zipItems.push({ entryName: ensureExtension(fileName + "_" + annotation.annotationTypeId), url: `/mask-image-annotation/${item.id}/${annotation.annotationTypeId}/raw`, content: null })
-//       downloadSizeBytes += annotation.size
-//     }
-//   }
-//
-//   $q.dialog({
-//     title: 'Download inputs',
-//     message: `You are about to download ${zipItems.length} files (${formatFileSize(downloadSizeBytes)}).<br/>Do you want to continue?<br/><br/>Please note that due how the ZIP file is created, your computer needs at least ${formatFileSize(downloadSizeBytes)} of free RAM space.`,
-//     html: true,
-//     cancel: true,
-//     persistent: true
-//   }).onOk(() => {
-//     const shouldCancel = ref<boolean>(false);
-//     const dialog = $q.dialog({
-//       title: 'Downloading results ...',
-//       message: 'Preparing ...',
-//       progress: {
-//         spinner: QSpinnerHourglass,
-//       },
-//       persistent: true,
-//       ok: false,
-//       cancel: true,
-//     })
-//     dialog.onCancel(() => {
-//       shouldCancel.value = true
-//       dialog.hide()
-//     })
-//
-//     generateAndDownloadZip(zipItems, projectPayload.value.name, (percentage, info) => {
-//       dialog.update({
-//         message: `${percentage}% ${info}`
-//       })
-//     }, () => shouldCancel.value)
-//       .finally(() => {
-//         dialog.hide()
-//       })
-//
-//   })
-// }
-
-// function onTaskFinished() {
-//   // For now just query the backend again
-//   queryBackend();
-// }
 
 function onImageSelected(imageId: number) {
   selectedImageId.value = imageId;
@@ -312,5 +185,14 @@ useIntervalFn(queryResultListBackend, 4000);
   height: 100%;
   overflow: hidden;
   border-top: 1px solid $blue-5;
+}
+
+.image-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.image-list-items {
+  flex-grow: 1;
 }
 </style>

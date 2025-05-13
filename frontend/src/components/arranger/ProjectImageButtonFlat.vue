@@ -1,7 +1,7 @@
 <template>
   <q-btn
     no-caps
-    class="item text-black active"
+    :class="{ item: true, 'bg-grey-4': isSelected }"
     flat
     :color="selectionColor"
     @click.stop="clicked($event)"
@@ -52,6 +52,10 @@ const emit = defineEmits<{
 
 const metadataAsBadges = computed(() => plainToInstance(ImagePayload, props.currentImage).getMetadataAsBadges())
 const annotationsAsBadges = computed(() => plainToInstance(ImagePayload, props.currentImage).getAnnotationsAsBadges())
+const isSelected = computed(() => {
+  const index = props.selectedImageIds.indexOf(props.currentImage.id)
+  return index >= 0
+})
 const selectionColor = computed(() => {
   const index = props.selectedImageIds.indexOf(props.currentImage.id)
   if(index >= 0) {
