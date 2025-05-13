@@ -3,28 +3,9 @@
     <q-toolbar class="bg-primary text-white edit-toolbar">
       <q-btn label="Download" icon="fa-solid fa-download" color="green" @click="download"/>
       <q-btn label="Reset view" icon="fa-solid fa-expand" color="blue" @click="resetLocationAndZoom"/>
+      <ZoomControl v-model="zoom" />
     </q-toolbar>
     <div class="row col-grow" style="width: calc(100vw - 10px)">
-      <div class="col-2 q-pa-lg tool-control-container">
-        <div class="tool-control">
-          <q-badge color="primary" class="tool-control-badge">
-            <div class="label">Zoom</div>
-            <q-btn size="xs" icon="fa-solid fa-undo" @click="zoom = 1">
-              <q-tooltip>Reset zoom</q-tooltip>
-            </q-btn>
-          </q-badge>
-          <q-slider
-            v-model="zoom"
-            :min="0.25"
-            :max="3"
-            :markers="0.25"
-            :step="0"
-            label
-            :marker-labels="zoomLabels"
-            switch-label-side
-          ></q-slider>
-        </div>
-      </div>
       <div class="col flex column">
         <div class="full-width stage-container">
           <konva-stage
@@ -56,6 +37,7 @@ import { useQuasar } from 'quasar';
 import { api } from 'boot/axios';
 import { sendFailureNotification } from 'src/types/notification';
 import { downloadFromApi, ensureExtension, loadImageElementFromDataString } from 'src/types/common';
+import ZoomControl from 'components/utils/ZoomControl.vue';
 
 const $q = useQuasar()
 
@@ -75,9 +57,6 @@ const props = defineProps<{
 }>()
 
 const zoom = ref(1);
-function zoomLabels(value : number) {
-  return value == 1 ? "100%" : " "
-}
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 let isMouseDown = false;
@@ -276,8 +255,6 @@ watch(() => props.imageBackendUrl, queryFromBackend)
 </script>
 <style scoped lang="scss">
 .stage-container {
-  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.2), 0 2px 2px rgba(0, 0, 0, 0.14),
-  0 3px 1px -2px rgba(0, 0, 0, 0.12);
   flex-grow: 1;
   overflow: hidden;
   height: 0;
