@@ -71,6 +71,7 @@
     filled
     label="MIC"
     type="number"
+    v-if="model?.assayType == 'ETest'"
     @update:model-value="onUpdateMIC"
   />
   <MaskImageAnnotationButton
