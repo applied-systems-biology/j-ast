@@ -29,11 +29,16 @@
         <ProjectImageButtonFlat
           :current-image="projectImages.getImageById(imageId)"
           :selected-image-ids="[selectedImageId]"
-          v-for="imageId in projectImages.imageIds"
+          v-for="imageId in filteredImageIds"
           :key="imageId"
           @image-selected="onImageSelected"
         />
       </q-scroll-area>
+      <q-toolbar>
+        <q-btn icon="fa-solid fa-chevron-left" color="secondary" @click="goToPreviousImage"/>
+        <q-space />
+        <q-btn icon="fa-solid fa-chevron-right" color="secondary" @click="goToNextImage"/>
+      </q-toolbar>
     </q-drawer>
     <q-drawer
       side="right"
@@ -84,6 +89,7 @@ import BackendTaskProgressOverlay from 'components/backendProcessors/BackendTask
 import DocumentationComponent from 'components/layout/DocumentationComponent.vue';
 import ProjectImageButtonFlat from 'components/arranger/ProjectImageButtonFlat.vue';
 import ImageViewer from 'components/dataViewers/ImageViewer.vue';
+import { filterAppliesToImage } from 'src/types/filters';
 
 function createDummyBackendTask() {
   const task = new BackendTaskPayload();
@@ -109,15 +115,52 @@ const projectBackendTasks = ref<Array<BackendTaskPayload>>([
 ]);
 const resultList = ref<ResultPayload[]>();
 const filterText = ref("")
+const filteredImageIds = computed(() => {
+  if(filterText.value && filterText.value.length > 0) {
+    return projectImages.value.imageIds.filter(index => {
+      const image = projectImages.value.getImageById(index);
+      if(image) {
+        return filterAppliesToImage(filterText.value, image)
+      }
+      return false
+    })
+  }
+  else {
+    return projectImages.value.imageIds
+  }
+})
 
 defineOptions({
   name: 'ProjectLayout',
 });
 
+function goToPreviousImage() {
+  const index = filteredImageIds.value.indexOf(selectedImageId.value);
+  if (index > -1 && filteredImageIds.value.length > 0) {
+    if(index > 0) {
+      selectedImageId.value = filteredImageIds.value[index - 1];
+    }
+    else {
+      selectedImageId.value = filteredImageIds.value[filteredImageIds.value.length - 1];
+    }
+  }
+}
+
+function goToNextImage() {
+  const index = filteredImageIds.value.indexOf(selectedImageId.value);
+  if (index > -1 && filteredImageIds.value.length > 0) {
+    if(index < filteredImageIds.value.length - 1) {
+      selectedImageId.value = filteredImageIds.value[index + 1];
+    }
+    else {
+      selectedImageId.value = filteredImageIds.value[0];
+    }
+  }
+}
+
 function goToProject() {
   router.push(`/project/${projectId}`);
 }
-
 
 function onImageSelected(imageId: number) {
   selectedImageId.value = imageId;

@@ -7,7 +7,7 @@
           :key="`image-id-${imageIndex}`"
         >
           <ProjectImageButton
-            v-if="filterAppliesToImage(imageIndex)"
+            v-if="filterAppliesToImageIndex(imageIndex)"
             :current-image="getImageByIndex(imageIndex)!"
             :selected-image-ids="selectedImageIds"
             class="draggable-item"
@@ -36,7 +36,7 @@ import {
 import {
   BackendTaskPayload,
 } from 'src/types/backendTasks';
-import { AssayType } from 'src/types/assayType';
+import { filterAppliesToImage } from 'src/types/filters';
 
 const selectedImageIds = defineModel<Array<number>>('selectedImageIds', {
   required: true,
@@ -66,7 +66,7 @@ const hasTaskRunning = computed(() => {
 });
 const lastProjectId = ref(-1);
 
-function filterAppliesToImage(imageIndex: number) {
+function filterAppliesToImageIndex(imageIndex: number) {
   if (filterText.value && filterText.value.length > 0 && projectImages.value) {
     const imageId = projectImages.value.imageIds[imageIndex]
     if(!imageId) {
@@ -76,44 +76,7 @@ function filterAppliesToImage(imageIndex: number) {
     if (!image) {
       return true;
     }
-    const tags = new Set<string>();
-
-    if (image.experiment) {
-      tags.add('experiment:' + image.experiment);
-    }
-    if (image.sample) {
-      tags.add('sample:' + image.sample);
-    }
-    if (image.assayType != AssayType.Unknown) {
-      tags.add('assayType:' + image.assayType);
-    }
-    tags.add(image.fileName);
-
-    let hasPlate = false;
-    let hasDiskStrip = false;
-    let hasZOIShape = false;
-
-    for (const annotation of image.maskImageAnnotations) {
-      if (annotation.version > 0) {
-        if (annotation.annotationTypeId == 'plate') {
-          hasPlate = true;
-        } else if (annotation.annotationTypeId == 'strip-disk') {
-          hasDiskStrip = true;
-        } else if (annotation.annotationTypeId == 'zoi-shape') {
-          hasZOIShape = true;
-        }
-      }
-    }
-
-    tags.add('hasPlate:' + (hasPlate ? 'yes' : 'no'));
-    tags.add('hasDiskStrip:' + (hasDiskStrip ? 'yes' : 'no'));
-    if (image.assayType == AssayType.ETest) {
-      tags.add('hasZOIShape:' + (hasZOIShape ? 'yes' : 'no'));
-    }
-
-    // Tags to string
-    const searchString = [...tags].join(' ');
-    return searchString.includes(filterText.value);
+    return filterAppliesToImage(filterText.value, image)
   } else {
     return true;
   }
@@ -157,7 +120,7 @@ function selectAll() {
   const newSelected : Array<number> = []
   if(projectImages.value) {
     for(const imageId of projectImages.value.imageIds) {
-      if(filterAppliesToImage(imageId)) {
+      if(filterAppliesToImageIndex(imageId)) {
         newSelected.push(imageId);
       }
     }
