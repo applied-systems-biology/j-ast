@@ -57,4 +57,15 @@ public class BackendTaskWorkloadParameterSlot {
     public void setDefaultValue(Object defaultValue) {
         this.defaultValue = defaultValue;
     }
+
+    @Override
+    public String toString() {
+        return "BackendTaskWorkloadParameterSlot{" +
+                "type=" + type +
+                ", id='" + id + '\'' +
+                ", label='" + label + '\'' +
+                ", description='" + description + '\'' +
+                ", defaultValue=" + defaultValue +
+                '}';
+    }
 }

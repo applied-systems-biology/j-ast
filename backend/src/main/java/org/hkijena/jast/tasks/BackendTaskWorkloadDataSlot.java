@@ -50,4 +50,13 @@ public class BackendTaskWorkloadDataSlot {
     public void setType(BackendTaskWorkloadDataSlotType type) {
         this.type = type;
     }
+
+    @Override
+    public String toString() {
+        return "BackendTaskWorkloadDataSlot{" +
+                "type=" + type +
+                ", validationMode=" + validationMode +
+                ", name='" + name + '\'' +
+                '}';
+    }
 }
