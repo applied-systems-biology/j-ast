@@ -27,8 +27,8 @@ import java.util.List;
 import java.util.Map;
 
 @Component
-@BackendTaskType(typeId = "generate-visualizations-time-series")
-public class GenerateVisualizationsTimeSeriesWorkload implements BackendTaskWorkload {
+@BackendTaskType(typeId = "generate-visualizations-single")
+public class GenerateVisualizationsSingleWorkload implements BackendTaskWorkload {
 
     private static final List<BackendTaskWorkloadDataSlot> INPUTS = List.of(JASTDataSlot.Plate.toSlot(BackendTaskWorkloadDataSlotValidationMode.Optional),
             JASTDataSlot.ZOIShape.toSlot(BackendTaskWorkloadDataSlotValidationMode.Optional),
@@ -48,7 +48,7 @@ public class GenerateVisualizationsTimeSeriesWorkload implements BackendTaskWork
     private BackendTaskRegistry registry;
 
     @Autowired
-    public GenerateVisualizationsTimeSeriesWorkload(ImageRepository imageRepository, ResultRepository resultRepository, ProjectRepository projectRepository, FileStorageService fileStorageService, BackendTaskUtils taskUtils) {
+    public GenerateVisualizationsSingleWorkload(ImageRepository imageRepository, ResultRepository resultRepository, ProjectRepository projectRepository, FileStorageService fileStorageService, BackendTaskUtils taskUtils) {
         this.imageRepository = imageRepository;
         this.resultRepository = resultRepository;
         this.projectRepository = projectRepository;
@@ -67,12 +67,12 @@ public class GenerateVisualizationsTimeSeriesWorkload implements BackendTaskWork
 
     @Override
     public String getName() {
-        return "Generate visualizations (time series)";
+        return "Generate visualizations (single)";
     }
 
     @Override
     public String getDescription() {
-        return "Generates visualizations of the images and annotations (plate, strip/disk, ZOI shape). This algorithm requires that images are properly organized into time series.";
+        return "Generates visualizations of the images and annotations (plate, strip/disk, ZOI shape).";
     }
 
     @Override
@@ -112,7 +112,7 @@ public class GenerateVisualizationsTimeSeriesWorkload implements BackendTaskWork
 
     @Override
     public ViewMode getViewModeRestriction() {
-        return ViewMode.Timeline;
+        return null;
     }
 
     @Override
@@ -131,7 +131,7 @@ public class GenerateVisualizationsTimeSeriesWorkload implements BackendTaskWork
             }
         }
 
-        Path projectFilePath = taskUtils.writeSharedFile(params, "generate-visualizations.jip");
+        Path projectFilePath = taskUtils.writeSharedFile(params, "generate-visualizations-single.jip");
         progressInfo.log("Project file is " + projectFilePath);
         taskUtils.runJIPipe(params, projectFilePath, parameterOverrides, "", progressInfo);
 

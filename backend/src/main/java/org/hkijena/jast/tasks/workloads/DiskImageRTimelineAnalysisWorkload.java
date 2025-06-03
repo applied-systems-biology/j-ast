@@ -1,5 +1,6 @@
 package org.hkijena.jast.tasks.workloads;
 
+import com.google.common.base.Predicates;
 import jakarta.transaction.Transactional;
 import org.hkijena.jast.model.AssayType;
 import org.hkijena.jast.model.ViewMode;
@@ -165,6 +166,6 @@ public class DiskImageRTimelineAnalysisWorkload implements BackendTaskWorkload {
         String resultDescription = StringUtils.nullToEmpty(params.getPayload().getParameter("result-description").getValue());
         Project project = projectRepository.findById(params.getPayload().getProjectId()).get();
 
-        taskUtils.readResultsDirectory(resultName, resultDescription, params.getTmpPath().resolve("results"), project, projectRepository, fileStorageService, progressInfo);
+        taskUtils.readResultsDirectory(resultName, resultDescription, params.getTmpPath().resolve("results"), project, projectRepository, fileStorageService, Predicates.alwaysTrue(), progressInfo);
     }
 }

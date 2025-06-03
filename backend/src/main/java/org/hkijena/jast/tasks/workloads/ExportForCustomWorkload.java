@@ -5,7 +5,6 @@ import jakarta.transaction.Transactional;
 import org.hkijena.jast.model.AssayType;
 import org.hkijena.jast.model.ViewMode;
 import org.hkijena.jast.model.entities.Project;
-import org.hkijena.jast.payloads.task.BackendTaskParameterPayload;
 import org.hkijena.jast.repositories.ImageRepository;
 import org.hkijena.jast.repositories.ProjectRepository;
 import org.hkijena.jast.repositories.ResultRepository;
@@ -20,26 +19,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
-import java.nio.file.Path;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Component
-@BackendTaskType(typeId = "generate-visualizations-time-series")
-public class GenerateVisualizationsTimeSeriesWorkload implements BackendTaskWorkload {
+@BackendTaskType(typeId = "export-custom")
+public class ExportForCustomWorkload implements BackendTaskWorkload {
 
     private static final List<BackendTaskWorkloadDataSlot> INPUTS = List.of(JASTDataSlot.Plate.toSlot(BackendTaskWorkloadDataSlotValidationMode.Optional),
             JASTDataSlot.ZOIShape.toSlot(BackendTaskWorkloadDataSlotValidationMode.Optional),
             JASTDataSlot.StripDisk.toSlot(BackendTaskWorkloadDataSlotValidationMode.Optional));
     private static final List<BackendTaskWorkloadDataSlot> OUTPUTS = Collections.emptyList();
     private static final List<BackendTaskWorkloadParameterSlot> PARAMETERS = List.of(
-            new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotType.String, "result-name", "Result name", "The name of the generated result folder", "Visualization"),
-            new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotType.String, "result-description", "Result description", "Description of the generated result", ""),
-            new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotType.Number, "line-width", "Line width", "The annotation's line width in pixels", 3)
+            new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotType.String, "result-name", "Result name", "The name of the generated result folder", "Exported"),
+            new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotType.String, "result-description", "Result description", "Description of the generated result", "")
     );
-    private static final Map<String, String> PARAMETER_OVERRIDES = new HashMap<>();
+
     private final ImageRepository imageRepository;
     private final ResultRepository resultRepository;
     private final ProjectRepository projectRepository;
@@ -48,16 +43,12 @@ public class GenerateVisualizationsTimeSeriesWorkload implements BackendTaskWork
     private BackendTaskRegistry registry;
 
     @Autowired
-    public GenerateVisualizationsTimeSeriesWorkload(ImageRepository imageRepository, ResultRepository resultRepository, ProjectRepository projectRepository, FileStorageService fileStorageService, BackendTaskUtils taskUtils) {
+    public ExportForCustomWorkload(ImageRepository imageRepository, ResultRepository resultRepository, ProjectRepository projectRepository, FileStorageService fileStorageService, BackendTaskUtils taskUtils) {
         this.imageRepository = imageRepository;
         this.resultRepository = resultRepository;
         this.projectRepository = projectRepository;
         this.fileStorageService = fileStorageService;
         this.taskUtils = taskUtils;
-    }
-
-    static {
-        PARAMETER_OVERRIDES.put("line-width", "/lineWidth");
     }
 
     @Override
@@ -67,12 +58,12 @@ public class GenerateVisualizationsTimeSeriesWorkload implements BackendTaskWork
 
     @Override
     public String getName() {
-        return "Generate visualizations (time series)";
+        return "Export for custom pipelines";
     }
 
     @Override
     public String getDescription() {
-        return "Generates visualizations of the images and annotations (plate, strip/disk, ZOI shape). This algorithm requires that images are properly organized into time series.";
+        return "Exports the selected images to be used in custom pipelines (through results)";
     }
 
     @Override
@@ -97,7 +88,7 @@ public class GenerateVisualizationsTimeSeriesWorkload implements BackendTaskWork
 
     @Override
     public String getCategory() {
-        return "Visualize";
+        return "Miscellaneous";
     }
 
     @Override
@@ -112,7 +103,7 @@ public class GenerateVisualizationsTimeSeriesWorkload implements BackendTaskWork
 
     @Override
     public ViewMode getViewModeRestriction() {
-        return ViewMode.Timeline;
+        return null;
     }
 
     @Override
@@ -123,22 +114,14 @@ public class GenerateVisualizationsTimeSeriesWorkload implements BackendTaskWork
         taskUtils.writeMaskAnnotations(params, params.getPayload().getImageIds(), "zoi-shape", imageRepository, fileStorageService, progressInfo);
         taskUtils.writeMaskAnnotations(params, params.getPayload().getImageIds(), "plate", imageRepository, fileStorageService, progressInfo);
 
-        Map<String, Object> parameterOverrides = new HashMap<>();
-        for (BackendTaskParameterPayload parameter : params.getPayload().getParameters()) {
-            String overriddenKey = PARAMETER_OVERRIDES.get(parameter.getId());
-            if (overriddenKey != null) {
-                parameterOverrides.put(overriddenKey, parameter.getValue());
-            }
-        }
-
-        Path projectFilePath = taskUtils.writeSharedFile(params, "generate-visualizations.jip");
-        progressInfo.log("Project file is " + projectFilePath);
-        taskUtils.runJIPipe(params, projectFilePath, parameterOverrides, "", progressInfo);
-
-        String resultName = StringUtils.orElse(params.getPayload().getParameter("result-name").getValue(), "Visualization");
+        String resultName = StringUtils.orElse(params.getPayload().getParameter("result-name").getValue(), "Exported");
         String resultDescription = StringUtils.nullToEmpty(params.getPayload().getParameter("result-description").getValue());
         Project project = projectRepository.findById(params.getPayload().getProjectId()).get();
 
-        taskUtils.readResultsDirectory(resultName, resultDescription, params.getTmpPath().resolve("results"), project, projectRepository, fileStorageService, Predicates.alwaysTrue(), progressInfo);
+        // We just grab the current directory
+        taskUtils.readResultsDirectory(resultName, resultDescription, params.getTmpPath(), project, projectRepository, fileStorageService, (path) -> switch (path.getFileName().toString()) {
+            case "lockfile", "log.txt", "job_started" -> false;
+            default -> true;
+        }, progressInfo);
     }
 }

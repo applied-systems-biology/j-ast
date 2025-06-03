@@ -1,5 +1,6 @@
 package org.hkijena.jast.services;
 
+import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import jakarta.persistence.EntityManager;
@@ -27,7 +28,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
-import org.springframework.util.FileSystemUtils;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -307,7 +307,7 @@ public class BackendTaskUtils {
     }
 
     @Transactional(Transactional.TxType.REQUIRES_NEW)
-    public void readResultsDirectory(String resultName, String resultDescription, Path resultDirectory, Project project, ProjectRepository projectRepository, FileStorageService fileStorageService, ProgressInfo progressInfo) throws IOException {
+    public void readResultsDirectory(String resultName, String resultDescription, Path resultDirectory, Project project, ProjectRepository projectRepository, FileStorageService fileStorageService, Predicate<Path> filter, ProgressInfo progressInfo) throws IOException {
 
         Result result = new Result();
         result.setProject(project);
@@ -318,10 +318,13 @@ public class BackendTaskUtils {
             @Override
             public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
                 try {
-                    ResultItem item = createResultItemFromPath(file, resultDirectory, fileStorageService, progressInfo);
-                    if (item != null) {
-                        result.addResultItem(item);
+                    if(filter.test(file)) {
+                        ResultItem item = createResultItemFromPath(file, resultDirectory, fileStorageService, progressInfo);
+                        if (item != null) {
+                            result.addResultItem(item);
+                        }
                     }
+
                 } catch (Throwable e) {
                     progressInfo.log("Unable to read result file " + file);
                     progressInfo.log(ExceptionUtils.getStackTrace(e));
