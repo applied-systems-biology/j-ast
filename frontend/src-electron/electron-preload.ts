@@ -27,3 +27,22 @@
  *   }
  * }
  */
+
+// Inject any static/default value as fallback
+import { contextBridge } from 'electron';
+
+function getArgValue(prefix: string): string | null {
+  const arg = process.argv.find(arg => arg.startsWith(prefix));
+  return arg ? arg.slice(prefix.length) : null;
+}
+
+const apiBase = getArgValue('--api-base=');
+
+// Expose getApiBase
+contextBridge.exposeInMainWorld('electronAPI', {
+  getApiBase: () => {
+    console.log("getApiBase() accessed");
+    console.log(apiBase)
+    return apiBase;
+  },
+});

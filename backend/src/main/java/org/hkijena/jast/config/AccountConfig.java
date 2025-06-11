@@ -18,6 +18,7 @@ public class AccountConfig {
     private int guestImageLimit = 10;
     private int guestAccountExpireMinutes = 60 * 24 * 3;
 
+
     public String getAdminContact() {
         return adminContact;
     }

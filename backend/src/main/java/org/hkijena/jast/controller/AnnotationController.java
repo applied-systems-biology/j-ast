@@ -1,7 +1,7 @@
 package org.hkijena.jast.controller;
 
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.transaction.Transactional;
+import org.hkijena.jast.config.WebSecurityConfig;
 import org.hkijena.jast.model.entities.Image;
 import org.hkijena.jast.model.entities.MaskImageAnnotation;
 import org.hkijena.jast.payloads.MaskImageAnnotationPayload;
@@ -39,9 +39,10 @@ public class AnnotationController {
     private final UserService userService;
     private final FileStorageService fileStorageService;
     private final ImageAnnotationService imageAnnotationService;
+    private final WebSecurityConfig webSecurityConfig;
 
     @Autowired
-    public AnnotationController(ProjectRepository projectRepository, ImageRepository imageRepository, MaskImageAnnotationRepository maskImageAnnotationRepository, ProjectService projectService, UserService userService, FileStorageService fileStorageService, ImageAnnotationService imageAnnotationService) {
+    public AnnotationController(ProjectRepository projectRepository, ImageRepository imageRepository, MaskImageAnnotationRepository maskImageAnnotationRepository, ProjectService projectService, UserService userService, FileStorageService fileStorageService, ImageAnnotationService imageAnnotationService, WebSecurityConfig webSecurityConfig) {
         this.projectRepository = projectRepository;
         this.imageRepository = imageRepository;
         this.maskImageAnnotationRepository = maskImageAnnotationRepository;
@@ -49,12 +50,13 @@ public class AnnotationController {
         this.userService = userService;
         this.fileStorageService = fileStorageService;
         this.imageAnnotationService = imageAnnotationService;
+        this.webSecurityConfig = webSecurityConfig;
     }
 
     @PostMapping("/api/mask-image-annotation/{imageId}/{annotationType}/raw")
     public void updateRaw(Authentication authentication, @PathVariable long imageId, @PathVariable String annotationType, @RequestPart("file") MultipartFile imageFile) {
         userService.validateAuthentication(authentication);
-        MaskImageAnnotation maskImageAnnotation = imageAnnotationService.getOrCreateMaskImageAnnotation(authentication, imageId, annotationType, true);
+        MaskImageAnnotation maskImageAnnotation = imageAnnotationService.getOrCreateMaskImageAnnotation(authentication, webSecurityConfig, imageId, annotationType, true);
 
         try (InputStream stream = imageFile.getInputStream()) {
             BufferedImage bufferedImage = ImageIO.read(stream);
@@ -85,14 +87,14 @@ public class AnnotationController {
     @GetMapping("/api/mask-image-annotation/{imageId}/{annotationType}")
     public ResponseEntity<MaskImageAnnotationPayload> getPayload(Authentication authentication, @PathVariable long imageId, @PathVariable String annotationType) {
         userService.validateAuthentication(authentication);
-        MaskImageAnnotation maskImageAnnotation = imageAnnotationService.getOrCreateMaskImageAnnotation(authentication, imageId, annotationType, false);
+        MaskImageAnnotation maskImageAnnotation = imageAnnotationService.getOrCreateMaskImageAnnotation(authentication, webSecurityConfig, imageId, annotationType, false);
         return ResponseEntity.ok(MaskImageAnnotationPayload.create(maskImageAnnotation));
     }
 
     @GetMapping("/api/mask-image-annotation/{imageId}/{annotationType}/raw")
     public void getRaw(HttpServletResponse response, Authentication authentication, @PathVariable long imageId, @PathVariable String annotationType) throws IOException {
         userService.validateAuthentication(authentication);
-        MaskImageAnnotation maskImageAnnotation = imageAnnotationService.getOrCreateMaskImageAnnotation(authentication, imageId, annotationType, false);
+        MaskImageAnnotation maskImageAnnotation = imageAnnotationService.getOrCreateMaskImageAnnotation(authentication, webSecurityConfig, imageId, annotationType, false);
 
         RequestUtils.sendContent(response, maskImageAnnotation.getRawData(fileStorageService), MimeTypeUtils.MIME_TYPE_PNG);
     }
@@ -108,7 +110,7 @@ public class AnnotationController {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
         Image image = image_.get();
-        if (!image.getProject().canAccess(authentication)) {
+        if (!image.getProject().canAccess(authentication, webSecurityConfig)) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN);
         }
         Optional<MaskImageAnnotation> imageAnnotation_ = maskImageAnnotationRepository.findFirstByImageAndType(image, annotationType);

@@ -1,6 +1,7 @@
 package org.hkijena.jast.controller;
 
 import jakarta.servlet.http.HttpServletResponse;
+import org.hkijena.jast.config.WebSecurityConfig;
 import org.hkijena.jast.model.entities.Project;
 import org.hkijena.jast.model.entities.Result;
 import org.hkijena.jast.model.entities.ResultItem;
@@ -38,22 +39,24 @@ public class ResultsController {
     private final ResultRepository resultRepository;
     private final ResultItemRepository resultItemRepository;
     private final FileStorageService fileStorageService;
+    private final WebSecurityConfig webSecurityConfig;
 
     @Autowired
-    public ResultsController(ProjectService projectService, UserService userService, ProjectRepository projectRepository, ResultRepository resultRepository, ResultItemRepository resultItemRepository, FileStorageService fileStorageService) {
+    public ResultsController(ProjectService projectService, UserService userService, ProjectRepository projectRepository, ResultRepository resultRepository, ResultItemRepository resultItemRepository, FileStorageService fileStorageService, WebSecurityConfig webSecurityConfig) {
         this.projectService = projectService;
         this.userService = userService;
         this.projectRepository = projectRepository;
         this.resultRepository = resultRepository;
         this.resultItemRepository = resultItemRepository;
         this.fileStorageService = fileStorageService;
+        this.webSecurityConfig = webSecurityConfig;
     }
 
     @GetMapping("/api/project/{id}/list-results")
     public ResponseEntity<List<ResultPayload>> listResultsForProject(@PathVariable("id") long projectId, Authentication authentication) {
         userService.validateAuthentication(authentication);
         Project project = projectService.getProjectByIdOrError(projectId);
-        if (!project.canAccess(authentication)) {
+        if (!project.canAccess(authentication, webSecurityConfig)) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
         }
 
@@ -72,7 +75,7 @@ public class ResultsController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
         Result result = result_.get();
-        if (!result.getProject().canAccess(authentication)) {
+        if (!result.getProject().canAccess(authentication, webSecurityConfig)) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
         }
         if (!result.isViewed()) {
@@ -112,7 +115,7 @@ public class ResultsController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
         Result result = result_.get();
-        if (!result.getProject().canEdit(authentication)) {
+        if (!result.getProject().canEdit(authentication, webSecurityConfig)) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
         }
         result.deleteFilesLater(fileStorageService);
@@ -127,7 +130,7 @@ public class ResultsController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
         Result result = result_.get();
-        if (!result.getProject().canEdit(authentication)) {
+        if (!result.getProject().canEdit(authentication, webSecurityConfig)) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
         }
         result.setViewed(true);

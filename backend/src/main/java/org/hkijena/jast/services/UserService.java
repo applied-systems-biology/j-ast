@@ -3,6 +3,7 @@ package org.hkijena.jast.services;
 import com.google.common.collect.ImmutableList;
 import jakarta.transaction.Transactional;
 import org.hkijena.jast.config.AccountConfig;
+import org.hkijena.jast.config.WebSecurityConfig;
 import org.hkijena.jast.model.AdminPrincipal;
 import org.hkijena.jast.model.UserPrincipal;
 import org.hkijena.jast.model.entities.Project;
@@ -42,15 +43,17 @@ public class UserService implements UserDetailsService, ApplicationContextAware 
     private final ProjectService projectService;
     private final ProjectRepository projectRepository;
     private final SessionRegistry sessionRegistry;
+    private final WebSecurityConfig webSecurityConfig;
     private ApplicationContext applicationContext;
 
     @Autowired
-    public UserService(AccountConfig accountConfig, UserRepository userRepository, ProjectService projectService, @Lazy SessionRegistry sessionRegistry, ProjectRepository projectRepository) {
+    public UserService(AccountConfig accountConfig, UserRepository userRepository, ProjectService projectService, @Lazy SessionRegistry sessionRegistry, ProjectRepository projectRepository, WebSecurityConfig webSecurityConfig) {
         this.accountConfig = accountConfig;
         this.userRepository = userRepository;
         this.projectService = projectService;
         this.sessionRegistry = sessionRegistry;
         this.projectRepository = projectRepository;
+        this.webSecurityConfig = webSecurityConfig;
     }
 
     @Override
@@ -73,6 +76,9 @@ public class UserService implements UserDetailsService, ApplicationContextAware 
     }
 
     public void logoutUser(User user) {
+        if (webSecurityConfig.isDisableAuth()) {
+            return;
+        }
         for (Object principal : sessionRegistry.getAllPrincipals()) {
             if (principal instanceof UserPrincipal) {
                 if (Objects.equals(((UserPrincipal) principal).getUser().getId(), user.getId())) {
@@ -98,6 +104,12 @@ public class UserService implements UserDetailsService, ApplicationContextAware 
     }
 
     public void deleteUser(User user) {
+
+        if (webSecurityConfig.isDisableAuth()) {
+            log.info("User deletion is disabled (no auth)");
+            return;
+        }
+
         // Lock the user
         user.setAllowLogin(false);
         userRepository.save(user);
@@ -118,6 +130,11 @@ public class UserService implements UserDetailsService, ApplicationContextAware 
     @Scheduled(fixedRate = 60 * 1000)
     @Transactional
     public void autoDeleteGuests() {
+        if (webSecurityConfig.isDisableAuth()) {
+            log.info("User deletion is disabled (no auth)");
+            return;
+        }
+
         for (User user : ImmutableList.copyOf(userRepository.findAll())) {
             if (user.getRole() == User.Role.Guest) {
                 if (user.getGuestExpire() == null || LocalDateTime.now().isAfter(user.getGuestExpire())) {
@@ -129,12 +146,23 @@ public class UserService implements UserDetailsService, ApplicationContextAware 
     }
 
     public void validateAuthentication(Authentication authentication) {
+        if (webSecurityConfig.isDisableAuth()) {
+            log.info("Authentication is disabled (authentication granted)");
+            return;
+        }
+
         if (authentication == null || !authentication.isAuthenticated()) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN);
         }
     }
 
     public void validateIsAdmin(Authentication authentication) {
+
+        if (webSecurityConfig.isDisableAuth()) {
+            log.info("Authentication is disabled (admin authentication granted)");
+            return;
+        }
+
         validateAuthentication(authentication);
         if (authentication.getPrincipal() instanceof AdminPrincipal) {
             // Everything OK
@@ -148,6 +176,12 @@ public class UserService implements UserDetailsService, ApplicationContextAware 
     }
 
     public boolean isAdmin(Authentication authentication) {
+
+        if (webSecurityConfig.isDisableAuth()) {
+            log.info("Authentication is disabled (admin authentication granted)");
+            return true;
+        }
+
         validateAuthentication(authentication);
         if (authentication.getPrincipal() instanceof AdminPrincipal) {
             return true;

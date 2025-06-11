@@ -1,5 +1,5 @@
 <template>
-  <div class="q-gutter-sm flex row flex-center">
+  <div v-if="isWebApp()" class="q-gutter-sm flex row flex-center">
     <q-btn v-if="authStore.isGuest" color="orange-5" no-caps @click="displayGuestInfoDialog = true" >
       <q-icon name="warning" class="q-mr-sm"/>
       <div class="q-mr-md">Limited account</div>
@@ -244,6 +244,7 @@ import * as EmailValidator from 'email-validator';
 import { instanceToPlain, plainToInstance } from 'class-transformer';
 import { UserAuthenticationLoginResponse } from 'src/types/auth';
 import { formatExpirationTime, formatNumberPlural } from 'src/types/utils';
+import { isWebApp } from 'src/types/electron';
 
 const $q = useQuasar();
 const $router = useRouter();

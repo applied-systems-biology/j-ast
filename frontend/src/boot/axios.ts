@@ -3,6 +3,7 @@ import axios, { AxiosInstance } from 'axios';
 import {useAuthStore} from "stores/auth-store";
 import {Notify} from "quasar";
 import {useRouter} from "vue-router";
+import { apiBase } from 'src/types/api';
 
 declare module 'vue' {
   interface ComponentCustomProperties {
@@ -11,15 +12,13 @@ declare module 'vue' {
   }
 }
 
-export const apiPath = process.env.API_LOCATION || "/api"
-
 // Be careful when using SSR for cross-request state pollution
 // due to creating a Singleton instance here;
 // If any client changes this (global) instance, it might be a
 // good idea to move this instance creation inside of the
 // "export default () => {}" function below (which runs individually
 // for each client)
-const api = axios.create({ baseURL: apiPath });
+const api = axios.create({ baseURL: apiBase });
 
 export default boot(({ app }) => {
   // for use inside Vue files (Options API) through this.$axios and this.$api

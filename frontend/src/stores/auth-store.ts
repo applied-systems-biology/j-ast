@@ -2,6 +2,7 @@ import { defineStore } from 'pinia';
 import {api} from "boot/axios";
 import {jwtDecode, JwtPayload} from "jwt-decode";
 import { GuestLimits } from 'src/types/auth';
+import { isDesktopApp } from 'src/types/electron';
 
 type AccessTokenField = string | number | string[] | null
 
@@ -16,7 +17,7 @@ export const useAuthStore = defineStore('auth', {
   }),
   getters: {
     isLoggedIn(): boolean {
-      return Boolean(this.accessToken && this.accessToken.length > 0)
+      return Boolean(this.accessToken && this.accessToken.length > 0) || isDesktopApp()
     },
     isGuest(): boolean {
       return this.role == "Guest"

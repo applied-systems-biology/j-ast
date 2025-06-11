@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableList;
 import jakarta.persistence.*;
 import jakarta.transaction.Transactional;
 import jakarta.validation.constraints.NotNull;
+import org.hkijena.jast.config.WebSecurityConfig;
 import org.hkijena.jast.model.AdminPrincipal;
 import org.hkijena.jast.model.Privileges;
 import org.hkijena.jast.model.UserPrincipal;
@@ -113,7 +114,7 @@ public class Project {
         this.owner = owner;
     }
 
-    public boolean isOwnedBy(Authentication authentication) {
+    public boolean isOwnedBy(Authentication authentication, WebSecurityConfig webSecurityConfig) {
         if (authentication == null || !authentication.isAuthenticated()) {
             return false;
         }
@@ -127,8 +128,7 @@ public class Project {
         }
     }
 
-    public boolean canEdit(Authentication authentication) {
-
+    public boolean canEdit(Authentication authentication, WebSecurityConfig webSecurityConfig) {
         if (authentication == null || !authentication.isAuthenticated()) {
             return false;
         }
@@ -140,8 +140,7 @@ public class Project {
         }
     }
 
-    public boolean canAccess(Authentication authentication) {
-
+    public boolean canAccess(Authentication authentication, WebSecurityConfig webSecurityConfig) {
         if (authentication == null || !authentication.isAuthenticated()) {
             return false;
         }

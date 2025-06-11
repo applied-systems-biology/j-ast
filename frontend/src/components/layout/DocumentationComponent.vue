@@ -14,7 +14,7 @@
         <q-btn flat icon="close" v-close-popup/>
       </q-card-section>
 
-      <q-card-section>
+      <q-card-section v-if="isWebApp()">
         <q-icon name="info"/>
         If you experience issues, please contact {{ registrationFeatures.adminContact }}
       </q-card-section>
@@ -251,6 +251,7 @@
 import {onMounted, ref} from "vue";
 import {UserRegistrationAllowedFeaturesPayload} from "src/types/registration";
 import {loadPayloadInstanceFromApi} from "src/types/common";
+import { isWebApp } from 'src/types/electron';
 
 const showDocumentation = ref(false)
 const registrationFeatures = ref<UserRegistrationAllowedFeaturesPayload>(

@@ -1,6 +1,7 @@
 package org.hkijena.jast.controller;
 
 import jakarta.servlet.http.HttpServletResponse;
+import org.hkijena.jast.config.WebSecurityConfig;
 import org.hkijena.jast.model.entities.Image;
 import org.hkijena.jast.model.entities.Project;
 import org.hkijena.jast.payloads.ImagePayload;
@@ -30,21 +31,23 @@ public class ImageController {
     private final ProjectService projectService;
     private final UserService userService;
     private final FileStorageService fileStorageService;
+    private final WebSecurityConfig webSecurityConfig;
 
     @Autowired
-    public ImageController(ProjectRepository projectRepository, ImageRepository imageRepository, ProjectService projectService, UserService userService, FileStorageService fileStorageService) {
+    public ImageController(ProjectRepository projectRepository, ImageRepository imageRepository, ProjectService projectService, UserService userService, FileStorageService fileStorageService, WebSecurityConfig webSecurityConfig) {
         this.projectRepository = projectRepository;
         this.imageRepository = imageRepository;
         this.projectService = projectService;
         this.userService = userService;
         this.fileStorageService = fileStorageService;
+        this.webSecurityConfig = webSecurityConfig;
     }
 
     @GetMapping("/api/project/{id}/images")
     public ResponseEntity<ProjectImagesPayload> getImagesPayload(Authentication authentication, @PathVariable long id) {
         userService.validateAuthentication(authentication);
         Project project = projectService.getProjectByIdOrError(id);
-        if (!project.canAccess(authentication)) {
+        if (!project.canAccess(authentication, webSecurityConfig)) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
         }
         return ResponseEntity.ok(new ProjectImagesPayload(project));
@@ -57,7 +60,7 @@ public class ImageController {
         if (inputData_.isPresent()) {
             Image image = inputData_.get();
 
-            if (!image.getProject().canAccess(authentication)) {
+            if (!image.getProject().canAccess(authentication, webSecurityConfig)) {
                 throw new ResponseStatusException(HttpStatus.FORBIDDEN);
             }
 
@@ -71,7 +74,7 @@ public class ImageController {
     public ResponseEntity<List<ImagePayload>> listImages(Authentication authentication, @PathVariable long id) {
         userService.validateAuthentication(authentication);
         Project project = projectService.getProjectByIdOrError(id);
-        if (!project.canAccess(authentication)) {
+        if (!project.canAccess(authentication, webSecurityConfig)) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
         }
         List<ImagePayload> result = new ArrayList<>();
@@ -88,7 +91,7 @@ public class ImageController {
         if (inputData_.isPresent()) {
             Image image = inputData_.get();
 
-            if (!image.getProject().canAccess(authentication)) {
+            if (!image.getProject().canAccess(authentication, webSecurityConfig)) {
                 throw new ResponseStatusException(HttpStatus.FORBIDDEN);
             }
 
@@ -105,7 +108,7 @@ public class ImageController {
         if (inputData_.isPresent()) {
             Image image = inputData_.get();
 
-            if (!image.getProject().canAccess(authentication)) {
+            if (!image.getProject().canAccess(authentication, webSecurityConfig)) {
                 throw new ResponseStatusException(HttpStatus.FORBIDDEN);
             }
 
@@ -122,7 +125,7 @@ public class ImageController {
         if (inputData_.isPresent()) {
             Image image = inputData_.get();
 
-            if (!image.getProject().canEdit(authentication)) {
+            if (!image.getProject().canEdit(authentication, webSecurityConfig)) {
                 throw new ResponseStatusException(HttpStatus.FORBIDDEN);
             }
 
@@ -137,7 +140,7 @@ public class ImageController {
     public void updateImages(Authentication authentication, @PathVariable long id, @RequestBody ProjectImagesPayload imagesPayload) {
         userService.validateAuthentication(authentication);
         Project project = projectService.getProjectByIdOrError(id);
-        if (!project.canEdit(authentication)) {
+        if (!project.canEdit(authentication, webSecurityConfig)) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN);
         }
 
@@ -177,7 +180,7 @@ public class ImageController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
         Image image = image_.get();
-        if (!image.getProject().canEdit(authentication)) {
+        if (!image.getProject().canEdit(authentication, webSecurityConfig)) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN);
         }
         image.updateFromPayload(imagePayload);

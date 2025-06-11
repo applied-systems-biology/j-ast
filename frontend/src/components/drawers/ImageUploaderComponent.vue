@@ -13,7 +13,7 @@
     <div class="uploader-panel" >
       <q-uploader
         ref="uploader"
-        :url="`${apiPath}/project/${props.projectId}/upload-raw-image`"
+        :url="`${apiBase}/project/${props.projectId}/upload-raw-image`"
         label="Upload raw data"
         field-name="file"
         multiple
@@ -35,7 +35,7 @@ import {QUploader} from "quasar";
 import {useAuthStore} from "stores/auth-store";
 import {useTemplateRef} from "vue";
 import {sendFailureNotification} from "src/types/notification";
-import { apiPath } from 'boot/axios';
+import { apiBase } from 'src/types/api';
 
 type ValidationError = Array<{ failedPropValidation: string, file: File }>
 type UploadError ={ files: readonly any[]; xhr: any; }

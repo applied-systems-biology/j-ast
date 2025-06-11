@@ -1,6 +1,7 @@
 package org.hkijena.jast.services;
 
 import jakarta.transaction.Transactional;
+import org.hkijena.jast.config.WebSecurityConfig;
 import org.hkijena.jast.model.entities.Image;
 import org.hkijena.jast.model.entities.MaskImageAnnotation;
 import org.hkijena.jast.repositories.ImageRepository;
@@ -28,7 +29,7 @@ public class ImageAnnotationService {
     }
 
     @Transactional
-    public MaskImageAnnotation getOrCreateMaskImageAnnotation(Authentication authentication, long imageId, String annotationType, boolean edit) {
+    public MaskImageAnnotation getOrCreateMaskImageAnnotation(Authentication authentication, WebSecurityConfig webSecurityConfig, long imageId, String annotationType, boolean edit) {
         Optional<Image> image_ = imageRepository.findById(imageId);
         if (image_.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
@@ -37,10 +38,10 @@ public class ImageAnnotationService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
         Image image = image_.get();
-        if (!image.getProject().canAccess(authentication)) {
+        if (!image.getProject().canAccess(authentication, webSecurityConfig)) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN);
         }
-        if (edit && !image.getProject().canEdit(authentication)) {
+        if (edit && !image.getProject().canEdit(authentication, webSecurityConfig)) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN);
         }
 
