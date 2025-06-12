@@ -223,6 +223,20 @@
       </q-card-section>
     </q-card>
   </q-dialog>
+
+  <!-- Loading info for desktop app (backend server startup) -->
+  <q-dialog :model-value="isDesktopApp() && !authStore.isLoggedIn" seamless position="bottom">
+    <q-card style="width: 350px">
+      <q-linear-progress indeterminate color="orange" />
+      <q-card-section class="row items-center no-wrap">
+        <q-spinner size="xl" class="q-mr-lg"/>
+        <div>
+          <div class="text-weight-bold">Loading J-AST ...</div>
+          <div class="text-grey">This will take only a few seconds</div>
+        </div>
+      </q-card-section>
+    </q-card>
+  </q-dialog>
 </template>
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue';
@@ -244,7 +258,8 @@ import * as EmailValidator from 'email-validator';
 import { instanceToPlain, plainToInstance } from 'class-transformer';
 import { UserAuthenticationLoginResponse } from 'src/types/auth';
 import { formatExpirationTime, formatNumberPlural } from 'src/types/utils';
-import { isWebApp } from 'src/types/electron';
+import { isDesktopApp, isWebApp } from 'src/types/electron';
+import { useIntervalFn } from '@vueuse/core';
 
 const $q = useQuasar();
 const $router = useRouter();
@@ -373,6 +388,12 @@ function doRegister() {
     });
 }
 
+function doDesktopAppLogin() {
+  if(!authStore.isLoggedIn) {
+    authStore.doDesktopAppLogin()
+  }
+}
+
 onMounted(() => {
   loadPayloadInstanceFromApi(
     '/auth/registration-features',
@@ -380,6 +401,10 @@ onMounted(() => {
     registrationFeatures
   )
 })
+
+if(isDesktopApp()) {
+  useIntervalFn(doDesktopAppLogin, 1000)
+}
 
 </script>
 <style scoped lang="scss">

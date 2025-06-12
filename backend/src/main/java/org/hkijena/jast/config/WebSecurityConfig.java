@@ -6,12 +6,12 @@ import org.hkijena.jast.utils.JwtTokenFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -25,24 +25,20 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
-import org.springframework.validation.annotation.Validated;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @Configuration
 @EnableWebSecurity
-@ConfigurationProperties(prefix = "auth")
-@Validated
 public class WebSecurityConfig {
 
     public static final Logger LOG = LoggerFactory.getLogger(WebSecurityConfig.class);
+    private final AccountConfig accountConfig;
 
-    private boolean disableAuth = false;
-
-    public boolean isDisableAuth() {
-        return disableAuth;
-    }
-
-    public void setDisableAuth(boolean disableAuth) {
-        this.disableAuth = disableAuth;
+    @Autowired
+    public WebSecurityConfig(AccountConfig accountConfig) {
+        this.accountConfig = accountConfig;
     }
 
     @Resource
@@ -70,16 +66,33 @@ public class WebSecurityConfig {
     }
 
     @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration config = new CorsConfiguration();
+
+        if (accountConfig.isDisableAuth()) {
+            LOG.info("CORS configured for DESKTOP mode");
+            config.addAllowedOrigin("*");
+            config.addAllowedMethod("*");
+            config.addAllowedHeader("*");
+            config.setAllowCredentials(false);
+        } else {
+            LOG.info("CORS configured for WEB mode");
+        }
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", config);
+        return source;
+    }
+
+    @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         // Enable CORS and disable CSRF
         http.csrf(AbstractHttpConfigurer::disable);
 
-        if(disableAuth) {
+        if(accountConfig.isDisableAuth()) {
             LOG.warn("Authentication disabled");
-            http.cors(CorsConfigurer::disable);
+            http.cors(Customizer.withDefaults());
         }
-
-//        http.cors(Customizer.withDefaults());
 
         // Set session management to stateless
         http.sessionManagement(sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
@@ -95,13 +108,14 @@ public class WebSecurityConfig {
         });
 
         // Configure permissions
-        if(disableAuth) {
+        if(accountConfig.isDisableAuth()) {
             http.authorizeHttpRequests(authorize -> authorize.anyRequest().permitAll());
         }
         else {
             http.authorizeHttpRequests(authorize -> authorize
                     .requestMatchers(AntPathRequestMatcher.antMatcher("/api/auth/**")).permitAll()
                     .requestMatchers(AntPathRequestMatcher.antMatcher("/api/test")).permitAll()
+                    .requestMatchers(AntPathRequestMatcher.antMatcher("/api/ping")).permitAll()
                     .requestMatchers(AntPathRequestMatcher.antMatcher("/api/admin/**")).hasRole("ADMIN")
                     .requestMatchers(AntPathRequestMatcher.antMatcher("/api/**")).authenticated()
                     .anyRequest().permitAll());

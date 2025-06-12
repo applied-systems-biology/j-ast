@@ -41,10 +41,9 @@ public class ProjectController {
     private final ProjectService projectService;
     private final UserService userService;
     private final FileStorageService fileStorageService;
-    private final WebSecurityConfig webSecurityConfig;
 
     @Autowired
-    public ProjectController(AccountConfig accountConfig, ProjectRepository projectRepository, ImageRepository imageRepository, BackendTaskService backendTaskService, ProjectService projectService, UserService userService, FileStorageService fileStorageService, WebSecurityConfig webSecurityConfig) {
+    public ProjectController(AccountConfig accountConfig, ProjectRepository projectRepository, ImageRepository imageRepository, BackendTaskService backendTaskService, ProjectService projectService, UserService userService, FileStorageService fileStorageService) {
         this.accountConfig = accountConfig;
         this.projectRepository = projectRepository;
         this.imageRepository = imageRepository;
@@ -52,7 +51,6 @@ public class ProjectController {
         this.projectService = projectService;
         this.userService = userService;
         this.fileStorageService = fileStorageService;
-        this.webSecurityConfig = webSecurityConfig;
     }
 
     @GetMapping("/api/list-projects")
@@ -75,7 +73,7 @@ public class ProjectController {
     public ResponseEntity<ProjectMetadataPayload> editProject(Authentication authentication, @PathVariable("id") long id, @RequestBody CreateEditProjectRequest request) {
         userService.validateAuthentication(authentication);
         Project project = projectService.getProjectByIdOrError(id);
-        if (project.canEdit(authentication, webSecurityConfig)) {
+        if (project.canEdit(authentication, accountConfig)) {
             project.setName(StringUtils.orElse(request.getName(), "Unnamed project"));
             project.setViewMode(request.getViewMode() != null ? request.getViewMode() : ViewMode.Timeline);
             projectRepository.save(project);
@@ -135,7 +133,7 @@ public class ProjectController {
     public void deleteProject(Authentication authentication, @PathVariable("id") long id) {
         userService.validateAuthentication(authentication);
         Project project = projectService.getProjectByIdOrError(id);
-        if (!project.canEdit(authentication, webSecurityConfig)) {
+        if (!project.canEdit(authentication, accountConfig)) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN);
         }
         project.deleteFilesLater(fileStorageService);

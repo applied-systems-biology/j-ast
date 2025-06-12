@@ -2,7 +2,6 @@ import { defineStore } from 'pinia';
 import {api} from "boot/axios";
 import {jwtDecode, JwtPayload} from "jwt-decode";
 import { GuestLimits } from 'src/types/auth';
-import { isDesktopApp } from 'src/types/electron';
 
 type AccessTokenField = string | number | string[] | null
 
@@ -13,11 +12,12 @@ export const useAuthStore = defineStore('auth', {
     username: "",
     authorities: new Array<string>(),
     limits: new GuestLimits(),
-    role: ""
+    role: "",
+    desktopLogin: false
   }),
   getters: {
     isLoggedIn(): boolean {
-      return Boolean(this.accessToken && this.accessToken.length > 0) || isDesktopApp()
+      return Boolean(this.accessToken && this.accessToken.length > 0) || this.desktopLogin
     },
     isGuest(): boolean {
       return this.role == "Guest"
@@ -36,6 +36,11 @@ export const useAuthStore = defineStore('auth', {
       this.username = ""
       this.authorities = new Array<string>()
       this.role = ""
+    },
+    doDesktopAppLogin() {
+      api.get('/ping').then(() => {
+        this.desktopLogin = true;
+      })
     },
     async doRefreshToken() {
       if(!this.isLoggedIn) {

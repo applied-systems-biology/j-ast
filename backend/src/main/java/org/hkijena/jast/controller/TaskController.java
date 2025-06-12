@@ -1,5 +1,6 @@
 package org.hkijena.jast.controller;
 
+import org.hkijena.jast.config.AccountConfig;
 import org.hkijena.jast.config.RuntimeConfig;
 import org.hkijena.jast.config.WebSecurityConfig;
 import org.hkijena.jast.model.entities.BackendTask;
@@ -47,12 +48,12 @@ public class TaskController {
     private final BackendTaskRepository backendTaskRepository;
     private final BackendTaskService backendTaskService;
     private final FileStorageService fileStorageService;
-    private final WebSecurityConfig webSecurityConfig;
+    private final AccountConfig accountConfig;
     private final RuntimeConfig runtimeConfig;
     private final JobScheduler jobScheduler;
 
     @Autowired
-    public TaskController(ProjectService projectService, ImageRepository imageRepository, BackendTaskRegistry backendTaskRegistry, ProjectRepository projectRepository, BackendTaskRepository backendTaskRepository, BackendTaskService backendTaskService, FileStorageService fileStorageService, WebSecurityConfig webSecurityConfig, RuntimeConfig runtimeConfig, JobScheduler jobScheduler) {
+    public TaskController(ProjectService projectService, ImageRepository imageRepository, BackendTaskRegistry backendTaskRegistry, ProjectRepository projectRepository, BackendTaskRepository backendTaskRepository, BackendTaskService backendTaskService, FileStorageService fileStorageService, AccountConfig accountConfig, RuntimeConfig runtimeConfig, JobScheduler jobScheduler) {
         this.projectService = projectService;
         this.imageRepository = imageRepository;
         this.backendTaskRegistry = backendTaskRegistry;
@@ -60,7 +61,7 @@ public class TaskController {
         this.backendTaskRepository = backendTaskRepository;
         this.backendTaskService = backendTaskService;
         this.fileStorageService = fileStorageService;
-        this.webSecurityConfig = webSecurityConfig;
+        this.accountConfig = accountConfig;
         this.runtimeConfig = runtimeConfig;
         this.jobScheduler = jobScheduler;
     }
@@ -76,7 +77,7 @@ public class TaskController {
     @GetMapping("/api/project/{id}/tasks")
     public ResponseEntity<List<BackendTaskPayload>> listTasksForProject(@PathVariable long id, Authentication authentication) {
         Project project = projectService.getProjectByIdOrError(id);
-        if (!project.canAccess(authentication, webSecurityConfig)) {
+        if (!project.canAccess(authentication, accountConfig)) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
         }
         return ResponseEntity.ok(project.getTasks().stream().map(BackendTaskPayload::new).toList());
@@ -86,7 +87,7 @@ public class TaskController {
     @PostMapping("/api/project/{id}/clear-tasks")
     public void clearProjectTasks(@PathVariable long id, Authentication authentication) {
         Project project = projectService.getProjectByIdOrError(id);
-        if (!project.canEdit(authentication, webSecurityConfig)) {
+        if (!project.canEdit(authentication, accountConfig)) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
         }
         project.clearTasks(fileStorageService);
@@ -96,7 +97,7 @@ public class TaskController {
     @PostMapping("/api/task/new")
     public ResponseEntity<BackendTaskPayload> startNewTask(@RequestBody BackendTaskPayload payload, Authentication authentication) {
         Project project = projectService.getProjectByIdOrError(payload.getProjectId());
-        if (!project.canEdit(authentication, webSecurityConfig)) {
+        if (!project.canEdit(authentication, accountConfig)) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
         }
 
@@ -151,7 +152,7 @@ public class TaskController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
         BackendTask task = task_.get();
-        if (!task.getProject().canAccess(authentication, webSecurityConfig)) {
+        if (!task.getProject().canAccess(authentication, accountConfig)) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
         }
         if (task.isRunning()) {
@@ -175,7 +176,7 @@ public class TaskController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
         BackendTask task = task_.get();
-        if (!task.getProject().canAccess(authentication, webSecurityConfig)) {
+        if (!task.getProject().canAccess(authentication, accountConfig)) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
         }
         String log = fileStorageService.loadStringOrNull(task.getLogFileId());
@@ -189,7 +190,7 @@ public class TaskController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
         BackendTask task = task_.get();
-        if (!task.getProject().canEdit(authentication, webSecurityConfig)) {
+        if (!task.getProject().canEdit(authentication, accountConfig)) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
         }
         if(task.isRunning()) {

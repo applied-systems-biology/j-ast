@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableList;
 import jakarta.persistence.*;
 import jakarta.transaction.Transactional;
 import jakarta.validation.constraints.NotNull;
+import org.hkijena.jast.config.AccountConfig;
 import org.hkijena.jast.config.WebSecurityConfig;
 import org.hkijena.jast.model.AdminPrincipal;
 import org.hkijena.jast.model.Privileges;
@@ -114,8 +115,8 @@ public class Project {
         this.owner = owner;
     }
 
-    public boolean isOwnedBy(Authentication authentication, WebSecurityConfig webSecurityConfig) {
-        if(webSecurityConfig.isDisableAuth()) {
+    public boolean isOwnedBy(Authentication authentication, AccountConfig accountConfig) {
+        if(accountConfig.isDisableAuth()) {
             return true;
         }
         if (authentication == null || !authentication.isAuthenticated()) {
@@ -131,8 +132,8 @@ public class Project {
         }
     }
 
-    public boolean canEdit(Authentication authentication, WebSecurityConfig webSecurityConfig) {
-        if(webSecurityConfig.isDisableAuth()) {
+    public boolean canEdit(Authentication authentication, AccountConfig accountConfig) {
+        if(accountConfig.isDisableAuth()) {
             return true;
         }
         if (authentication == null || !authentication.isAuthenticated()) {
@@ -146,8 +147,8 @@ public class Project {
         }
     }
 
-    public boolean canAccess(Authentication authentication, WebSecurityConfig webSecurityConfig) {
-        if(webSecurityConfig.isDisableAuth()) {
+    public boolean canAccess(Authentication authentication, AccountConfig accountConfig) {
+        if(accountConfig.isDisableAuth()) {
             return true;
         }
         if (authentication == null || !authentication.isAuthenticated()) {

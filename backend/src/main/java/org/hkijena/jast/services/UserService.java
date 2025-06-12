@@ -43,17 +43,15 @@ public class UserService implements UserDetailsService, ApplicationContextAware 
     private final ProjectService projectService;
     private final ProjectRepository projectRepository;
     private final SessionRegistry sessionRegistry;
-    private final WebSecurityConfig webSecurityConfig;
     private ApplicationContext applicationContext;
 
     @Autowired
-    public UserService(AccountConfig accountConfig, UserRepository userRepository, ProjectService projectService, @Lazy SessionRegistry sessionRegistry, ProjectRepository projectRepository, WebSecurityConfig webSecurityConfig) {
+    public UserService(AccountConfig accountConfig, UserRepository userRepository, ProjectService projectService, @Lazy SessionRegistry sessionRegistry, ProjectRepository projectRepository) {
         this.accountConfig = accountConfig;
         this.userRepository = userRepository;
         this.projectService = projectService;
         this.sessionRegistry = sessionRegistry;
         this.projectRepository = projectRepository;
-        this.webSecurityConfig = webSecurityConfig;
     }
 
     @Override
@@ -76,7 +74,7 @@ public class UserService implements UserDetailsService, ApplicationContextAware 
     }
 
     public void logoutUser(User user) {
-        if (webSecurityConfig.isDisableAuth()) {
+        if (accountConfig.isDisableAuth()) {
             return;
         }
         for (Object principal : sessionRegistry.getAllPrincipals()) {
@@ -105,7 +103,7 @@ public class UserService implements UserDetailsService, ApplicationContextAware 
 
     public void deleteUser(User user) {
 
-        if (webSecurityConfig.isDisableAuth()) {
+        if (accountConfig.isDisableAuth()) {
             log.info("User deletion is disabled (no auth)");
             return;
         }
@@ -130,7 +128,7 @@ public class UserService implements UserDetailsService, ApplicationContextAware 
     @Scheduled(fixedRate = 60 * 1000)
     @Transactional
     public void autoDeleteGuests() {
-        if (webSecurityConfig.isDisableAuth()) {
+        if (accountConfig.isDisableAuth()) {
             log.info("User deletion is disabled (no auth)");
             return;
         }
@@ -146,7 +144,7 @@ public class UserService implements UserDetailsService, ApplicationContextAware 
     }
 
     public void validateAuthentication(Authentication authentication) {
-        if (webSecurityConfig.isDisableAuth()) {
+        if (accountConfig.isDisableAuth()) {
             log.info("Authentication is disabled (authentication granted)");
             return;
         }
@@ -158,7 +156,7 @@ public class UserService implements UserDetailsService, ApplicationContextAware 
 
     public void validateIsAdmin(Authentication authentication) {
 
-        if (webSecurityConfig.isDisableAuth()) {
+        if (accountConfig.isDisableAuth()) {
             log.info("Authentication is disabled (admin authentication granted)");
             return;
         }
@@ -177,7 +175,7 @@ public class UserService implements UserDetailsService, ApplicationContextAware 
 
     public boolean isAdmin(Authentication authentication) {
 
-        if (webSecurityConfig.isDisableAuth()) {
+        if (accountConfig.isDisableAuth()) {
             log.info("Authentication is disabled (admin authentication granted)");
             return true;
         }

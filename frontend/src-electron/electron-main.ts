@@ -32,7 +32,7 @@ async function startSpringBoot(): Promise<number> {
   console.log("App path is " + appPath)
   console.log("Backend dir is " + backendDir)
 
-  springBootProcess = spawn('/usr/bin/java', ['-jar', jarPath, `--server.port=${port}`, "--auth.disableAuth=true"], {
+  springBootProcess = spawn('/usr/bin/java', ['-jar', jarPath, `--server.port=${port}`, "--accounts.disableAuth=true"], {
     cwd: backendDir,
     stdio: 'inherit',
   });

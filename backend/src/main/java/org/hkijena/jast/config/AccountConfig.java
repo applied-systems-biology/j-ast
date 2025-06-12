@@ -2,10 +2,12 @@ package org.hkijena.jast.config;
 
 import jakarta.validation.constraints.NotEmpty;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.stereotype.Component;
 import org.springframework.validation.annotation.Validated;
 
 @ConfigurationProperties(prefix = "accounts")
 @Validated
+@Component
 public class AccountConfig {
     @NotEmpty
     private String adminUsername;
@@ -17,7 +19,15 @@ public class AccountConfig {
     private int guestProjectLimit = 1;
     private int guestImageLimit = 10;
     private int guestAccountExpireMinutes = 60 * 24 * 3;
+    private boolean disableAuth = false;
 
+    public boolean isDisableAuth() {
+        return disableAuth;
+    }
+
+    public void setDisableAuth(boolean disableAuth) {
+        this.disableAuth = disableAuth;
+    }
 
     public String getAdminContact() {
         return adminContact;
