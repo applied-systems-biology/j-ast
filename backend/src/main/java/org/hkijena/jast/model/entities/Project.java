@@ -115,6 +115,9 @@ public class Project {
     }
 
     public boolean isOwnedBy(Authentication authentication, WebSecurityConfig webSecurityConfig) {
+        if(webSecurityConfig.isDisableAuth()) {
+            return true;
+        }
         if (authentication == null || !authentication.isAuthenticated()) {
             return false;
         }
@@ -129,6 +132,9 @@ public class Project {
     }
 
     public boolean canEdit(Authentication authentication, WebSecurityConfig webSecurityConfig) {
+        if(webSecurityConfig.isDisableAuth()) {
+            return true;
+        }
         if (authentication == null || !authentication.isAuthenticated()) {
             return false;
         }
@@ -141,6 +147,9 @@ public class Project {
     }
 
     public boolean canAccess(Authentication authentication, WebSecurityConfig webSecurityConfig) {
+        if(webSecurityConfig.isDisableAuth()) {
+            return true;
+        }
         if (authentication == null || !authentication.isAuthenticated()) {
             return false;
         }
