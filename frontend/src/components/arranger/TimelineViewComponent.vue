@@ -509,7 +509,7 @@ function selectAll() {
 
 onMounted(() => {
   watch(projectImages, () => {
-    console.log('new project images:' + projectImages.value?.projectId);
+    // console.log('new project images:' + projectImages.value?.projectId);
     if (projectImages.value?.projectId != lastProjectId.value) {
       maxNumRenderedRows.value = 10;
     }

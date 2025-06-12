@@ -42,6 +42,12 @@ public class ProjectService {
                 }
             }
         }
+
+        // Desktop app mode
+        if(accountConfig.isDisableAuth()) {
+            return true;
+        }
+
         return false;
     }
 
@@ -65,6 +71,12 @@ public class ProjectService {
                 }
             }
         }
+
+        // Desktop app mode
+        if(accountConfig.isDisableAuth()) {
+            return true;
+        }
+
         return false;
     }
 
@@ -82,7 +94,7 @@ public class ProjectService {
     }
 
     public Project getProjectByIdOrError(long projectId) {
-        Optional<Project> project = projectRepository.findById((long) projectId);
+        Optional<Project> project = projectRepository.findById(projectId);
         if (project.isPresent()) {
             return project.get();
         } else {

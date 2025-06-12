@@ -254,7 +254,7 @@ export function doBackendTask(
   projectImages: ProjectImagesPayload
 ) {
 
-  console.log(images)
+  // console.log(images)
 
   // Do modifications to the list of images based on the workload type
   if(tool.workloadMode == BackendTaskWorkloadMode.FullRow) {

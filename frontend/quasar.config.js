@@ -195,7 +195,7 @@ module.exports = configure(function (/* ctx */) {
 
       inspectPort: 5858,
 
-      bundler: 'packager', // 'packager' or 'builder'
+      bundler: 'builder', // 'packager' or 'builder'
 
       packager: {
         // https://github.com/electron-userland/electron-packager/blob/master/docs/api.md#options
@@ -213,7 +213,38 @@ module.exports = configure(function (/* ctx */) {
       builder: {
         // https://www.electron.build/configuration/configuration
 
-        appId: 'frontend'
+        appId: 'org.hkijena.jast.desktop',
+        productName: "J-AST Desktop",
+        extraResources: [
+          {
+            from: 'backend-electron/bin',
+            to: 'backend-electron/bin',
+            filter: ['**/*'],
+          },
+          {
+            from: 'backend-electron/share',
+            to: 'backend-electron/share',
+            filter: ['**/*'],
+          },
+          {
+            from: 'backend-electron/backend.jar',   // or whatever your JAR is named
+            to: 'backend-electron/backend.jar',
+          },
+        ],
+
+        // Output formats per platform
+        linux: {
+          target: 'dir',
+          executableName: 'j-ast-desktop',
+        },
+        win: {
+          target: 'dir',
+          executableName: 'j-ast-desktop',
+        },
+        mac: {
+          target: 'dir', // this gives you a .app bundle in a folder
+          artifactName: 'j-ast-desktop-${version}.app',
+        },
       }
     },
 

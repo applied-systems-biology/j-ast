@@ -1,9 +1,14 @@
 import { app, BrowserWindow } from 'electron';
-import path from 'path';
 import os from 'os';
 import { spawn } from 'child_process';
 import * as net from 'net';
 import { ChildProcess } from 'node:child_process';
+import { mkdirSync } from 'fs';
+import path from 'path';
+import YAML from 'yaml';
+import { writeFileSync } from 'node:fs';
+import { dialog } from 'electron';
+import fs from 'fs';
 
 // needed in case process is undefined under Linux
 const platform = process.platform || os.platform();
@@ -22,17 +27,85 @@ function findFreePort(): Promise<number> {
   });
 }
 
+function getBackendDir(): string {
+  const devPath = path.resolve(app.getAppPath(), '..', '..', 'backend-electron');
+
+  // Check if we're running in dev mode
+  if (fs.existsSync(devPath)) {
+    return devPath;
+  }
+
+  // In production, it's inside the unpacked resources
+  return path.join(process.resourcesPath, 'backend-electron');
+}
+
 async function startSpringBoot(): Promise<number> {
   const port = await findFreePort();
 
   const appPath = app.getAppPath(); // Quasar's build path
-  const backendDir = path.join(appPath, '..', '..', 'backend-electron'); // Adjust as needed
+  const backendDir = getBackendDir()
   const jarPath = path.join(backendDir, 'backend.jar');
 
   console.log("App path is " + appPath)
   console.log("Backend dir is " + backendDir)
 
-  springBootProcess = spawn('/usr/bin/java', ['-jar', jarPath, `--server.port=${port}`, "--accounts.disableAuth=true"], {
+  // Storage files/directories
+  const dataDirectory = path.join(backendDir, "storage", "data");
+  const tmpDirectory = path.join(backendDir, "storage", "tmp");
+  const databaseFile = path.join(backendDir, "storage", "database");
+  const appConfigPath = path.join(backendDir, "application.yml");
+
+  // Setup configuration
+  const appConfig = {
+    server: {
+      port: port,
+    },
+    spring: {
+      datasource: {
+        url: "jdbc:h2:file:" + databaseFile,
+        username: "sa",
+        password: "password",
+        driverClassName: "org.h2.Driver"
+      }
+    },
+    runtime: {
+      dataDirectory: dataDirectory,
+      customTempDirectory: tmpDirectory,
+      sharedResourcesDirectory: path.resolve(backendDir, 'share'),
+      keepTmp: false
+    },
+    accounts: {
+      disableAuth: true
+    }
+  }
+
+  // Configure JIPipe
+  switch (os.platform()) {
+    case "win32":
+      (appConfig as any)["runtime"]["fijiPath"] = path.join(backendDir, "bin", "jipipe-windows");
+      (appConfig as any)["runtime"]["fijiExecutablePath"] = path.join(backendDir, "bin", "jipipe-windows", "ImageJ-linux64.exe");
+      (appConfig as any)["runtime"]["fijiWrapperEnabled"] = false
+      break
+    case "darwin":
+      break
+    case "linux":
+      (appConfig as any)["runtime"]["fijiPath"] = path.join(backendDir, "bin", "jipipe-linux");
+      (appConfig as any)["runtime"]["fijiExecutablePath"] = path.join(backendDir, "bin", "jipipe-linux", "ImageJ-linux64");
+      (appConfig as any)["runtime"]["fijiWrapperEnabled"] = false
+      break
+    default:
+      console.error("UNABLE TO DETERMINE CURRENT PLATFORM, RETURNED " + os.platform())
+      break
+  }
+
+  // Prepare directories & write config
+  mkdirSync(dataDirectory, { recursive: true });
+  mkdirSync(tmpDirectory, { recursive: true });
+
+  writeFileSync(appConfigPath, YAML.stringify(appConfig));
+
+  // Create Spring process
+  springBootProcess = spawn('/usr/bin/java', [ "-jar", jarPath, `--spring.config.additional-location=${appConfigPath}` ], {
     cwd: backendDir,
     stdio: 'inherit',
   });
@@ -61,6 +134,7 @@ async function createWindow() {
     },
   });
 
+  mainWindow.setMenuBarVisibility(false);
   mainWindow.loadURL(process.env.APP_URL);
 
   if (process.env.DEBUGGING) {
@@ -72,6 +146,22 @@ async function createWindow() {
       mainWindow?.webContents.closeDevTools();
     });
   }
+
+  mainWindow.on('close', (event) => {
+    const choice = dialog.showMessageBoxSync(mainWindow!, {
+      type: 'question',
+      buttons: ['Cancel', 'Quit'],
+      defaultId: 1,
+      cancelId: 0,
+      title: 'Confirm Exit',
+      message: 'Are you sure you want to quit J-AST? All running processes will be cancelled.',
+    });
+
+    if (choice === 0) {
+      // User clicked "Cancel"
+      event.preventDefault(); // Prevent window from closing
+    }
+  });
 
   mainWindow.on('closed', () => {
     mainWindow = undefined;

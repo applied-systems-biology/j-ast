@@ -57,7 +57,7 @@ public class ProjectController {
     public ResponseEntity<List<ProjectMetadataPayload>> listProjects(Authentication authentication) {
         userService.validateAuthentication(authentication);
         ArrayList<ProjectMetadataPayload> result = new ArrayList<>();
-        for (Project project : projectRepository.getByAuthentication(authentication)) {
+        for (Project project : projectRepository.getByAuthentication(authentication, accountConfig)) {
             result.add(new ProjectMetadataPayload(project));
         }
         return ResponseEntity.ok(result);
@@ -92,7 +92,7 @@ public class ProjectController {
         Project project = new Project();
         project.setName(StringUtils.orElse(request.getName(), "Unnamed project"));
         project.setViewMode(request.getViewMode());
-        if (authentication.getPrincipal() instanceof UserPrincipal) {
+        if (authentication != null && authentication.getPrincipal() instanceof UserPrincipal) {
             project.setOwner(((UserPrincipal) authentication.getPrincipal()).getUser());
         }
         project = projectRepository.save(project);

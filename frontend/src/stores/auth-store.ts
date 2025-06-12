@@ -2,6 +2,7 @@ import { defineStore } from 'pinia';
 import {api} from "boot/axios";
 import {jwtDecode, JwtPayload} from "jwt-decode";
 import { GuestLimits } from 'src/types/auth';
+import { isDesktopApp } from 'src/types/electron';
 
 type AccessTokenField = string | number | string[] | null
 
@@ -43,6 +44,9 @@ export const useAuthStore = defineStore('auth', {
       })
     },
     async doRefreshToken() {
+      if(isDesktopApp()) {
+        return
+      }
       if(!this.isLoggedIn) {
         throw Error("Not logged in");
       }
