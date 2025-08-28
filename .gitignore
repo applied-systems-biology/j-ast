@@ -45,3 +45,4 @@ build/
 /*.zip
 */JIPipe.tmp.dir/*
 /frontend/node
+.aider*
