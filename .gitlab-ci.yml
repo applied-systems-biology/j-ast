@@ -9,8 +9,6 @@ stages:
 variables:
   MAVEN_OPTS: "-Dmaven.repo.local=.m2/repository"
   NODE_VERSION: "20"
-  JAVA_VERSION: "21"
-  BUILD_NUMBER: "1"
 
 # Cache dependencies to speed up builds
 cache:
@@ -19,17 +17,24 @@ cache:
     - frontend/node_modules/
     - frontend/.quasar/
 
+# Job template for shared configuration
+.default_build_template: &default_build
+  interruptible: true
+  retry: 1
+  image: maven:3-eclipse-temurin-21-jammy
+  before_script:
+    - apt-get update
+    - apt-get install -y nsis git zip unzip curl wget
+    - curl -fsSL https://deb.nodesource.com/setup_20.x | bash -
+    - apt-get install -y nodejs
+    - node --version
+    - npm --version
+    - git config --global --add safe.directory "$CI_PROJECT_DIR"
+
 # Build job that runs on all branches to ensure code quality
 build:
   stage: build
-  image: eclipse-temurin:${JAVA_VERSION}-jdk-focal
-  before_script:
-    - apt-get update -qq
-    - apt-get install -y wget unzip curl
-    - cd frontend
-    - npm ci --cache .npm
-    - npm install -g @quasar/cli
-    - cd ..
+  <<: *default_build
   script:
     - echo "Building backend..."
     - cd backend
@@ -48,12 +53,10 @@ build:
 # Package stage - Create the final packages
 package:
   stage: package
-  image: eclipse-temurin:${JAVA_VERSION}-jdk-focal
-  before_script:
-    - apt-get update -qq
-    - apt-get install -y wget unzip curl
-    - chmod +x dist/electron/build.sh
+  image: maven:3-eclipse-temurin-21-jammy
+  <<: *default_build
   script:
+    - chmod +x dist/electron/build.sh
     - echo "Building Electron packages..."
     - cd dist/electron
     - ./build.sh
