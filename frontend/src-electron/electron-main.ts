@@ -82,15 +82,18 @@ async function startSpringBoot(): Promise<number> {
   // Configure JIPipe
   switch (os.platform()) {
     case "win32":
-      (appConfig as any)["runtime"]["fijiPath"] = path.join(backendDir, "bin", "jipipe-windows");
-      (appConfig as any)["runtime"]["fijiExecutablePath"] = path.join(backendDir, "bin", "jipipe-windows", "ImageJ-linux64.exe");
+      (appConfig as any)["runtime"]["fijiPath"] = path.join(backendDir, "jipipe-windows", "bin");
+      (appConfig as any)["runtime"]["fijiExecutablePath"] = path.join(backendDir, "jipipe-windows", "bin", "ImageJ-win64.exe");
       (appConfig as any)["runtime"]["fijiWrapperEnabled"] = false
       break
     case "darwin":
+      (appConfig as any)["runtime"]["fijiPath"] = path.join(backendDir, "jipipe-macos", "Contents", "Resources", "bin");
+      (appConfig as any)["runtime"]["fijiExecutablePath"] = path.join(backendDir, "jipipe-macos", "Contents", "Resources", "bin", "Fiji.app", "Contents", "MacOS", "fiji-macos");
+      (appConfig as any)["runtime"]["fijiWrapperEnabled"] = false
       break
     case "linux":
-      (appConfig as any)["runtime"]["fijiPath"] = path.join(backendDir, "bin", "jipipe-linux");
-      (appConfig as any)["runtime"]["fijiExecutablePath"] = path.join(backendDir, "bin", "jipipe-linux", "ImageJ-linux64");
+      (appConfig as any)["runtime"]["fijiPath"] = path.join(backendDir, "jipipe-linux", "bin");
+      (appConfig as any)["runtime"]["fijiExecutablePath"] = path.join(backendDir, "jipipe-linux", "bin", "ImageJ-linux64");
       (appConfig as any)["runtime"]["fijiWrapperEnabled"] = false
       break
     default:
@@ -105,7 +108,22 @@ async function startSpringBoot(): Promise<number> {
   writeFileSync(appConfigPath, YAML.stringify(appConfig));
 
   // Create Spring process
-  springBootProcess = spawn('/usr/bin/java', [ "-jar", jarPath, `--spring.config.additional-location=${appConfigPath}` ], {
+  let javaProcess : string | undefined;
+  switch(os.platform()) {
+    case "win32":
+      javaProcess = path.join(backendDir, "jdk", "bin", "java.exe")
+      break 
+    case "darwin":
+      javaProcess = path.join(backendDir, "jdk", "Contents", "Home", "bin", "java")
+      break 
+    case "linux":
+      javaProcess = path.join(backendDir, "jdk", "bin", "java")
+     default:
+      console.error("UNABLE TO DETERMINE CURRENT PLATFORM, RETURNED " + os.platform())
+      break
+  }
+
+  springBootProcess = spawn(javaProcess!, [ "-jar", jarPath, `--spring.config.additional-location=${appConfigPath}` ], {
     cwd: backendDir,
     stdio: 'inherit',
   });

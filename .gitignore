@@ -4,6 +4,8 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 
+.directory
+
 ### STS ###
 .apt_generated
 .classpath
@@ -18,16 +20,6 @@ target/
 *.iws
 *.iml
 *.ipr
-
-### NetBeans ###
-/nbproject/private/
-/nbbuild/
-/dist/
-/nbdist/
-/.nb-gradle/
-build/
-!**/src/main/**/build/
-!**/src/test/**/build/
 
 ### VS Code ###
 .vscode/
@@ -44,5 +36,10 @@ build/
 /windows/*.zip
 /*.zip
 */JIPipe.tmp.dir/*
-/frontend/node
+frontend/node/*
+frontent/dist/*
 .aider*
+frontend/dist/**
+dist/electron/tmp/**
+dist/docker/*.zip
+dist/docker/package/**

@@ -195,19 +195,12 @@ module.exports = configure(function (/* ctx */) {
 
       inspectPort: 5858,
 
-      bundler: 'builder', // 'packager' or 'builder'
+      bundler: 'packager', // 'packager' or 'builder'
 
       packager: {
-        // https://github.com/electron-userland/electron-packager/blob/master/docs/api.md#options
-
-        // OS X / Mac App Store
-        // appBundleId: '',
-        // appCategoryType: '',
-        // osxSign: '',
-        // protocol: 'myapp://path',
-
-        // Windows only
-        // win32metadata: { ... }
+        // https://electron.github.io/packager/main/interfaces/Options.html
+        platform: ["linux", "win32", "darwin"],
+        arch: ["x64", "arm64"]
       },
 
       builder: {
