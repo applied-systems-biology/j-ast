@@ -43,3 +43,6 @@ frontend/dist/**
 dist/electron/tmp/**
 dist/docker/*.zip
 dist/docker/package/**
+dist/electron/*.exe
+dist/electron/*.zip
+dist/electron/*.tar.gz

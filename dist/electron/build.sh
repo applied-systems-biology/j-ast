@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -Eeuo pipefail
+
 # JIPipe downloads
 JIPIPE_WINDOWS="https://github.com/applied-systems-biology/jipipe/releases/download/pom-jipipe-5.3.0/JIPipe-5.3.0-Prepackaged-Win64.zip"
 JIPIPE_LINUX="https://github.com/applied-systems-biology/jipipe/releases/download/pom-jipipe-5.3.0/JIPipe-5.3.0-Prepackaged-Linux64.tar.gz"
@@ -12,8 +14,27 @@ JAVA_MACOS="https://api.adoptium.net/v3/binary/latest/21/ga/mac/aarch64/jre/hots
 
 # Create temporary directories
 TMP_DIR="$PWD/tmp"
-rm -rvf "$TMP_DIR"
+ROOT_DIR=$(realpath "$PWD/../..")
+rm -rvf "$TMP_DIR" || true
 mkdir -p "$TMP_DIR"
+
+# Version detection
+pushd ../.. || exit 1
+echo "Detecting J-AST base version ..."
+JAST_BASE_VERSION="$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout | grep -Po '\d+\.\d+\.\d+')"
+popd || exit 1
+
+# Build number: arg2 > CI var > 0
+BUILD_NUMBER="${2:-${CI_PIPELINE_IID:-0}}"
+
+JAST_VERSION="$JAST_BASE_VERSION.$BUILD_NUMBER"
+echo "-----> Final J-AST version is $JAST_VERSION"
+
+# Delete old packages
+rm -v "j-ast-${JAST_VERSION}-linux-x64.tar.gz" || true
+rm -v "j-ast-${JAST_VERSION}-windows-x64.zip" || true
+rm -v "j-ast-${JAST_VERSION}-macos-arm64.zip" || true
+rm -v "j-ast-${JAST_VERSION}-windows-x64-installer.exe" || true
 
 # Build backend
 echo "-----------------------------------------"
@@ -56,6 +77,10 @@ cp -v "$TMP_DIR/backend.jar" "$TMP_DIR/j-ast-macos-arm64/backend-electron/backen
 cp -rv "../../share" "$TMP_DIR/j-ast-linux-x64/backend-electron/share"
 cp -rv "../../share" "$TMP_DIR/j-ast-windows-x64/backend-electron/share"
 cp -rv "../../share" "$TMP_DIR/j-ast-macos-arm64/backend-electron/share"
+
+# Copy icons
+cp -v "$ROOT_DIR/j-ast-icon.svg" "$TMP_DIR/j-ast-linux-x64/"
+cp -v "$ROOT_DIR/j-ast-icon.ico" "$TMP_DIR/j-ast-windows-x64/"
 
 pushd "$TMP_DIR/j-ast-linux-x64/backend-electron" || exit 1
 
@@ -104,6 +129,31 @@ mv JIPipe* jipipe-macos
 rm jipipe.zip
 
 # Move macos backend dir
-mv -v "$TMP_DIR/j-ast-macos-arm64/backend-electron" "$TMP_DIR/j-ast-macos-arm64/J-AST.app/Content/Resources/backend-electron"
+mv -v "$TMP_DIR/j-ast-macos-arm64/backend-electron" "$TMP_DIR/j-ast-macos-arm64/J-AST.app/Contents/Resources/backend-electron"
+
+popd || exit 1
+
+# Build backend directories
+echo "-----------------------------------------"
+echo "Creating packages ..."
+echo "-----------------------------------------"
+
+pushd "$TMP_DIR" || exit 1
+
+tar -cvzf "../j-ast-${JAST_VERSION}-linux-x64.tar.gz" j-ast-linux-x64
+zip -rv "../j-ast-${JAST_VERSION}-windows-x64.zip" j-ast-windows-x64
+
+pushd j-ast-macos-arm64 || exit 1
+zip -rv "../../j-ast-${JAST_VERSION}-macos-arm64.zip" J-AST.app
+popd || exit 1
+
+# Windows package
+cp -rv ../nsis ./nsis
+cp -rv ./j-ast-windows-x64 ./nsis/j-ast-windows-x64
+pushd nsis || exit 1
+sed -i "s/%%JAST_VERSION%%/${JAST_VERSION}/g" j-ast-installer-win64.nsi
+makensis j-ast-installer-win64.nsi
+cp -v j-ast-*-windows-x64-installer.exe ../../
+popd || exit 1
 
 popd || exit 1
