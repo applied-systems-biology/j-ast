@@ -80,18 +80,46 @@ package:
 # Deploy to GitLab packages repository
 deploy:
   stage: deploy
-  image: curlimages/curl:latest
+  image: curlimages/curl:8.10.1
   script:
     - echo "Deploying packages to GitLab Generic Package Registry..."
+
+    # Discover a version from the first artifact filename: j-ast-<VERSION>-<platform>.<ext>
     - |
-      for file in dist/electron/j-ast-*-*.tar.gz dist/electron/j-ast-*-*.zip dist/electron/j-ast-*-*.exe; do
+      find dist/electron -maxdepth 1 -type f \( -name 'j-ast-*-*.tar.gz' -o -name 'j-ast-*-*.zip' -o -name 'j-ast-*-*.exe' \) | head -n1 > .first_file || true
+      if [ ! -s .first_file ]; then
+        echo "No artifacts found to upload." >&2
+        exit 0
+      fi
+      FIRST_FILE="$(cat .first_file)"
+      PACKAGE_NAME="j-ast"
+      PACKAGE_VERSION="$(basename "$FIRST_FILE" | sed -E 's/^j-ast-([^ -]+)-.*$/\1/')"
+      echo "Detected version: ${PACKAGE_VERSION}"
+
+    # Upload helper (PUT raw bytes, no multipart)
+    - |
+      upload_generic () {
+        file="$1"; fname="$(basename "$file")"
+        echo "Uploading $file ..."
+        echo "File size: $(du -h "$file" | cut -f1)"
+        curl -sS \
+          --header "JOB-TOKEN: ${CI_JOB_TOKEN}" \
+          --header "Content-Type: application/octet-stream" \
+          --retry 3 --retry-delay 2 --fail \
+          --request PUT \
+          --upload-file "$file" \
+          "${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/generic/${PACKAGE_NAME}/${PACKAGE_VERSION}/${fname}"
+        echo
+      }
+
+    # Upload all artifacts
+    - |
+      for file in dist/electron/j-ast-*-*.tar.gz \
+                  dist/electron/j-ast-*-*.zip \
+                  dist/electron/j-ast-*-*.exe
+      do
         if [ -f "$file" ]; then
-          echo "Uploading $file..."
-          echo "File size: $(du -h "$file")"
-          echo "File exists: $(test -f "$file" && echo 'yes' || echo 'no')"
-          curl --header "JOB-TOKEN: ${CI_JOB_TOKEN}" \
-               --upload-file "$file" \
-               "${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/generic/j-ast/$(basename "$file")"
+          upload_generic "$file"
         else
           echo "File not found: $file"
         fi
