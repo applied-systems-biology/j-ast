@@ -52,6 +52,7 @@ echo "Building frontend ..."
 echo "-----------------------------------------"
 
 pushd "../../frontend" || exit 1
+npm install
 quasar build -m electron
 
 cp -rv ./dist/electron/Packaged/J-AST-linux-x64 "$TMP_DIR/j-ast-linux-x64"
