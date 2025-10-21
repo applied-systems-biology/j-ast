@@ -86,13 +86,13 @@ cp -v "$ROOT_DIR/j-ast-icon.ico" "$TMP_DIR/j-ast-windows-x64/"
 pushd "$TMP_DIR/j-ast-linux-x64/backend-electron" || exit 1
 
 # Install Java
-wget -O jdk.tar.gz "$JAVA_LINUX"
+wget -qO jdk.tar.gz "$JAVA_LINUX"
 tar -xf jdk.tar.gz
 rm jdk.tar.gz
 mv jdk* jdk
 
 # Install JIPipe
-wget -O jipipe.tar.gz "$JIPIPE_LINUX"
+wget -qO jipipe.tar.gz "$JIPIPE_LINUX"
 tar -xf jipipe.tar.gz
 mv JIPipe* jipipe-linux
 rm jipipe.tar.gz
@@ -102,13 +102,13 @@ popd || exit 1
 pushd "$TMP_DIR/j-ast-windows-x64/backend-electron" || exit 1
 
 # Install Java
-wget -O jdk.zip "$JAVA_WINDOWS"
+wget -qO jdk.zip "$JAVA_WINDOWS"
 unzip -q jdk.zip
 rm jdk.zip
 mv jdk* jdk
 
 # Install JIPipe
-wget -O jipipe.zip "$JIPIPE_WINDOWS"
+wget -qO jipipe.zip "$JIPIPE_WINDOWS"
 unzip -q jipipe.zip
 mv JIPipe* jipipe-windows
 rm jipipe.zip
@@ -118,13 +118,13 @@ popd || exit 1
 pushd "$TMP_DIR/j-ast-macos-arm64/backend-electron" || exit 1
 
 # Install Java
-wget -O jdk.tar.gz "$JAVA_MACOS"
+wget -qO jdk.tar.gz "$JAVA_MACOS"
 tar -xf jdk.tar.gz
 rm jdk.tar.gz
 mv jdk* jdk
 
 # Install JIPipe
-wget -O jipipe.zip "$JIPIPE_MACOS"
+wget -qO jipipe.zip "$JIPIPE_MACOS"
 unzip -q jipipe.zip
 mv JIPipe* jipipe-macos
 rm jipipe.zip
