@@ -55,9 +55,9 @@ pushd "../../frontend" || exit 1
 npm install
 quasar build -m electron
 
-cp -rv ./dist/electron/Packaged/J-AST-linux-x64 "$TMP_DIR/j-ast-linux-x64"
-cp -rv ./dist/electron/Packaged/J-AST-win32-x64 "$TMP_DIR/j-ast-windows-x64"
-cp -rv ./dist/electron/Packaged/J-AST-darwin-arm64 "$TMP_DIR/j-ast-macos-arm64"
+cp -r ./dist/electron/Packaged/J-AST-linux-x64 "$TMP_DIR/j-ast-linux-x64"
+cp -r ./dist/electron/Packaged/J-AST-win32-x64 "$TMP_DIR/j-ast-windows-x64"
+cp -r ./dist/electron/Packaged/J-AST-darwin-arm64 "$TMP_DIR/j-ast-macos-arm64"
 popd || exit 1
 
 # Build backend directories
@@ -87,13 +87,13 @@ pushd "$TMP_DIR/j-ast-linux-x64/backend-electron" || exit 1
 
 # Install Java
 wget -O jdk.tar.gz "$JAVA_LINUX"
-tar -xvf jdk.tar.gz
+tar -xf jdk.tar.gz
 rm jdk.tar.gz
 mv jdk* jdk
 
 # Install JIPipe
 wget -O jipipe.tar.gz "$JIPIPE_LINUX"
-tar -xvf jipipe.tar.gz
+tar -xf jipipe.tar.gz
 mv JIPipe* jipipe-linux
 rm jipipe.tar.gz
 
@@ -103,13 +103,13 @@ pushd "$TMP_DIR/j-ast-windows-x64/backend-electron" || exit 1
 
 # Install Java
 wget -O jdk.zip "$JAVA_WINDOWS"
-unzip jdk.zip
+unzip -q jdk.zip
 rm jdk.zip
 mv jdk* jdk
 
 # Install JIPipe
 wget -O jipipe.zip "$JIPIPE_WINDOWS"
-unzip jipipe.zip
+unzip -q jipipe.zip
 mv JIPipe* jipipe-windows
 rm jipipe.zip
 
@@ -119,18 +119,19 @@ pushd "$TMP_DIR/j-ast-macos-arm64/backend-electron" || exit 1
 
 # Install Java
 wget -O jdk.tar.gz "$JAVA_MACOS"
-tar -xvf jdk.tar.gz
+tar -xf jdk.tar.gz
 rm jdk.tar.gz
 mv jdk* jdk
 
 # Install JIPipe
 wget -O jipipe.zip "$JIPIPE_MACOS"
-unzip jipipe.zip
+unzip -q jipipe.zip
 mv JIPipe* jipipe-macos
 rm jipipe.zip
 
 # Move macos backend dir
-mv -v "$TMP_DIR/j-ast-macos-arm64/backend-electron" "$TMP_DIR/j-ast-macos-arm64/J-AST.app/Contents/Resources/backend-electron"
+echo "Moving $TMP_DIR/j-ast-macos-arm64/backend-electron to $TMP_DIR/j-ast-macos-arm64/J-AST.app/Contents/Resources/backend-electron ..."
+mv "$TMP_DIR/j-ast-macos-arm64/backend-electron" "$TMP_DIR/j-ast-macos-arm64/J-AST.app/Contents/Resources/backend-electron"
 
 popd || exit 1
 
@@ -149,8 +150,8 @@ zip -rv "../../j-ast-${JAST_VERSION}-macos-arm64.zip" J-AST.app
 popd || exit 1
 
 # Windows package
-cp -rv ../nsis ./nsis
-cp -rv ./j-ast-windows-x64 ./nsis/j-ast-windows-x64
+cp -r ../nsis ./nsis
+cp -r ./j-ast-windows-x64 ./nsis/j-ast-windows-x64
 pushd nsis || exit 1
 sed -i "s/%%JAST_VERSION%%/${JAST_VERSION}/g" j-ast-installer-win64.nsi
 makensis j-ast-installer-win64.nsi
