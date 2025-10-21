@@ -30,6 +30,8 @@ cache:
     - node --version
     - npm --version
     - git config --global --add safe.directory "$CI_PROJECT_DIR"
+    - npm i -g @quasar/cli
+    - quasar --version
 
 # Build job that runs on all branches to ensure code quality
 build:
