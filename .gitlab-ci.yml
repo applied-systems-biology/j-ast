@@ -1,0 +1,89 @@
+# GitLab CI configuration for J-AST Electron build
+# This CI pipeline builds the Electron application for multiple platforms and packages the outputs
+
+stages:
+  - build
+  - package
+  - deploy
+
+variables:
+  MAVEN_OPTS: "-Dmaven.repo.local=.m2/repository"
+  NODE_VERSION: "20"
+  JAVA_VERSION: "21"
+  BUILD_NUMBER: "1"
+
+# Cache dependencies to speed up builds
+cache:
+  paths:
+    - .m2/repository/
+    - frontend/node_modules/
+    - frontend/.quasar/
+
+# Build job that runs on all branches to ensure code quality
+build:
+  stage: build
+  image: eclipse-temurin:${JAVA_VERSION}-jdk-focal
+  before_script:
+    - apt-get update -qq
+    - apt-get install -y wget unzip curl
+    - cd frontend
+    - npm ci --cache .npm
+    - npm install -g @quasar/cli
+    - cd ..
+  script:
+    - echo "Building backend..."
+    - cd backend
+    - mvn clean package -DskipTests
+    - cd ..
+    - echo "Building frontend..."
+    - cd frontend
+    - quasar build -m electron
+    - cd ..
+  artifacts:
+    paths:
+      - backend/target/j-ast-backend*.jar
+      - frontend/dist/electron/Packaged/
+    expire_in: 1 week
+
+# Package stage - Create the final packages
+package:
+  stage: package
+  image: eclipse-temurin:${JAVA_VERSION}-jdk-focal
+  before_script:
+    - apt-get update -qq
+    - apt-get install -y wget unzip curl
+    - chmod +x dist/electron/build.sh
+  script:
+    - echo "Building Electron packages..."
+    - cd dist/electron
+    - ./build.sh
+    - cd ../..
+  artifacts:
+    paths:
+      - dist/electron/j-ast-*-macos-arm64.zip
+      - dist/electron/j-ast-*-linux-x64.tar.gz
+      - dist/electron/j-ast-*-windows-x64.zip
+      - dist/electron/j-ast-*-windows-x64-installer.exe
+    expire_in: 1 month
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+    - when: manual
+
+# Deploy to GitLab packages repository
+deploy:
+  stage: deploy
+  image: curlimages/curl:latest
+  script:
+    - echo "Deploying packages to GitLab Generic Package Registry..."
+    - |
+      for file in dist/electron/j-ast-*-*.tar.gz dist/electron/j-ast-*-*.zip dist/electron/j-ast-*-*.exe; do
+        if [ -f "$file" ]; then
+          echo "Uploading $file..."
+          curl --header "JOB-TOKEN: ${CI_JOB_TOKEN}" \
+               --upload-file "$file" \
+               "${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/generic/j-ast/$(basename "$file")"
+        fi
+      done
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+  when: on_success
