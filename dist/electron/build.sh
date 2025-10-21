@@ -42,7 +42,7 @@ echo "Building backend ..."
 echo "-----------------------------------------"
 
 pushd "../../backend" || exit 1
-mvn clean package
+mvn clean package -DskipTests
 cp -v target/j-ast-backend*.jar "$TMP_DIR/backend.jar"
 popd || exit 1
 

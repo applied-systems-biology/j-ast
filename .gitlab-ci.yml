@@ -50,7 +50,7 @@ build:
   artifacts:
     paths:
       - backend/target/j-ast-backend*.jar
-      - frontend/dist/electron/Packaged/
+      # - frontend/dist/electron/Packaged/
     expire_in: 1 week
 
 # Package stage - Create the final packages
