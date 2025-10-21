@@ -71,6 +71,8 @@ package:
       - dist/electron/j-ast-*-windows-x64.zip
       - dist/electron/j-ast-*-windows-x64-installer.exe
     expire_in: 1 month
+  needs:
+    - build
   rules:
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
     - when: manual
@@ -85,11 +87,17 @@ deploy:
       for file in dist/electron/j-ast-*-*.tar.gz dist/electron/j-ast-*-*.zip dist/electron/j-ast-*-*.exe; do
         if [ -f "$file" ]; then
           echo "Uploading $file..."
+          echo "File size: $(du -h "$file")"
+          echo "File exists: $(test -f "$file" && echo 'yes' || echo 'no')"
           curl --header "JOB-TOKEN: ${CI_JOB_TOKEN}" \
                --upload-file "$file" \
                "${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/generic/j-ast/$(basename "$file")"
+        else
+          echo "File not found: $file"
         fi
       done
   rules:
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
   when: on_success
+  needs:
+    - package
