@@ -88,7 +88,7 @@ async function startSpringBoot(): Promise<number> {
       break
     case "darwin":
       (appConfig as any)["runtime"]["fijiPath"] = path.join(backendDir, "jipipe-macos", "Contents", "Resources", "bin");
-      (appConfig as any)["runtime"]["fijiExecutablePath"] = path.join(backendDir, "jipipe-macos", "Contents", "Resources", "bin", "Fiji.app", "Contents", "MacOS", "fiji-macos");
+      (appConfig as any)["runtime"]["fijiExecutablePath"] = path.join(backendDir, "jipipe-macos", "Contents", "Resources", "bin", "Fiji.app", "Contents", "MacOS", "fiji-macos-x64");
       (appConfig as any)["runtime"]["fijiWrapperEnabled"] = false
       break
     case "linux":
@@ -112,10 +112,10 @@ async function startSpringBoot(): Promise<number> {
   switch(os.platform()) {
     case "win32":
       javaProcess = path.join(backendDir, "jdk", "bin", "java.exe")
-      break 
+      break
     case "darwin":
       javaProcess = path.join(backendDir, "jdk", "Contents", "Home", "bin", "java")
-      break 
+      break
     case "linux":
       javaProcess = path.join(backendDir, "jdk", "bin", "java")
      default:
