@@ -12,7 +12,7 @@
     <artifactId>pom-j-ast</artifactId>
     <version>1.0.0-SNAPSHOT</version>
     <name>J-AST</name>
-    <description>JIPipe Antibiotic Susceptibility Test</description>
+    <description>JIPipe Antimicrobial Susceptibility Test</description>
     <properties>
         <java.version>21</java.version>
     </properties>

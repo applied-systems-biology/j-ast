@@ -1,6 +1,7 @@
 # J-AST
 
-Your tool for managing, annotating, and analyzing disk diffusion assays and E-tests
+The JIPipe Antimicrobial Susceptibility Test (J-AST) platform is
+your tool for managing, annotating, and analyzing disk diffusion assays and E-tests.
 
 **Upload your data**
 

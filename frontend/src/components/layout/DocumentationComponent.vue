@@ -30,7 +30,7 @@
             >
               <q-card>
                 <q-card-section>
-                  The <strong>JIPipe Antibiotic Susceptibility Test</strong> analysis platform is a modern web-based
+                  The <strong>JIPipe Antimicrobial Susceptibility Test</strong> analysis platform is a modern web-based
                   software
                   that allows anyone to upload DDA and E-Tests and apply analyses via manual annotation and/or automated
                   algorithms.

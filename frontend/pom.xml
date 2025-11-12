@@ -10,7 +10,7 @@
     <version>1.0.0-SNAPSHOT</version>
   </parent>
   <name>J-AST Frontend</name>
-  <description>JIPipe Antibiotic Susceptibility Test (Frontend)</description>
+  <description>JIPipe Antimicrobial Susceptibility Test (Frontend)</description>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
