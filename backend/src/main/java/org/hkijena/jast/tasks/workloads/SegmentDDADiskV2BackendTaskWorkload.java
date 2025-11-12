@@ -28,7 +28,8 @@ public class SegmentDDADiskV2BackendTaskWorkload implements BackendTaskWorkload 
     private static final List<BackendTaskWorkloadDataSlot> INPUTS = Collections.singletonList(JASTDataSlot.Plate.toSlot());
     private static final List<BackendTaskWorkloadDataSlot> OUTPUTS = Collections.singletonList(JASTDataSlot.StripDisk.toSlot());
     private static final List<BackendTaskWorkloadParameterSlot> PARAMETERS = List.of(
-            new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotType.Number, "expectedDiameter", "Expected diameter (mm)", "Expected disk diameter in millimeters", 6)
+            new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotType.Number, "expectedDiameter", "Expected diameter (mm)", "Expected disk diameter in millimeters", 6),
+            new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotType.Number, "localVarianceDivisor", "Local variance divisor", "Determines the kernel size of the local variance operation. The expected diameter is divided by that value.", 6)
     );
     private static final Map<String, String> PARAMETER_OVERRIDES = new HashMap<>();
 
