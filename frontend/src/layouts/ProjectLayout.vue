@@ -33,7 +33,7 @@
                   <q-icon name="fa-solid fa-grip" />
                 </q-item-section>
                 <q-item-section>
-                  <q-item-label>Grid</q-item-label>
+                  <q-item-label>Single images</q-item-label>
                 </q-item-section>
                 <q-tooltip>
                   Use this view for projects where each image is independent.
