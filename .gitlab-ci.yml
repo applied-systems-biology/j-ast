@@ -216,4 +216,4 @@ deploy_server_packages:
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
   when: on_success
   needs:
-    - package_electron
+    - package_server
