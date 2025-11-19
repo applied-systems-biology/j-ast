@@ -174,7 +174,7 @@ deploy_server_packages:
 
     # Discover a version from the first artifact filename: j-ast-<VERSION>-<platform>.<ext>
     - |
-      find dist/electron -maxdepth 1 -type f \( -name 'j-ast-server-*-*.tar.gz' -o -name 'j-ast-server-*-*.zip' \) | head -n1 > .first_file || true
+      find dist/server -maxdepth 1 -type f \( -name 'j-ast-server-*-*.tar.gz' -o -name 'j-ast-server-*-*.zip' \) | head -n1 > .first_file || true
       if [ ! -s .first_file ]; then
         echo "No artifacts found to upload." >&2
         exit 0
