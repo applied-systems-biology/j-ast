@@ -1,5 +1,6 @@
 package org.hkijena.jast.utils;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -8,6 +9,7 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.stream.Stream;
 import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
 public class ArchiveUtils {
@@ -59,5 +61,57 @@ public class ArchiveUtils {
                 zipOut.write(bytes, 0, length);
             }
         }
+    }
+
+    /**
+     * Unzips a file
+     *
+     * @param zipFile      the zip file
+     * @param targetDir    the target dir
+     * @param progressInfo the progress info
+     * @throws IOException io exception
+     */
+    public static void decompressZipFile(Path zipFile, Path targetDir, ProgressInfo progressInfo) throws IOException {
+        byte[] buffer = new byte[1024];
+        ZipInputStream zis = new ZipInputStream(new FileInputStream(zipFile.toFile()));
+        ZipEntry zipEntry = zis.getNextEntry();
+        while (zipEntry != null) {
+            if (zipEntry.isDirectory()) {
+                File newDirectory = decompressZipFileNewFile(targetDir.toFile(), zipEntry);
+                progressInfo.log(newDirectory.toString());
+                if (!Files.isDirectory(newDirectory.toPath()))
+                    Files.createDirectories(newDirectory.toPath());
+            } else {
+                File newFile = decompressZipFileNewFile(targetDir.toFile(), zipEntry);
+                progressInfo.log(newFile.toString());
+                if (!Files.isDirectory(newFile.toPath().getParent()))
+                    Files.createDirectories(newFile.toPath().getParent());
+                if (Files.exists(newFile.toPath())) {
+                    Files.delete(newFile.toPath());
+                }
+                FileOutputStream fos = new FileOutputStream(newFile);
+                int len;
+                while ((len = zis.read(buffer)) > 0) {
+                    fos.write(buffer, 0, len);
+                }
+                fos.close();
+            }
+            zipEntry = zis.getNextEntry();
+        }
+        zis.closeEntry();
+        zis.close();
+    }
+
+    private static File decompressZipFileNewFile(File destinationDir, ZipEntry zipEntry) throws IOException {
+        File destFile = new File(destinationDir, zipEntry.getName());
+
+        String destDirPath = destinationDir.getCanonicalPath();
+        String destFilePath = destFile.getCanonicalPath();
+
+        if (!destFilePath.startsWith(destDirPath + File.separator)) {
+            throw new IOException("Entry is outside of the target dir: " + zipEntry.getName());
+        }
+
+        return destFile;
     }
 }

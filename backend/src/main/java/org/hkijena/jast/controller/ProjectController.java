@@ -1,5 +1,6 @@
 package org.hkijena.jast.controller;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import org.hkijena.jast.config.AccountConfig;
 import org.hkijena.jast.config.WebSecurityConfig;
 import org.hkijena.jast.model.UserPrincipal;
@@ -7,6 +8,7 @@ import org.hkijena.jast.model.ViewMode;
 import org.hkijena.jast.model.entities.Image;
 import org.hkijena.jast.model.entities.Project;
 import org.hkijena.jast.payloads.CreateEditProjectRequest;
+import org.hkijena.jast.payloads.ImagePayload;
 import org.hkijena.jast.payloads.ProjectMetadataPayload;
 import org.hkijena.jast.repositories.ImageRepository;
 import org.hkijena.jast.repositories.ProjectRepository;
@@ -14,8 +16,7 @@ import org.hkijena.jast.services.BackendTaskService;
 import org.hkijena.jast.services.FileStorageService;
 import org.hkijena.jast.services.ProjectService;
 import org.hkijena.jast.services.UserService;
-import org.hkijena.jast.utils.ImageUtils;
-import org.hkijena.jast.utils.StringUtils;
+import org.hkijena.jast.utils.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,8 +29,11 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 public class ProjectController {
@@ -139,4 +143,5 @@ public class ProjectController {
         project.deleteFilesLater(fileStorageService);
         projectRepository.delete(project);
     }
+
 }

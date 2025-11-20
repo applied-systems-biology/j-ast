@@ -175,7 +175,7 @@
   </q-page>
 </template>
 <script setup lang="ts">
-import { Dialog } from 'quasar';
+import { Dialog, useQuasar } from 'quasar';
 import { useAuthStore } from 'stores/auth-store';
 import { computed, ref } from 'vue';
 import { storeToRefs } from 'pinia';
@@ -183,11 +183,11 @@ import { api } from 'boot/axios';
 import { useWatchInterval } from '../composables/UseWatchInterval';
 import { useRouter } from 'vue-router';
 import {
-  sendFailureNotification, sendSuccessNotification
-
+  sendFailureNotification,
+  sendSuccessNotification,
 } from 'src/types/notification';
 import {
-  CreateEditProjectRequest,
+  CreateProjectRequest,
   ProjectMetadataPayload,
 } from 'src/types/project';
 import logo from 'assets/logo-j-ast-full.svg';
@@ -198,7 +198,9 @@ import heroInteractiveAnnotation from 'assets/hero/hero-interactive-annotation.p
 import heroResultsBrowser from 'assets/hero/hero-results-browser.png';
 import CreateProjectDialog from 'components/CreateProjectDialog.vue';
 import { plainToInstance } from 'class-transformer';
+import { uploadZipFile } from 'src/types/common';
 
+const $q = useQuasar();
 const authStore = useAuthStore();
 const router = useRouter();
 const { isLoggedIn } = storeToRefs(authStore);
@@ -219,46 +221,50 @@ const canAddProject = computed(() => {
  * Creates a new project
  */
 function newProject() {
-  // $q.dialog({
-  //   title: 'Create new project',
-  //   message: 'Please enter the name of the newly created project',
-  //   prompt: {
-  //     model: "",
-  //     type: 'text'
-  //   },
-  //   cancel: true,
-  //   persistent: true
-  // }).onOk((data: string) => {
-  //   api.post("/new-project", {name: data} as CreateEditProjectRequest)
-  //     .then((result) => {
-  //       const info = plainToInstance(ProjectMetadataPayload, result.data)
-  //       sendSuccessNotification(`Created new project "${info.name}"`)
-  //       router.push(`/project/${info.id}`)
-  //     })
-  //     .catch((reason) => {
-  //       console.log(reason);
-  //       sendFailureNotification("Unable to create project!")
-  //     })
-  // }).onCancel(() => {
-  // }).onDismiss(() => {
-  // })
   Dialog.create({
     component: CreateProjectDialog,
     componentProps: {
       persistent: true,
     },
-  }).onOk((payload: CreateEditProjectRequest) => {
-      api.post("/new-project", payload)
-        .then((result) => {
-          const info = plainToInstance(ProjectMetadataPayload, result.data)
-          sendSuccessNotification(`Created new project "${info.name}"`)
-          refreshProjectList()
-        })
-        .catch((reason) => {
-          console.log(reason);
-          sendFailureNotification("Unable to create project!")
-        })
+  }).onOk((payload: CreateProjectRequest) => {
+    api
+      .post('/new-project', payload)
+      .then((result) => {
+        const info = plainToInstance(ProjectMetadataPayload, result.data);
+        sendSuccessNotification(`Created new project "${info.name}"`);
+
+        if (payload.projectArchiveFile) {
+          // Upload the project archive
+          uploadProjectArchive(info.id, payload.projectArchiveFile);
+        } else {
+          refreshProjectList();
+        }
+      })
+      .catch((reason) => {
+        console.log(reason);
+        sendFailureNotification('Unable to create project!');
+      });
   });
+}
+
+/**
+ * Uploads a project archive file to the backend for the import process
+ * @param id the project id
+ * @param projectArchiveFile the archive file
+ */
+function uploadProjectArchive(id: number, projectArchiveFile: File) {
+  $q.loading.show({ message: 'Uploading project archive ...' });
+  uploadZipFile(`/project/${id}/import-project-archive`, projectArchiveFile)
+    .then(() => {
+      sendSuccessNotification('The archive was successfully imported!');
+    })
+    .catch(() => {
+      sendFailureNotification('Error while uploading!');
+    })
+    .finally(() => {
+      $q.loading.hide();
+      refreshProjectList();
+    });
 }
 
 /**
