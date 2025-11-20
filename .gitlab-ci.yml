@@ -225,7 +225,7 @@ deploy_leibniz_hki:
   needs: [ package_server ]
   script:
     - set -euo pipefail
-    - rm -rv /opt/jastapp/tmp/* || true
+    - rm -rv /opt/jastapp/tmp || true
     - mkdir /opt/jastapp/tmp
     - cp dist/server/j-ast-server-*-linux-x64.tar.gz /opt/jastapp/tmp/server.tar.gz
     - cd /opt/jastapp/tmp/ && tar -xvf server.tar.gz
