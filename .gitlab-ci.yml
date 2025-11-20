@@ -229,9 +229,9 @@ deploy_leibniz_hki:
     - mkdir /opt/jastapp/tmp
     - cp dist/server/j-ast-server-*-linux-x64.tar.gz /opt/jastapp/tmp/server.tar.gz
     - cd /opt/jastapp/tmp/ && tar -xvf server.tar.gz
-    - test -d /opt/jastapp/tmp/jast-server-linux-x64/bin/jipipe-linux
-    - test -d /opt/jastapp/tmp/jast-server-linux-x64/share
-    - test -f /opt/jastapp/tmp/jast-server-linux-x64/server.jar
+    - ! test -d /opt/jastapp/tmp/jast-server-linux-x64/bin/jipipe-linux
+    - ! test -d /opt/jastapp/tmp/jast-server-linux-x64/share
+    - ! test -f /opt/jastapp/tmp/jast-server-linux-x64/server.jar
     - rm -rvf /opt/jastapp/app/share /opt/jastapp/app/bin || true
     - mv -v /opt/jastapp/tmp/jast-server-linux-x64/bin /opt/jastapp/app/bin
     - mv -v /opt/jastapp/tmp/jast-server-linux-x64/share /opt/jastapp/app/share
