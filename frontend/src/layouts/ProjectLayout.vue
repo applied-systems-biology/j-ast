@@ -379,7 +379,7 @@ import BackendTaskProgressOverlay from 'components/backendProcessors/BackendTask
 import DocumentationComponent from "components/layout/DocumentationComponent.vue";
 import { ViewMode } from 'src/types/view';
 import GridViewComponent from 'components/arranger/GridViewComponent.vue';
-import { ImagePayload } from 'src/types/image';
+import { collectProjectArchiveContents } from 'src/types/projectArchive';
 
 function createDummyBackendTask() {
   const task = new BackendTaskPayload()
@@ -620,27 +620,7 @@ function downloadProjectArchive(imageIds : Array<number> | null) {
   const items = imageIds.map(id => projectImages.value.getImageById(id));
 
   // Create Zip items
-  const zipItems : Array<ZipItem>  = []
-  let downloadSizeBytes = 0
-  const metadata : Record<string, any> = {}
-  for(const item of items) {
-    const fileName = "" + item.id
-    zipItems.push({ entryName: ensureExtension(fileName), url: `/image/${item.id}/raw`, content: null })
-    downloadSizeBytes += item.size
-
-    // Add annotations
-    for(const annotation of item.maskImageAnnotations) {
-      const annotationFileName = annotation.annotationTypeId + "/" + fileName
-      zipItems.push({ entryName: ensureExtension(annotationFileName), url: `/mask-image-annotation/${item.id}/${annotation.annotationTypeId}/raw`, content: null })
-      downloadSizeBytes += annotation.size
-    }
-
-    // Add metadata
-    metadata["" + item.id] = plainToInstance(ImagePayload, item).getMetadataAsDict()
-  }
-
-  // Create ZIP entry for metadata
-  zipItems.push({ entryName: "metadata.json", url: null, content: JSON.stringify(metadata, null, 4) })
+  let { zipItems, downloadSizeBytes } = collectProjectArchiveContents(items);
 
   $q.dialog({
     title: 'Download project archive',

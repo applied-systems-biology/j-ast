@@ -104,12 +104,14 @@ public class ProjectController {
     }
 
     @PostMapping("/api/project/{id}/upload-raw-image")
-    public void uploadRawImage(Authentication authentication, @PathVariable("id") long id, @RequestPart("file") MultipartFile imageFile) {
+    public List<ImagePayload> uploadRawImage(Authentication authentication, @PathVariable("id") long id, @RequestPart("file") MultipartFile imageFile) {
         userService.validateAuthentication(authentication);
         Project project = projectService.getProjectByIdOrError(id);
         if (!projectService.canUploadImage(project, authentication)) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN);
         }
+
+        List<Image> uploadedImages =new ArrayList<>();
 
         try (InputStream stream = imageFile.getInputStream()) {
             BufferedImage bufferedImage = ImageIO.read(stream);
@@ -131,6 +133,8 @@ public class ProjectController {
         }
 
         projectRepository.save(project);
+
+        // TODO: make it that upload-raw-image yields the ImagePayload instances we need for the frontend
     }
 
     @PostMapping("/api/project/{id}/delete")
