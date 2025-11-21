@@ -180,3 +180,17 @@ export function uploadImage(url: string, dataUri: string): Promise<void> {
   });
 }
 
+export function uploadZipFile(url: string, zipFile: File | Blob): Promise<void> {
+  const formData = new FormData();
+
+  // Use original file name if it's a File, otherwise fall back to 'archive.zip'
+  const fileName = zipFile instanceof File ? zipFile.name : 'archive.zip';
+
+  formData.append('file', zipFile, fileName);
+
+  return api.post(url, formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  });
+}

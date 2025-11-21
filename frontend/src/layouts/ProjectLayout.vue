@@ -71,10 +71,22 @@
                 <q-item-label>Download selected raw images (*.png)</q-item-label>
               </q-item-section>
             </q-item>
+            <q-item v-if="selectedImageIds.length > 0" clickable v-close-popup @click="downloadProjectArchive(selectedImageIds)">
+              <q-item-section>
+                <q-item-label>Export selection as project archive (*.project.zip)</q-item-label>
+                <q-tooltip>Creates an archive based on the selected images that can be later imported into another J-AST instance</q-tooltip>
+              </q-item-section>
+            </q-item>
             <q-separator v-if="selectedImageIds.length > 0"/>
             <q-item clickable v-close-popup @click="downloadZip(null)">
               <q-item-section>
-                <q-item-label>Download everything (*.zip)</q-item-label>
+                <q-item-label>Download all images (*.zip)</q-item-label>
+              </q-item-section>
+            </q-item>
+            <q-item clickable v-close-popup @click="downloadProjectArchive(null)">
+              <q-item-section>
+                <q-item-label>Export project (*.project.zip)</q-item-label>
+                <q-tooltip>Creates an archive that can be later imported into another J-AST instance</q-tooltip>
               </q-item-section>
             </q-item>
           </q-list>
@@ -367,6 +379,7 @@ import BackendTaskProgressOverlay from 'components/backendProcessors/BackendTask
 import DocumentationComponent from "components/layout/DocumentationComponent.vue";
 import { ViewMode } from 'src/types/view';
 import GridViewComponent from 'components/arranger/GridViewComponent.vue';
+import { collectProjectArchiveContents } from 'src/types/projectArchive';
 
 function createDummyBackendTask() {
   const task = new BackendTaskPayload()
@@ -571,7 +584,7 @@ function downloadZip(imageIds : Array<number> | null) {
   }).onOk(() => {
     const shouldCancel = ref<boolean>(false);
     const dialog = $q.dialog({
-      title: 'Downloading results ...',
+      title: 'Downloading files ...',
       message: 'Preparing ...',
       progress: {
         spinner: QSpinnerHourglass,
@@ -586,6 +599,53 @@ function downloadZip(imageIds : Array<number> | null) {
     })
 
     generateAndDownloadZip(zipItems, projectPayload.value.name, (percentage, info) => {
+      dialog.update({
+        message: `${percentage}% ${info}`
+      })
+    }, () => shouldCancel.value)
+      .finally(() => {
+        dialog.hide()
+      })
+
+  })
+}
+
+function downloadProjectArchive(imageIds : Array<number> | null) {
+
+  if(imageIds == null) {
+    imageIds = projectImages.value.imageIds
+  }
+
+  // Map to images
+  const items = imageIds.map(id => projectImages.value.getImageById(id));
+
+  // Create Zip items
+  let { zipItems, downloadSizeBytes } = collectProjectArchiveContents(items);
+
+  $q.dialog({
+    title: 'Download project archive',
+    message: `You are about to download ${zipItems.length} files (${formatFileSize(downloadSizeBytes)}).<br/>Do you want to continue?<br/><br/>Please note that due how the ZIP file is created, your computer needs at least ${formatFileSize(downloadSizeBytes)} of free RAM space.`,
+    html: true,
+    cancel: true,
+    persistent: true
+  }).onOk(() => {
+    const shouldCancel = ref<boolean>(false);
+    const dialog = $q.dialog({
+      title: 'Downloading project contents ...',
+      message: 'Preparing ...',
+      progress: {
+        spinner: QSpinnerHourglass,
+      },
+      persistent: true,
+      ok: false,
+      cancel: true,
+    })
+    dialog.onCancel(() => {
+      shouldCancel.value = true
+      dialog.hide()
+    })
+
+    generateAndDownloadZip(zipItems, projectPayload.value.name + ".project.zip", (percentage, info) => {
       dialog.update({
         message: `${percentage}% ${info}`
       })

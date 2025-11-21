@@ -29,3 +29,18 @@ export class CreateEditProjectRequest {
   @Expose()
   viewMode: ViewMode = ViewMode.Timeline;
 }
+
+/**
+ * Used by the create project dialog. Has also
+ */
+export class CreateProjectRequest {
+
+  @Expose()
+  name: string = "";
+
+  @Expose()
+  viewMode: ViewMode = ViewMode.Timeline;
+
+  @Expose()
+  projectArchiveFile: File | null = null;
+}

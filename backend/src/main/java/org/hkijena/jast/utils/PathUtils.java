@@ -101,4 +101,12 @@ public class PathUtils {
             }
         }
     }
+
+    public static Path createTempDirectory(String prefix) {
+        try {
+            return Files.createTempDirectory(prefix);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

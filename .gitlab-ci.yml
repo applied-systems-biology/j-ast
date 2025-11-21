@@ -2,12 +2,9 @@
 # This CI pipeline builds the Electron application for multiple platforms and packages the outputs
 
 stages:
-  - build_electron
-  - package_electron
-  - deploy_electron
-  - build_server
-  - package_server
-  - deploy_server
+  - build
+  - package
+  - deploy
 
 variables:
   MAVEN_OPTS: "-Dmaven.repo.local=.m2/repository"
@@ -38,7 +35,7 @@ cache:
 
 # Build job that runs on all branches to ensure code quality
 build_electron:
-  stage: build_electron
+  stage: build
   <<: *default_build
   script:
     - echo "Building backend..."
@@ -56,7 +53,7 @@ build_electron:
     expire_in: 1 week
 
 build_server:
-  stage: build_server
+  stage: build
   <<: *default_build
   script:
     - echo "Building server..."
@@ -68,7 +65,7 @@ build_server:
 
 # Package stage - Create the final packages
 package_electron:
-  stage: package_electron
+  stage: package
   image: maven:3-eclipse-temurin-21-jammy
   <<: *default_build
   script:
@@ -85,13 +82,13 @@ package_electron:
       - dist/electron/j-ast-*-windows-x64-installer.exe
     expire_in: 1 month
   needs:
-    - build_electron
+    - job: build_electron
+      optional: true
   rules:
-    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
-    - when: manual
+    - if: '$CI_COMMIT_BRANCH == "master"'
 
 package_server:
-  stage: package_server
+  stage: package
   image: maven:3-eclipse-temurin-21-jammy
   <<: *default_build
   script:
@@ -107,14 +104,14 @@ package_server:
       - dist/server/j-ast-server-*-windows-x64.zip
     expire_in: 1 month
   needs:
-    - build_server
+    - job: build_server
+      optional: true
   rules:
-    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
-    - when: manual
+    - if: '$CI_COMMIT_BRANCH == "master"'
 
 # Deploy to GitLab packages repository
 deploy_electron:
-  stage: deploy_electron
+  stage: deploy
   image: curlimages/curl:8.10.1
   script:
     - echo "Deploying packages to GitLab Generic Package Registry..."
@@ -160,14 +157,13 @@ deploy_electron:
         fi
       done
   rules:
-    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
-  when: on_success
+    - if: '$CI_COMMIT_BRANCH == "master"'
   needs:
     - package_electron
 
 # Deploy to GitLab packages repository
 deploy_server_packages:
-  stage: deploy_server
+  stage: deploy
   image: curlimages/curl:8.10.1
   script:
     - echo "Deploying server packages to GitLab Generic Package Registry..."
@@ -213,14 +209,13 @@ deploy_server_packages:
         fi
       done
   rules:
-    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
-  when: on_success
+    - if: '$CI_COMMIT_BRANCH == "master"'
   needs:
     - package_server
 
   # Deploy to Leibniz-HKI
 deploy_leibniz_hki:
-  stage: deploy_server
+  stage: deploy
   tags: [ "tromos", "deploy" ]
   needs: [ package_server ]
   script:

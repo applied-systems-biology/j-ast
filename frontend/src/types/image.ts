@@ -90,6 +90,23 @@ export class ImagePayload {
     return api.post(`/image/${this.id}/update`, instanceToPlain(this));
   }
 
+  getMetadataAsDict(): Record<string, any> {
+    return {
+      id: this.id,
+      fileName: this.fileName,
+      experiment: this.experiment,
+      sample: this.sample,
+      timePoint: this.timePoint,
+      assayType: this.assayType,
+      mic: this.mic,
+      groupRow: this.groupRow,
+      groupColumn: this.groupColumn,
+      version: this.version,
+      pixelSizeMillimeter: this.pixelSizeMillimeter,
+      metadata: this.metadata,
+    }
+  }
+
   getMetadataAsBadges(): Array<Badge> {
     const result: Array<Badge> = [];
     if (this.experiment) {
