@@ -258,8 +258,6 @@ deploy_leibniz_hki:
     - rm -rvf /opt/jastapp/app/share /opt/jastapp/app/bin
     - mv -v /opt/jastapp/tmp/j-ast-server-linux-x64/bin /opt/jastapp/app/bin
     - mv -v /opt/jastapp/tmp/j-ast-server-linux-x64/share /opt/jastapp/app/share
-    - chmod -Rv 664 /opt/jastapp/app/bin
-    - chmod -Rv 664 /opt/jastapp/app/share
     - chmod 664 /opt/jastapp/tmp/j-ast-server-linux-x64/server.jar
     - chown -Rv jastapp:appdeploy /opt/jastapp/app
     - mv -f /opt/jastapp/tmp/j-ast-server-linux-x64/server.jar /opt/jastapp/app/server.jar
