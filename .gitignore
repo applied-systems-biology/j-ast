@@ -46,3 +46,6 @@ dist/docker/package/**
 dist/electron/*.exe
 dist/electron/*.zip
 dist/electron/*.tar.gz
+dist/server/tmp
+dist/server/*.tar.gz
+dist/server/*.zip

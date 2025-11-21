@@ -2,6 +2,18 @@
 
 set -Eeuo pipefail
 
+API_LOCATION=/api
+FRONTEND_LOCATION=/
+
+if [ "$1" != "" ]; then
+  echo "-> Using custom frontend location $1"
+  FRONTEND_LOCATION=$1
+fi
+if [ "$2" != "" ]; then
+  echo "-> Using custom API location $2"
+  API_LOCATION=$2
+fi
+
 # JIPipe downloads
 JIPIPE_WINDOWS="https://github.com/applied-systems-biology/jipipe/releases/download/pom-jipipe-5.3.0/JIPipe-5.3.0-Prepackaged-Win64.zip"
 JIPIPE_LINUX="https://github.com/applied-systems-biology/jipipe/releases/download/pom-jipipe-5.3.0/JIPipe-5.3.0-Prepackaged-Linux64.tar.gz"
@@ -22,6 +34,11 @@ popd || exit 1
 # Build number: arg2 > CI var > 0
 BUILD_NUMBER="${2:-${CI_PIPELINE_IID:-0}}"
 
+if [ "$BUILD_NUMBER" == "" ]; then
+  BUILD_NUMBER="0"
+  echo "-> Build number is set to 0"
+fi
+
 JAST_VERSION="$JAST_BASE_VERSION.$BUILD_NUMBER"
 echo "-----> Final J-AST version is $JAST_VERSION"
 
@@ -36,7 +53,7 @@ echo "Building backend/frontend hybrid ..."
 echo "-----------------------------------------"
 
 pushd "../.." || exit 1
-mvn clean package -DskipTests
+mvn clean package -DskipTests -Dfrontend.location="$FRONTEND_LOCATION" -Dapi.location="$API_LOCATION"
 mkdir -p "$TMP_DIR/j-ast-server-linux-x64" "$TMP_DIR/j-ast-server-windows-x64" "$TMP_DIR/j-ast-server-macos-arm64"
 cp -v backend/target/j-ast-backend*.jar "$TMP_DIR/j-ast-server-linux-x64/server.jar"
 cp -v backend/target/j-ast-backend*.jar "$TMP_DIR/j-ast-server-windows-x64/server.jar"

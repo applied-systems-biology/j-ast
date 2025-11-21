@@ -109,6 +109,26 @@ package_server:
   rules:
     - if: '$CI_COMMIT_BRANCH == "master"'
 
+package_server_leibniz_hki:
+  stage: package
+  image: maven:3-eclipse-temurin-21-jammy
+  <<: *default_build
+  script:
+    - chmod +x dist/server/build.sh
+    - echo "Building server packages for Leibniz-HKI..."
+    - cd dist/server
+    - ./build.sh /j-ast-app /j-ast-app/api
+    - cd ../..
+  artifacts:
+    paths:
+      - dist/server/j-ast-server-*-linux-x64.tar.gz
+    expire_in: 1 day
+  needs:
+    - job: build_server
+      optional: true
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "master"'
+
 # Deploy to GitLab packages repository
 deploy_electron:
   stage: deploy
@@ -217,7 +237,7 @@ deploy_server_packages:
 deploy_leibniz_hki:
   stage: deploy
   tags: [ "tromos", "deploy" ]
-  needs: [ package_server ]
+  needs: [ package_server_leibniz_hki ]
   script:
     - set -euo pipefail
     - rm -rv /opt/jastapp/tmp || true
