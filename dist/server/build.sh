@@ -4,14 +4,19 @@ set -Eeuo pipefail
 
 API_LOCATION=/api
 FRONTEND_LOCATION=/
+BUILD_NUMBER="0"
 
 if [ "$1" != "" ]; then
-  echo "-> Using custom frontend location $1"
-  FRONTEND_LOCATION=$1
+  echo "-> Using build number $1"
+  BUILD_NUMBER=$1
 fi
 if [ "$2" != "" ]; then
-  echo "-> Using custom API location $2"
-  API_LOCATION=$2
+  echo "-> Using custom frontend location $2"
+  FRONTEND_LOCATION=$2
+fi
+if [ "$3" != "" ]; then
+  echo "-> Using custom API location $3"
+  API_LOCATION=$3
 fi
 
 # JIPipe downloads
@@ -30,14 +35,6 @@ pushd ../.. || exit 1
 echo "Detecting J-AST base version ..."
 JAST_BASE_VERSION="$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout | grep -Po '\d+\.\d+\.\d+')"
 popd || exit 1
-
-# Build number: arg2 > CI var > 0
-BUILD_NUMBER="${2:-${CI_PIPELINE_IID:-0}}"
-
-if [ "$BUILD_NUMBER" == "" ]; then
-  BUILD_NUMBER="0"
-  echo "-> Build number is set to 0"
-fi
 
 JAST_VERSION="$JAST_BASE_VERSION.$BUILD_NUMBER"
 echo "-----> Final J-AST version is $JAST_VERSION"
