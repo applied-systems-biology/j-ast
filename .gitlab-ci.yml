@@ -24,7 +24,7 @@ cache:
   image: maven:3-eclipse-temurin-21-jammy
   before_script:
     - apt-get update
-    - apt-get install -y nsis git zip unzip curl wget
+    - apt-get install -y nsis git zip unzip curl wget patch
     - curl -fsSL https://deb.nodesource.com/setup_20.x | bash -
     - apt-get install -y nodejs
     - node --version
