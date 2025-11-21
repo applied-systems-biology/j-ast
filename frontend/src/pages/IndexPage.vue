@@ -175,7 +175,7 @@
   </q-page>
 </template>
 <script setup lang="ts">
-import { Dialog, useQuasar } from 'quasar';
+import { Dialog, QSpinnerHourglass, useQuasar } from 'quasar';
 import { useAuthStore } from 'stores/auth-store';
 import { computed, ref } from 'vue';
 import { storeToRefs } from 'pinia';
@@ -198,7 +198,7 @@ import heroInteractiveAnnotation from 'assets/hero/hero-interactive-annotation.p
 import heroResultsBrowser from 'assets/hero/hero-results-browser.png';
 import CreateProjectDialog from 'components/CreateProjectDialog.vue';
 import { plainToInstance } from 'class-transformer';
-import { uploadZipFile } from 'src/types/common';
+import { uploadProjectArchive } from 'src/types/projectArchive';
 
 const $q = useQuasar();
 const authStore = useAuthStore();
@@ -235,7 +235,7 @@ function newProject() {
 
         if (payload.projectArchiveFile) {
           // Upload the project archive
-          uploadProjectArchive(info.id, payload.projectArchiveFile);
+          doUploadProjectArchive(info.id, payload.projectArchiveFile);
         } else {
           refreshProjectList();
         }
@@ -252,19 +252,31 @@ function newProject() {
  * @param id the project id
  * @param projectArchiveFile the archive file
  */
-function uploadProjectArchive(id: number, projectArchiveFile: File) {
-  $q.loading.show({ message: 'Uploading project archive ...' });
-  uploadZipFile(`/project/${id}/import-project-archive`, projectArchiveFile)
-    .then(() => {
-      sendSuccessNotification('The archive was successfully imported!');
-    })
-    .catch(() => {
-      sendFailureNotification('Error while uploading!');
-    })
-    .finally(() => {
-      $q.loading.hide();
-      refreshProjectList();
-    });
+function doUploadProjectArchive(id: number, projectArchiveFile: File) {
+  const shouldCancel = ref<boolean>(false);
+  const dialog = $q.dialog({
+    title: 'Uploading project ...',
+    message: 'Preparing ...',
+    progress: {
+      spinner: QSpinnerHourglass,
+    },
+    persistent: true,
+    ok: false,
+    cancel: true,
+  });
+  dialog.onCancel(() => {
+    shouldCancel.value = true;
+    dialog.hide();
+  });
+
+  uploadProjectArchive(id, projectArchiveFile, (percentage, info) => {
+      dialog.update({
+        message: `${percentage}% ${info}`,
+      });
+    },
+    () => shouldCancel.value).finally(() => {
+    dialog.hide();
+  });
 }
 
 /**

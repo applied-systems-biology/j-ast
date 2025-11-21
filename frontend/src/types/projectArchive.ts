@@ -2,6 +2,7 @@ import { ZipItem } from 'src/types/zip';
 import { ensureExtension } from 'src/types/common';
 import { plainToInstance } from 'class-transformer';
 import { ImagePayload } from 'src/types/image';
+import { api } from 'boot/axios';
 import JSZip from 'jszip';
 
 /**
@@ -48,20 +49,136 @@ export function uploadProjectArchive(projectId: number,
     }
 
     // TODO 1: Get the metadata.json from the ZIP and read it in. It's a Record<string, ImagePayload>
+    const metadataEntry = zip.file("metadata.json");
+    if (!metadataEntry) {
+      throw new Error("metadata.json not found in ZIP archive");
+    }
 
-    // TODO 2: For each key in the metadata do the following: Get the image data from ZIP (entry is known: /[key].png within the ZIP). Then we upload each image to ${apiBase}/project/${projectId}/upload-raw-image
-    // TODO 2: You will need to make changes to ProjectController so we can get ImagePayload and the respective IDs back. Keep track which record key and which image payload ID correspond
+    return metadataEntry.async("text").then((metadataText) => {
+      const metadata: Record<string, ImagePayload> = JSON.parse(metadataText);
+      const totalItems = Object.keys(metadata).length;
+      let processedItems = 0;
 
-    // TODO 3: Now as we now the image IDs, post for each image the ${apiBase}/image/{id}/update with the updated ImagePayload where metadata was taken from the Record
+      // Track mapping between original keys and new image IDs
+      const idMapping: Record<string, number> = {};
 
-    // TODO 4: After all images are uploaded, we go through the each annotation type ['plate', 'strip-disk', 'zoi-shape'] and do the following:
-    // TODO 4: Check if there's a zip entry /[annotation type]/[key].png. If it exists, upload it using  uploadImage(
-    //       `/mask-image-annotation/${image id in database}/${annotation type}/raw`,
-    //       pngData
-    //     ) where the pngData is a DataURL('image/png')
+      // For each key in the metadata do the following: Get the image data from ZIP (entry is known: /[key].png within the ZIP). Then we upload each image to /project/${projectId}/upload-raw-image
+      const uploadPromises: Promise<void>[] = [];
 
-    // Keep reporting progress through onProgress (number is percent)
-    // Listen to onCancel for cancellation
+      for (const key of Object.keys(metadata)) {
+        if (onCancel()) {
+          return Promise.reject("Cancelled");
+        }
 
+        const imageEntry = zip.file(`${key}.png`);
+        if (!imageEntry) {
+          console.warn(`Image ${key}.png not found in ZIP, skipping`);
+          processedItems++;
+          onProgress((processedItems / totalItems) * 100, `Processing ${processedItems}/${totalItems} items...`);
+          continue;
+        }
+
+        uploadPromises.push(
+          imageEntry.async("blob").then((imageBlob) => {
+            console.log(`Uploading raw image ${key}.png ...`);
+            const formData = new FormData();
+            formData.append("file", imageBlob, `${key}.png`);
+
+            return api.post(`/project/${projectId}/upload-raw-image`, formData, {
+              headers: {
+                'Content-Type': 'multipart/form-data'
+              }
+            }).then((response) => {
+              const imagePayload = response.data as ImagePayload;
+              // Should return one image payload
+              if (imagePayload) {
+                console.log(`Uploading raw image ${key}.png ... Found ID mapping ${key}=${imagePayload.id}`);
+                idMapping[key] = imagePayload.id;
+              }
+              processedItems++;
+              onProgress((processedItems / totalItems) * 100, `Uploaded ${processedItems}/${totalItems} images...`);
+            });
+          })
+        );
+      }
+
+      return Promise.all(uploadPromises).then(() => {
+        // Now as we now the image IDs, post for each image the /image/{id}/update with the updated ImagePayload where metadata was taken from the Record
+        const updatePromises: Promise<void>[] = [];
+
+        for (const [key, imageId] of Object.entries(idMapping)) {
+          if (onCancel()) {
+            return Promise.reject("Cancelled");
+          }
+
+          const originalMetadata = metadata[key];
+          const updatedImagePayload = new ImagePayload();
+          updatedImagePayload.id = imageId;
+          updatedImagePayload.projectId = projectId;
+          updatedImagePayload.fileName = originalMetadata.fileName;
+          updatedImagePayload.owner = originalMetadata.owner;
+          updatedImagePayload.experiment = originalMetadata.experiment;
+          updatedImagePayload.sample = originalMetadata.sample;
+          updatedImagePayload.timePoint = originalMetadata.timePoint;
+          updatedImagePayload.assayType = originalMetadata.assayType;
+          updatedImagePayload.mic = originalMetadata.mic;
+          updatedImagePayload.groupRow = originalMetadata.groupRow;
+          updatedImagePayload.groupColumn = originalMetadata.groupColumn;
+          updatedImagePayload.version = originalMetadata.version;
+          updatedImagePayload.pixelSizeMillimeter = originalMetadata.pixelSizeMillimeter;
+          updatedImagePayload.metadata = originalMetadata.metadata;
+          updatedImagePayload.maskImageAnnotations = originalMetadata.maskImageAnnotations;
+          updatedImagePayload.size = originalMetadata.size;
+
+          console.log(`Updating image metadata for ${key}=${imageId} ...`);
+          updatePromises.push(
+            api.post(`/image/${imageId}/update`, updatedImagePayload).then(() => {
+              processedItems++;
+              onProgress((processedItems / totalItems) * 100, `Updated ${processedItems}/${totalItems} image metadata...`);
+            })
+          );
+        }
+
+        return Promise.all(updatePromises);
+      }).then(() => {
+        // After all images are uploaded, we go through the each annotation type ['plate', 'strip-disk', 'zoi-shape'] and do the following:
+        const annotationTypes = ['plate', 'strip-disk', 'zoi-shape'];
+        const annotationPromises: Promise<void>[] = [];
+
+        for (const annotationType of annotationTypes) {
+          if (onCancel()) {
+            return Promise.reject("Cancelled");
+          }
+
+          for (const [key, imageId] of Object.entries(idMapping)) {
+            const annotationEntry = zip.file(`${annotationType}/${key}.png`);
+            if (!annotationEntry) {
+              continue; // No annotation for this image/type combination
+            }
+
+            // TODO: the backend expects @RequestPart("file") MultipartFile imageFile, so use the same uploading mechanism as for the raw images above
+            annotationPromises.push(
+              annotationEntry.async("base64").then((base64Data) => {
+                console.log(`Uploading annotation ${key}=${imageId}/${annotationType} ...`);
+                const dataUrl = `data:image/png;base64,${base64Data}`;
+
+                return api.post(`/mask-image-annotation/${imageId}/${annotationType}/raw`, dataUrl, {
+                  headers: {
+                    'Content-Type': 'image/png'
+                  }
+                }).then(() => {
+                  processedItems++;
+                  onProgress((processedItems / totalItems) * 100, `Uploaded ${processedItems}/${totalItems} annotations...`);
+                });
+              })
+            );
+          }
+        }
+
+        return Promise.all(annotationPromises);
+      }).then(() => {
+        onProgress(100, "ZIP upload completed successfully!");
+      });
+    });
   })
 }
