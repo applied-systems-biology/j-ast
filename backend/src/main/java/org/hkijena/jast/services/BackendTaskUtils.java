@@ -62,6 +62,7 @@ public class BackendTaskUtils {
 
     public Path writeSharedFile(BackendTaskWorkloadParams params, Path sourcePath, Path targetPath) throws IOException {
         Path fullPath = Paths.get(params.getRuntimeConfig().getSharedResourcesDirectory()).resolve(sourcePath);
+        LOGGER.info("Copying shared resource from {} to {}", sourcePath, targetPath);
         Files.copy(fullPath, params.getTmpPath().resolve(targetPath));
         return params.getTmpPath().resolve(targetPath);
     }
