@@ -82,7 +82,8 @@ package_electron:
       - dist/electron/j-ast-*-windows-x64-installer.exe
     expire_in: 1 month
   needs:
-    - build_electron
+    - job: build_electron
+      optional: true
   rules:
     - if: '$CI_COMMIT_BRANCH == "master"'
     - when: manual
@@ -104,7 +105,8 @@ package_server:
       - dist/server/j-ast-server-*-windows-x64.zip
     expire_in: 1 month
   needs:
-    - build_server
+    - job: build_server
+      optional: true
   rules:
     - if: '$CI_COMMIT_BRANCH == "master"'
     - when: manual
