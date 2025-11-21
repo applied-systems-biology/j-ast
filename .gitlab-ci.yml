@@ -116,12 +116,12 @@ package_server_leibniz_hki:
   script:
     - chmod +x dist/server/build.sh
     - echo "Building server packages for Leibniz-HKI..."
-    - cd dist/server
+    - cd dist/server-hki
     - ./build.sh $CI_PIPELINE_IID /j-ast-app /j-ast-app/api
     - cd ../..
   artifacts:
     paths:
-      - dist/server/j-ast-server-*-linux-x64.tar.gz
+      - dist/server-hki/j-ast-server-*-linux-x64.tar.gz
     expire_in: 1 day
   needs:
     - job: build_server
@@ -242,7 +242,7 @@ deploy_leibniz_hki:
     - set -euo pipefail
     - rm -rv /opt/jastapp/tmp || true
     - mkdir /opt/jastapp/tmp
-    - cp dist/server/j-ast-server-*-linux-x64.tar.gz /opt/jastapp/tmp/server.tar.gz
+    - cp dist/server-hki/j-ast-server-*-linux-x64.tar.gz /opt/jastapp/tmp/server.tar.gz
     - cd /opt/jastapp/tmp/ && tar -xvf server.tar.gz
     - rm -rvf /opt/jastapp/app/share /opt/jastapp/app/bin || true
     - mv -v /opt/jastapp/tmp/j-ast-server-linux-x64/bin /opt/jastapp/app/bin
