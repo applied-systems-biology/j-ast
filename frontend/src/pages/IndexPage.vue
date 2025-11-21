@@ -276,6 +276,7 @@ function doUploadProjectArchive(id: number, projectArchiveFile: File) {
     },
     () => shouldCancel.value).finally(() => {
     dialog.hide();
+    refreshProjectList()
   });
 }
 

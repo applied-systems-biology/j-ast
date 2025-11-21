@@ -156,15 +156,16 @@ export function uploadProjectArchive(projectId: number,
               continue; // No annotation for this image/type combination
             }
 
-            // TODO: the backend expects @RequestPart("file") MultipartFile imageFile, so use the same uploading mechanism as for the raw images above
+            // Use the same uploading mechanism as for the raw images above since backend expects @RequestPart("file") MultipartFile
             annotationPromises.push(
-              annotationEntry.async("base64").then((base64Data) => {
+              annotationEntry.async("blob").then((annotationBlob) => {
                 console.log(`Uploading annotation ${key}=${imageId}/${annotationType} ...`);
-                const dataUrl = `data:image/png;base64,${base64Data}`;
+                const formData = new FormData();
+                formData.append("file", annotationBlob, `${annotationType}/${key}.png`);
 
-                return api.post(`/mask-image-annotation/${imageId}/${annotationType}/raw`, dataUrl, {
+                return api.post(`/mask-image-annotation/${imageId}/${annotationType}/raw`, formData, {
                   headers: {
-                    'Content-Type': 'image/png'
+                    'Content-Type': 'multipart/form-data'
                   }
                 }).then(() => {
                   processedItems++;
