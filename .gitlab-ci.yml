@@ -255,12 +255,13 @@ deploy_leibniz_hki:
     - mkdir /opt/jastapp/tmp
     - cp dist/server-hki/j-ast-server-*-linux-x64.tar.gz /opt/jastapp/tmp/server.tar.gz
     - cd /opt/jastapp/tmp/ && tar -xvf server.tar.gz
-    - rm -rvf /opt/jastapp/app/share /opt/jastapp/app/bin || true
+    - rm -rvf /opt/jastapp/app/share /opt/jastapp/app/bin
     - mv -v /opt/jastapp/tmp/j-ast-server-linux-x64/bin /opt/jastapp/app/bin
     - mv -v /opt/jastapp/tmp/j-ast-server-linux-x64/share /opt/jastapp/app/share
     - chmod -Rv 664 /opt/jastapp/app/bin
     - chmod -Rv 664 /opt/jastapp/app/share
     - chmod 664 /opt/jastapp/tmp/j-ast-server-linux-x64/server.jar
+    - chown -Rv jastapp:appdeploy /opt/jastapp/app
     - mv -f /opt/jastapp/tmp/j-ast-server-linux-x64/server.jar /opt/jastapp/app/server.jar
     - rm -rv /opt/jastapp/tmp/* || true
   rules:
