@@ -40,6 +40,14 @@ echo "-----> Final J-AST version is $JAST_VERSION"
 # Delete old packages
 rm -v "j-ast-server-${JAST_VERSION}-linux-x64.tar.gz" || true
 
+echo "-----------------------------------------"
+echo "Applying API patch for frontend ..."
+echo "-----------------------------------------"
+
+pushd "../.." || exit 1
+patch frontend/src/types/api.ts < dist/server-hki/frontend-api.patch
+popd || exit 1
+
 # Build backend/frontend hybrid
 echo "-----------------------------------------"
 echo "Building backend/frontend hybrid ..."
