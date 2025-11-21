@@ -63,6 +63,17 @@ build_server:
       - backend/target/j-ast-backend*.jar
     expire_in: 1 week
 
+build_server_leibniz_hki:
+  stage: build
+  <<: *default_build
+  script:
+    - echo "Building server for HKI..."
+    - mvn clean package -DskipTests
+  artifacts:
+    paths:
+      - backend/target/j-ast-backend*.jar
+    expire_in: 1 day
+
 # Package stage - Create the final packages
 package_electron:
   stage: package
@@ -124,7 +135,7 @@ package_server_leibniz_hki:
       - dist/server-hki/j-ast-server-*-linux-x64.tar.gz
     expire_in: 1 day
   needs:
-    - job: build_server
+    - job: build_server_leibniz_hki
       optional: true
   rules:
     - if: '$CI_COMMIT_BRANCH == "master"'
