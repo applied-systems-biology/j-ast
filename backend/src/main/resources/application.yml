@@ -36,6 +36,11 @@ runtime:
   data-directory: "./storage/data"
   shared-resources-directory: "./share"
   keep-tmp: true
+provider:
+  provider-name: 'Localhost'
+  provider-url: 'http://localhost'
+  imprint-file: ''
+  privacy-statement-file: ''
 accounts:
   admin-username: 'admin@localhost'
   admin-password: 'Ckw55ryzy1mXGxb8'

@@ -71,6 +71,16 @@ export function loadPayloadInstanceFromApi<T>(
   });
 }
 
+export function loadStringFromApi(url: string, target: Ref<string | string[]>) {
+  return new Promise<string>((resolve) => {
+    api.get(url).then((response) => {
+      const value = response.data
+      target.value = value;
+      resolve(value);
+    });
+  });
+}
+
 export function loadDataStringFromApi(url: string) {
   return new Promise<string>((resolve) => {
     api.get(url, { responseType: 'blob' }).then((response) => {

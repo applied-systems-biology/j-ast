@@ -116,6 +116,7 @@ public class WebSecurityConfig {
                     .requestMatchers(AntPathRequestMatcher.antMatcher("/api/auth/**")).permitAll()
                     .requestMatchers(AntPathRequestMatcher.antMatcher("/api/test")).permitAll()
                     .requestMatchers(AntPathRequestMatcher.antMatcher("/api/ping")).permitAll()
+                    .requestMatchers(AntPathRequestMatcher.antMatcher("/api/provider/**")).permitAll()
                     .requestMatchers(AntPathRequestMatcher.antMatcher("/api/admin/**")).hasRole("ADMIN")
                     .requestMatchers(AntPathRequestMatcher.antMatcher("/api/**")).authenticated()
                     .anyRequest().permitAll());

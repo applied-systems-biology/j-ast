@@ -12,6 +12,16 @@ const routes: RouteRecordRaw[] = [
     children: [{ path: '', component: () => import('pages/UserAccountPage.vue') }],
   },
   {
+    path: '/imprint',
+    component: () => import('layouts/DefaultLayout.vue'),
+    children: [{ path: '', component: () => import('pages/ImprintPage.vue') }],
+  },
+  {
+    path: '/privacy',
+    component: () => import('layouts/DefaultLayout.vue'),
+    children: [{ path: '', component: () => import('pages/PrivacyPage.vue') }],
+  },
+  {
     path: '/admin',
     component: () => import('layouts/AdminLayout.vue'),
     children: [],

@@ -18,6 +18,11 @@
         <q-icon name="info"/>
         If you experience issues, please contact {{ registrationFeatures.adminContact }}
       </q-card-section>
+      <q-card-section>
+        <q-icon name="info"/>
+        If you want to learn more, please visit the <a href="https://applied-systems-biology.github.io/J-AST-Documentation/" target="_blank">J-AST documentation site</a>.
+        You can also find <a href="https://asb.hki-jena.de/j-ast/tutorials" target="_blank">tutorials</a> online.
+      </q-card-section>
       <q-card-section class="col-grow">
         <q-scroll-area style="width: 100%; height: 100%">
           <q-list bordered class="rounded-borders">
