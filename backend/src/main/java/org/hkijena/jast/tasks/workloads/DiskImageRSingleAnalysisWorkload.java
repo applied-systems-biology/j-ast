@@ -67,7 +67,7 @@ public class DiskImageRSingleAnalysisWorkload implements BackendTaskWorkload {
 
     @Override
     public ViewMode getViewModeRestriction() {
-        return ViewMode.Timeline;
+        return null;
     }
 
     @Override
