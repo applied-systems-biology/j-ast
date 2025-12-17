@@ -15,7 +15,7 @@
               <q-icon name="delete" />
             </q-btn>
           </q-btn-group>
-          <q-btn-dropdown color="blue" :label="currentViewMode" :icon="currentViewMode == ViewMode.Timeline ? 'fa-solid fa-timeline' : 'fa-solid fa-grip'">
+          <q-btn-dropdown color="blue" :label="currentViewMode == ViewMode.Timeline ? 'Timeline' : 'Single images'"  :icon="currentViewMode == ViewMode.Timeline ? 'fa-solid fa-timeline' : 'fa-solid fa-grip'">
             <q-list>
               <q-item clickable v-close-popup @click="changeViewMode(ViewMode.Timeline)">
                 <q-item-section avatar>
