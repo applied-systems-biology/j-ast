@@ -106,9 +106,12 @@ public class SegmentZoiShapeStripBackendTaskWorkload implements BackendTaskWorkl
     @Override
     @Transactional(Transactional.TxType.REQUIRES_NEW)
     public void execute(BackendTaskWorkloadParams params, ProgressInfo progressInfo) throws Throwable {
-        taskUtils.writeRawImages(params, params.getPayload().getImageIds(), imageRepository, fileStorageService, progressInfo);
-        taskUtils.writeMaskAnnotations(params, params.getPayload().getImageIds(), "plate", imageRepository, fileStorageService, progressInfo);
-        taskUtils.writeMaskAnnotations(params, params.getPayload().getImageIds(), "strip-disk", imageRepository, fileStorageService, progressInfo);
+
+        final boolean verbose = params.getRuntimeConfig().isVerbose();
+
+        taskUtils.writeRawImages(params, params.getPayload().getImageIds(), imageRepository, fileStorageService, progressInfo, verbose);
+        taskUtils.writeMaskAnnotations(params, params.getPayload().getImageIds(), "plate", imageRepository, fileStorageService, progressInfo, verbose);
+        taskUtils.writeMaskAnnotations(params, params.getPayload().getImageIds(), "strip-disk", imageRepository, fileStorageService, progressInfo, verbose);
 
         Map<String, Object> parameterOverrides = new HashMap<>();
         for (BackendTaskParameterPayload parameter : params.getPayload().getParameters()) {
@@ -117,10 +120,10 @@ public class SegmentZoiShapeStripBackendTaskWorkload implements BackendTaskWorkl
 
         Path projectFilePath = taskUtils.writeSharedFile(params, "image-segment-zoi-shape.jip");
         progressInfo.log("Project file is " + projectFilePath);
-        taskUtils.runJIPipe(params, projectFilePath, parameterOverrides, "", progressInfo);
+        taskUtils.runJIPipe(params, projectFilePath, parameterOverrides, "", progressInfo, verbose);
 
         Map<String, Path> maskAnnotationsConfig = new HashMap<>();
         maskAnnotationsConfig.put("zoi-shape", params.getTmpPath().resolve("zoi-shape"));
-        taskUtils.readMaskAnnotations(params.getPayload().getImageIds(), maskAnnotationsConfig, imageRepository, fileStorageService, progressInfo);
+        taskUtils.readMaskAnnotations(params.getPayload().getImageIds(), maskAnnotationsConfig, imageRepository, fileStorageService, progressInfo, verbose);
     }
 }

@@ -95,12 +95,15 @@ public class InvertRawImageBackendTaskWorkload implements BackendTaskWorkload {
     @Override
     @Transactional(Transactional.TxType.REQUIRES_NEW)
     public void execute(BackendTaskWorkloadParams params, ProgressInfo progressInfo) throws Throwable {
-        taskUtils.writeRawImages(params, params.getPayload().getImageIds(), imageRepository, fileStorageService, progressInfo);
+
+        final boolean verbose = params.getRuntimeConfig().isVerbose();
+
+        taskUtils.writeRawImages(params, params.getPayload().getImageIds(), imageRepository, fileStorageService, progressInfo, verbose);
 
         Path projectFilePath = taskUtils.writeSharedFile(params, "invert-image.jip");
         progressInfo.log("Project file is " + projectFilePath);
-        taskUtils.runJIPipe(params, projectFilePath, Collections.emptyMap(), "", progressInfo);
+        taskUtils.runJIPipe(params, projectFilePath, Collections.emptyMap(), "", progressInfo, verbose);
 
-        taskUtils.readRawImages(params.getPayload().getImageIds(), params.getTmpPath().resolve("raw_updated"), imageRepository, fileStorageService, progressInfo);
+        taskUtils.readRawImages(params.getPayload().getImageIds(), params.getTmpPath().resolve("raw_updated"), imageRepository, fileStorageService, progressInfo, verbose);
     }
 }
