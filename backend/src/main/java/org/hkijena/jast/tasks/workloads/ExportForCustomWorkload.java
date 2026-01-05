@@ -1,6 +1,5 @@
 package org.hkijena.jast.tasks.workloads;
 
-import com.google.common.base.Predicates;
 import jakarta.transaction.Transactional;
 import org.hkijena.jast.model.AssayType;
 import org.hkijena.jast.model.ViewMode;
@@ -109,10 +108,12 @@ public class ExportForCustomWorkload implements BackendTaskWorkload {
     @Override
     @Transactional(Transactional.TxType.REQUIRES_NEW)
     public void execute(BackendTaskWorkloadParams params, ProgressInfo progressInfo) throws Throwable {
-        taskUtils.writeRawImages(params, params.getPayload().getImageIds(), imageRepository, fileStorageService, progressInfo);
-        taskUtils.writeMaskAnnotations(params, params.getPayload().getImageIds(), "strip-disk", imageRepository, fileStorageService, progressInfo);
-        taskUtils.writeMaskAnnotations(params, params.getPayload().getImageIds(), "zoi-shape", imageRepository, fileStorageService, progressInfo);
-        taskUtils.writeMaskAnnotations(params, params.getPayload().getImageIds(), "plate", imageRepository, fileStorageService, progressInfo);
+        final boolean verbose = params.getRuntimeConfig().isVerbose();
+
+        taskUtils.writeRawImages(params, params.getPayload().getImageIds(), imageRepository, fileStorageService, progressInfo, verbose);
+        taskUtils.writeMaskAnnotations(params, params.getPayload().getImageIds(), "strip-disk", imageRepository, fileStorageService, progressInfo, verbose);
+        taskUtils.writeMaskAnnotations(params, params.getPayload().getImageIds(), "zoi-shape", imageRepository, fileStorageService, progressInfo, verbose);
+        taskUtils.writeMaskAnnotations(params, params.getPayload().getImageIds(), "plate", imageRepository, fileStorageService, progressInfo, verbose);
 
         String resultName = StringUtils.orElse(params.getPayload().getParameter("result-name").getValue(), "Exported");
         String resultDescription = StringUtils.nullToEmpty(params.getPayload().getParameter("result-description").getValue());
@@ -122,6 +123,6 @@ public class ExportForCustomWorkload implements BackendTaskWorkload {
         taskUtils.readResultsDirectory(resultName, resultDescription, params.getTmpPath(), project, projectRepository, fileStorageService, (path) -> switch (path.getFileName().toString()) {
             case "lockfile", "log.txt", "job_started" -> false;
             default -> true;
-        }, progressInfo);
+        }, progressInfo, verbose);
     }
 }

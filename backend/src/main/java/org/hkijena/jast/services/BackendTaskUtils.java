@@ -11,7 +11,10 @@ import org.apache.commons.csv.CSVPrinter;
 import org.apache.commons.csv.CSVRecord;
 import org.apache.commons.exec.CommandLine;
 import org.apache.commons.exec.ExecuteWatchdog;
+import org.apache.commons.exec.LogOutputStream;
+import org.apache.commons.exec.PumpStreamHandler;
 import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.apache.commons.text.WordUtils;
 import org.hkijena.jast.config.RuntimeConfig;
 import org.hkijena.jast.model.ResultItemType;
 import org.hkijena.jast.model.entities.*;
@@ -86,17 +89,20 @@ public class BackendTaskUtils {
         }
     }
 
-    public void writeRawImages(BackendTaskWorkloadParams params, Iterable<Long> imageIds, ImageRepository repository, FileStorageService fileStorageService, ProgressInfo progressInfo) throws IOException {
+    public void writeRawImages(BackendTaskWorkloadParams params, Iterable<Long> imageIds, ImageRepository repository, FileStorageService fileStorageService, ProgressInfo progressInfo, boolean verbose) throws IOException {
         Path rawPath = PathUtils.resolveAndMakeSubDirectory(params.getTmpPath(), "raw");
         Path csvPath = params.getTmpPath().resolve("metadata.csv");
         final String[] csvHeader = new String[]{"#ImageId", "#Experiment", "#Sample", "#TimePoint", "#AssayType", "PixelSize", "GroupRow", "GroupColumn"};
+        progressInfo.log("Writing raw image data ...");
         try (FileWriter csvFileWriter = new FileWriter(csvPath.toFile())) {
             CSVPrinter csvPrinter = new CSVPrinter(csvFileWriter, CSVFormat.Builder.create().setDelimiter(',').setQuote('"').setHeader(csvHeader).build());
             ImmutableList<Image> images = ImmutableList.copyOf(repository.findAllById(imageIds));
             for (int i = 0; i < images.size(); i++) {
                 progressInfo.setProgress(i, images.size());
                 Image image = images.get(i);
-                progressInfo.log("Writing raw image data " + image.getId());
+                if(verbose) {
+                    progressInfo.log("Writing raw image data " + image.getId());
+                }
                 Path pngPath = rawPath.resolve(image.getId() + ".png");
                 Files.write(pngPath, image.getRawData(fileStorageService));
 
@@ -107,13 +113,16 @@ public class BackendTaskUtils {
     }
 
     @Transactional
-    public void writeMaskAnnotations(BackendTaskWorkloadParams params, Iterable<Long> imageIds, String annotationTypeId, ImageRepository repository, FileStorageService fileStorageService, ProgressInfo progressInfo) throws IOException {
+    public void writeMaskAnnotations(BackendTaskWorkloadParams params, Iterable<Long> imageIds, String annotationTypeId, ImageRepository repository, FileStorageService fileStorageService, ProgressInfo progressInfo, boolean verbose) throws IOException {
         Path rawPath = PathUtils.resolveAndMakeSubDirectory(params.getTmpPath(), annotationTypeId);
         ImmutableList<Image> images = ImmutableList.copyOf(repository.findAllById(imageIds));
+        progressInfo.log("Writing mask annotations for " + annotationTypeId + " ...");
         for (int i = 0; i < images.size(); i++) {
             progressInfo.setProgress(i, images.size());
             Image image = images.get(i);
-            progressInfo.log("Writing mask annotation " + annotationTypeId + " image data " + image.getId());
+            if(verbose) {
+                progressInfo.log("Writing mask annotation " + annotationTypeId + " image data " + image.getId());
+            }
             MaskImageAnnotation annotation = image.getMaskImageAnnotation(annotationTypeId);
             Path pngPath = rawPath.resolve(image.getId() + ".png");
             if (annotation != null) {
@@ -126,13 +135,17 @@ public class BackendTaskUtils {
     }
 
     @Transactional
-    public void writeRowFirstMaskAnnotations(BackendTaskWorkloadParams params, Iterable<Long> imageIds, String annotationTypeId, ImageRepository repository, FileStorageService fileStorageService, ProgressInfo progressInfo) throws IOException {
+    public void writeRowFirstMaskAnnotations(BackendTaskWorkloadParams params, Iterable<Long> imageIds, String annotationTypeId, ImageRepository repository, FileStorageService fileStorageService, ProgressInfo progressInfo, boolean verbose) throws IOException {
         Path rawPath = PathUtils.resolveAndMakeSubDirectory(params.getTmpPath(), annotationTypeId);
         List<Image> images = Lists.newArrayList(repository.findAllById(imageIds));
         images.sort(Comparator.comparing(Image::getGroupColumn));
 
+        progressInfo.log("Writing per-row first available mask annotation for " + annotationTypeId + " ...");
+
         for (int groupRow : images.stream().map(Image::getGroupRow).collect(Collectors.toSet())) {
-            progressInfo.log("Processing row " + groupRow);
+            if(verbose) {
+                progressInfo.log("Processing row " + groupRow);
+            }
             byte[] firstAnnotation = null;
             for (Image image : images) {
                 if (image.getGroupRow() != groupRow) {
@@ -140,7 +153,9 @@ public class BackendTaskUtils {
                 }
                 MaskImageAnnotation annotation = image.getMaskImageAnnotation(annotationTypeId);
                 if (annotation != null) {
-                    progressInfo.log("Found first available annotation " + annotationTypeId + " image data " + image.getId());
+                    if(verbose) {
+                        progressInfo.log("Found first available annotation " + annotationTypeId + " image data " + image.getId());
+                    }
                     firstAnnotation = annotation.getRawData(fileStorageService);
                     break;
                 }
@@ -149,7 +164,9 @@ public class BackendTaskUtils {
                 if (image.getGroupRow() != groupRow) {
                     continue;
                 }
-                progressInfo.log("Writing first available mask annotation " + annotationTypeId + " image data " + image.getId());
+                if(verbose) {
+                    progressInfo.log("Writing first available mask annotation " + annotationTypeId + " image data " + image.getId());
+                }
                 MaskImageAnnotation annotation = image.getMaskImageAnnotation(annotationTypeId);
                 Path pngPath = rawPath.resolve(image.getId() + ".png");
                 if (firstAnnotation != null) {
@@ -166,8 +183,11 @@ public class BackendTaskUtils {
 
     @Transactional
     public List<Image> readMaskAnnotations(Iterable<Long> imageIds, Map<String, Path> annotationTypeIdDirectories,
-                                           ImageRepository imageRepository, FileStorageService fileStorageService, ProgressInfo progressInfo) throws IOException {
+                                           ImageRepository imageRepository, FileStorageService fileStorageService, ProgressInfo progressInfo, boolean verbose) throws IOException {
         List<Image> images = ImmutableList.copyOf(imageRepository.findAllById(imageIds));
+
+        progressInfo.log("Reading annotations ... ");
+
         for (int i = 0; i < images.size(); i++) {
             progressInfo.setProgress(i, images.size());
             Image image = images.get(i);
@@ -178,7 +198,9 @@ public class BackendTaskUtils {
                 Path imageDirectory = entry.getValue();
                 Path imageFileName = imageDirectory.resolve(image.getId() + ".png");
                 if (Files.isRegularFile(imageFileName)) {
-                    progressInfo.log("Reading annotation from " + imageFileName);
+                    if(verbose) {
+                        progressInfo.log("Reading annotation from " + imageFileName);
+                    }
                     try {
                         BufferedImage rawImage = ImageIO.read(imageFileName.toFile());
 
@@ -220,8 +242,11 @@ public class BackendTaskUtils {
     }
 
     @Transactional
-    public List<Image> readRawImages(Iterable<Long> imageIds, Path imageDirectory, ImageRepository imageRepository, FileStorageService fileStorageService, ProgressInfo progressInfo) throws IOException {
+    public List<Image> readRawImages(Iterable<Long> imageIds, Path imageDirectory, ImageRepository imageRepository, FileStorageService fileStorageService, ProgressInfo progressInfo, boolean verbose) throws IOException {
         List<Image> images = ImmutableList.copyOf(imageRepository.findAllById(imageIds));
+
+        progressInfo.log("Reading raw images ...");
+
         for (int i = 0; i < images.size(); i++) {
             progressInfo.setProgress(i, images.size());
             Image image = images.get(i);
@@ -229,7 +254,9 @@ public class BackendTaskUtils {
 
             Path imageFileName = imageDirectory.resolve(image.getId() + ".png");
             if (Files.isRegularFile(imageFileName)) {
-                progressInfo.log("Reading raw image from " + imageFileName);
+                if(verbose) {
+                    progressInfo.log("Reading raw image from " + imageFileName);
+                }
                 try {
                     BufferedImage rawImage = ImageIO.read(imageFileName.toFile());
 
@@ -258,7 +285,7 @@ public class BackendTaskUtils {
         return images;
     }
 
-    public ResultItem createResultItemFromPath(Path file, Path resultDirectory, FileStorageService fileStorageService, ProgressInfo progressInfo) {
+    public ResultItem createResultItemFromPath(Path file, Path resultDirectory, FileStorageService fileStorageService, ProgressInfo progressInfo, boolean verbose) {
         String path = StringUtils.nullToEmpty(resultDirectory.relativize(file).getParent());
         String name = file.getFileName().toString();
 
@@ -266,7 +293,9 @@ public class BackendTaskUtils {
         resultItem.setName(name);
         resultItem.setPath(path);
 
-        progressInfo.log("Processing result " + path + "/" + name);
+        if(verbose) {
+            progressInfo.log("Processing result " + path + "/" + name);
+        }
 
         if (name.endsWith(".png") || name.endsWith(".bmp") || name.endsWith(".jpg") || name.endsWith(".jpeg")) {
             try {
@@ -308,7 +337,7 @@ public class BackendTaskUtils {
     }
 
     @Transactional(Transactional.TxType.REQUIRES_NEW)
-    public void readResultsDirectory(String resultName, String resultDescription, Path resultDirectory, Project project, ProjectRepository projectRepository, FileStorageService fileStorageService, Predicate<Path> filter, ProgressInfo progressInfo) throws IOException {
+    public void readResultsDirectory(String resultName, String resultDescription, Path resultDirectory, Project project, ProjectRepository projectRepository, FileStorageService fileStorageService, Predicate<Path> filter, ProgressInfo progressInfo, boolean verbose) throws IOException {
 
         Result result = new Result();
         result.setProject(project);
@@ -320,7 +349,7 @@ public class BackendTaskUtils {
             public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
                 try {
                     if(filter.test(file)) {
-                        ResultItem item = createResultItemFromPath(file, resultDirectory, fileStorageService, progressInfo);
+                        ResultItem item = createResultItemFromPath(file, resultDirectory, fileStorageService, progressInfo, verbose);
                         if (item != null) {
                             result.addResultItem(item);
                         }
@@ -362,7 +391,7 @@ public class BackendTaskUtils {
 //        projectRepository.save(project);
     }
 
-    public void runJIPipe(BackendTaskWorkloadParams params, Path projectFile, Map<String, Object> parameterOverrides, String prefix, ProgressInfo progressInfo) {
+    public void runJIPipe(BackendTaskWorkloadParams params, Path projectFile, Map<String, Object> parameterOverrides, String prefix, ProgressInfo progressInfo, boolean verbose) {
         RuntimeConfig runtimeConfig = params.getRuntimeConfig();
         Path tmpPath = params.getTmpPath().toAbsolutePath().normalize();
 
@@ -428,7 +457,15 @@ public class BackendTaskUtils {
 
         ProcessUtils.ExtendedExecutor executor = new ProcessUtils.ExtendedExecutor(ExecuteWatchdog.INFINITE_TIMEOUT, jipipeProgress, params.getLockFilePath());
         executor.setWorkingDirectory(jipipeRootPath.toFile());
-        ProcessUtils.setupLogger(commandLine, executor, jipipeProgress);
+
+        if(verbose) {
+            // Dump all JIPipe progress into info
+            ProcessUtils.setupLogger(commandLine, executor, jipipeProgress);
+        }
+        else {
+            // Use extractor to only capture relevant JIPipe outputs
+            setupLeanJIPipeLogger(commandLine, executor, jipipeProgress);
+        }
 
         try {
             executor.execute(commandLine);
@@ -436,6 +473,41 @@ public class BackendTaskUtils {
             progressInfo.log("Error: " + e.getMessage());
             throw new RuntimeException(e);
         }
+    }
+
+    private void setupLeanJIPipeLogger(CommandLine commandLine, ProcessUtils.ExtendedExecutor executor, ProgressInfo progressInfo) {
+        progressInfo.log("Running " + commandLine.toString());
+        String[] lastLine = new String[] { "" };
+
+        LogOutputStream progressInfoLog = new LogOutputStream() {
+            @Override
+            protected void processLine(String s, int i) {
+                for (String s1 : s.split("\\r")) {
+                    if(s1.contains("|")) {
+                        String s2 = s1.split("\\|")[0];
+                        if(s2.contains("{") || s2.contains("}") || s2.contains("(")) {
+                            // Filter out code
+                            continue;
+                        }
+                        if(s1.contains("GC")) {
+                            continue;
+                        }
+                        if(s1.contains("Copying data")) {
+                            continue;
+                        }
+                        if(!s1.contains("Executing")) {
+                            continue;
+                        }
+                        if(!lastLine[0].equals(s2)) {
+                            lastLine[0] = s2;
+                            progressInfo.log(WordUtils.wrap(s1, 120));
+                        }
+                    }
+
+                }
+            }
+        };
+        executor.setStreamHandler(new PumpStreamHandler(progressInfoLog, progressInfoLog));
     }
 
     /**

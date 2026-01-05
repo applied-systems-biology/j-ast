@@ -97,12 +97,15 @@ public class CalibratePixelSizeBackendTaskWorkload implements BackendTaskWorkloa
     @Override
     @Transactional(Transactional.TxType.REQUIRES_NEW)
     public void execute(BackendTaskWorkloadParams params, ProgressInfo progressInfo) throws Throwable {
-        taskUtils.writeRawImages(params, params.getPayload().getImageIds(), imageRepository, fileStorageService, progressInfo);
-        taskUtils.writeMaskAnnotations(params, params.getPayload().getImageIds(), "plate", imageRepository, fileStorageService, progressInfo);
+
+        final boolean verbose = params.getRuntimeConfig().isVerbose();
+
+        taskUtils.writeRawImages(params, params.getPayload().getImageIds(), imageRepository, fileStorageService, progressInfo, verbose);
+        taskUtils.writeMaskAnnotations(params, params.getPayload().getImageIds(), "plate", imageRepository, fileStorageService, progressInfo, verbose);
 
         Path projectFilePath = taskUtils.writeSharedFile(params, "image-calibrate-pixel-size-by-plate.jip");
         progressInfo.log("Project file is " + projectFilePath);
-        taskUtils.runJIPipe(params, projectFilePath, null, "", progressInfo);
+        taskUtils.runJIPipe(params, projectFilePath, null, "", progressInfo, verbose);
 
         List<Map<String, String>> updatedMetadata = taskUtils.readCsv(params, Paths.get("metadata_updated.csv"));
         List<Image> toSave = new ArrayList<>();

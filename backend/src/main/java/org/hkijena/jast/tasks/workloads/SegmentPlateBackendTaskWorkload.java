@@ -98,18 +98,20 @@ public class SegmentPlateBackendTaskWorkload implements BackendTaskWorkload {
     @Transactional(Transactional.TxType.REQUIRES_NEW)
     public void execute(BackendTaskWorkloadParams params, ProgressInfo progressInfo) throws Throwable {
 
+        final boolean verbose = params.getRuntimeConfig().isVerbose();
+
         boolean fastAlgorithm = (boolean) params.getPayload().getParameter("fastAlgorithm").getValue();
         boolean withCalibrate = (boolean) params.getPayload().getParameter("calibrateAfterwards").getValue();
         double plateDiameterMillimeters = ((Number) params.getPayload().getParameter("plate-diameter-mm").getValue()).doubleValue();
 
-        taskUtils.writeRawImages(params, params.getPayload().getImageIds(), imageRepository, fileStorageService, progressInfo);
+        taskUtils.writeRawImages(params, params.getPayload().getImageIds(), imageRepository, fileStorageService, progressInfo, verbose);
         Path projectFilePath = taskUtils.writeSharedFile(params, fastAlgorithm ? "image-segment-plate-fast.jip" : "image-segment-plate.jip");
         progressInfo.log("Project file is " + projectFilePath);
-        taskUtils.runJIPipe(params, projectFilePath, null, "", progressInfo);
+        taskUtils.runJIPipe(params, projectFilePath, null, "", progressInfo, params.getRuntimeConfig().isVerbose());
 
         Map<String, Path> maskAnnotationsConfig = new HashMap<>();
         maskAnnotationsConfig.put("plate", params.getTmpPath().resolve("plate"));
-        taskUtils.readMaskAnnotations(params.getPayload().getImageIds(), maskAnnotationsConfig, imageRepository, fileStorageService, progressInfo);
+        taskUtils.readMaskAnnotations(params.getPayload().getImageIds(), maskAnnotationsConfig, imageRepository, fileStorageService, progressInfo, verbose);
 
         if(withCalibrate) {
             BackendTaskPayload subTaskPayload = new BackendTaskPayload();

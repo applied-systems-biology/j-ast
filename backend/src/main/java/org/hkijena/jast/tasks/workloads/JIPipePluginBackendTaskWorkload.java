@@ -169,13 +169,15 @@ public class JIPipePluginBackendTaskWorkload implements BackendTaskWorkload {
 
     @Override
     public void execute(BackendTaskWorkloadParams params, ProgressInfo progressInfo) throws Throwable {
+        final boolean verbose = params.getRuntimeConfig().isVerbose();
+
         progressInfo.log("Executing plugin " + pluginFile.getFileName());
         Map<String, Object> parameterOverrides = new HashMap<>();
 
-        taskUtils.writeRawImages(params, params.getPayload().getImageIds(), imageRepository, fileStorageService, progressInfo);
+        taskUtils.writeRawImages(params, params.getPayload().getImageIds(), imageRepository, fileStorageService, progressInfo, verbose);
         for (BackendTaskWorkloadDataSlot input : inputs) {
             if(input.getType() == BackendTaskWorkloadDataSlotType.ImageMaskAnnotation) {
-                taskUtils.writeMaskAnnotations(params, params.getPayload().getImageIds(), input.getName(), imageRepository, fileStorageService, progressInfo);
+                taskUtils.writeMaskAnnotations(params, params.getPayload().getImageIds(), input.getName(), imageRepository, fileStorageService, progressInfo, verbose);
             }
         }
 
@@ -189,7 +191,7 @@ public class JIPipePluginBackendTaskWorkload implements BackendTaskWorkload {
         Path projectFile = params.getTmpPath().resolve(pluginFile.getFileName());
         Files.copy(pluginFile, projectFile);
         progressInfo.log("Project file is " + projectFile);
-        taskUtils.runJIPipe(params, projectFile, parameterOverrides, "", progressInfo);
+        taskUtils.runJIPipe(params, projectFile, parameterOverrides, "", progressInfo, verbose);
 
         // Collect generated annotations
         Map<String, Path> maskAnnotationsConfig = new HashMap<>();
@@ -206,13 +208,13 @@ public class JIPipePluginBackendTaskWorkload implements BackendTaskWorkload {
                 maskAnnotationsConfig.put(output.getName(), annotationPath);
             }
             else if(output.getType() == BackendTaskWorkloadDataSlotType.Raw) {
-                taskUtils.readRawImages(params.getPayload().getImageIds(), params.getTmpPath().resolve("raw_updated"), imageRepository, fileStorageService, progressInfo);
+                taskUtils.readRawImages(params.getPayload().getImageIds(), params.getTmpPath().resolve("raw_updated"), imageRepository, fileStorageService, progressInfo, verbose);
             }
         }
 
         // Execute annotation reading
         if(!maskAnnotationsConfig.isEmpty()) {
-            taskUtils.readMaskAnnotations(params.getPayload().getImageIds(), maskAnnotationsConfig, imageRepository, fileStorageService, progressInfo);
+            taskUtils.readMaskAnnotations(params.getPayload().getImageIds(), maskAnnotationsConfig, imageRepository, fileStorageService, progressInfo, verbose);
         }
 
         // Process results if enabled
@@ -221,7 +223,7 @@ public class JIPipePluginBackendTaskWorkload implements BackendTaskWorkload {
             String resultDescription = StringUtils.nullToEmpty(params.getPayload().getParameter("__jast__result-description").getValue());
             Project project = projectRepository.findById(params.getPayload().getProjectId()).get();
 
-            taskUtils.readResultsDirectory(resultName, resultDescription, params.getTmpPath().resolve("results"), project, projectRepository, fileStorageService, Predicates.alwaysTrue(), progressInfo);
+            taskUtils.readResultsDirectory(resultName, resultDescription, params.getTmpPath().resolve("results"), project, projectRepository, fileStorageService, Predicates.alwaysTrue(), progressInfo, verbose);
         }
     }
 }

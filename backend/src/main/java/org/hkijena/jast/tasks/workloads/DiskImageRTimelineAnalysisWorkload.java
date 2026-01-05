@@ -134,6 +134,8 @@ public class DiskImageRTimelineAnalysisWorkload implements BackendTaskWorkload {
     @Transactional(Transactional.TxType.REQUIRES_NEW)
     public void execute(BackendTaskWorkloadParams params, ProgressInfo progressInfo) throws Throwable {
 
+        final boolean verbose = params.getRuntimeConfig().isVerbose();
+
         Map<String, Object> parameterOverrides = new HashMap<>();
 
         // Parse and read the thresholds
@@ -141,10 +143,10 @@ public class DiskImageRTimelineAnalysisWorkload implements BackendTaskWorkload {
         List<Integer> thresholds = StringUtils.getIntegersFromRangeString(rawThresholds);
         parameterOverrides.put(PARAMETER_OVERRIDES.get("__thresholds"), thresholds.stream().map(t -> t / 100.0).toList());
 
-        taskUtils.writeRawImages(params, params.getPayload().getImageIds(), imageRepository, fileStorageService, progressInfo);
-        taskUtils.writeMaskAnnotations(params, params.getPayload().getImageIds(), "plate", imageRepository, fileStorageService, progressInfo);
-        taskUtils.writeMaskAnnotations(params, params.getPayload().getImageIds(), "strip-disk", imageRepository, fileStorageService, progressInfo);
-        taskUtils.writeRowFirstMaskAnnotations(params, params.getPayload().getImageIds(), "zoi-shape", imageRepository, fileStorageService, progressInfo);
+        taskUtils.writeRawImages(params, params.getPayload().getImageIds(), imageRepository, fileStorageService, progressInfo, verbose);
+        taskUtils.writeMaskAnnotations(params, params.getPayload().getImageIds(), "plate", imageRepository, fileStorageService, progressInfo, verbose);
+        taskUtils.writeMaskAnnotations(params, params.getPayload().getImageIds(), "strip-disk", imageRepository, fileStorageService, progressInfo, verbose);
+        taskUtils.writeRowFirstMaskAnnotations(params, params.getPayload().getImageIds(), "zoi-shape", imageRepository, fileStorageService, progressInfo, verbose);
 
         for (BackendTaskParameterPayload parameter : params.getPayload().getParameters()) {
             String overriddenKey = PARAMETER_OVERRIDES.get(parameter.getId());
@@ -160,12 +162,12 @@ public class DiskImageRTimelineAnalysisWorkload implements BackendTaskWorkload {
 
         Path projectFilePath = taskUtils.writeSharedFile(params, useNumDiff ? "disk-image-r-analysis-timeline-v2-numdiff.jip" : "disk-image-r-analysis-timeline-v2.jip");
         progressInfo.log("Project file is " + projectFilePath);
-        taskUtils.runJIPipe(params, projectFilePath, parameterOverrides, "", progressInfo);
+        taskUtils.runJIPipe(params, projectFilePath, parameterOverrides, "", progressInfo, verbose);
 
         String resultName = StringUtils.orElse(params.getPayload().getParameter("result-name").getValue(), "Visualization");
         String resultDescription = StringUtils.nullToEmpty(params.getPayload().getParameter("result-description").getValue());
         Project project = projectRepository.findById(params.getPayload().getProjectId()).get();
 
-        taskUtils.readResultsDirectory(resultName, resultDescription, params.getTmpPath().resolve("results"), project, projectRepository, fileStorageService, Predicates.alwaysTrue(), progressInfo);
+        taskUtils.readResultsDirectory(resultName, resultDescription, params.getTmpPath().resolve("results"), project, projectRepository, fileStorageService, Predicates.alwaysTrue(), progressInfo, verbose);
     }
 }

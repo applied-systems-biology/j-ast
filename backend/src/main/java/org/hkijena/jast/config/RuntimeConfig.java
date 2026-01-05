@@ -16,6 +16,7 @@ public class RuntimeConfig {
     private List<String> fijiWrapperArgs;
     private String sharedResourcesDirectory;
     private boolean keepTmp;
+    private boolean verbose;
 
     public String getSharedResourcesDirectory() {
         return sharedResourcesDirectory;
@@ -95,5 +96,13 @@ public class RuntimeConfig {
 
     public void setKeepTmp(boolean keepTmp) {
         this.keepTmp = keepTmp;
+    }
+
+    public boolean isVerbose() {
+        return verbose;
+    }
+
+    public void setVerbose(boolean verbose) {
+        this.verbose = verbose;
     }
 }

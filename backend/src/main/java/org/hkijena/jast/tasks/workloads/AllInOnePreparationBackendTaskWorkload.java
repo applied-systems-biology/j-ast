@@ -124,6 +124,8 @@ public class AllInOnePreparationBackendTaskWorkload implements BackendTaskWorklo
     @Transactional(Transactional.TxType.REQUIRES_NEW)
     public void execute(BackendTaskWorkloadParams params, ProgressInfo progressInfo) throws Throwable {
 
+        final boolean verbose = params.getRuntimeConfig().isVerbose();
+
         final boolean doAutofill = params.getPayload().getParameterAsBoolean("do-autofill", true);
         final boolean doAutosort = params.getPayload().getParameterAsBoolean("do-autosort", true);
         final boolean doFindCalibratePlate = params.getPayload().getParameterAsBoolean("do-find-plate", true);
@@ -174,24 +176,24 @@ public class AllInOnePreparationBackendTaskWorkload implements BackendTaskWorklo
                 ProgressInfo plateProgress = progressInfo.resolve("Find/calibrate plate");
                 {
                     taskUtils.clearTmp(params.getTmpPath(), plateProgress);
-                    taskUtils.writeRawImages(params, idsToProcess, imageRepository, fileStorageService, plateProgress);
+                    taskUtils.writeRawImages(params, idsToProcess, imageRepository, fileStorageService, plateProgress, verbose);
                     Path projectFilePath = taskUtils.writeSharedFile(params, "image-segment-plate-fast.jip");
                     plateProgress.log("Project file is " + projectFilePath);
-                    taskUtils.runJIPipe(params, projectFilePath, null, "", plateProgress);
+                    taskUtils.runJIPipe(params, projectFilePath, null, "", plateProgress, params.getRuntimeConfig().isVerbose());
 
                     Map<String, Path> maskAnnotationsConfig = new HashMap<>();
                     maskAnnotationsConfig.put("plate", params.getTmpPath().resolve("plate"));
-                    taskUtils.readMaskAnnotations(idsToProcess, maskAnnotationsConfig, imageRepository, fileStorageService, plateProgress);
+                    taskUtils.readMaskAnnotations(idsToProcess, maskAnnotationsConfig, imageRepository, fileStorageService, plateProgress, verbose);
                 }
                 // Calibrate
                 {
                     taskUtils.clearTmp(params.getTmpPath(), plateProgress);
-                    taskUtils.writeRawImages(params, idsToProcess, imageRepository, fileStorageService, plateProgress);
-                    taskUtils.writeMaskAnnotations(params, idsToProcess, "plate", imageRepository, fileStorageService, plateProgress);
+                    taskUtils.writeRawImages(params, idsToProcess, imageRepository, fileStorageService, plateProgress, verbose);
+                    taskUtils.writeMaskAnnotations(params, idsToProcess, "plate", imageRepository, fileStorageService, plateProgress, verbose);
 
                     Path projectFilePath = taskUtils.writeSharedFile(params, "image-calibrate-pixel-size-by-plate.jip");
                     plateProgress.log("Project file is " + projectFilePath);
-                    taskUtils.runJIPipe(params, projectFilePath, null, "", plateProgress);
+                    taskUtils.runJIPipe(params, projectFilePath, null, "", plateProgress, params.getRuntimeConfig().isVerbose());
 
                     List<Map<String, String>> updatedMetadata = taskUtils.readCsv(params, Paths.get("metadata_updated.csv"));
                     List<Image> toSave = new ArrayList<>();
@@ -223,18 +225,18 @@ public class AllInOnePreparationBackendTaskWorkload implements BackendTaskWorklo
                 ProgressInfo ddaProgress = progressInfo.resolve("Find DDA disk");
                 taskUtils.clearTmp(params.getTmpPath(), ddaProgress);
 
-                taskUtils.writeRawImages(params, idsToProcess, imageRepository, fileStorageService, ddaProgress);
-                taskUtils.writeMaskAnnotations(params, idsToProcess, "plate", imageRepository, fileStorageService, ddaProgress);
+                taskUtils.writeRawImages(params, idsToProcess, imageRepository, fileStorageService, ddaProgress, verbose);
+                taskUtils.writeMaskAnnotations(params, idsToProcess, "plate", imageRepository, fileStorageService, ddaProgress, verbose);
 
                 Path projectFilePath = taskUtils.writeSharedFile(params, "image-segment-dda-disk-v3.jip");
                 ddaProgress.log("Project file is " + projectFilePath);
                 Map<String, Object> ddaParameters = new HashMap<>();
                 ddaParameters.put("/expectedDiskDiameter", params.getPayload().getParameterAsDouble("dda-disk-diameter-mm", 6));
-                taskUtils.runJIPipe(params, projectFilePath, ddaParameters, "", ddaProgress);
+                taskUtils.runJIPipe(params, projectFilePath, ddaParameters, "", ddaProgress, params.getRuntimeConfig().isVerbose());
 
                 Map<String, Path> maskAnnotationsConfig = new HashMap<>();
                 maskAnnotationsConfig.put("strip-disk", params.getTmpPath().resolve("strip-disk"));
-                taskUtils.readMaskAnnotations(idsToProcess, maskAnnotationsConfig, imageRepository, fileStorageService, ddaProgress);
+                taskUtils.readMaskAnnotations(idsToProcess, maskAnnotationsConfig, imageRepository, fileStorageService, ddaProgress, verbose);
             }
             else {
                 progressInfo.log("Find DDA disk: nothing to do!");
@@ -247,16 +249,16 @@ public class AllInOnePreparationBackendTaskWorkload implements BackendTaskWorklo
                 ProgressInfo etestProgress = progressInfo.resolve("Find E-Test strip");
                 taskUtils.clearTmp(params.getTmpPath(), etestProgress);
 
-                taskUtils.writeRawImages(params, idsToProcess, imageRepository, fileStorageService, etestProgress);
-                taskUtils.writeMaskAnnotations(params, idsToProcess, "plate", imageRepository, fileStorageService, etestProgress);
+                taskUtils.writeRawImages(params, idsToProcess, imageRepository, fileStorageService, etestProgress, verbose);
+                taskUtils.writeMaskAnnotations(params, idsToProcess, "plate", imageRepository, fileStorageService, etestProgress, verbose);
 
                 Path projectFilePath = taskUtils.writeSharedFile(params, "image-segment-etest-strip.jip");
                 etestProgress.log("Project file is " + projectFilePath);
-                taskUtils.runJIPipe(params, projectFilePath, Collections.emptyMap(), "", etestProgress);
+                taskUtils.runJIPipe(params, projectFilePath, Collections.emptyMap(), "", etestProgress, params.getRuntimeConfig().isVerbose());
 
                 Map<String, Path> maskAnnotationsConfig = new HashMap<>();
                 maskAnnotationsConfig.put("strip-disk", params.getTmpPath().resolve("strip-disk"));
-                taskUtils.readMaskAnnotations(idsToProcess, maskAnnotationsConfig, imageRepository, fileStorageService, etestProgress);
+                taskUtils.readMaskAnnotations(idsToProcess, maskAnnotationsConfig, imageRepository, fileStorageService, etestProgress, verbose);
             }
             else {
                 progressInfo.log("Find E-test strip: nothing to do!");
@@ -268,17 +270,17 @@ public class AllInOnePreparationBackendTaskWorkload implements BackendTaskWorklo
             if(!idsToProcess.isEmpty()) {
                 ProgressInfo zoiShapeProgress = progressInfo.resolve("Find ZOI shape");
                 taskUtils.clearTmp(params.getTmpPath(), zoiShapeProgress);
-                taskUtils.writeRawImages(params, idsToProcess, imageRepository, fileStorageService, zoiShapeProgress);
-                taskUtils.writeMaskAnnotations(params, idsToProcess, "plate", imageRepository, fileStorageService, zoiShapeProgress);
-                taskUtils.writeMaskAnnotations(params, idsToProcess, "strip-disk", imageRepository, fileStorageService, zoiShapeProgress);
+                taskUtils.writeRawImages(params, idsToProcess, imageRepository, fileStorageService, zoiShapeProgress, verbose);
+                taskUtils.writeMaskAnnotations(params, idsToProcess, "plate", imageRepository, fileStorageService, zoiShapeProgress, verbose);
+                taskUtils.writeMaskAnnotations(params, idsToProcess, "strip-disk", imageRepository, fileStorageService, zoiShapeProgress, verbose);
 
                 Path projectFilePath = taskUtils.writeSharedFile(params, "image-segment-zoi-shape.jip");
                 zoiShapeProgress.log("Project file is " + projectFilePath);
-                taskUtils.runJIPipe(params, projectFilePath, Collections.emptyMap(), "", zoiShapeProgress);
+                taskUtils.runJIPipe(params, projectFilePath, Collections.emptyMap(), "", zoiShapeProgress, params.getRuntimeConfig().isVerbose());
 
                 Map<String, Path> maskAnnotationsConfig = new HashMap<>();
                 maskAnnotationsConfig.put("zoi-shape", params.getTmpPath().resolve("zoi-shape"));
-                taskUtils.readMaskAnnotations(idsToProcess, maskAnnotationsConfig, imageRepository, fileStorageService, zoiShapeProgress);
+                taskUtils.readMaskAnnotations(idsToProcess, maskAnnotationsConfig, imageRepository, fileStorageService, zoiShapeProgress, verbose);
             }
             else {
                 progressInfo.log("Find E-test ZOI shape: nothing to do!");
@@ -290,17 +292,17 @@ public class AllInOnePreparationBackendTaskWorkload implements BackendTaskWorklo
                 ProgressInfo zoiShapeProgress = progressInfo.resolve("Register ZOI shape");
                 taskUtils.clearTmp(params.getTmpPath(), zoiShapeProgress);
 
-                taskUtils.writeRawImages(params, idsToProcess, imageRepository, fileStorageService, zoiShapeProgress);
-                taskUtils.writeMaskAnnotations(params, idsToProcess, "strip-disk", imageRepository, fileStorageService, zoiShapeProgress);
-                taskUtils.writeRowFirstMaskAnnotations(params, idsToProcess, "zoi-shape", imageRepository, fileStorageService, zoiShapeProgress);
+                taskUtils.writeRawImages(params, idsToProcess, imageRepository, fileStorageService, zoiShapeProgress, verbose);
+                taskUtils.writeMaskAnnotations(params, idsToProcess, "strip-disk", imageRepository, fileStorageService, zoiShapeProgress, verbose);
+                taskUtils.writeRowFirstMaskAnnotations(params, idsToProcess, "zoi-shape", imageRepository, fileStorageService, zoiShapeProgress, verbose);
 
                 Path projectFilePath = taskUtils.writeSharedFile(params, "etest-copy-registered-zoi-shape.jip");
                 zoiShapeProgress.log("Project file is " + projectFilePath);
-                taskUtils.runJIPipe(params, projectFilePath, Collections.emptyMap(), "", zoiShapeProgress);
+                taskUtils.runJIPipe(params, projectFilePath, Collections.emptyMap(), "", zoiShapeProgress, params.getRuntimeConfig().isVerbose());
 
                 Map<String, Path> maskAnnotationsConfig = new HashMap<>();
                 maskAnnotationsConfig.put("zoi-shape", params.getTmpPath().resolve("zoi-shape-aligned"));
-                taskUtils.readMaskAnnotations(idsToProcess, maskAnnotationsConfig, imageRepository, fileStorageService, zoiShapeProgress);
+                taskUtils.readMaskAnnotations(idsToProcess, maskAnnotationsConfig, imageRepository, fileStorageService, zoiShapeProgress, verbose);
             }
             else {
                 progressInfo.log("Register E-test ZOI shape: nothing to do!");
