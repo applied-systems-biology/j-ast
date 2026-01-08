@@ -260,7 +260,6 @@ deploy_leibniz_hki:
     - mv -v /opt/jastapp/tmp/j-ast-server-linux-x64/share /opt/jastapp/app/share
     - chmod 664 /opt/jastapp/tmp/j-ast-server-linux-x64/server.jar
     - mv -f /opt/jastapp/tmp/j-ast-server-linux-x64/server.jar /opt/jastapp/app/server.jar
-    - chmod -Rv g+w /opt/jastapp/app/
     - rm -rv /opt/jastapp/tmp/* || true
   rules:
     - if: '$CI_COMMIT_BRANCH == "master"'
