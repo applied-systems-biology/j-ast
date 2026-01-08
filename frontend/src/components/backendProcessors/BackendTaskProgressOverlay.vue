@@ -36,7 +36,7 @@ import { api } from 'boot/axios';
 const progress = ref<ProgressInfo | null>(null);
 let lastMatchTime = 0;
 
-const pollingInterval = 2500;
+// const pollingInterval = 2500;
 
 const visible = ref(false)
 const collapsed = ref(false);
@@ -71,11 +71,12 @@ function fetchLogs(raw : string) {
 
 // Function to display logs with smooth updates
 async function updateDisplayedLogs(newLogs: { id: number; text: string }[]) {
-  const delay = (pollingInterval / newLogs.length) * 0.75; // Delay per line
+  // const delay = (pollingInterval / newLogs.length) * 0.75; // Delay per line
   let newProgress : ProgressInfo | null = null
 
+  displayedLogs.value = []
+
   for (const log of newLogs) {
-    await new Promise(resolve => setTimeout(resolve, delay)); // Wait for the delay
 
     // Add the new log to the displayed logs
     displayedLogs.value.push(log);
@@ -126,17 +127,17 @@ useIntervalFn(queryBackend, 2500);
   overflow: hidden;
 }
 
-.log-enter-active, .log-leave-active {
-  transition: transform 0.3s linear, opacity 0.5s ease;
-}
-
-.log-enter-from {
-  //transform: translateY(100%);
-  opacity: 0.5;
-}
-
-.log-leave-to {
-  //transform: translateY(-100%);
-  opacity: 0;
-}
+//.log-enter-active, .log-leave-active {
+//  transition: transform 0.3s linear, opacity 0.5s ease;
+//}
+//
+//.log-enter-from {
+//  //transform: translateY(100%);
+//  opacity: 0.5;
+//}
+//
+//.log-leave-to {
+//  //transform: translateY(-100%);
+//  opacity: 0;
+//}
 </style>
