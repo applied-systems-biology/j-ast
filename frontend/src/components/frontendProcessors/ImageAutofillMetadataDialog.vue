@@ -13,7 +13,7 @@
         <div>
           <strong>Dynamic mode:</strong>
           The file name will be split by the delimiter and the metadata values
-          will be extracted as the n-th element (starting with 0) from the
+          will be extracted as the n-th element (starting with 1) from the
           resulting list.
         </div>
         <div>
@@ -54,10 +54,10 @@
             <q-input
               v-if="value.mode == ImageAutofillMetadataDialogFieldPayloadMode.Dynamic"
               type="number"
-              label="Element index"
+              label="Element #"
               v-model="value.index"
               filled
-              :rules="[(val) => val >= 0 || 'Most be at least zero']"
+              :rules="[(val) => val >= 1 || 'Most be at least one']"
             />
             <q-input
               v-if="value.mode == ImageAutofillMetadataDialogFieldPayloadMode.Static && value.staticValueOptions.length == 0"
@@ -128,7 +128,7 @@ const payload = ref<ImageAutofillMetadataDialogPayload>({
       fieldName: 'assayType',
       label: 'Assay type',
       mode: ImageAutofillMetadataDialogFieldPayloadMode.Dynamic,
-      index: 0,
+      index: 1,
       staticValue: AssayType.DDA,
       staticValueOptions: [AssayType.DDA, AssayType.ETest]
     },
@@ -136,7 +136,7 @@ const payload = ref<ImageAutofillMetadataDialogPayload>({
       fieldName: 'experiment',
       label: 'Experiment',
       mode: ImageAutofillMetadataDialogFieldPayloadMode.Dynamic,
-      index: 1,
+      index: 2,
       staticValue: "",
       staticValueOptions: []
     },
@@ -144,7 +144,7 @@ const payload = ref<ImageAutofillMetadataDialogPayload>({
       fieldName: 'sample',
       label: 'Sample',
       mode: ImageAutofillMetadataDialogFieldPayloadMode.Dynamic,
-      index: 2,
+      index: 3,
       staticValue: "",
       staticValueOptions: []
     },
@@ -152,7 +152,7 @@ const payload = ref<ImageAutofillMetadataDialogPayload>({
       fieldName: 'timePoint',
       label: 'Time point',
       mode: ImageAutofillMetadataDialogFieldPayloadMode.Dynamic,
-      index: 3,
+      index: 4,
       staticValue: "",
       staticValueOptions: []
     },
