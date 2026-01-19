@@ -57,11 +57,12 @@ export function doImageAutofillMetadata(
               for (const fieldPayload of payload.fields) {
                 
                 if(fieldPayload.mode == ImageAutofillMetadataDialogFieldPayloadMode.Dynamic) {
-                  if (fieldPayload.index >= 0 && fieldPayload.index < elements.length) {
+                  const zindex = fieldPayload.index - 1
+                  if (zindex >= 0 && zindex < elements.length) {
                     const currentValue = (image as any)[fieldPayload.fieldName];
                     if (payload.overrideExisting || !currentValue) {
                       // Read out the current value
-                      let newValue = elements[fieldPayload.index]
+                      let newValue = elements[zindex]
 
                       // Special case for assay Type
                       if (fieldPayload.fieldName == "assayType") {
