@@ -1,6 +1,7 @@
 package org.hkijena.jast.tasks.workloads;
 
 import jakarta.transaction.Transactional;
+import org.hkijena.jast.config.SystemPackage;
 import org.hkijena.jast.model.AssayType;
 import org.hkijena.jast.model.ViewMode;
 import org.hkijena.jast.repositories.ImageRepository;
@@ -97,12 +98,14 @@ public class InvertRawImageBackendTaskWorkload implements BackendTaskWorkload {
     public void execute(BackendTaskWorkloadParams params, ProgressInfo progressInfo) throws Throwable {
 
         final boolean verbose = params.getRuntimeConfig().isVerbose();
+        final boolean preferSystemPackages = params.getRuntimeConfig().isPreferSystemPackages();
+        final List<SystemPackage> systemPackages = params.getRuntimeConfig().getSystemPackages();
 
         taskUtils.writeRawImages(params, params.getPayload().getImageIds(), imageRepository, fileStorageService, progressInfo, verbose);
 
         Path projectFilePath = taskUtils.writeSharedFile(params, "invert-image.jip");
         progressInfo.log("Project file is " + projectFilePath);
-        taskUtils.runJIPipe(params, projectFilePath, Collections.emptyMap(), "", progressInfo, verbose);
+        taskUtils.runJIPipe(params, projectFilePath, Collections.emptyMap(), "", progressInfo, systemPackages, preferSystemPackages, verbose);
 
         taskUtils.readRawImages(params.getPayload().getImageIds(), params.getTmpPath().resolve("raw_updated"), imageRepository, fileStorageService, progressInfo, verbose);
     }

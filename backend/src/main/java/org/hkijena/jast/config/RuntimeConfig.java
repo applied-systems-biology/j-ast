@@ -2,7 +2,10 @@ package org.hkijena.jast.config;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @ConfigurationProperties(prefix = "runtime")
 public class RuntimeConfig {
@@ -17,6 +20,11 @@ public class RuntimeConfig {
     private String sharedResourcesDirectory;
     private boolean keepTmp;
     private boolean verbose;
+    private boolean preferSystemPackages;
+    private List<SystemPackage> systemPackages = new ArrayList<>();
+
+    public RuntimeConfig() {
+    }
 
     public String getSharedResourcesDirectory() {
         return sharedResourcesDirectory;
@@ -104,5 +112,21 @@ public class RuntimeConfig {
 
     public void setVerbose(boolean verbose) {
         this.verbose = verbose;
+    }
+
+    public boolean isPreferSystemPackages() {
+        return preferSystemPackages;
+    }
+
+    public void setPreferSystemPackages(boolean preferSystemPackages) {
+        this.preferSystemPackages = preferSystemPackages;
+    }
+
+    public List<SystemPackage> getSystemPackages() {
+        return systemPackages;
+    }
+
+    public void setSystemPackages(List<SystemPackage> systemPackages) {
+        this.systemPackages = systemPackages;
     }
 }

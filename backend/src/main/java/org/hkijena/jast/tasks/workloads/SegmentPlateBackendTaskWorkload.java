@@ -1,6 +1,7 @@
 package org.hkijena.jast.tasks.workloads;
 
 import jakarta.transaction.Transactional;
+import org.hkijena.jast.config.SystemPackage;
 import org.hkijena.jast.model.AssayType;
 import org.hkijena.jast.model.ViewMode;
 import org.hkijena.jast.payloads.task.BackendTaskPayload;
@@ -99,6 +100,8 @@ public class SegmentPlateBackendTaskWorkload implements BackendTaskWorkload {
     public void execute(BackendTaskWorkloadParams params, ProgressInfo progressInfo) throws Throwable {
 
         final boolean verbose = params.getRuntimeConfig().isVerbose();
+        final boolean preferSystemPackages = params.getRuntimeConfig().isPreferSystemPackages();
+        final List<SystemPackage> systemPackages = params.getRuntimeConfig().getSystemPackages();
 
         boolean fastAlgorithm = (boolean) params.getPayload().getParameter("fastAlgorithm").getValue();
         boolean withCalibrate = (boolean) params.getPayload().getParameter("calibrateAfterwards").getValue();
@@ -107,7 +110,7 @@ public class SegmentPlateBackendTaskWorkload implements BackendTaskWorkload {
         taskUtils.writeRawImages(params, params.getPayload().getImageIds(), imageRepository, fileStorageService, progressInfo, verbose);
         Path projectFilePath = taskUtils.writeSharedFile(params, fastAlgorithm ? "image-segment-plate-fast.jip" : "image-segment-plate.jip");
         progressInfo.log("Project file is " + projectFilePath);
-        taskUtils.runJIPipe(params, projectFilePath, null, "", progressInfo, params.getRuntimeConfig().isVerbose());
+        taskUtils.runJIPipe(params, projectFilePath, null, "", progressInfo, systemPackages, preferSystemPackages, params.getRuntimeConfig().isVerbose());
 
         Map<String, Path> maskAnnotationsConfig = new HashMap<>();
         maskAnnotationsConfig.put("plate", params.getTmpPath().resolve("plate"));
