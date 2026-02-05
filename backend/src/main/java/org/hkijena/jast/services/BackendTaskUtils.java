@@ -1,5 +1,7 @@
 package org.hkijena.jast.services;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
@@ -16,6 +18,7 @@ import org.apache.commons.exec.PumpStreamHandler;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.commons.text.WordUtils;
 import org.hkijena.jast.config.RuntimeConfig;
+import org.hkijena.jast.config.SystemPackage;
 import org.hkijena.jast.model.ResultItemType;
 import org.hkijena.jast.model.entities.*;
 import org.hkijena.jast.payloads.task.BackendTaskPayload;
@@ -391,9 +394,37 @@ public class BackendTaskUtils {
 //        projectRepository.save(project);
     }
 
-    public void runJIPipe(BackendTaskWorkloadParams params, Path projectFile, Map<String, Object> parameterOverrides, String prefix, ProgressInfo progressInfo, boolean verbose) {
+    public void runJIPipe(BackendTaskWorkloadParams params, Path projectFile, Map<String, Object> parameterOverrides, String prefix, ProgressInfo progressInfo, List<SystemPackage> systemPackages, boolean preferSystemPackages, boolean verbose) {
         RuntimeConfig runtimeConfig = params.getRuntimeConfig();
         Path tmpPath = params.getTmpPath().toAbsolutePath().normalize();
+
+        // Do system package transformation
+        if(preferSystemPackages) {
+            progressInfo.log("--> SYSTEM PACKAGES ARE SET AS PREFERENCE <--");
+            final JsonNode projectNode = JsonUtils.readFromFile(projectFile, JsonNode.class);
+            for (SystemPackage systemPackage : systemPackages) {
+                if(systemPackage.isPresent()) {
+                    JsonNode settingsNode = projectNode;
+                    List<String> key = systemPackage.getKey();
+                    for (int i = 0; i < key.size() - 1; i++) {
+                        String k = key.get(i);
+                        settingsNode = settingsNode.path(k);
+                    }
+                    if(settingsNode.isObject() && settingsNode instanceof ObjectNode objectNode) {
+                        String lastKey = key.getLast();
+                        JsonNode value = JsonUtils.readFromString(systemPackage.getValue(), JsonNode.class);
+                        objectNode.set(lastKey, value);
+                        progressInfo.log("Using system package override for " + String.join("/", systemPackage.getKey()));
+                    }
+                    else {
+                        progressInfo.log("Unable to setup system package override for " + String.join("/", systemPackage.getKey()) + " - settings node does not exist!");
+                    }
+                }
+            }
+
+            projectFile = projectFile.getParent().resolve("project-modified.jip");
+            JsonUtils.saveToFile(projectNode, projectFile);
+        }
 
         // Create a new JIPipe output directory
         Path outputDir = PathUtils.resolveAndMakeSubDirectory(params.getTmpPath(), prefix + "jip-output");

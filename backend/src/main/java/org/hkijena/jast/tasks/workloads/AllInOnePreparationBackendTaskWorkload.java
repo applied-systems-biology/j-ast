@@ -2,6 +2,7 @@ package org.hkijena.jast.tasks.workloads;
 
 import com.google.common.collect.ImmutableList;
 import jakarta.transaction.Transactional;
+import org.hkijena.jast.config.SystemPackage;
 import org.hkijena.jast.model.AssayType;
 import org.hkijena.jast.model.ViewMode;
 import org.hkijena.jast.model.entities.Image;
@@ -125,6 +126,8 @@ public class AllInOnePreparationBackendTaskWorkload implements BackendTaskWorklo
     public void execute(BackendTaskWorkloadParams params, ProgressInfo progressInfo) throws Throwable {
 
         final boolean verbose = params.getRuntimeConfig().isVerbose();
+        final boolean preferSystemPackages = params.getRuntimeConfig().isPreferSystemPackages();
+        final List<SystemPackage> systemPackages = params.getRuntimeConfig().getSystemPackages();
 
         final boolean doAutofill = params.getPayload().getParameterAsBoolean("do-autofill", true);
         final boolean doAutosort = params.getPayload().getParameterAsBoolean("do-autosort", true);
@@ -179,7 +182,7 @@ public class AllInOnePreparationBackendTaskWorkload implements BackendTaskWorklo
                     taskUtils.writeRawImages(params, idsToProcess, imageRepository, fileStorageService, plateProgress, verbose);
                     Path projectFilePath = taskUtils.writeSharedFile(params, "image-segment-plate-fast.jip");
                     plateProgress.log("Project file is " + projectFilePath);
-                    taskUtils.runJIPipe(params, projectFilePath, null, "", plateProgress, params.getRuntimeConfig().isVerbose());
+                    taskUtils.runJIPipe(params, projectFilePath, null, "", plateProgress, systemPackages, preferSystemPackages, verbose);
 
                     Map<String, Path> maskAnnotationsConfig = new HashMap<>();
                     maskAnnotationsConfig.put("plate", params.getTmpPath().resolve("plate"));
@@ -193,7 +196,7 @@ public class AllInOnePreparationBackendTaskWorkload implements BackendTaskWorklo
 
                     Path projectFilePath = taskUtils.writeSharedFile(params, "image-calibrate-pixel-size-by-plate.jip");
                     plateProgress.log("Project file is " + projectFilePath);
-                    taskUtils.runJIPipe(params, projectFilePath, null, "", plateProgress, params.getRuntimeConfig().isVerbose());
+                    taskUtils.runJIPipe(params, projectFilePath, null, "", plateProgress, systemPackages, preferSystemPackages, verbose);
 
                     List<Map<String, String>> updatedMetadata = taskUtils.readCsv(params, Paths.get("metadata_updated.csv"));
                     List<Image> toSave = new ArrayList<>();
@@ -232,7 +235,7 @@ public class AllInOnePreparationBackendTaskWorkload implements BackendTaskWorklo
                 ddaProgress.log("Project file is " + projectFilePath);
                 Map<String, Object> ddaParameters = new HashMap<>();
                 ddaParameters.put("/expectedDiskDiameter", params.getPayload().getParameterAsDouble("dda-disk-diameter-mm", 6));
-                taskUtils.runJIPipe(params, projectFilePath, ddaParameters, "", ddaProgress, params.getRuntimeConfig().isVerbose());
+                taskUtils.runJIPipe(params, projectFilePath, ddaParameters, "", ddaProgress, systemPackages, preferSystemPackages, verbose);
 
                 Map<String, Path> maskAnnotationsConfig = new HashMap<>();
                 maskAnnotationsConfig.put("strip-disk", params.getTmpPath().resolve("strip-disk"));
@@ -254,7 +257,7 @@ public class AllInOnePreparationBackendTaskWorkload implements BackendTaskWorklo
 
                 Path projectFilePath = taskUtils.writeSharedFile(params, "image-segment-etest-strip.jip");
                 etestProgress.log("Project file is " + projectFilePath);
-                taskUtils.runJIPipe(params, projectFilePath, Collections.emptyMap(), "", etestProgress, params.getRuntimeConfig().isVerbose());
+                taskUtils.runJIPipe(params, projectFilePath, Collections.emptyMap(), "", etestProgress, systemPackages, preferSystemPackages, verbose);
 
                 Map<String, Path> maskAnnotationsConfig = new HashMap<>();
                 maskAnnotationsConfig.put("strip-disk", params.getTmpPath().resolve("strip-disk"));
@@ -276,7 +279,7 @@ public class AllInOnePreparationBackendTaskWorkload implements BackendTaskWorklo
 
                 Path projectFilePath = taskUtils.writeSharedFile(params, "image-segment-zoi-shape.jip");
                 zoiShapeProgress.log("Project file is " + projectFilePath);
-                taskUtils.runJIPipe(params, projectFilePath, Collections.emptyMap(), "", zoiShapeProgress, params.getRuntimeConfig().isVerbose());
+                taskUtils.runJIPipe(params, projectFilePath, Collections.emptyMap(), "", zoiShapeProgress, systemPackages, preferSystemPackages, verbose);
 
                 Map<String, Path> maskAnnotationsConfig = new HashMap<>();
                 maskAnnotationsConfig.put("zoi-shape", params.getTmpPath().resolve("zoi-shape"));
@@ -298,7 +301,7 @@ public class AllInOnePreparationBackendTaskWorkload implements BackendTaskWorklo
 
                 Path projectFilePath = taskUtils.writeSharedFile(params, "etest-copy-registered-zoi-shape.jip");
                 zoiShapeProgress.log("Project file is " + projectFilePath);
-                taskUtils.runJIPipe(params, projectFilePath, Collections.emptyMap(), "", zoiShapeProgress, params.getRuntimeConfig().isVerbose());
+                taskUtils.runJIPipe(params, projectFilePath, Collections.emptyMap(), "", zoiShapeProgress, systemPackages, preferSystemPackages, verbose);
 
                 Map<String, Path> maskAnnotationsConfig = new HashMap<>();
                 maskAnnotationsConfig.put("zoi-shape", params.getTmpPath().resolve("zoi-shape-aligned"));

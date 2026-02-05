@@ -1,6 +1,7 @@
 package org.hkijena.jast.tasks.workloads;
 
 import com.google.common.base.Predicates;
+import org.hkijena.jast.config.SystemPackage;
 import org.hkijena.jast.model.AssayType;
 import org.hkijena.jast.model.ViewMode;
 import org.hkijena.jast.model.entities.Project;
@@ -170,6 +171,8 @@ public class JIPipePluginBackendTaskWorkload implements BackendTaskWorkload {
     @Override
     public void execute(BackendTaskWorkloadParams params, ProgressInfo progressInfo) throws Throwable {
         final boolean verbose = params.getRuntimeConfig().isVerbose();
+        final boolean preferSystemPackages = params.getRuntimeConfig().isPreferSystemPackages();
+        final List<SystemPackage> systemPackages = params.getRuntimeConfig().getSystemPackages();
 
         progressInfo.log("Executing plugin " + pluginFile.getFileName());
         Map<String, Object> parameterOverrides = new HashMap<>();
@@ -191,7 +194,7 @@ public class JIPipePluginBackendTaskWorkload implements BackendTaskWorkload {
         Path projectFile = params.getTmpPath().resolve(pluginFile.getFileName());
         Files.copy(pluginFile, projectFile);
         progressInfo.log("Project file is " + projectFile);
-        taskUtils.runJIPipe(params, projectFile, parameterOverrides, "", progressInfo, verbose);
+        taskUtils.runJIPipe(params, projectFile, parameterOverrides, "", progressInfo, systemPackages, preferSystemPackages, verbose);
 
         // Collect generated annotations
         Map<String, Path> maskAnnotationsConfig = new HashMap<>();
