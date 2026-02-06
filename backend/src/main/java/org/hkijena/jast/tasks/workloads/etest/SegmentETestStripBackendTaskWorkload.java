@@ -1,4 +1,4 @@
-package org.hkijena.jast.tasks.workloads;
+package org.hkijena.jast.tasks.workloads.etest;
 
 import jakarta.transaction.Transactional;
 import org.hkijena.jast.config.SystemPackage;
@@ -23,22 +23,18 @@ import java.util.List;
 import java.util.Map;
 
 @Component
-@BackendTaskType(typeId = "image-segment-dda-disk-v3")
-public class SegmentDDADiskV3BackendTaskWorkload implements BackendTaskWorkload {
+@BackendTaskType(typeId = "image-segment-etest-strip")
+public class SegmentETestStripBackendTaskWorkload implements BackendTaskWorkload {
 
     private static final List<BackendTaskWorkloadDataSlot> INPUTS = Collections.singletonList(JASTDataSlot.Plate.toSlot());
     private static final List<BackendTaskWorkloadDataSlot> OUTPUTS = Collections.singletonList(JASTDataSlot.StripDisk.toSlot());
     private static final List<BackendTaskWorkloadParameterSlot> PARAMETERS = List.of(
-            new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotType.Number, "expectedDiameter", "Expected diameter (mm)", "Expected disk diameter in millimeters", 6),
-            new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotType.Number, "expectedDiskDiameterMaxDiffPerc", "Allowed diameter difference (%)", "How much the detected objects can deviate from the expected diameter", 0.3),
-            new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotType.Number, "minCirc", "Minimum circularity (%)", "Minimum circularity for object filtering", 0.5)
+            new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotType.Number, "expectedAR", "Strip aspect ratio", "The expected aspect ratio of the strip", 11)
     );
     private static final Map<String, String> PARAMETER_OVERRIDES = new HashMap<>();
 
     static {
-        PARAMETER_OVERRIDES.put("expectedDiameter", "/expectedDiskDiameter");
-        PARAMETER_OVERRIDES.put("expectedDiskDiameterMaxDiffPerc", "/expectedDiskDiameterMaxDiffPerc");
-        PARAMETER_OVERRIDES.put("minCirc", "/minCirc");
+        PARAMETER_OVERRIDES.put("expectedAR", "961ff2c5-c955-4600-97fe-f7e09b6e515a/jipipe:algorithm:custom-expression-variables/expectedAR");
     }
 
     private final ImageRepository imageRepository;
@@ -47,7 +43,7 @@ public class SegmentDDADiskV3BackendTaskWorkload implements BackendTaskWorkload 
     private BackendTaskRegistry registry;
 
     @Autowired
-    public SegmentDDADiskV3BackendTaskWorkload(ImageRepository imageRepository, FileStorageService fileStorageService, BackendTaskUtils taskUtils) {
+    public SegmentETestStripBackendTaskWorkload(ImageRepository imageRepository, FileStorageService fileStorageService, BackendTaskUtils taskUtils) {
         this.imageRepository = imageRepository;
         this.fileStorageService = fileStorageService;
         this.taskUtils = taskUtils;
@@ -60,12 +56,17 @@ public class SegmentDDADiskV3BackendTaskWorkload implements BackendTaskWorkload 
 
     @Override
     public String getName() {
-        return "Auto-detect DDA disk (v3)";
+        return "Auto-detect ETest strip (v1)";
     }
 
     @Override
     public String getDescription() {
-        return "Automatically detects the disk in disk diffusion assays. Combination of intensity- and variance-based methods.";
+        return "Automatically detects the strip in E-tests";
+    }
+
+    @Override
+    public String getCategory() {
+        return "E-Test";
     }
 
     @Override
@@ -89,13 +90,8 @@ public class SegmentDDADiskV3BackendTaskWorkload implements BackendTaskWorkload 
     }
 
     @Override
-    public String getCategory() {
-        return "DDA";
-    }
-
-    @Override
     public AssayType getAssayTypeRestriction() {
-        return AssayType.DDA;
+        return AssayType.ETest;
     }
 
     @Override
@@ -121,13 +117,10 @@ public class SegmentDDADiskV3BackendTaskWorkload implements BackendTaskWorkload 
 
         Map<String, Object> parameterOverrides = new HashMap<>();
         for (BackendTaskParameterPayload parameter : params.getPayload().getParameters()) {
-            String key = PARAMETER_OVERRIDES.get(parameter.getId());
-            if(key != null) {
-                parameterOverrides.put(key, parameter.getValue());
-            }
+            parameterOverrides.put(PARAMETER_OVERRIDES.get(parameter.getId()), parameter.getValue());
         }
 
-        Path projectFilePath = taskUtils.writeSharedFile(params, Path.of("workflows","image-segment-dda-disk-v3.jip"));
+        Path projectFilePath = taskUtils.writeSharedFile(params, Path.of("workflows","image-segment-etest-strip.jip"));
         progressInfo.log("Project file is " + projectFilePath);
         taskUtils.runJIPipe(params, projectFilePath, parameterOverrides, "", progressInfo, systemPackages, preferSystemPackages, verbose);
 

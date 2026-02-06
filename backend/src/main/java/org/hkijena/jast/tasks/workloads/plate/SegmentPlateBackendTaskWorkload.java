@@ -1,4 +1,4 @@
-package org.hkijena.jast.tasks.workloads;
+package org.hkijena.jast.tasks.workloads.plate;
 
 import jakarta.transaction.Transactional;
 import org.hkijena.jast.config.SystemPackage;

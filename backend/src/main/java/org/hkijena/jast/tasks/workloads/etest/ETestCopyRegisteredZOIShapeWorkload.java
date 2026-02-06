@@ -1,9 +1,10 @@
-package org.hkijena.jast.tasks.workloads;
+package org.hkijena.jast.tasks.workloads.etest;
 
 import jakarta.transaction.Transactional;
 import org.hkijena.jast.config.SystemPackage;
 import org.hkijena.jast.model.AssayType;
 import org.hkijena.jast.model.ViewMode;
+import org.hkijena.jast.payloads.task.BackendTaskParameterPayload;
 import org.hkijena.jast.repositories.ImageRepository;
 import org.hkijena.jast.services.BackendTaskRegistry;
 import org.hkijena.jast.services.BackendTaskUtils;
@@ -17,22 +18,26 @@ import org.springframework.stereotype.Component;
 
 import java.nio.file.Path;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Component
-@BackendTaskType(typeId = "invert-raw-image")
-public class InvertRawImageBackendTaskWorkload implements BackendTaskWorkload {
+@BackendTaskType(typeId = "etest-copy-registered-zoi-shape")
+public class ETestCopyRegisteredZOIShapeWorkload implements BackendTaskWorkload {
 
-    private static final List<BackendTaskWorkloadDataSlot> INPUTS = List.of(JASTDataSlot.Raw.toSlot());
-    private static final List<BackendTaskWorkloadDataSlot> OUTPUTS = List.of(JASTDataSlot.Raw.toSlot());
-    private static final List<BackendTaskWorkloadParameterSlot> PARAMETERS = List.of();
+    private static final List<BackendTaskWorkloadDataSlot> INPUTS = List.of(JASTDataSlot.StripDisk.toSlot(),
+            JASTDataSlot.ZOIShape.toSlot(BackendTaskWorkloadDataSlotValidationMode.OncePerRow));
+    private static final List<BackendTaskWorkloadDataSlot> OUTPUTS = Collections.emptyList();
+    private static final List<BackendTaskWorkloadParameterSlot> PARAMETERS = Collections.emptyList();
+    private static final Map<String, String> PARAMETER_OVERRIDES = new HashMap<>();
     private final ImageRepository imageRepository;
     private final FileStorageService fileStorageService;
     private final BackendTaskUtils taskUtils;
     private BackendTaskRegistry registry;
 
     @Autowired
-    public InvertRawImageBackendTaskWorkload(ImageRepository imageRepository, FileStorageService fileStorageService, BackendTaskUtils taskUtils) {
+    public ETestCopyRegisteredZOIShapeWorkload(ImageRepository imageRepository, FileStorageService fileStorageService, BackendTaskUtils taskUtils) {
         this.imageRepository = imageRepository;
         this.fileStorageService = fileStorageService;
         this.taskUtils = taskUtils;
@@ -45,22 +50,18 @@ public class InvertRawImageBackendTaskWorkload implements BackendTaskWorkload {
 
     @Override
     public String getName() {
-        return "Invert raw image";
+        return "Copy and register ZOI shape across timeline";
     }
 
     @Override
     public String getDescription() {
-        return "Inverts the pixel values in the raw image";
-    }
-
-    @Override
-    public String getCategory() {
-        return "Preprocessing";
+        return "Copies the first available ZOI shape to the other images in the timeline. " +
+                "The strip is used to register the ZOI shape image.";
     }
 
     @Override
     public BackendTaskWorkloadMode getMode() {
-        return BackendTaskWorkloadMode.Single;
+        return BackendTaskWorkloadMode.FullRow;
     }
 
     @Override
@@ -79,8 +80,13 @@ public class InvertRawImageBackendTaskWorkload implements BackendTaskWorkload {
     }
 
     @Override
+    public String getCategory() {
+        return "E-Test";
+    }
+
+    @Override
     public AssayType getAssayTypeRestriction() {
-        return AssayType.Unknown;
+        return AssayType.ETest;
     }
 
     @Override
@@ -90,7 +96,7 @@ public class InvertRawImageBackendTaskWorkload implements BackendTaskWorkload {
 
     @Override
     public ViewMode getViewModeRestriction() {
-        return null;
+        return ViewMode.Timeline;
     }
 
     @Override
@@ -102,11 +108,20 @@ public class InvertRawImageBackendTaskWorkload implements BackendTaskWorkload {
         final List<SystemPackage> systemPackages = params.getRuntimeConfig().getSystemPackages();
 
         taskUtils.writeRawImages(params, params.getPayload().getImageIds(), imageRepository, fileStorageService, progressInfo, verbose);
+        taskUtils.writeMaskAnnotations(params, params.getPayload().getImageIds(), "strip-disk", imageRepository, fileStorageService, progressInfo, verbose);
+        taskUtils.writeRowFirstMaskAnnotations(params, params.getPayload().getImageIds(), "zoi-shape", imageRepository, fileStorageService, progressInfo, verbose);
 
-        Path projectFilePath = taskUtils.writeSharedFile(params, Path.of("workflows","invert-image.jip"));
+        Map<String, Object> parameterOverrides = new HashMap<>();
+        for (BackendTaskParameterPayload parameter : params.getPayload().getParameters()) {
+            parameterOverrides.put(PARAMETER_OVERRIDES.get(parameter.getId()), parameter.getValue());
+        }
+
+        Path projectFilePath = taskUtils.writeSharedFile(params, Path.of("workflows", "etest-copy-registered-zoi-shape.jip"));
         progressInfo.log("Project file is " + projectFilePath);
-        taskUtils.runJIPipe(params, projectFilePath, Collections.emptyMap(), "", progressInfo, systemPackages, preferSystemPackages, verbose);
+        taskUtils.runJIPipe(params, projectFilePath, parameterOverrides, "", progressInfo, systemPackages, preferSystemPackages, verbose);
 
-        taskUtils.readRawImages(params.getPayload().getImageIds(), params.getTmpPath().resolve("raw_updated"), imageRepository, fileStorageService, progressInfo, verbose);
+        Map<String, Path> maskAnnotationsConfig = new HashMap<>();
+        maskAnnotationsConfig.put("zoi-shape", params.getTmpPath().resolve("zoi-shape-aligned"));
+        taskUtils.readMaskAnnotations(params.getPayload().getImageIds(), maskAnnotationsConfig, imageRepository, fileStorageService, progressInfo, verbose);
     }
 }

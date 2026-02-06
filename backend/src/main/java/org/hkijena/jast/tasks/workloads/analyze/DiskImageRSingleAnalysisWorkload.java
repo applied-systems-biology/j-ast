@@ -1,4 +1,4 @@
-package org.hkijena.jast.tasks.workloads;
+package org.hkijena.jast.tasks.workloads.analyze;
 
 import com.google.common.base.Predicates;
 import jakarta.transaction.Transactional;
@@ -28,8 +28,8 @@ import java.util.List;
 import java.util.Map;
 
 @Component
-@BackendTaskType(typeId = "disk-image-r-analysis-timeline")
-public class DiskImageRTimelineAnalysisWorkload implements BackendTaskWorkload {
+@BackendTaskType(typeId = "disk-image-r-analysis-single")
+public class DiskImageRSingleAnalysisWorkload implements BackendTaskWorkload {
 
     private static final List<BackendTaskWorkloadDataSlot> INPUTS = List.of(
             JASTDataSlot.Plate.toSlot(),
@@ -37,7 +37,7 @@ public class DiskImageRTimelineAnalysisWorkload implements BackendTaskWorkload {
             JASTDataSlot.ZOIShape.toSlot(BackendTaskWorkloadDataSlotValidationMode.OncePerRow));
     private static final List<BackendTaskWorkloadDataSlot> OUTPUTS = Collections.emptyList();
     private static final List<BackendTaskWorkloadParameterSlot> PARAMETERS = List.of(
-            new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotType.String, "result-name", "Result name", "The name of the generated result folder", "DiskImageR-style result"),
+            new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotType.String, "result-name", "Result name", "The name of the generated result folder", "DiskImageR-style result (single)"),
             new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotType.String, "result-description", "Result description", "Description of the generated result", "RAD/FoG/ZOI"),
             new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotType.String, "thresholds", "Thresholds (%)", "The thresholds in percent (separate items with a semicolon)", "20; 50; 80"),
             new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotType.Number, "global-plate-shave-off-mm", "Plate edge thickness (mm)", "The thickness of the plate edge, which is subtracted from the plate area. If not set appropriately, the measurements will be skewed by the bright plate edge.", 10),
@@ -58,7 +58,7 @@ public class DiskImageRTimelineAnalysisWorkload implements BackendTaskWorkload {
     private BackendTaskRegistry registry;
 
     @Autowired
-    public DiskImageRTimelineAnalysisWorkload(ImageRepository imageRepository, ProjectRepository projectRepository, ResultRepository resultRepository, FileStorageService fileStorageService, BackendTaskUtils taskUtils) {
+    public DiskImageRSingleAnalysisWorkload(ImageRepository imageRepository, ProjectRepository projectRepository, ResultRepository resultRepository, FileStorageService fileStorageService, BackendTaskUtils taskUtils) {
         this.imageRepository = imageRepository;
         this.projectRepository = projectRepository;
         this.resultRepository = resultRepository;
@@ -68,7 +68,7 @@ public class DiskImageRTimelineAnalysisWorkload implements BackendTaskWorkload {
 
     @Override
     public ViewMode getViewModeRestriction() {
-        return ViewMode.Timeline;
+        return null;
     }
 
     @Override
@@ -78,7 +78,7 @@ public class DiskImageRTimelineAnalysisWorkload implements BackendTaskWorkload {
 
     @Override
     public String getName() {
-        return "DiskImageR-style analysis (RAD/FoG/ZOI) - Timeline only";
+        return "DiskImageR-style analysis (RAD/FoG/ZOI) - Single images";
     }
 
     @Override
@@ -89,7 +89,7 @@ public class DiskImageRTimelineAnalysisWorkload implements BackendTaskWorkload {
     @Override
     public String getDescription() {
         return "Applies an analysis that is based on the DiskImageR tool (Gerstein et al). " +
-                "For each time series, the tool will generate label areas around the strip/disk that follows the zone-of-inhibition (ZOI) shape (i.e. for DDA this is trivial). " +
+                "For each image, the tool will generate label areas around the strip/disk that follows the zone-of-inhibition (ZOI) shape (i.e. for DDA this is trivial). " +
                 "Then the analysis will proceed to find for each percentage threshold (default 20%, 50%, and 80%) the label that has the given reduction in brightness. " +
                 "This yields the radius-of-inhibition (RAD), which for DDA is the distance of the ZOI border to the disk, and for E-tests the distance to the point inside the strip where the distance to the ZOI shape is greatest. " +
                 "The ZOI is then applied to the other time point to calculate the field-of-growth (FoG)." +
@@ -98,7 +98,7 @@ public class DiskImageRTimelineAnalysisWorkload implements BackendTaskWorkload {
 
     @Override
     public BackendTaskWorkloadMode getMode() {
-        return BackendTaskWorkloadMode.FullRow;
+        return BackendTaskWorkloadMode.Single;
     }
 
     @Override
@@ -134,7 +134,6 @@ public class DiskImageRTimelineAnalysisWorkload implements BackendTaskWorkload {
     @Override
     @Transactional(Transactional.TxType.REQUIRES_NEW)
     public void execute(BackendTaskWorkloadParams params, ProgressInfo progressInfo) throws Throwable {
-
         final boolean verbose = params.getRuntimeConfig().isVerbose();
         final boolean preferSystemPackages = params.getRuntimeConfig().isPreferSystemPackages();
         final List<SystemPackage> systemPackages = params.getRuntimeConfig().getSystemPackages();
@@ -163,7 +162,8 @@ public class DiskImageRTimelineAnalysisWorkload implements BackendTaskWorkload {
 
         boolean useNumDiff = params.getPayload().getParameterAsBoolean("num-diff", true);
 
-        Path projectFilePath = taskUtils.writeSharedFile(params, useNumDiff ? Path.of("workflows", "disk-image-r-analysis-timeline-v2-numdiff.jip") : Path.of("workflows", "disk-image-r-analysis-timeline-v2.jip"));
+        Path projectFilePath = taskUtils.writeSharedFile(params, useNumDiff ? Path.of("workflows", "disk-image-r-analysis-single-numdiff.jip") : Path.of("workflows", "disk-image-r-analysis-single.jip"));
+
         progressInfo.log("Project file is " + projectFilePath);
         taskUtils.runJIPipe(params, projectFilePath, parameterOverrides, "", progressInfo, systemPackages, preferSystemPackages, verbose);
 

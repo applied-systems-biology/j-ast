@@ -1,4 +1,4 @@
-package org.hkijena.jast.tasks.workloads;
+package org.hkijena.jast.tasks.workloads.utils;
 
 import jakarta.transaction.Transactional;
 import org.hkijena.jast.model.AssayType;

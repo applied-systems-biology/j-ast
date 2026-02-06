@@ -1,4 +1,4 @@
-package org.hkijena.jast.tasks.workloads;
+package org.hkijena.jast.tasks.workloads.ddadisk;
 
 import jakarta.transaction.Transactional;
 import org.hkijena.jast.config.SystemPackage;
@@ -23,26 +23,22 @@ import java.util.List;
 import java.util.Map;
 
 @Component
-@BackendTaskType(typeId = "image-segment-dda-disk-fast")
-public class SegmentDDADiskBackendTaskWorkload implements BackendTaskWorkload {
+@BackendTaskType(typeId = "image-segment-dda-disk-v3")
+public class SegmentDDADiskV3BackendTaskWorkload implements BackendTaskWorkload {
 
     private static final List<BackendTaskWorkloadDataSlot> INPUTS = Collections.singletonList(JASTDataSlot.Plate.toSlot());
     private static final List<BackendTaskWorkloadDataSlot> OUTPUTS = Collections.singletonList(JASTDataSlot.StripDisk.toSlot());
     private static final List<BackendTaskWorkloadParameterSlot> PARAMETERS = List.of(
-            new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotType.Boolean, "fastAlgorithm", "Use fast algorithm", "Use a faster algorithm that assumes that the DDA disk is close to the center of the plate", true),
-            new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotType.Number, "minCirc", "Minimum circularity (0-1)", "Minimum circularity of the disk", 0.5),
-            new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotType.Number, "minFeret", "Minimum diameter (mm)", "Minimum diameter in millimeters. A lower than expected value is better.", 2),
-            new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotType.Number, "maxFeret", "Maximum diameter (mm)", "Maximum diameter in millimeters. A higher than expected value is better.", 12),
-            new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotType.Number, "areaScale", "Fast algorithm: Area scale (0-1)", "Scale the plate area down for searching for the disk. Applies only to the fast algorithm.", 0.25)
+            new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotType.Number, "expectedDiameter", "Expected diameter (mm)", "Expected disk diameter in millimeters", 6),
+            new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotType.Number, "expectedDiskDiameterMaxDiffPerc", "Allowed diameter difference (%)", "How much the detected objects can deviate from the expected diameter", 0.3),
+            new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotType.Number, "minCirc", "Minimum circularity (%)", "Minimum circularity for object filtering", 0.5)
     );
     private static final Map<String, String> PARAMETER_OVERRIDES = new HashMap<>();
 
     static {
-        PARAMETER_OVERRIDES.put("minCirc", "dc2e186c-881c-42d1-a9b6-78a8f24579ec/exported/circle filter/minCirc");
-        PARAMETER_OVERRIDES.put("minFeret", "dc2e186c-881c-42d1-a9b6-78a8f24579ec/exported/circle filter/minFeret");
-        PARAMETER_OVERRIDES.put("maxFeret", "dc2e186c-881c-42d1-a9b6-78a8f24579ec/exported/circle filter/maxFeret");
-        PARAMETER_OVERRIDES.put("areaScaleX_", "74d9b4c1-2e11-4b37-8766-e5e4f24f837c/scale-x");
-        PARAMETER_OVERRIDES.put("areaScaleY_", "74d9b4c1-2e11-4b37-8766-e5e4f24f837c/scale-y");
+        PARAMETER_OVERRIDES.put("expectedDiameter", "/expectedDiskDiameter");
+        PARAMETER_OVERRIDES.put("expectedDiskDiameterMaxDiffPerc", "/expectedDiskDiameterMaxDiffPerc");
+        PARAMETER_OVERRIDES.put("minCirc", "/minCirc");
     }
 
     private final ImageRepository imageRepository;
@@ -51,7 +47,7 @@ public class SegmentDDADiskBackendTaskWorkload implements BackendTaskWorkload {
     private BackendTaskRegistry registry;
 
     @Autowired
-    public SegmentDDADiskBackendTaskWorkload(ImageRepository imageRepository, FileStorageService fileStorageService, BackendTaskUtils taskUtils) {
+    public SegmentDDADiskV3BackendTaskWorkload(ImageRepository imageRepository, FileStorageService fileStorageService, BackendTaskUtils taskUtils) {
         this.imageRepository = imageRepository;
         this.fileStorageService = fileStorageService;
         this.taskUtils = taskUtils;
@@ -64,12 +60,12 @@ public class SegmentDDADiskBackendTaskWorkload implements BackendTaskWorkload {
 
     @Override
     public String getName() {
-        return "Auto-detect DDA disk (v1)";
+        return "Auto-detect DDA disk (v3)";
     }
 
     @Override
     public String getDescription() {
-        return "Automatically detects the disk in disk diffusion assays. Applies basic thresholding to find the disk.";
+        return "Automatically detects the disk in disk diffusion assays. Combination of intensity- and variance-based methods.";
     }
 
     @Override
@@ -123,8 +119,6 @@ public class SegmentDDADiskBackendTaskWorkload implements BackendTaskWorkload {
         taskUtils.writeRawImages(params, params.getPayload().getImageIds(), imageRepository, fileStorageService, progressInfo, verbose);
         taskUtils.writeMaskAnnotations(params, params.getPayload().getImageIds(), "plate", imageRepository, fileStorageService, progressInfo, verbose);
 
-        boolean fastAlgorithm = (boolean) params.getPayload().getParameter("fastAlgorithm").getValue();
-
         Map<String, Object> parameterOverrides = new HashMap<>();
         for (BackendTaskParameterPayload parameter : params.getPayload().getParameters()) {
             String key = PARAMETER_OVERRIDES.get(parameter.getId());
@@ -133,14 +127,9 @@ public class SegmentDDADiskBackendTaskWorkload implements BackendTaskWorkload {
             }
         }
 
-        if(fastAlgorithm) {
-            parameterOverrides.put(PARAMETER_OVERRIDES.get("areaScaleX_"), params.getPayload().getParameter("areaScale").getValue());
-            parameterOverrides.put(PARAMETER_OVERRIDES.get("areaScaleY_"), params.getPayload().getParameter("areaScale").getValue());
-        }
-
-        Path projectFilePath = taskUtils.writeSharedFile(params, fastAlgorithm ? Path.of("workflows","image-segment-dda-disk-fast.jip") : Path.of("workflows","image-segment-dda-disk.jip"));
+        Path projectFilePath = taskUtils.writeSharedFile(params, Path.of("workflows","image-segment-dda-disk-v3.jip"));
         progressInfo.log("Project file is " + projectFilePath);
-        taskUtils.runJIPipe(params, projectFilePath, parameterOverrides, "", progressInfo, systemPackages, preferSystemPackages, params.getRuntimeConfig().isVerbose());
+        taskUtils.runJIPipe(params, projectFilePath, parameterOverrides, "", progressInfo, systemPackages, preferSystemPackages, verbose);
 
         Map<String, Path> maskAnnotationsConfig = new HashMap<>();
         maskAnnotationsConfig.put("strip-disk", params.getTmpPath().resolve("strip-disk"));
