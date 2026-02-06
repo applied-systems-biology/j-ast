@@ -124,7 +124,7 @@ public class SegmentDDADiskV2BackendTaskWorkload implements BackendTaskWorkload 
             }
         }
 
-        Path projectFilePath = taskUtils.writeSharedFile(params, "image-segment-dda-disk-v2.jip");
+        Path projectFilePath = taskUtils.writeSharedFile(params, Path.of("workflows","image-segment-dda-disk-v2.jip"));
         progressInfo.log("Project file is " + projectFilePath);
         taskUtils.runJIPipe(params, projectFilePath, parameterOverrides, "", progressInfo, systemPackages, preferSystemPackages, verbose);
 

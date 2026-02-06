@@ -162,7 +162,7 @@ public class DiskImageRSingleAnalysisWorkload implements BackendTaskWorkload {
 
         boolean useNumDiff = params.getPayload().getParameterAsBoolean("num-diff", true);
 
-        Path projectFilePath = taskUtils.writeSharedFile(params, useNumDiff ? "disk-image-r-analysis-single-numdiff.jip" : "disk-image-r-analysis-single.jip");
+        Path projectFilePath = taskUtils.writeSharedFile(params, useNumDiff ? Path.of("workflows", "disk-image-r-analysis-single-numdiff.jip") : Path.of("workflows", "disk-image-r-analysis-single.jip"));
 
         progressInfo.log("Project file is " + projectFilePath);
         taskUtils.runJIPipe(params, projectFilePath, parameterOverrides, "", progressInfo, systemPackages, preferSystemPackages, verbose);

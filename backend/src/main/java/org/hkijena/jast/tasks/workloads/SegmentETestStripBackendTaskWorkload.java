@@ -120,7 +120,7 @@ public class SegmentETestStripBackendTaskWorkload implements BackendTaskWorkload
             parameterOverrides.put(PARAMETER_OVERRIDES.get(parameter.getId()), parameter.getValue());
         }
 
-        Path projectFilePath = taskUtils.writeSharedFile(params, "image-segment-etest-strip.jip");
+        Path projectFilePath = taskUtils.writeSharedFile(params, Path.of("workflows","image-segment-etest-strip.jip"));
         progressInfo.log("Project file is " + projectFilePath);
         taskUtils.runJIPipe(params, projectFilePath, parameterOverrides, "", progressInfo, systemPackages, preferSystemPackages, verbose);
 

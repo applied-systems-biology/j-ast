@@ -138,7 +138,7 @@ public class SegmentDDADiskBackendTaskWorkload implements BackendTaskWorkload {
             parameterOverrides.put(PARAMETER_OVERRIDES.get("areaScaleY_"), params.getPayload().getParameter("areaScale").getValue());
         }
 
-        Path projectFilePath = taskUtils.writeSharedFile(params, fastAlgorithm ? "image-segment-dda-disk-fast.jip" : "image-segment-dda-disk.jip");
+        Path projectFilePath = taskUtils.writeSharedFile(params, fastAlgorithm ? Path.of("workflows","image-segment-dda-disk-fast.jip") : Path.of("workflows","image-segment-dda-disk.jip"));
         progressInfo.log("Project file is " + projectFilePath);
         taskUtils.runJIPipe(params, projectFilePath, parameterOverrides, "", progressInfo, systemPackages, preferSystemPackages, params.getRuntimeConfig().isVerbose());
 

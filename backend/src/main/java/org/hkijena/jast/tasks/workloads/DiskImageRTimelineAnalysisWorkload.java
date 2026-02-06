@@ -163,7 +163,7 @@ public class DiskImageRTimelineAnalysisWorkload implements BackendTaskWorkload {
 
         boolean useNumDiff = params.getPayload().getParameterAsBoolean("num-diff", true);
 
-        Path projectFilePath = taskUtils.writeSharedFile(params, useNumDiff ? "disk-image-r-analysis-timeline-v2-numdiff.jip" : "disk-image-r-analysis-timeline-v2.jip");
+        Path projectFilePath = taskUtils.writeSharedFile(params, useNumDiff ? Path.of("workflows", "disk-image-r-analysis-timeline-v2-numdiff.jip") : Path.of("workflows", "disk-image-r-analysis-timeline-v2.jip"));
         progressInfo.log("Project file is " + projectFilePath);
         taskUtils.runJIPipe(params, projectFilePath, parameterOverrides, "", progressInfo, systemPackages, preferSystemPackages, verbose);
 

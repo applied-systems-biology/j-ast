@@ -73,6 +73,17 @@ public class BackendTaskUtils {
         return params.getTmpPath().resolve(targetPath);
     }
 
+    /**
+     * Copies the shared file to the temporary directory; the directory is ignored
+     * @param params the params
+     * @param sourcePath the source path
+     * @return where the shared file is written
+     * @throws IOException on exception
+     */
+    public Path writeSharedFile(BackendTaskWorkloadParams params, Path sourcePath) throws IOException {
+        return writeSharedFile(params, sourcePath, sourcePath.getFileName());
+    }
+
     public Path writeSharedFile(BackendTaskWorkloadParams params, String sourcePath, String targetPath) throws IOException {
         return writeSharedFile(params, Paths.get(sourcePath), Paths.get(targetPath));
     }

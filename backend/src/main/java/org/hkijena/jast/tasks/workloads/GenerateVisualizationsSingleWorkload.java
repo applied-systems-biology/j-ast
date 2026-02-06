@@ -136,7 +136,7 @@ public class GenerateVisualizationsSingleWorkload implements BackendTaskWorkload
             }
         }
 
-        Path projectFilePath = taskUtils.writeSharedFile(params, "generate-visualizations-single.jip");
+        Path projectFilePath = taskUtils.writeSharedFile(params, Path.of("workflows", "generate-visualizations-single.jip"));
         progressInfo.log("Project file is " + projectFilePath);
         taskUtils.runJIPipe(params, projectFilePath, parameterOverrides, "", progressInfo, systemPackages, preferSystemPackages, verbose);
 

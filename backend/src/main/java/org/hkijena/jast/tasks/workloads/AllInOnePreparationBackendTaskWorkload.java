@@ -180,7 +180,7 @@ public class AllInOnePreparationBackendTaskWorkload implements BackendTaskWorklo
                 {
                     taskUtils.clearTmp(params.getTmpPath(), plateProgress);
                     taskUtils.writeRawImages(params, idsToProcess, imageRepository, fileStorageService, plateProgress, verbose);
-                    Path projectFilePath = taskUtils.writeSharedFile(params, "image-segment-plate-fast.jip");
+                    Path projectFilePath = taskUtils.writeSharedFile(params, Path.of("workflows", "image-segment-plate-fast.jip"));
                     plateProgress.log("Project file is " + projectFilePath);
                     taskUtils.runJIPipe(params, projectFilePath, null, "", plateProgress, systemPackages, preferSystemPackages, verbose);
 
@@ -194,7 +194,7 @@ public class AllInOnePreparationBackendTaskWorkload implements BackendTaskWorklo
                     taskUtils.writeRawImages(params, idsToProcess, imageRepository, fileStorageService, plateProgress, verbose);
                     taskUtils.writeMaskAnnotations(params, idsToProcess, "plate", imageRepository, fileStorageService, plateProgress, verbose);
 
-                    Path projectFilePath = taskUtils.writeSharedFile(params, "image-calibrate-pixel-size-by-plate.jip");
+                    Path projectFilePath = taskUtils.writeSharedFile(params, Path.of("workflows","image-calibrate-pixel-size-by-plate.jip"));
                     plateProgress.log("Project file is " + projectFilePath);
                     taskUtils.runJIPipe(params, projectFilePath, null, "", plateProgress, systemPackages, preferSystemPackages, verbose);
 
@@ -231,7 +231,7 @@ public class AllInOnePreparationBackendTaskWorkload implements BackendTaskWorklo
                 taskUtils.writeRawImages(params, idsToProcess, imageRepository, fileStorageService, ddaProgress, verbose);
                 taskUtils.writeMaskAnnotations(params, idsToProcess, "plate", imageRepository, fileStorageService, ddaProgress, verbose);
 
-                Path projectFilePath = taskUtils.writeSharedFile(params, "image-segment-dda-disk-v3.jip");
+                Path projectFilePath = taskUtils.writeSharedFile(params, Path.of("workflows","image-segment-dda-disk-v3.jip"));
                 ddaProgress.log("Project file is " + projectFilePath);
                 Map<String, Object> ddaParameters = new HashMap<>();
                 ddaParameters.put("/expectedDiskDiameter", params.getPayload().getParameterAsDouble("dda-disk-diameter-mm", 6));
@@ -255,7 +255,7 @@ public class AllInOnePreparationBackendTaskWorkload implements BackendTaskWorklo
                 taskUtils.writeRawImages(params, idsToProcess, imageRepository, fileStorageService, etestProgress, verbose);
                 taskUtils.writeMaskAnnotations(params, idsToProcess, "plate", imageRepository, fileStorageService, etestProgress, verbose);
 
-                Path projectFilePath = taskUtils.writeSharedFile(params, "image-segment-etest-strip.jip");
+                Path projectFilePath = taskUtils.writeSharedFile(params, Path.of("workflows","image-segment-etest-strip.jip"));
                 etestProgress.log("Project file is " + projectFilePath);
                 taskUtils.runJIPipe(params, projectFilePath, Collections.emptyMap(), "", etestProgress, systemPackages, preferSystemPackages, verbose);
 
@@ -277,7 +277,7 @@ public class AllInOnePreparationBackendTaskWorkload implements BackendTaskWorklo
                 taskUtils.writeMaskAnnotations(params, idsToProcess, "plate", imageRepository, fileStorageService, zoiShapeProgress, verbose);
                 taskUtils.writeMaskAnnotations(params, idsToProcess, "strip-disk", imageRepository, fileStorageService, zoiShapeProgress, verbose);
 
-                Path projectFilePath = taskUtils.writeSharedFile(params, "image-segment-zoi-shape.jip");
+                Path projectFilePath = taskUtils.writeSharedFile(params, Path.of("workflows","image-segment-zoi-shape.jip"));
                 zoiShapeProgress.log("Project file is " + projectFilePath);
                 taskUtils.runJIPipe(params, projectFilePath, Collections.emptyMap(), "", zoiShapeProgress, systemPackages, preferSystemPackages, verbose);
 
@@ -299,7 +299,7 @@ public class AllInOnePreparationBackendTaskWorkload implements BackendTaskWorklo
                 taskUtils.writeMaskAnnotations(params, idsToProcess, "strip-disk", imageRepository, fileStorageService, zoiShapeProgress, verbose);
                 taskUtils.writeRowFirstMaskAnnotations(params, idsToProcess, "zoi-shape", imageRepository, fileStorageService, zoiShapeProgress, verbose);
 
-                Path projectFilePath = taskUtils.writeSharedFile(params, "etest-copy-registered-zoi-shape.jip");
+                Path projectFilePath = taskUtils.writeSharedFile(params, Path.of("workflows","etest-copy-registered-zoi-shape.jip"));
                 zoiShapeProgress.log("Project file is " + projectFilePath);
                 taskUtils.runJIPipe(params, projectFilePath, Collections.emptyMap(), "", zoiShapeProgress, systemPackages, preferSystemPackages, verbose);
 

@@ -137,7 +137,7 @@ public class GenerateVisualizationsTimeSeriesWorkload implements BackendTaskWork
             }
         }
 
-        Path projectFilePath = taskUtils.writeSharedFile(params, "generate-visualizations.jip");
+        Path projectFilePath = taskUtils.writeSharedFile(params, Path.of("workflows","generate-visualizations.jip"));
         progressInfo.log("Project file is " + projectFilePath);
         taskUtils.runJIPipe(params, projectFilePath, parameterOverrides, "", progressInfo, systemPackages, preferSystemPackages, verbose);
 
