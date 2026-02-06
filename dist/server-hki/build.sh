@@ -67,16 +67,6 @@ echo "-----------------------------------------"
 # Copy shared directory
 cp -rv "../../share" "$TMP_DIR/j-ast-server-linux-x64/share"
 
-# Replace artifact with system version if available (needed for more stability)
-pushd "$TMP_DIR/j-ast-server-linux-x64/share" || exit 1
-
-for f in *-system.jip; do
-  base="${f%-system.jip}.jip"
-  mv -vf -- "$f" "$base"
-done
-
-popd || exit 1
-
 pushd "$TMP_DIR/j-ast-server-linux-x64/" || exit 1
 
 # Install JIPipe

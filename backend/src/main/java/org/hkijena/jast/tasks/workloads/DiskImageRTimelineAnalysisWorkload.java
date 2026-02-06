@@ -2,6 +2,7 @@ package org.hkijena.jast.tasks.workloads;
 
 import com.google.common.base.Predicates;
 import jakarta.transaction.Transactional;
+import org.hkijena.jast.config.SystemPackage;
 import org.hkijena.jast.model.AssayType;
 import org.hkijena.jast.model.ViewMode;
 import org.hkijena.jast.model.entities.Project;
@@ -135,6 +136,8 @@ public class DiskImageRTimelineAnalysisWorkload implements BackendTaskWorkload {
     public void execute(BackendTaskWorkloadParams params, ProgressInfo progressInfo) throws Throwable {
 
         final boolean verbose = params.getRuntimeConfig().isVerbose();
+        final boolean preferSystemPackages = params.getRuntimeConfig().isPreferSystemPackages();
+        final List<SystemPackage> systemPackages = params.getRuntimeConfig().getSystemPackages();
 
         Map<String, Object> parameterOverrides = new HashMap<>();
 
@@ -162,7 +165,7 @@ public class DiskImageRTimelineAnalysisWorkload implements BackendTaskWorkload {
 
         Path projectFilePath = taskUtils.writeSharedFile(params, useNumDiff ? "disk-image-r-analysis-timeline-v2-numdiff.jip" : "disk-image-r-analysis-timeline-v2.jip");
         progressInfo.log("Project file is " + projectFilePath);
-        taskUtils.runJIPipe(params, projectFilePath, parameterOverrides, "", progressInfo, verbose);
+        taskUtils.runJIPipe(params, projectFilePath, parameterOverrides, "", progressInfo, systemPackages, preferSystemPackages, verbose);
 
         String resultName = StringUtils.orElse(params.getPayload().getParameter("result-name").getValue(), "Visualization");
         String resultDescription = StringUtils.nullToEmpty(params.getPayload().getParameter("result-description").getValue());

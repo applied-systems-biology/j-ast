@@ -2,6 +2,7 @@ package org.hkijena.jast.tasks.workloads;
 
 import com.google.common.base.Predicates;
 import jakarta.transaction.Transactional;
+import org.hkijena.jast.config.SystemPackage;
 import org.hkijena.jast.model.AssayType;
 import org.hkijena.jast.model.ViewMode;
 import org.hkijena.jast.model.entities.Project;
@@ -120,6 +121,8 @@ public class GenerateVisualizationsTimeSeriesWorkload implements BackendTaskWork
     public void execute(BackendTaskWorkloadParams params, ProgressInfo progressInfo) throws Throwable {
 
         final boolean verbose = params.getRuntimeConfig().isVerbose();
+        final boolean preferSystemPackages = params.getRuntimeConfig().isPreferSystemPackages();
+        final List<SystemPackage> systemPackages = params.getRuntimeConfig().getSystemPackages();
 
         taskUtils.writeRawImages(params, params.getPayload().getImageIds(), imageRepository, fileStorageService, progressInfo, verbose);
         taskUtils.writeMaskAnnotations(params, params.getPayload().getImageIds(), "strip-disk", imageRepository, fileStorageService, progressInfo, verbose);
@@ -136,7 +139,7 @@ public class GenerateVisualizationsTimeSeriesWorkload implements BackendTaskWork
 
         Path projectFilePath = taskUtils.writeSharedFile(params, "generate-visualizations.jip");
         progressInfo.log("Project file is " + projectFilePath);
-        taskUtils.runJIPipe(params, projectFilePath, parameterOverrides, "", progressInfo, verbose);
+        taskUtils.runJIPipe(params, projectFilePath, parameterOverrides, "", progressInfo, systemPackages, preferSystemPackages, verbose);
 
         String resultName = StringUtils.orElse(params.getPayload().getParameter("result-name").getValue(), "Visualization");
         String resultDescription = StringUtils.nullToEmpty(params.getPayload().getParameter("result-description").getValue());
