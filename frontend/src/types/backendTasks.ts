@@ -30,10 +30,15 @@ export enum BackendTaskWorkloadDataSlotType {
   Metadata = "Metadata",
 }
 
-export  enum BackendTaskWorkloadParameterSlotType {
+export  enum BackendTaskWorkloadParameterSlotDataType {
   String = "String",
   Number = "Number",
   Boolean = "Boolean",
+}
+
+export enum BackendTaskWorkloadParameterSlotType {
+  Common = 'Common',
+  Advanced = 'Advanced'
 }
 
 export enum BackendTaskWorkloadDataSlotValidationMode {
@@ -61,7 +66,10 @@ export class BackendTaskWorkloadDataSlot {
 
 export class BackendTaskParameterPayload {
   @Expose()
-  type: BackendTaskWorkloadParameterSlotType = BackendTaskWorkloadParameterSlotType.String;
+  dataType: BackendTaskWorkloadParameterSlotDataType = BackendTaskWorkloadParameterSlotDataType.String;
+
+  @Expose()
+  type: BackendTaskWorkloadParameterSlotType = BackendTaskWorkloadParameterSlotType.Common;
 
   @Expose()
   id: string = "";
@@ -78,19 +86,19 @@ export class BackendTaskParameterPayload {
 
 export class BackendTaskTypePayload {
   @Expose()
-  taskId: string = "";
+  taskId: string = '';
 
   @Expose()
-  name: string = "";
+  name: string = '';
 
   @Expose()
-  description: string = "";
+  description: string = '';
 
   @Expose()
-  shortDescription: string = "";
+  shortDescription: string = '';
 
   @Expose()
-  category: string = "";
+  category: string = '';
 
   @Expose()
   workloadMode: BackendTaskWorkloadMode = BackendTaskWorkloadMode.Single;
@@ -112,6 +120,22 @@ export class BackendTaskTypePayload {
 
   @Expose()
   viewModeRestriction: ViewMode | null = null;
+
+  hasCommonParameters(): boolean {
+    return (
+      this.parameters.find(
+        (p) => p.type == BackendTaskWorkloadParameterSlotType.Common
+      ) != undefined
+    );
+  }
+
+  hasAdvancedParameters(): boolean {
+    return (
+      this.parameters.find(
+        (p) => p.type == BackendTaskWorkloadParameterSlotType.Advanced
+      ) != undefined
+    );
+  }
 }
 
 export class BackendTaskPayload {

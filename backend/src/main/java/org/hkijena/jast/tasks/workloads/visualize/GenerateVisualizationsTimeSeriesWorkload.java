@@ -36,9 +36,9 @@ public class GenerateVisualizationsTimeSeriesWorkload implements BackendTaskWork
             JASTDataSlot.StripDisk.toSlot(BackendTaskWorkloadDataSlotValidationMode.Optional));
     private static final List<BackendTaskWorkloadDataSlot> OUTPUTS = Collections.emptyList();
     private static final List<BackendTaskWorkloadParameterSlot> PARAMETERS = List.of(
-            new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotType.String, "result-name", "Result name", "The name of the generated result folder", "Visualization"),
-            new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotType.String, "result-description", "Result description", "Description of the generated result", ""),
-            new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotType.Number, "line-width", "Line width", "The annotation's line width in pixels", 3)
+            new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotDataType.String, BackendTaskWorkloadParameterSlotType.Common, "result-name", "Result name", "The name of the generated result folder", "Visualization"),
+            new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotDataType.String, BackendTaskWorkloadParameterSlotType.Common, "result-description", "Result description", "Description of the generated result", ""),
+            new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotDataType.Number, BackendTaskWorkloadParameterSlotType.Common, "line-width", "Line width", "The annotation's line width in pixels", 3)
     );
     private static final Map<String, String> PARAMETER_OVERRIDES = new HashMap<>();
     private final ImageRepository imageRepository;

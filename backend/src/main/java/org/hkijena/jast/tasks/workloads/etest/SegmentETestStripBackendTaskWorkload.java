@@ -29,7 +29,7 @@ public class SegmentETestStripBackendTaskWorkload implements BackendTaskWorkload
     private static final List<BackendTaskWorkloadDataSlot> INPUTS = Collections.singletonList(JASTDataSlot.Plate.toSlot());
     private static final List<BackendTaskWorkloadDataSlot> OUTPUTS = Collections.singletonList(JASTDataSlot.StripDisk.toSlot());
     private static final List<BackendTaskWorkloadParameterSlot> PARAMETERS = List.of(
-            new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotType.Number, "expectedAR", "Strip aspect ratio", "The expected aspect ratio of the strip", 11)
+            new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotDataType.Number, BackendTaskWorkloadParameterSlotType.Common, "expectedAR", "Strip aspect ratio", "The expected aspect ratio of the strip", 11)
     );
     private static final Map<String, String> PARAMETER_OVERRIDES = new HashMap<>();
 

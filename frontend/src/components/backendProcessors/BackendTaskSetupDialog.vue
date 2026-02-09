@@ -52,47 +52,28 @@
         </div>
       </q-card-section>
       <q-separator />
-      <q-card-section class="q-gutter-sm">
+      <q-card-section class="q-gutter-sm" v-if="taskType.hasCommonParameters()">
         <div class="text-h6">Parameters</div>
-        <div v-if="!payload.parameters">
-          <q-icon name="fa-solid fa-check" /> This task has no parameters
-        </div>
-        <template v-for="parameter in payload.parameters" :key="parameter.id">
-          <q-input
-            v-if="parameter.type == BackendTaskWorkloadParameterSlotType.String"
-            type="text"
-            v-model="parameter.value"
-            filled
-            :label="parameter.label"
-          >
-            <q-tooltip>{{ parameter.description }}</q-tooltip>
-          </q-input>
-          <q-input
-            v-else-if="
-              parameter.type == BackendTaskWorkloadParameterSlotType.Number
-            "
-            type="number"
-            v-model="parameter.value"
-            filled
-            :label="parameter.label"
-          >
-            <q-tooltip>{{ parameter.description }}</q-tooltip>
-          </q-input>
-          <q-checkbox
-            v-else-if="
-              parameter.type == BackendTaskWorkloadParameterSlotType.Boolean
-            "
-            type="number"
-            v-model="parameter.value"
-            :label="parameter.label"
-          >
-            <q-tooltip>{{ parameter.description }}</q-tooltip>
-          </q-checkbox>
-          <div v-else class="text-red">
-            <q-icon name="warning" />
-            Unable to render parameter {{ parameter.id }} with type
-            {{ parameter.type }}
-          </div>
+        <template
+          v-for="(parameter, index) in payload.parameters"
+          :key="parameter.id"
+        >
+          <BackendTaskParameterEditor
+            v-if="parameter.type == BackendTaskWorkloadParameterSlotType.Common"
+            v-model="payload.parameters[index]"
+          />
+        </template>
+      </q-card-section>
+      <q-card-section class="q-gutter-sm" v-if="taskType.hasAdvancedParameters()">
+        <div class="text-h6">Advanced parameters</div>
+        <template
+          v-for="(parameter, index) in payload.parameters"
+          :key="parameter.id"
+        >
+          <BackendTaskParameterEditor
+            v-if="parameter.type == BackendTaskWorkloadParameterSlotType.Advanced"
+            v-model="payload.parameters[index]"
+          />
         </template>
       </q-card-section>
       <q-separator />
@@ -118,11 +99,23 @@
           <template v-slot:body-cell-inputs="props">
             <q-td :props="props">
               <template v-for="slot in props.value" :key="slot.slot.name">
-                <div v-if="slot.validation == BackendTaskWorkloadDataSlotValidationResult.Ok" class="text-green">
+                <div
+                  v-if="
+                    slot.validation ==
+                    BackendTaskWorkloadDataSlotValidationResult.Ok
+                  "
+                  class="text-green"
+                >
                   <q-icon name="fa-solid fa-check" />
                   {{ renderMaskAnnotationId2(slot.slot.name) }}
                 </div>
-                <div v-else-if="slot.validation == BackendTaskWorkloadDataSlotValidationResult.OptionalMissing" class="text-orange">
+                <div
+                  v-else-if="
+                    slot.validation ==
+                    BackendTaskWorkloadDataSlotValidationResult.OptionalMissing
+                  "
+                  class="text-orange"
+                >
                   <q-icon name="fa-solid fa-circle-info" />
                   {{ renderMaskAnnotationId2(slot.slot.name) }}
                 </div>
@@ -174,6 +167,7 @@ import {
 } from 'src/types/backendTasks';
 import ProjectImageButton from 'components/arranger/ProjectImageButton.vue';
 import { renderMaskAnnotationId2 } from 'src/types/common';
+import BackendTaskParameterEditor from 'components/backendProcessors/BackendTaskParameterEditor.vue';
 
 const payload = ref<BackendTaskPayload>(new BackendTaskPayload());
 

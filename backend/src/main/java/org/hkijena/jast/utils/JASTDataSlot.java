@@ -9,7 +9,8 @@ public enum JASTDataSlot {
     Plate("plate", BackendTaskWorkloadDataSlotType.ImageMaskAnnotation),
     StripDisk("strip-disk", BackendTaskWorkloadDataSlotType.ImageMaskAnnotation),
     ZOIShape("zoi-shape", BackendTaskWorkloadDataSlotType.ImageMaskAnnotation),
-    PixelSize("pixelSize", BackendTaskWorkloadDataSlotType.Metadata);
+    PixelSize("pixelSize", BackendTaskWorkloadDataSlotType.Metadata),
+    MIC("mic", BackendTaskWorkloadDataSlotType.Metadata);
 
     private final String key;
     private final BackendTaskWorkloadDataSlotType slotType;

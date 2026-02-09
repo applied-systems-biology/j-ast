@@ -37,6 +37,17 @@ runtime:
   shared-resources-directory: "./share"
   keep-tmp: true
   verbose: false
+  system-packages:
+    -
+      operating-system: "linux"
+      must-exist: "/usr/bin/R"
+      key: [ "settings", "org.hkijena.jipipe:r", "project-default-environment" ]
+      value: '{ "content" : { "load-from-artifact" : false, "arguments" : { "expression" : "ARRAY(script_file)" }, "r-executable-path" : "/usr/bin/R", "rscript-executable-path" : "/usr/bin/Rscript" }, "enabled" : true }'
+    -
+      operating-system: "linux"
+      must-exist: "/usr/bin/tesseract"
+      key: [ "settings", "org.hkijena.jipipe:r", "org.hkijena.jipipe:ij-ocr" ]
+      value: '{ "content" : { "load-from-artifact" : false, "arguments" : { "expression" : "cli_parameters" }, "executable-path" : "/usr/bin/tesseract" }, "enabled" : true }'
   prefer-system-packages: true
 provider:
   provider-name: 'Localhost'

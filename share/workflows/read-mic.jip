@@ -272,77 +272,6 @@
   },
   "dependencies" : [ {
     "metadata" : {
-      "name" : "Graph annotations",
-      "description" : "<html><head></head><body>Provides the default graph annotations</body></html>",
-      "summary" : "<html><head></head><body>Provides the default graph annotations</body></html>",
-      "authors" : [ {
-        "title" : null,
-        "first-name" : "Zoltán",
-        "last-name" : "Cseresnyés",
-        "affiliations-list" : [ "Applied Systems Biology, Leibniz Institute for Natural Product Research and Infection Biology – Hans-Knöll-Institute, Jena, Germany" ],
-        "website" : "https://www.leibniz-hki.de/en/staff-details.html?member=144",
-        "contact" : "zoltan.cseresnyes@leibniz-hki.de",
-        "first-author" : true,
-        "corresponding-author" : false,
-        "orcid" : "https://orcid.org/0000-0002-6574-2588",
-        "custom-text" : "<html><head></head><body></body></html>"
-      }, {
-        "title" : null,
-        "first-name" : "Ruman",
-        "last-name" : "Gerst",
-        "affiliations-list" : [ "Applied Systems Biology, Leibniz Institute for Natural Product Research and Infection Biology – Hans-Knöll-Institute, Jena, Germany", "Faculty of Biological Sciences, Friedrich Schiller University Jena, Germany" ],
-        "website" : "https://www.leibniz-hki.de/en/staff-details.html?member=1027",
-        "contact" : "ruman.gerst@leibniz-hki.de",
-        "first-author" : true,
-        "corresponding-author" : false,
-        "orcid" : "https://orcid.org/0000-0002-0723-6038",
-        "custom-text" : "<html><head></head><body></body></html>"
-      }, {
-        "title" : null,
-        "first-name" : "Marc Thilo",
-        "last-name" : "Figge",
-        "affiliations-list" : [ "Applied Systems Biology, Leibniz Institute for Natural Product Research and Infection Biology – Hans-Knöll-Institute, Jena, Germany", "Institute of Microbiology, Faculty of Biological Sciences, Friedrich Schiller University Jena, Germany" ],
-        "website" : "https://www.leibniz-hki.de/en/staff-details.html?member=81",
-        "contact" : "thilo.figge@leibniz-hki.de",
-        "first-author" : false,
-        "corresponding-author" : true,
-        "orcid" : "https://orcid.org/0000-0002-4044-9166",
-        "custom-text" : "<html><head></head><body></body></html>"
-      } ],
-      "acknowledgements" : [ ],
-      "website" : "https://www.jipipe.org/",
-      "license" : "MIT",
-      "citation" : "Gerst, R., Cseresnyés, Z. & Figge, M.T. JIPipe: visual batch processing for ImageJ. Nat Methods (2023). https://doi.org/10.1038/s41592-022-01744-4",
-      "dependency-citations" : [ ],
-      "categories" : [ "Core" ]
-    },
-    "id" : "jipipe:graph-annotations",
-    "version" : "5.3.0",
-    "provides" : [ ],
-    "ij:update-site-dependencies" : [ ],
-    "dependencies" : [ ],
-    "ij:update-site-providers" : [ ]
-  }, {
-    "metadata" : {
-      "name" : "Standard table operations",
-      "description" : "<html><head></head><body>A JIPipe project</body></html>",
-      "summary" : "<html><head></head><body></body></html>",
-      "authors" : [ ],
-      "acknowledgements" : [ ],
-      "website" : "",
-      "license" : "",
-      "citation" : "",
-      "dependency-citations" : [ ],
-      "categories" : [ ]
-    },
-    "id" : "org.hkijena.jipipe:table-operations",
-    "version" : "5.3.0",
-    "provides" : [ ],
-    "ij:update-site-dependencies" : [ ],
-    "dependencies" : [ ],
-    "ij:update-site-providers" : [ ]
-  }, {
-    "metadata" : {
       "name" : "ImageJ integration",
       "description" : "<html><head></head><body>A JIPipe project</body></html>",
       "summary" : "<html><head></head><body></body></html>",
@@ -362,7 +291,7 @@
     "ij:update-site-providers" : [ ]
   }, {
     "metadata" : {
-      "name" : "Core",
+      "name" : "Strings",
       "description" : "<html><head></head><body>A JIPipe project</body></html>",
       "summary" : "<html><head></head><body></body></html>",
       "authors" : [ ],
@@ -373,7 +302,7 @@
       "dependency-citations" : [ ],
       "categories" : [ ]
     },
-    "id" : "org.hkijena.jipipe:core",
+    "id" : "org.hkijena.jipipe:strings",
     "version" : "5.3.0",
     "provides" : [ ],
     "ij:update-site-dependencies" : [ ],
@@ -381,59 +310,7 @@
     "ij:update-site-providers" : [ ]
   }, {
     "metadata" : {
-      "name" : "Filesystem types and algorithms",
-      "description" : "<html><head></head><body>Data types and algorithms for interacting with files and folders</body></html>",
-      "summary" : "<html><head></head><body>Data types and algorithms for interacting with files and folders</body></html>",
-      "authors" : [ {
-        "title" : null,
-        "first-name" : "Zoltán",
-        "last-name" : "Cseresnyés",
-        "affiliations-list" : [ "Applied Systems Biology, Leibniz Institute for Natural Product Research and Infection Biology – Hans-Knöll-Institute, Jena, Germany" ],
-        "website" : "https://www.leibniz-hki.de/en/staff-details.html?member=144",
-        "contact" : "zoltan.cseresnyes@leibniz-hki.de",
-        "first-author" : true,
-        "corresponding-author" : false,
-        "orcid" : "https://orcid.org/0000-0002-6574-2588",
-        "custom-text" : "<html><head></head><body></body></html>"
-      }, {
-        "title" : null,
-        "first-name" : "Ruman",
-        "last-name" : "Gerst",
-        "affiliations-list" : [ "Applied Systems Biology, Leibniz Institute for Natural Product Research and Infection Biology – Hans-Knöll-Institute, Jena, Germany", "Faculty of Biological Sciences, Friedrich Schiller University Jena, Germany" ],
-        "website" : "https://www.leibniz-hki.de/en/staff-details.html?member=1027",
-        "contact" : "ruman.gerst@leibniz-hki.de",
-        "first-author" : true,
-        "corresponding-author" : false,
-        "orcid" : "https://orcid.org/0000-0002-0723-6038",
-        "custom-text" : "<html><head></head><body></body></html>"
-      }, {
-        "title" : null,
-        "first-name" : "Marc Thilo",
-        "last-name" : "Figge",
-        "affiliations-list" : [ "Applied Systems Biology, Leibniz Institute for Natural Product Research and Infection Biology – Hans-Knöll-Institute, Jena, Germany", "Institute of Microbiology, Faculty of Biological Sciences, Friedrich Schiller University Jena, Germany" ],
-        "website" : "https://www.leibniz-hki.de/en/staff-details.html?member=81",
-        "contact" : "thilo.figge@leibniz-hki.de",
-        "first-author" : false,
-        "corresponding-author" : true,
-        "orcid" : "https://orcid.org/0000-0002-4044-9166",
-        "custom-text" : "<html><head></head><body></body></html>"
-      } ],
-      "acknowledgements" : [ ],
-      "website" : "https://www.jipipe.org/",
-      "license" : "MIT",
-      "citation" : "Gerst, R., Cseresnyés, Z. & Figge, M.T. JIPipe: visual batch processing for ImageJ. Nat Methods (2023). https://doi.org/10.1038/s41592-022-01744-4",
-      "dependency-citations" : [ ],
-      "categories" : [ "Automation", "Annotation", "Filtering" ]
-    },
-    "id" : "org.hkijena.jipipe:filesystem",
-    "version" : "5.3.0",
-    "provides" : [ ],
-    "ij:update-site-dependencies" : [ ],
-    "dependencies" : [ ],
-    "ij:update-site-providers" : [ ]
-  }, {
-    "metadata" : {
-      "name" : "ImageJ algorithms",
+      "name" : "Standard table operations",
       "description" : "<html><head></head><body>A JIPipe project</body></html>",
       "summary" : "<html><head></head><body></body></html>",
       "authors" : [ ],
@@ -444,59 +321,7 @@
       "dependency-citations" : [ ],
       "categories" : [ ]
     },
-    "id" : "org.hkijena.jipipe:imagej-algorithms",
-    "version" : "5.3.0",
-    "provides" : [ ],
-    "ij:update-site-dependencies" : [ ],
-    "dependencies" : [ ],
-    "ij:update-site-providers" : [ ]
-  }, {
-    "metadata" : {
-      "name" : "Multi parameter algorithms",
-      "description" : "<html><head></head><body>Extension that provides capabilities to run multiple parameters</body></html>",
-      "summary" : "<html><head></head><body>Extension that provides capabilities to run multiple parameters</body></html>",
-      "authors" : [ {
-        "title" : null,
-        "first-name" : "Zoltán",
-        "last-name" : "Cseresnyés",
-        "affiliations-list" : [ "Applied Systems Biology, Leibniz Institute for Natural Product Research and Infection Biology – Hans-Knöll-Institute, Jena, Germany" ],
-        "website" : "https://www.leibniz-hki.de/en/staff-details.html?member=144",
-        "contact" : "zoltan.cseresnyes@leibniz-hki.de",
-        "first-author" : true,
-        "corresponding-author" : false,
-        "orcid" : "https://orcid.org/0000-0002-6574-2588",
-        "custom-text" : "<html><head></head><body></body></html>"
-      }, {
-        "title" : null,
-        "first-name" : "Ruman",
-        "last-name" : "Gerst",
-        "affiliations-list" : [ "Applied Systems Biology, Leibniz Institute for Natural Product Research and Infection Biology – Hans-Knöll-Institute, Jena, Germany", "Faculty of Biological Sciences, Friedrich Schiller University Jena, Germany" ],
-        "website" : "https://www.leibniz-hki.de/en/staff-details.html?member=1027",
-        "contact" : "ruman.gerst@leibniz-hki.de",
-        "first-author" : true,
-        "corresponding-author" : false,
-        "orcid" : "https://orcid.org/0000-0002-0723-6038",
-        "custom-text" : "<html><head></head><body></body></html>"
-      }, {
-        "title" : null,
-        "first-name" : "Marc Thilo",
-        "last-name" : "Figge",
-        "affiliations-list" : [ "Applied Systems Biology, Leibniz Institute for Natural Product Research and Infection Biology – Hans-Knöll-Institute, Jena, Germany", "Institute of Microbiology, Faculty of Biological Sciences, Friedrich Schiller University Jena, Germany" ],
-        "website" : "https://www.leibniz-hki.de/en/staff-details.html?member=81",
-        "contact" : "thilo.figge@leibniz-hki.de",
-        "first-author" : false,
-        "corresponding-author" : true,
-        "orcid" : "https://orcid.org/0000-0002-4044-9166",
-        "custom-text" : "<html><head></head><body></body></html>"
-      } ],
-      "acknowledgements" : [ ],
-      "website" : "https://www.jipipe.org/",
-      "license" : "MIT",
-      "citation" : "Gerst, R., Cseresnyés, Z. & Figge, M.T. JIPipe: visual batch processing for ImageJ. Nat Methods (2023). https://doi.org/10.1038/s41592-022-01744-4",
-      "dependency-citations" : [ ],
-      "categories" : [ "Core", "Scripting" ]
-    },
-    "id" : "org.hkijena.jipipe:multi-parameters-algorithms",
+    "id" : "org.hkijena.jipipe:table-operations",
     "version" : "5.3.0",
     "provides" : [ ],
     "ij:update-site-dependencies" : [ ],
@@ -556,6 +381,129 @@
     "ij:update-site-providers" : [ ]
   }, {
     "metadata" : {
+      "name" : "Filesystem types and algorithms",
+      "description" : "<html><head></head><body>Data types and algorithms for interacting with files and folders</body></html>",
+      "summary" : "<html><head></head><body>Data types and algorithms for interacting with files and folders</body></html>",
+      "authors" : [ {
+        "title" : null,
+        "first-name" : "Zoltán",
+        "last-name" : "Cseresnyés",
+        "affiliations-list" : [ "Applied Systems Biology, Leibniz Institute for Natural Product Research and Infection Biology – Hans-Knöll-Institute, Jena, Germany" ],
+        "website" : "https://www.leibniz-hki.de/en/staff-details.html?member=144",
+        "contact" : "zoltan.cseresnyes@leibniz-hki.de",
+        "first-author" : true,
+        "corresponding-author" : false,
+        "orcid" : "https://orcid.org/0000-0002-6574-2588",
+        "custom-text" : "<html><head></head><body></body></html>"
+      }, {
+        "title" : null,
+        "first-name" : "Ruman",
+        "last-name" : "Gerst",
+        "affiliations-list" : [ "Applied Systems Biology, Leibniz Institute for Natural Product Research and Infection Biology – Hans-Knöll-Institute, Jena, Germany", "Faculty of Biological Sciences, Friedrich Schiller University Jena, Germany" ],
+        "website" : "https://www.leibniz-hki.de/en/staff-details.html?member=1027",
+        "contact" : "ruman.gerst@leibniz-hki.de",
+        "first-author" : true,
+        "corresponding-author" : false,
+        "orcid" : "https://orcid.org/0000-0002-0723-6038",
+        "custom-text" : "<html><head></head><body></body></html>"
+      }, {
+        "title" : null,
+        "first-name" : "Marc Thilo",
+        "last-name" : "Figge",
+        "affiliations-list" : [ "Applied Systems Biology, Leibniz Institute for Natural Product Research and Infection Biology – Hans-Knöll-Institute, Jena, Germany", "Institute of Microbiology, Faculty of Biological Sciences, Friedrich Schiller University Jena, Germany" ],
+        "website" : "https://www.leibniz-hki.de/en/staff-details.html?member=81",
+        "contact" : "thilo.figge@leibniz-hki.de",
+        "first-author" : false,
+        "corresponding-author" : true,
+        "orcid" : "https://orcid.org/0000-0002-4044-9166",
+        "custom-text" : "<html><head></head><body></body></html>"
+      } ],
+      "acknowledgements" : [ ],
+      "website" : "https://www.jipipe.org/",
+      "license" : "MIT",
+      "citation" : "Gerst, R., Cseresnyés, Z. & Figge, M.T. JIPipe: visual batch processing for ImageJ. Nat Methods (2023). https://doi.org/10.1038/s41592-022-01744-4",
+      "dependency-citations" : [ ],
+      "categories" : [ "Automation", "Annotation", "Filtering" ]
+    },
+    "id" : "org.hkijena.jipipe:filesystem",
+    "version" : "5.3.0",
+    "provides" : [ ],
+    "ij:update-site-dependencies" : [ ],
+    "dependencies" : [ ],
+    "ij:update-site-providers" : [ ]
+  }, {
+    "metadata" : {
+      "name" : "Graph annotations",
+      "description" : "<html><head></head><body>Provides the default graph annotations</body></html>",
+      "summary" : "<html><head></head><body>Provides the default graph annotations</body></html>",
+      "authors" : [ {
+        "title" : null,
+        "first-name" : "Zoltán",
+        "last-name" : "Cseresnyés",
+        "affiliations-list" : [ "Applied Systems Biology, Leibniz Institute for Natural Product Research and Infection Biology – Hans-Knöll-Institute, Jena, Germany" ],
+        "website" : "https://www.leibniz-hki.de/en/staff-details.html?member=144",
+        "contact" : "zoltan.cseresnyes@leibniz-hki.de",
+        "first-author" : true,
+        "corresponding-author" : false,
+        "orcid" : "https://orcid.org/0000-0002-6574-2588",
+        "custom-text" : "<html><head></head><body></body></html>"
+      }, {
+        "title" : null,
+        "first-name" : "Ruman",
+        "last-name" : "Gerst",
+        "affiliations-list" : [ "Applied Systems Biology, Leibniz Institute for Natural Product Research and Infection Biology – Hans-Knöll-Institute, Jena, Germany", "Faculty of Biological Sciences, Friedrich Schiller University Jena, Germany" ],
+        "website" : "https://www.leibniz-hki.de/en/staff-details.html?member=1027",
+        "contact" : "ruman.gerst@leibniz-hki.de",
+        "first-author" : true,
+        "corresponding-author" : false,
+        "orcid" : "https://orcid.org/0000-0002-0723-6038",
+        "custom-text" : "<html><head></head><body></body></html>"
+      }, {
+        "title" : null,
+        "first-name" : "Marc Thilo",
+        "last-name" : "Figge",
+        "affiliations-list" : [ "Applied Systems Biology, Leibniz Institute for Natural Product Research and Infection Biology – Hans-Knöll-Institute, Jena, Germany", "Institute of Microbiology, Faculty of Biological Sciences, Friedrich Schiller University Jena, Germany" ],
+        "website" : "https://www.leibniz-hki.de/en/staff-details.html?member=81",
+        "contact" : "thilo.figge@leibniz-hki.de",
+        "first-author" : false,
+        "corresponding-author" : true,
+        "orcid" : "https://orcid.org/0000-0002-4044-9166",
+        "custom-text" : "<html><head></head><body></body></html>"
+      } ],
+      "acknowledgements" : [ ],
+      "website" : "https://www.jipipe.org/",
+      "license" : "MIT",
+      "citation" : "Gerst, R., Cseresnyés, Z. & Figge, M.T. JIPipe: visual batch processing for ImageJ. Nat Methods (2023). https://doi.org/10.1038/s41592-022-01744-4",
+      "dependency-citations" : [ ],
+      "categories" : [ "Core" ]
+    },
+    "id" : "jipipe:graph-annotations",
+    "version" : "5.3.0",
+    "provides" : [ ],
+    "ij:update-site-dependencies" : [ ],
+    "dependencies" : [ ],
+    "ij:update-site-providers" : [ ]
+  }, {
+    "metadata" : {
+      "name" : "Multi parameter algorithms",
+      "description" : "<html><head></head><body>A JIPipe project</body></html>",
+      "summary" : "<html><head></head><body></body></html>",
+      "authors" : [ ],
+      "acknowledgements" : [ ],
+      "website" : "",
+      "license" : "",
+      "citation" : "",
+      "dependency-citations" : [ ],
+      "categories" : [ ]
+    },
+    "id" : "org.hkijena.jipipe:multi-parameters-algorithms",
+    "version" : "5.3.0",
+    "provides" : [ ],
+    "ij:update-site-dependencies" : [ ],
+    "dependencies" : [ ],
+    "ij:update-site-providers" : [ ]
+  }, {
+    "metadata" : {
       "name" : "Utilities",
       "description" : "<html><head></head><body>Utility algorithms</body></html>",
       "summary" : "<html><head></head><body>Utility algorithms</body></html>",
@@ -601,77 +549,6 @@
       "categories" : [ "Data processing", "Scripting" ]
     },
     "id" : "org.hkijena.jipipe:utils",
-    "version" : "5.3.0",
-    "provides" : [ ],
-    "ij:update-site-dependencies" : [ ],
-    "dependencies" : [ ],
-    "ij:update-site-providers" : [ ]
-  }, {
-    "metadata" : {
-      "name" : "Strings",
-      "description" : "<html><head></head><body>A JIPipe project</body></html>",
-      "summary" : "<html><head></head><body></body></html>",
-      "authors" : [ ],
-      "acknowledgements" : [ ],
-      "website" : "",
-      "license" : "",
-      "citation" : "",
-      "dependency-citations" : [ ],
-      "categories" : [ ]
-    },
-    "id" : "org.hkijena.jipipe:strings",
-    "version" : "5.3.0",
-    "provides" : [ ],
-    "ij:update-site-dependencies" : [ ],
-    "dependencies" : [ ],
-    "ij:update-site-providers" : [ ]
-  }, {
-    "metadata" : {
-      "name" : "Annotation data types and algorithms",
-      "description" : "<html><head></head><body>Provides data types and algorithms to modify data annotations</body></html>",
-      "summary" : "<html><head></head><body>Provides data types and algorithms to modify data annotations</body></html>",
-      "authors" : [ {
-        "title" : null,
-        "first-name" : "Zoltán",
-        "last-name" : "Cseresnyés",
-        "affiliations-list" : [ "Applied Systems Biology, Leibniz Institute for Natural Product Research and Infection Biology – Hans-Knöll-Institute, Jena, Germany" ],
-        "website" : "https://www.leibniz-hki.de/en/staff-details.html?member=144",
-        "contact" : "zoltan.cseresnyes@leibniz-hki.de",
-        "first-author" : true,
-        "corresponding-author" : false,
-        "orcid" : "https://orcid.org/0000-0002-6574-2588",
-        "custom-text" : "<html><head></head><body></body></html>"
-      }, {
-        "title" : null,
-        "first-name" : "Ruman",
-        "last-name" : "Gerst",
-        "affiliations-list" : [ "Applied Systems Biology, Leibniz Institute for Natural Product Research and Infection Biology – Hans-Knöll-Institute, Jena, Germany", "Faculty of Biological Sciences, Friedrich Schiller University Jena, Germany" ],
-        "website" : "https://www.leibniz-hki.de/en/staff-details.html?member=1027",
-        "contact" : "ruman.gerst@leibniz-hki.de",
-        "first-author" : true,
-        "corresponding-author" : false,
-        "orcid" : "https://orcid.org/0000-0002-0723-6038",
-        "custom-text" : "<html><head></head><body></body></html>"
-      }, {
-        "title" : null,
-        "first-name" : "Marc Thilo",
-        "last-name" : "Figge",
-        "affiliations-list" : [ "Applied Systems Biology, Leibniz Institute for Natural Product Research and Infection Biology – Hans-Knöll-Institute, Jena, Germany", "Institute of Microbiology, Faculty of Biological Sciences, Friedrich Schiller University Jena, Germany" ],
-        "website" : "https://www.leibniz-hki.de/en/staff-details.html?member=81",
-        "contact" : "thilo.figge@leibniz-hki.de",
-        "first-author" : false,
-        "corresponding-author" : true,
-        "orcid" : "https://orcid.org/0000-0002-4044-9166",
-        "custom-text" : "<html><head></head><body></body></html>"
-      } ],
-      "acknowledgements" : [ ],
-      "website" : "https://www.jipipe.org/",
-      "license" : "MIT",
-      "citation" : "Gerst, R., Cseresnyés, Z. & Figge, M.T. JIPipe: visual batch processing for ImageJ. Nat Methods (2023). https://doi.org/10.1038/s41592-022-01744-4",
-      "dependency-citations" : [ ],
-      "categories" : [ "Annotation" ]
-    },
-    "id" : "org.hkijena.jipipe:annotations",
     "version" : "5.3.0",
     "provides" : [ ],
     "ij:update-site-dependencies" : [ ],
@@ -731,6 +608,44 @@
     "ij:update-site-providers" : [ ]
   }, {
     "metadata" : {
+      "name" : "ImageJ algorithms",
+      "description" : "<html><head></head><body>A JIPipe project</body></html>",
+      "summary" : "<html><head></head><body></body></html>",
+      "authors" : [ ],
+      "acknowledgements" : [ ],
+      "website" : "",
+      "license" : "",
+      "citation" : "",
+      "dependency-citations" : [ ],
+      "categories" : [ ]
+    },
+    "id" : "org.hkijena.jipipe:imagej-algorithms",
+    "version" : "5.3.0",
+    "provides" : [ ],
+    "ij:update-site-dependencies" : [ ],
+    "dependencies" : [ ],
+    "ij:update-site-providers" : [ ]
+  }, {
+    "metadata" : {
+      "name" : "Core",
+      "description" : "<html><head></head><body>A JIPipe project</body></html>",
+      "summary" : "<html><head></head><body></body></html>",
+      "authors" : [ ],
+      "acknowledgements" : [ ],
+      "website" : "",
+      "license" : "",
+      "citation" : "",
+      "dependency-citations" : [ ],
+      "categories" : [ ]
+    },
+    "id" : "org.hkijena.jipipe:core",
+    "version" : "5.3.0",
+    "provides" : [ ],
+    "ij:update-site-dependencies" : [ ],
+    "dependencies" : [ ],
+    "ij:update-site-providers" : [ ]
+  }, {
+    "metadata" : {
       "name" : "3D ImageJ Suite integration",
       "description" : "<html><head></head><body>A JIPipe project</body></html>",
       "summary" : "<html><head></head><body></body></html>",
@@ -743,6 +658,162 @@
       "categories" : [ ]
     },
     "id" : "org.hkijena.jipipe:ij-3d",
+    "version" : "5.3.0",
+    "provides" : [ ],
+    "ij:update-site-dependencies" : [ ],
+    "dependencies" : [ ],
+    "ij:update-site-providers" : [ ]
+  }, {
+    "metadata" : {
+      "name" : "Annotation data types and algorithms",
+      "description" : "<html><head></head><body>Provides data types and algorithms to modify data annotations</body></html>",
+      "summary" : "<html><head></head><body>Provides data types and algorithms to modify data annotations</body></html>",
+      "authors" : [ {
+        "title" : null,
+        "first-name" : "Zoltán",
+        "last-name" : "Cseresnyés",
+        "affiliations-list" : [ "Applied Systems Biology, Leibniz Institute for Natural Product Research and Infection Biology – Hans-Knöll-Institute, Jena, Germany" ],
+        "website" : "https://www.leibniz-hki.de/en/staff-details.html?member=144",
+        "contact" : "zoltan.cseresnyes@leibniz-hki.de",
+        "first-author" : true,
+        "corresponding-author" : false,
+        "orcid" : "https://orcid.org/0000-0002-6574-2588",
+        "custom-text" : "<html><head></head><body></body></html>"
+      }, {
+        "title" : null,
+        "first-name" : "Ruman",
+        "last-name" : "Gerst",
+        "affiliations-list" : [ "Applied Systems Biology, Leibniz Institute for Natural Product Research and Infection Biology – Hans-Knöll-Institute, Jena, Germany", "Faculty of Biological Sciences, Friedrich Schiller University Jena, Germany" ],
+        "website" : "https://www.leibniz-hki.de/en/staff-details.html?member=1027",
+        "contact" : "ruman.gerst@leibniz-hki.de",
+        "first-author" : true,
+        "corresponding-author" : false,
+        "orcid" : "https://orcid.org/0000-0002-0723-6038",
+        "custom-text" : "<html><head></head><body></body></html>"
+      }, {
+        "title" : null,
+        "first-name" : "Marc Thilo",
+        "last-name" : "Figge",
+        "affiliations-list" : [ "Applied Systems Biology, Leibniz Institute for Natural Product Research and Infection Biology – Hans-Knöll-Institute, Jena, Germany", "Institute of Microbiology, Faculty of Biological Sciences, Friedrich Schiller University Jena, Germany" ],
+        "website" : "https://www.leibniz-hki.de/en/staff-details.html?member=81",
+        "contact" : "thilo.figge@leibniz-hki.de",
+        "first-author" : false,
+        "corresponding-author" : true,
+        "orcid" : "https://orcid.org/0000-0002-4044-9166",
+        "custom-text" : "<html><head></head><body></body></html>"
+      } ],
+      "acknowledgements" : [ ],
+      "website" : "https://www.jipipe.org/",
+      "license" : "MIT",
+      "citation" : "Gerst, R., Cseresnyés, Z. & Figge, M.T. JIPipe: visual batch processing for ImageJ. Nat Methods (2023). https://doi.org/10.1038/s41592-022-01744-4",
+      "dependency-citations" : [ ],
+      "categories" : [ "Annotation" ]
+    },
+    "id" : "org.hkijena.jipipe:annotations",
+    "version" : "5.3.0",
+    "provides" : [ ],
+    "ij:update-site-dependencies" : [ ],
+    "dependencies" : [ ],
+    "ij:update-site-providers" : [ ]
+  }, {
+    "metadata" : {
+      "name" : "JFreeChart plots",
+      "description" : "<html><head></head><body>JFreeChart plot support</body></html>",
+      "summary" : "<html><head></head><body>JFreeChart plot support</body></html>",
+      "authors" : [ {
+        "title" : null,
+        "first-name" : "Zoltán",
+        "last-name" : "Cseresnyés",
+        "affiliations-list" : [ "Applied Systems Biology, Leibniz Institute for Natural Product Research and Infection Biology – Hans-Knöll-Institute, Jena, Germany" ],
+        "website" : "https://www.leibniz-hki.de/en/staff-details.html?member=144",
+        "contact" : "zoltan.cseresnyes@leibniz-hki.de",
+        "first-author" : true,
+        "corresponding-author" : false,
+        "orcid" : "https://orcid.org/0000-0002-6574-2588",
+        "custom-text" : "<html><head></head><body></body></html>"
+      }, {
+        "title" : null,
+        "first-name" : "Ruman",
+        "last-name" : "Gerst",
+        "affiliations-list" : [ "Applied Systems Biology, Leibniz Institute for Natural Product Research and Infection Biology – Hans-Knöll-Institute, Jena, Germany", "Faculty of Biological Sciences, Friedrich Schiller University Jena, Germany" ],
+        "website" : "https://www.leibniz-hki.de/en/staff-details.html?member=1027",
+        "contact" : "ruman.gerst@leibniz-hki.de",
+        "first-author" : true,
+        "corresponding-author" : false,
+        "orcid" : "https://orcid.org/0000-0002-0723-6038",
+        "custom-text" : "<html><head></head><body></body></html>"
+      }, {
+        "title" : null,
+        "first-name" : "Marc Thilo",
+        "last-name" : "Figge",
+        "affiliations-list" : [ "Applied Systems Biology, Leibniz Institute for Natural Product Research and Infection Biology – Hans-Knöll-Institute, Jena, Germany", "Institute of Microbiology, Faculty of Biological Sciences, Friedrich Schiller University Jena, Germany" ],
+        "website" : "https://www.leibniz-hki.de/en/staff-details.html?member=81",
+        "contact" : "thilo.figge@leibniz-hki.de",
+        "first-author" : false,
+        "corresponding-author" : true,
+        "orcid" : "https://orcid.org/0000-0002-4044-9166",
+        "custom-text" : "<html><head></head><body></body></html>"
+      } ],
+      "acknowledgements" : [ ],
+      "website" : "https://www.jipipe.org/",
+      "license" : "MIT",
+      "citation" : "Gerst, R., Cseresnyés, Z. & Figge, M.T. JIPipe: visual batch processing for ImageJ. Nat Methods (2023). https://doi.org/10.1038/s41592-022-01744-4",
+      "dependency-citations" : [ ],
+      "categories" : [ "Visualization", "Plotting" ]
+    },
+    "id" : "org.hkijena.jipipe:plots",
+    "version" : "5.3.0",
+    "provides" : [ ],
+    "ij:update-site-dependencies" : [ ],
+    "dependencies" : [ ],
+    "ij:update-site-providers" : [ ]
+  }, {
+    "metadata" : {
+      "name" : "Python integration (nodes)",
+      "description" : "<html><head></head><body>Provides algorithms and data types that allow Python scripting</body></html>",
+      "summary" : "<html><head></head><body>Provides algorithms and data types that allow Python scripting</body></html>",
+      "authors" : [ {
+        "title" : null,
+        "first-name" : "Zoltán",
+        "last-name" : "Cseresnyés",
+        "affiliations-list" : [ "Applied Systems Biology, Leibniz Institute for Natural Product Research and Infection Biology – Hans-Knöll-Institute, Jena, Germany" ],
+        "website" : "https://www.leibniz-hki.de/en/staff-details.html?member=144",
+        "contact" : "zoltan.cseresnyes@leibniz-hki.de",
+        "first-author" : true,
+        "corresponding-author" : false,
+        "orcid" : "https://orcid.org/0000-0002-6574-2588",
+        "custom-text" : "<html><head></head><body></body></html>"
+      }, {
+        "title" : null,
+        "first-name" : "Ruman",
+        "last-name" : "Gerst",
+        "affiliations-list" : [ "Applied Systems Biology, Leibniz Institute for Natural Product Research and Infection Biology – Hans-Knöll-Institute, Jena, Germany", "Faculty of Biological Sciences, Friedrich Schiller University Jena, Germany" ],
+        "website" : "https://www.leibniz-hki.de/en/staff-details.html?member=1027",
+        "contact" : "ruman.gerst@leibniz-hki.de",
+        "first-author" : true,
+        "corresponding-author" : false,
+        "orcid" : "https://orcid.org/0000-0002-0723-6038",
+        "custom-text" : "<html><head></head><body></body></html>"
+      }, {
+        "title" : null,
+        "first-name" : "Marc Thilo",
+        "last-name" : "Figge",
+        "affiliations-list" : [ "Applied Systems Biology, Leibniz Institute for Natural Product Research and Infection Biology – Hans-Knöll-Institute, Jena, Germany", "Institute of Microbiology, Faculty of Biological Sciences, Friedrich Schiller University Jena, Germany" ],
+        "website" : "https://www.leibniz-hki.de/en/staff-details.html?member=81",
+        "contact" : "thilo.figge@leibniz-hki.de",
+        "first-author" : false,
+        "corresponding-author" : true,
+        "orcid" : "https://orcid.org/0000-0002-4044-9166",
+        "custom-text" : "<html><head></head><body></body></html>"
+      } ],
+      "acknowledgements" : [ ],
+      "website" : "https://www.jipipe.org/",
+      "license" : "MIT",
+      "citation" : "Gerst, R., Cseresnyés, Z. & Figge, M.T. JIPipe: visual batch processing for ImageJ. Nat Methods (2023). https://doi.org/10.1038/s41592-022-01744-4",
+      "dependency-citations" : [ ],
+      "categories" : [ "Scripting" ]
+    },
+    "id" : "org.hkijena.jipipe:python",
     "version" : "5.3.0",
     "provides" : [ ],
     "ij:update-site-dependencies" : [ ],
@@ -866,110 +937,6 @@
       "categories" : [ "Feature Extraction", "Object Detection" ]
     },
     "id" : "org.hkijena.jipipe:ij-ocr",
-    "version" : "5.3.0",
-    "provides" : [ ],
-    "ij:update-site-dependencies" : [ ],
-    "dependencies" : [ ],
-    "ij:update-site-providers" : [ ]
-  }, {
-    "metadata" : {
-      "name" : "JFreeChart plots",
-      "description" : "<html><head></head><body>JFreeChart plot support</body></html>",
-      "summary" : "<html><head></head><body>JFreeChart plot support</body></html>",
-      "authors" : [ {
-        "title" : null,
-        "first-name" : "Zoltán",
-        "last-name" : "Cseresnyés",
-        "affiliations-list" : [ "Applied Systems Biology, Leibniz Institute for Natural Product Research and Infection Biology – Hans-Knöll-Institute, Jena, Germany" ],
-        "website" : "https://www.leibniz-hki.de/en/staff-details.html?member=144",
-        "contact" : "zoltan.cseresnyes@leibniz-hki.de",
-        "first-author" : true,
-        "corresponding-author" : false,
-        "orcid" : "https://orcid.org/0000-0002-6574-2588",
-        "custom-text" : "<html><head></head><body></body></html>"
-      }, {
-        "title" : null,
-        "first-name" : "Ruman",
-        "last-name" : "Gerst",
-        "affiliations-list" : [ "Applied Systems Biology, Leibniz Institute for Natural Product Research and Infection Biology – Hans-Knöll-Institute, Jena, Germany", "Faculty of Biological Sciences, Friedrich Schiller University Jena, Germany" ],
-        "website" : "https://www.leibniz-hki.de/en/staff-details.html?member=1027",
-        "contact" : "ruman.gerst@leibniz-hki.de",
-        "first-author" : true,
-        "corresponding-author" : false,
-        "orcid" : "https://orcid.org/0000-0002-0723-6038",
-        "custom-text" : "<html><head></head><body></body></html>"
-      }, {
-        "title" : null,
-        "first-name" : "Marc Thilo",
-        "last-name" : "Figge",
-        "affiliations-list" : [ "Applied Systems Biology, Leibniz Institute for Natural Product Research and Infection Biology – Hans-Knöll-Institute, Jena, Germany", "Institute of Microbiology, Faculty of Biological Sciences, Friedrich Schiller University Jena, Germany" ],
-        "website" : "https://www.leibniz-hki.de/en/staff-details.html?member=81",
-        "contact" : "thilo.figge@leibniz-hki.de",
-        "first-author" : false,
-        "corresponding-author" : true,
-        "orcid" : "https://orcid.org/0000-0002-4044-9166",
-        "custom-text" : "<html><head></head><body></body></html>"
-      } ],
-      "acknowledgements" : [ ],
-      "website" : "https://www.jipipe.org/",
-      "license" : "MIT",
-      "citation" : "Gerst, R., Cseresnyés, Z. & Figge, M.T. JIPipe: visual batch processing for ImageJ. Nat Methods (2023). https://doi.org/10.1038/s41592-022-01744-4",
-      "dependency-citations" : [ ],
-      "categories" : [ "Visualization", "Plotting" ]
-    },
-    "id" : "org.hkijena.jipipe:plots",
-    "version" : "5.3.0",
-    "provides" : [ ],
-    "ij:update-site-dependencies" : [ ],
-    "dependencies" : [ ],
-    "ij:update-site-providers" : [ ]
-  }, {
-    "metadata" : {
-      "name" : "Python integration (nodes)",
-      "description" : "<html><head></head><body>Provides algorithms and data types that allow Python scripting</body></html>",
-      "summary" : "<html><head></head><body>Provides algorithms and data types that allow Python scripting</body></html>",
-      "authors" : [ {
-        "title" : null,
-        "first-name" : "Zoltán",
-        "last-name" : "Cseresnyés",
-        "affiliations-list" : [ "Applied Systems Biology, Leibniz Institute for Natural Product Research and Infection Biology – Hans-Knöll-Institute, Jena, Germany" ],
-        "website" : "https://www.leibniz-hki.de/en/staff-details.html?member=144",
-        "contact" : "zoltan.cseresnyes@leibniz-hki.de",
-        "first-author" : true,
-        "corresponding-author" : false,
-        "orcid" : "https://orcid.org/0000-0002-6574-2588",
-        "custom-text" : "<html><head></head><body></body></html>"
-      }, {
-        "title" : null,
-        "first-name" : "Ruman",
-        "last-name" : "Gerst",
-        "affiliations-list" : [ "Applied Systems Biology, Leibniz Institute for Natural Product Research and Infection Biology – Hans-Knöll-Institute, Jena, Germany", "Faculty of Biological Sciences, Friedrich Schiller University Jena, Germany" ],
-        "website" : "https://www.leibniz-hki.de/en/staff-details.html?member=1027",
-        "contact" : "ruman.gerst@leibniz-hki.de",
-        "first-author" : true,
-        "corresponding-author" : false,
-        "orcid" : "https://orcid.org/0000-0002-0723-6038",
-        "custom-text" : "<html><head></head><body></body></html>"
-      }, {
-        "title" : null,
-        "first-name" : "Marc Thilo",
-        "last-name" : "Figge",
-        "affiliations-list" : [ "Applied Systems Biology, Leibniz Institute for Natural Product Research and Infection Biology – Hans-Knöll-Institute, Jena, Germany", "Institute of Microbiology, Faculty of Biological Sciences, Friedrich Schiller University Jena, Germany" ],
-        "website" : "https://www.leibniz-hki.de/en/staff-details.html?member=81",
-        "contact" : "thilo.figge@leibniz-hki.de",
-        "first-author" : false,
-        "corresponding-author" : true,
-        "orcid" : "https://orcid.org/0000-0002-4044-9166",
-        "custom-text" : "<html><head></head><body></body></html>"
-      } ],
-      "acknowledgements" : [ ],
-      "website" : "https://www.jipipe.org/",
-      "license" : "MIT",
-      "citation" : "Gerst, R., Cseresnyés, Z. & Figge, M.T. JIPipe: visual batch processing for ImageJ. Nat Methods (2023). https://doi.org/10.1038/s41592-022-01744-4",
-      "dependency-citations" : [ ],
-      "categories" : [ "Scripting" ]
-    },
-    "id" : "org.hkijena.jipipe:python",
     "version" : "5.3.0",
     "provides" : [ ],
     "ij:update-site-dependencies" : [ ],
@@ -1567,8 +1534,8 @@
     "org.hkijena.jipipe.ui:project-tabs" : {
       "jipipe:type" : "jipipe:desktop:project-tabs",
       "data" : {
-        "open-tabs" : [ "singleton:PROJECT_OVERVIEW", "singleton:COMPARTMENT_EDITOR", "graph-compartment:80640220-1066-41b8-9cfb-1d9be1fb5aa0", "graph-compartment:b3f163a6-0b5b-44ea-9cdd-71443eceb89f", "graph-compartment:f974fbbe-e15f-4b4a-a820-eb22c4f7808d", "graph-compartment:e0411412-045e-437f-b700-180112b40857", "graph-compartment:fb3bfe3a-c9c1-4ec4-908b-3f1b7380a851" ],
-        "selected-tab" : "graph-compartment:80640220-1066-41b8-9cfb-1d9be1fb5aa0"
+        "open-tabs" : [ "singleton:PROJECT_OVERVIEW", "singleton:COMPARTMENT_EDITOR", "graph-compartment:80640220-1066-41b8-9cfb-1d9be1fb5aa0", "graph-compartment:b3f163a6-0b5b-44ea-9cdd-71443eceb89f", "graph-compartment:f974fbbe-e15f-4b4a-a820-eb22c4f7808d", "graph-compartment:e0411412-045e-437f-b700-180112b40857", "graph-compartment:fb3bfe3a-c9c1-4ec4-908b-3f1b7380a851", "graph-compartment:68014b9b-e352-42bc-99e0-e3c7fd5e4a34" ],
+        "selected-tab" : "graph-compartment:fb3bfe3a-c9c1-4ec4-908b-3f1b7380a851"
       }
     }
   },
@@ -1603,7 +1570,7 @@
         "jipipe:node-info-id" : "import-folder-list",
         "jipipe:algorithm:enabled" : true,
         "jipipe:node:ui-locked" : false,
-        "folder-paths" : [ "/data/Projects/Carmi_Austin/webapp_v2_dev/read-mic/strip-disk" ],
+        "folder-paths" : [ "strip-disk" ],
         "jipipe:node:bookmarked" : false,
         "jipipe:algorithm:pass-through" : false,
         "jipipe:node:name" : "Folder list",
@@ -1867,317 +1834,6 @@
           "enabled" : false
         }
       },
-      "32ed1b6d-bf56-47f3-8498-15fb00d0f42b" : {
-        "jipipe:graph-compartment" : "fb3bfe3a-c9c1-4ec4-908b-3f1b7380a851",
-        "jipipe:alias-id" : "folder-list-1",
-        "jipipe:slot-configuration" : {
-          "input" : { },
-          "output" : {
-            "Folder paths" : {
-              "slot-data-type" : "folder",
-              "slot-type" : "Output",
-              "name" : "Folder paths",
-              "custom-name" : "zoi-shape",
-              "description" : "",
-              "is-virtual" : false,
-              "save-outputs" : true,
-              "is-optional" : false
-            }
-          }
-        },
-        "jipipe:ui-grid-location" : {
-          "" : {
-            "VerticalCompact" : {
-              "x" : 7,
-              "y" : 2
-            }
-          },
-          "fb3bfe3a-c9c1-4ec4-908b-3f1b7380a851" : {
-            "VerticalCompact" : {
-              "x" : 24,
-              "y" : 7
-            }
-          }
-        },
-        "jipipe:node-info-id" : "import-folder-list",
-        "jipipe:algorithm:enabled" : true,
-        "jipipe:node:ui-locked" : false,
-        "folder-paths" : [ "/data/Projects/Carmi_Austin/webapp_v2_dev/read-mic/zoi-shape" ],
-        "jipipe:node:bookmarked" : false,
-        "jipipe:algorithm:pass-through" : false,
-        "jipipe:node:name" : "Folder list",
-        "jipipe:algorithm:runtime-partition" : {
-          "index" : 1
-        },
-        "jipipe:node:description" : "<html><head></head><body></body></html>",
-        "jipipe:algorithm:custom-expression-variables" : {
-          "parameters" : { }
-        }
-      },
-      "9b456697-7fef-4020-9615-1e2c26ab9ce8" : {
-        "jipipe:graph-compartment" : "fb3bfe3a-c9c1-4ec4-908b-3f1b7380a851",
-        "jipipe:alias-id" : "list-files-1",
-        "jipipe:slot-configuration" : {
-          "input" : {
-            "Folders" : {
-              "slot-data-type" : "folder",
-              "slot-type" : "Input",
-              "name" : "Folders",
-              "custom-name" : null,
-              "description" : "",
-              "is-virtual" : false,
-              "save-outputs" : true,
-              "is-optional" : false
-            }
-          },
-          "output" : {
-            "Files" : {
-              "slot-data-type" : "file",
-              "slot-type" : "Output",
-              "name" : "Files",
-              "custom-name" : null,
-              "description" : "",
-              "is-virtual" : false,
-              "save-outputs" : true,
-              "is-optional" : false
-            }
-          }
-        },
-        "jipipe:ui-grid-location" : {
-          "" : {
-            "VerticalCompact" : {
-              "x" : 11,
-              "y" : 6
-            }
-          },
-          "fb3bfe3a-c9c1-4ec4-908b-3f1b7380a851" : {
-            "VerticalCompact" : {
-              "x" : 24,
-              "y" : 11
-            }
-          }
-        },
-        "jipipe:node-info-id" : "folder-list-files",
-        "jipipe:algorithm:enabled" : true,
-        "jipipe:node:ui-locked" : false,
-        "subfolder" : null,
-        "recursive-follows-links" : true,
-        "jipipe:node:bookmarked" : false,
-        "filters" : {
-          "expression" : "STRING_MATCHES_GLOB(name, \"*.png\")"
-        },
-        "jipipe:algorithm:pass-through" : false,
-        "recursive" : false,
-        "jipipe:node:name" : "List files",
-        "jipipe:algorithm:runtime-partition" : {
-          "index" : 1
-        },
-        "jipipe:node:description" : "<html><head></head><body></body></html>",
-        "jipipe:local-parallelization-num-threads" : {
-          "content" : 1,
-          "enabled" : false
-        },
-        "jipipe:algorithm:custom-expression-variables" : {
-          "parameters" : { }
-        },
-        "jipipe:adaptive-parameters/attach-parameter-annotations" : true,
-        "jipipe:adaptive-parameters/attach-only-non-default-parameter-annotations" : true,
-        "jipipe:adaptive-parameters/parameter-annotations-prefix" : "",
-        "jipipe:adaptive-parameters/overridden-parameters" : [ ],
-        "jipipe:adaptive-parameters/enabled" : true,
-        "jipipe:adaptive-parameters/parameter-annotations-use-internal-names" : false,
-        "jipipe:parameter-slot-algorithm/has-parameter-slot" : false,
-        "jipipe:parameter-slot-algorithm/attach-parameter-annotations" : true,
-        "jipipe:parameter-slot-algorithm/attach-only-non-default-parameter-annotations" : true,
-        "jipipe:parameter-slot-algorithm/parameter-annotations-prefix" : "",
-        "jipipe:parameter-slot-algorithm/parameter-annotations-use-internal-names" : false,
-        "jipipe:data-batch-generation/limit" : {
-          "content" : {
-            "value" : "0-9",
-            "is-expression" : false,
-            "expression" : {
-              "expression" : "MAKE_SEQUENCE(0, 10)"
-            }
-          },
-          "enabled" : false
-        }
-      },
-      "af973a43-4e6e-4afa-9455-03801e99946e" : {
-        "jipipe:graph-compartment" : "fb3bfe3a-c9c1-4ec4-908b-3f1b7380a851",
-        "jipipe:alias-id" : "add-path-to-annotations-1",
-        "jipipe:slot-configuration" : {
-          "input" : {
-            "Paths" : {
-              "slot-data-type" : "path",
-              "slot-type" : "Input",
-              "name" : "Paths",
-              "custom-name" : null,
-              "description" : "",
-              "is-virtual" : false,
-              "save-outputs" : true,
-              "is-optional" : false
-            }
-          },
-          "output" : {
-            "Annotated paths" : {
-              "slot-data-type" : "path",
-              "slot-type" : "Output",
-              "name" : "Annotated paths",
-              "custom-name" : null,
-              "description" : "",
-              "is-virtual" : false,
-              "save-outputs" : true,
-              "is-optional" : false
-            }
-          }
-        },
-        "jipipe:ui-grid-location" : {
-          "" : {
-            "VerticalCompact" : {
-              "x" : 11,
-              "y" : 10
-            }
-          },
-          "fb3bfe3a-c9c1-4ec4-908b-3f1b7380a851" : {
-            "VerticalCompact" : {
-              "x" : 24,
-              "y" : 15
-            }
-          }
-        },
-        "jipipe:node-info-id" : "path-to-annotation-simple",
-        "annotation-merge-strategy" : "OverwriteExisting",
-        "remove-extensions" : true,
-        "jipipe:algorithm:enabled" : true,
-        "jipipe:node:ui-locked" : false,
-        "jipipe:node:bookmarked" : false,
-        "full-path" : false,
-        "jipipe:algorithm:pass-through" : false,
-        "jipipe:node:name" : "Add path to annotations",
-        "jipipe:algorithm:runtime-partition" : {
-          "index" : 1
-        },
-        "jipipe:node:description" : "<html><head></head><body></body></html>",
-        "generated-annotation" : "#ImageId",
-        "jipipe:local-parallelization-num-threads" : {
-          "content" : 1,
-          "enabled" : false
-        },
-        "jipipe:algorithm:custom-expression-variables" : {
-          "parameters" : { }
-        },
-        "jipipe:adaptive-parameters/attach-parameter-annotations" : true,
-        "jipipe:adaptive-parameters/attach-only-non-default-parameter-annotations" : true,
-        "jipipe:adaptive-parameters/parameter-annotations-prefix" : "",
-        "jipipe:adaptive-parameters/overridden-parameters" : [ ],
-        "jipipe:adaptive-parameters/enabled" : true,
-        "jipipe:adaptive-parameters/parameter-annotations-use-internal-names" : false,
-        "jipipe:parameter-slot-algorithm/has-parameter-slot" : false,
-        "jipipe:parameter-slot-algorithm/attach-parameter-annotations" : true,
-        "jipipe:parameter-slot-algorithm/attach-only-non-default-parameter-annotations" : true,
-        "jipipe:parameter-slot-algorithm/parameter-annotations-prefix" : "",
-        "jipipe:parameter-slot-algorithm/parameter-annotations-use-internal-names" : false,
-        "jipipe:data-batch-generation/limit" : {
-          "content" : {
-            "value" : "0-9",
-            "is-expression" : false,
-            "expression" : {
-              "expression" : "MAKE_SEQUENCE(0, 10)"
-            }
-          },
-          "enabled" : false
-        }
-      },
-      "3b70eae2-58ed-42f7-990d-7c19260df0f4" : {
-        "jipipe:graph-compartment" : "fb3bfe3a-c9c1-4ec4-908b-3f1b7380a851",
-        "jipipe:alias-id" : "import-image-1",
-        "jipipe:slot-configuration" : {
-          "input" : {
-            "Files" : {
-              "slot-data-type" : "file",
-              "slot-type" : "Input",
-              "name" : "Files",
-              "custom-name" : null,
-              "description" : "The image file",
-              "is-virtual" : false,
-              "save-outputs" : true,
-              "is-optional" : false
-            }
-          },
-          "output" : {
-            "Image" : {
-              "slot-data-type" : "imagej-imgplus",
-              "slot-type" : "Output",
-              "name" : "Image",
-              "custom-name" : null,
-              "description" : "Imported image",
-              "is-virtual" : false,
-              "save-outputs" : true,
-              "is-optional" : false
-            }
-          }
-        },
-        "jipipe:ui-grid-location" : {
-          "" : {
-            "VerticalCompact" : {
-              "x" : 10,
-              "y" : 15
-            }
-          },
-          "fb3bfe3a-c9c1-4ec4-908b-3f1b7380a851" : {
-            "VerticalCompact" : {
-              "x" : 24,
-              "y" : 37
-            }
-          }
-        },
-        "jipipe:node-info-id" : "import-imagej-imgplus-from-file",
-        "generated-image-type" : "imagej-imgplus",
-        "remove-overlay" : false,
-        "jipipe:algorithm:enabled" : true,
-        "jipipe:node:ui-locked" : false,
-        "jipipe:node:bookmarked" : false,
-        "remove-lut" : false,
-        "jipipe:algorithm:pass-through" : false,
-        "force-native-import" : false,
-        "jipipe:node:name" : "Import image (ZS)",
-        "jipipe:algorithm:runtime-partition" : {
-          "index" : 0
-        },
-        "jipipe:node:description" : "<html><head></head><body></body></html>",
-        "title-annotation" : {
-          "content" : "Image title",
-          "enabled" : false
-        },
-        "jipipe:local-parallelization-num-threads" : {
-          "content" : 1,
-          "enabled" : false
-        },
-        "jipipe:algorithm:custom-expression-variables" : {
-          "parameters" : { }
-        },
-        "jipipe:adaptive-parameters/attach-parameter-annotations" : true,
-        "jipipe:adaptive-parameters/attach-only-non-default-parameter-annotations" : true,
-        "jipipe:adaptive-parameters/parameter-annotations-prefix" : "",
-        "jipipe:adaptive-parameters/overridden-parameters" : [ ],
-        "jipipe:adaptive-parameters/enabled" : true,
-        "jipipe:adaptive-parameters/parameter-annotations-use-internal-names" : false,
-        "jipipe:parameter-slot-algorithm/has-parameter-slot" : false,
-        "jipipe:parameter-slot-algorithm/attach-parameter-annotations" : true,
-        "jipipe:parameter-slot-algorithm/attach-only-non-default-parameter-annotations" : true,
-        "jipipe:parameter-slot-algorithm/parameter-annotations-prefix" : "",
-        "jipipe:parameter-slot-algorithm/parameter-annotations-use-internal-names" : false,
-        "jipipe:data-batch-generation/limit" : {
-          "content" : {
-            "value" : "0-9",
-            "is-expression" : false,
-            "expression" : {
-              "expression" : "MAKE_SEQUENCE(0, 10)"
-            }
-          },
-          "enabled" : false
-        }
-      },
       "40bd5388-0a6a-4c66-8e14-f228e43c10bf" : {
         "jipipe:graph-compartment" : "fb3bfe3a-c9c1-4ec4-908b-3f1b7380a851",
         "jipipe:alias-id" : "annotate-by-annotation-table",
@@ -2298,7 +1954,7 @@
         "jipipe:node:ui-locked" : false,
         "needs-to-exist" : true,
         "jipipe:node:bookmarked" : false,
-        "file-name" : "/data/Projects/Carmi_Austin/webapp_v2_dev/read-mic/metadata.csv",
+        "file-name" : "metadata.csv",
         "jipipe:algorithm:pass-through" : false,
         "jipipe:node:name" : "File",
         "jipipe:algorithm:runtime-partition" : {
@@ -2392,101 +2048,6 @@
           "enabled" : false
         }
       },
-      "be188ce3-24aa-4d35-ae53-84b7439027a1" : {
-        "jipipe:graph-compartment" : "fb3bfe3a-c9c1-4ec4-908b-3f1b7380a851",
-        "jipipe:alias-id" : "annotate-by-annotation-table-1",
-        "jipipe:slot-configuration" : {
-          "input" : {
-            "Annotations" : {
-              "slot-data-type" : "annotation-table",
-              "slot-type" : "Input",
-              "name" : "Annotations",
-              "custom-name" : null,
-              "description" : "",
-              "is-virtual" : false,
-              "save-outputs" : true,
-              "is-optional" : false
-            },
-            "Data" : {
-              "slot-data-type" : "jipipe:data",
-              "slot-type" : "Input",
-              "name" : "Data",
-              "custom-name" : null,
-              "description" : "",
-              "is-virtual" : false,
-              "save-outputs" : true,
-              "is-optional" : false
-            }
-          },
-          "output" : {
-            "Annotated data" : {
-              "slot-data-type" : "jipipe:data",
-              "slot-type" : "Output",
-              "name" : "Annotated data",
-              "custom-name" : null,
-              "description" : "",
-              "is-virtual" : false,
-              "save-outputs" : true,
-              "is-optional" : false
-            }
-          }
-        },
-        "jipipe:ui-grid-location" : {
-          "" : {
-            "VerticalCompact" : {
-              "x" : 22,
-              "y" : 14
-            }
-          },
-          "fb3bfe3a-c9c1-4ec4-908b-3f1b7380a851" : {
-            "VerticalCompact" : {
-              "x" : 21,
-              "y" : 19
-            }
-          }
-        },
-        "jipipe:node-info-id" : "annotate-with-annotation-table",
-        "discard-existing-annotations" : false,
-        "jipipe:algorithm:enabled" : true,
-        "jipipe:node:ui-locked" : false,
-        "jipipe:node:bookmarked" : false,
-        "jipipe:algorithm:pass-through" : false,
-        "jipipe:node:name" : "Annotate by annotation table",
-        "jipipe:algorithm:runtime-partition" : {
-          "index" : 1
-        },
-        "jipipe:node:description" : "<html><head></head><body></body></html>",
-        "table-merge-settings/annotation-merge-strategy" : "Merge",
-        "table-merge-settings/column-matching" : "PrefixHashUnion",
-        "table-merge-settings/data-annotation-merge-strategy" : "MergeTables",
-        "table-merge-settings/custom-matched-columns-expression" : {
-          "expression" : ""
-        },
-        "table-merge-settings/skip-incomplete" : false,
-        "table-merge-settings/custom-annotation-matching" : {
-          "expression" : "exact_match_results"
-        },
-        "table-merge-settings/limit" : {
-          "content" : {
-            "value" : "0-9",
-            "is-expression" : false,
-            "expression" : {
-              "expression" : "MAKE_SEQUENCE(0, 10)"
-            }
-          },
-          "enabled" : false
-        },
-        "table-merge-settings/annotation-matching-method" : "ExactMatch",
-        "table-merge-settings/force-flow-graph-solver" : false,
-        "jipipe:algorithm:custom-expression-variables" : {
-          "parameters" : { }
-        },
-        "jipipe:parameter-slot-algorithm/has-parameter-slot" : false,
-        "jipipe:parameter-slot-algorithm/attach-parameter-annotations" : true,
-        "jipipe:parameter-slot-algorithm/attach-only-non-default-parameter-annotations" : true,
-        "jipipe:parameter-slot-algorithm/parameter-annotations-prefix" : "",
-        "jipipe:parameter-slot-algorithm/parameter-annotations-use-internal-names" : false
-      },
       "1cc8443c-f452-4b72-9387-34b47d26b3c3" : {
         "jipipe:graph-compartment" : "fb3bfe3a-c9c1-4ec4-908b-3f1b7380a851",
         "jipipe:alias-id" : "folder-list-2",
@@ -2514,7 +2075,7 @@
           },
           "fb3bfe3a-c9c1-4ec4-908b-3f1b7380a851" : {
             "VerticalCompact" : {
-              "x" : 33,
+              "x" : 24,
               "y" : 7
             }
           }
@@ -2522,7 +2083,7 @@
         "jipipe:node-info-id" : "import-folder-list",
         "jipipe:algorithm:enabled" : true,
         "jipipe:node:ui-locked" : false,
-        "folder-paths" : [ "/data/Projects/Carmi_Austin/webapp_v2_dev/read-mic/plate" ],
+        "folder-paths" : [ "plate" ],
         "jipipe:node:bookmarked" : false,
         "jipipe:algorithm:pass-through" : false,
         "jipipe:node:name" : "Folder list",
@@ -2572,7 +2133,7 @@
           },
           "fb3bfe3a-c9c1-4ec4-908b-3f1b7380a851" : {
             "VerticalCompact" : {
-              "x" : 33,
+              "x" : 24,
               "y" : 11
             }
           }
@@ -2660,7 +2221,7 @@
           },
           "fb3bfe3a-c9c1-4ec4-908b-3f1b7380a851" : {
             "VerticalCompact" : {
-              "x" : 33,
+              "x" : 24,
               "y" : 15
             }
           }
@@ -2756,7 +2317,7 @@
           },
           "fb3bfe3a-c9c1-4ec4-908b-3f1b7380a851" : {
             "VerticalCompact" : {
-              "x" : 32,
+              "x" : 23,
               "y" : 19
             }
           }
@@ -2841,7 +2402,7 @@
           },
           "fb3bfe3a-c9c1-4ec4-908b-3f1b7380a851" : {
             "VerticalCompact" : {
-              "x" : 32,
+              "x" : 24,
               "y" : 37
             }
           }
@@ -2920,7 +2481,7 @@
           },
           "fb3bfe3a-c9c1-4ec4-908b-3f1b7380a851" : {
             "VerticalCompact" : {
-              "x" : 44,
+              "x" : 35,
               "y" : 7
             }
           }
@@ -2928,7 +2489,7 @@
         "jipipe:node-info-id" : "import-folder-list",
         "jipipe:algorithm:enabled" : true,
         "jipipe:node:ui-locked" : false,
-        "folder-paths" : [ "/data/Projects/Carmi_Austin/webapp_v2_dev/read-mic/raw" ],
+        "folder-paths" : [ "raw" ],
         "jipipe:node:bookmarked" : false,
         "jipipe:algorithm:pass-through" : false,
         "jipipe:node:name" : "Folder list",
@@ -2988,7 +2549,7 @@
           },
           "fb3bfe3a-c9c1-4ec4-908b-3f1b7380a851" : {
             "VerticalCompact" : {
-              "x" : 43,
+              "x" : 34,
               "y" : 19
             }
           }
@@ -3073,7 +2634,7 @@
           },
           "fb3bfe3a-c9c1-4ec4-908b-3f1b7380a851" : {
             "VerticalCompact" : {
-              "x" : 44,
+              "x" : 35,
               "y" : 15
             }
           }
@@ -3159,7 +2720,7 @@
           },
           "fb3bfe3a-c9c1-4ec4-908b-3f1b7380a851" : {
             "VerticalCompact" : {
-              "x" : 44,
+              "x" : 35,
               "y" : 11
             }
           }
@@ -3224,16 +2785,6 @@
               "save-outputs" : true,
               "is-optional" : false
             },
-            "ZS" : {
-              "slot-data-type" : "imagej-imgplus",
-              "slot-type" : "Input",
-              "name" : "ZS",
-              "custom-name" : null,
-              "description" : "",
-              "is-virtual" : false,
-              "save-outputs" : true,
-              "is-optional" : false
-            },
             "PL" : {
               "slot-data-type" : "imagej-imgplus",
               "slot-type" : "Input",
@@ -3260,16 +2811,6 @@
               "slot-data-type" : "imagej-imgplus",
               "slot-type" : "Output",
               "name" : "SD",
-              "custom-name" : null,
-              "description" : null,
-              "is-virtual" : false,
-              "save-outputs" : true,
-              "is-optional" : false
-            },
-            "ZS" : {
-              "slot-data-type" : "imagej-imgplus",
-              "slot-type" : "Output",
-              "name" : "ZS",
               "custom-name" : null,
               "description" : null,
               "is-virtual" : false,
@@ -3894,16 +3435,6 @@
               "save-outputs" : true,
               "is-optional" : false
             },
-            "ZS" : {
-              "slot-data-type" : "jipipe:data",
-              "slot-type" : "Input",
-              "name" : "ZS",
-              "custom-name" : null,
-              "description" : "",
-              "is-virtual" : false,
-              "save-outputs" : true,
-              "is-optional" : false
-            },
             "PL" : {
               "slot-data-type" : "jipipe:data",
               "slot-type" : "Input",
@@ -3930,16 +3461,6 @@
               "slot-data-type" : "jipipe:data",
               "slot-type" : "Output",
               "name" : "SD",
-              "custom-name" : null,
-              "description" : null,
-              "is-virtual" : false,
-              "save-outputs" : true,
-              "is-optional" : false
-            },
-            "ZS" : {
-              "slot-data-type" : "jipipe:data",
-              "slot-type" : "Output",
-              "name" : "ZS",
               "custom-name" : null,
               "description" : null,
               "is-virtual" : false,
@@ -4757,7 +4278,7 @@
         "max-particle-circularity" : 1.0,
         "exclude-edges" : false,
         "measurements" : {
-          "values" : [ "PixelValueModal", "FeretDiameter", "ShapeDescriptors", "AreaFraction", "PixelValueMinMax", "PixelValueSkewness", "CenterOfMass", "Area", "PixelValueMedian", "BoundingRectangle", "IntegratedDensity", "Perimeter", "PixelValueMean", "PixelValueStandardDeviation", "Centroid", "StackPosition", "FitEllipse", "PixelValueKurtosis" ],
+          "values" : [ "ShapeDescriptors", "PixelValueStandardDeviation", "Area", "Centroid", "IntegratedDensity", "PixelValueKurtosis", "PixelValueMedian", "PixelValueSkewness", "PixelValueModal", "StackPosition", "Perimeter", "BoundingRectangle", "CenterOfMass", "FitEllipse", "PixelValueMinMax", "FeretDiameter", "AreaFraction", "PixelValueMean" ],
           "collapsed" : true
         },
         "jipipe:algorithm:enabled" : true,
@@ -5417,7 +4938,7 @@
           },
           "f974fbbe-e15f-4b4a-a820-eb22c4f7808d" : {
             "VerticalCompact" : {
-              "x" : 5,
+              "x" : 3,
               "y" : 1
             }
           },
@@ -6736,7 +6257,7 @@
         "max-particle-circularity" : 1.0,
         "exclude-edges" : false,
         "measurements" : {
-          "values" : [ "PixelValueModal", "FeretDiameter", "ShapeDescriptors", "AreaFraction", "PixelValueMinMax", "PixelValueSkewness", "CenterOfMass", "Area", "PixelValueMedian", "BoundingRectangle", "IntegratedDensity", "Perimeter", "PixelValueMean", "PixelValueStandardDeviation", "Centroid", "StackPosition", "FitEllipse", "PixelValueKurtosis" ],
+          "values" : [ "ShapeDescriptors", "PixelValueStandardDeviation", "Area", "Centroid", "IntegratedDensity", "PixelValueKurtosis", "PixelValueMedian", "PixelValueSkewness", "PixelValueModal", "StackPosition", "Perimeter", "BoundingRectangle", "CenterOfMass", "FitEllipse", "PixelValueMinMax", "FeretDiameter", "AreaFraction", "PixelValueMean" ],
           "collapsed" : true
         },
         "jipipe:algorithm:enabled" : true,
@@ -7830,7 +7351,7 @@
           },
           "f974fbbe-e15f-4b4a-a820-eb22c4f7808d" : {
             "VerticalCompact" : {
-              "x" : 25,
+              "x" : 23,
               "y" : 1
             }
           }
@@ -8864,7 +8385,7 @@
         "jipipe:ui-grid-location" : {
           "f974fbbe-e15f-4b4a-a820-eb22c4f7808d" : {
             "VerticalCompact" : {
-              "x" : 5,
+              "x" : 3,
               "y" : 10
             }
           }
@@ -9008,7 +8529,7 @@
           },
           "f974fbbe-e15f-4b4a-a820-eb22c4f7808d" : {
             "VerticalCompact" : {
-              "x" : 17,
+              "x" : 15,
               "y" : 10
             }
           }
@@ -9434,7 +8955,7 @@
         "jipipe:ui-grid-location" : {
           "f974fbbe-e15f-4b4a-a820-eb22c4f7808d" : {
             "VerticalCompact" : {
-              "x" : 7,
+              "x" : 5,
               "y" : 15
             }
           }
@@ -9504,7 +9025,7 @@
         "jipipe:ui-grid-location" : {
           "f974fbbe-e15f-4b4a-a820-eb22c4f7808d" : {
             "VerticalCompact" : {
-              "x" : 3,
+              "x" : 1,
               "y" : 7
             }
           }
@@ -9571,7 +9092,7 @@
         "jipipe:ui-grid-location" : {
           "f974fbbe-e15f-4b4a-a820-eb22c4f7808d" : {
             "VerticalCompact" : {
-              "x" : 29,
+              "x" : 27,
               "y" : 10
             }
           }
@@ -9631,7 +9152,7 @@
           },
           "f974fbbe-e15f-4b4a-a820-eb22c4f7808d" : {
             "VerticalCompact" : {
-              "x" : 3,
+              "x" : 1,
               "y" : 20
             }
           }
@@ -9714,7 +9235,7 @@
           },
           "f974fbbe-e15f-4b4a-a820-eb22c4f7808d" : {
             "VerticalCompact" : {
-              "x" : 5,
+              "x" : 3,
               "y" : 24
             }
           }
@@ -9824,7 +9345,7 @@
         "jipipe:ui-grid-location" : {
           "f974fbbe-e15f-4b4a-a820-eb22c4f7808d" : {
             "VerticalCompact" : {
-              "x" : 7,
+              "x" : 5,
               "y" : 29
             }
           }
@@ -9923,7 +9444,7 @@
         "jipipe:ui-grid-location" : {
           "f974fbbe-e15f-4b4a-a820-eb22c4f7808d" : {
             "VerticalCompact" : {
-              "x" : 26,
+              "x" : 24,
               "y" : 54
             }
           }
@@ -10016,7 +9537,7 @@
           },
           "f974fbbe-e15f-4b4a-a820-eb22c4f7808d" : {
             "VerticalCompact" : {
-              "x" : 5,
+              "x" : 3,
               "y" : 38
             }
           }
@@ -10113,7 +9634,7 @@
         "jipipe:ui-grid-location" : {
           "f974fbbe-e15f-4b4a-a820-eb22c4f7808d" : {
             "VerticalCompact" : {
-              "x" : 4,
+              "x" : 2,
               "y" : 42
             }
           }
@@ -10478,7 +9999,7 @@
           },
           "fb3bfe3a-c9c1-4ec4-908b-3f1b7380a851" : {
             "VerticalCompact" : {
-              "x" : 41,
+              "x" : 33,
               "y" : 37
             }
           }
@@ -10588,7 +10109,7 @@
           },
           "f974fbbe-e15f-4b4a-a820-eb22c4f7808d" : {
             "VerticalCompact" : {
-              "x" : 3,
+              "x" : 1,
               "y" : 69
             }
           }
@@ -10687,8 +10208,8 @@
           "enabled" : false
         },
         "plot-parameters/background-color" : "#FFFFFF",
-        "plot-parameters/use-custom-color-map" : false,
         "plot-parameters/export-height" : 768,
+        "plot-parameters/use-custom-color-map" : false,
         "plot-parameters/color-map" : "Pastel1",
         "plot-parameters/y-axis-minimum" : {
           "content" : "-Infinity",
@@ -10825,8 +10346,8 @@
           "enabled" : false
         },
         "plot-parameters/background-color" : "#FFFFFF",
-        "plot-parameters/use-custom-color-map" : false,
         "plot-parameters/export-height" : 768,
+        "plot-parameters/use-custom-color-map" : false,
         "plot-parameters/color-map" : "Pastel1",
         "plot-parameters/y-axis-minimum" : {
           "content" : "-Infinity",
@@ -11139,7 +10660,7 @@
           },
           "f974fbbe-e15f-4b4a-a820-eb22c4f7808d" : {
             "VerticalCompact" : {
-              "x" : 3,
+              "x" : 1,
               "y" : 34
             }
           }
@@ -11331,7 +10852,7 @@
         "max-particle-circularity" : 1.0,
         "exclude-edges" : false,
         "measurements" : {
-          "values" : [ "PixelValueModal", "FeretDiameter", "ShapeDescriptors", "AreaFraction", "PixelValueMinMax", "PixelValueSkewness", "CenterOfMass", "Area", "PixelValueMedian", "BoundingRectangle", "IntegratedDensity", "Perimeter", "PixelValueMean", "PixelValueStandardDeviation", "Centroid", "StackPosition", "FitEllipse", "PixelValueKurtosis" ],
+          "values" : [ "ShapeDescriptors", "PixelValueStandardDeviation", "Area", "Centroid", "IntegratedDensity", "PixelValueKurtosis", "PixelValueMedian", "PixelValueSkewness", "PixelValueModal", "StackPosition", "Perimeter", "BoundingRectangle", "CenterOfMass", "FitEllipse", "PixelValueMinMax", "FeretDiameter", "AreaFraction", "PixelValueMean" ],
           "collapsed" : true
         },
         "jipipe:algorithm:enabled" : true,
@@ -12868,7 +12389,7 @@
         "jipipe:ui-grid-location" : {
           "f974fbbe-e15f-4b4a-a820-eb22c4f7808d" : {
             "VerticalCompact" : {
-              "x" : 25,
+              "x" : 23,
               "y" : 38
             }
           }
@@ -12951,7 +12472,7 @@
         "jipipe:ui-grid-location" : {
           "f974fbbe-e15f-4b4a-a820-eb22c4f7808d" : {
             "VerticalCompact" : {
-              "x" : 25,
+              "x" : 23,
               "y" : 42
             }
           }
@@ -13025,7 +12546,7 @@
           },
           "f974fbbe-e15f-4b4a-a820-eb22c4f7808d" : {
             "VerticalCompact" : {
-              "x" : 37,
+              "x" : 35,
               "y" : 34
             }
           }
@@ -13098,7 +12619,7 @@
           },
           "f974fbbe-e15f-4b4a-a820-eb22c4f7808d" : {
             "VerticalCompact" : {
-              "x" : 17,
+              "x" : 15,
               "y" : 42
             }
           }
@@ -13188,7 +12709,7 @@
         "jipipe:ui-grid-location" : {
           "f974fbbe-e15f-4b4a-a820-eb22c4f7808d" : {
             "VerticalCompact" : {
-              "x" : 39,
+              "x" : 37,
               "y" : 45
             }
           }
@@ -13267,7 +12788,7 @@
         "jipipe:ui-grid-location" : {
           "f974fbbe-e15f-4b4a-a820-eb22c4f7808d" : {
             "VerticalCompact" : {
-              "x" : 39,
+              "x" : 37,
               "y" : 53
             }
           }
@@ -13405,7 +12926,7 @@
         "jipipe:ui-grid-location" : {
           "f974fbbe-e15f-4b4a-a820-eb22c4f7808d" : {
             "VerticalCompact" : {
-              "x" : 39,
+              "x" : 37,
               "y" : 57
             }
           }
@@ -13484,7 +13005,7 @@
         "jipipe:ui-grid-location" : {
           "f974fbbe-e15f-4b4a-a820-eb22c4f7808d" : {
             "VerticalCompact" : {
-              "x" : 39,
+              "x" : 37,
               "y" : 37
             }
           }
@@ -13569,7 +13090,7 @@
           },
           "f974fbbe-e15f-4b4a-a820-eb22c4f7808d" : {
             "VerticalCompact" : {
-              "x" : 39,
+              "x" : 37,
               "y" : 49
             }
           }
@@ -13648,7 +13169,7 @@
         "jipipe:ui-grid-location" : {
           "f974fbbe-e15f-4b4a-a820-eb22c4f7808d" : {
             "VerticalCompact" : {
-              "x" : 39,
+              "x" : 37,
               "y" : 41
             }
           }
@@ -13739,7 +13260,7 @@
           },
           "f974fbbe-e15f-4b4a-a820-eb22c4f7808d" : {
             "VerticalCompact" : {
-              "x" : 46,
+              "x" : 44,
               "y" : 61
             }
           }
@@ -13837,7 +13358,7 @@
           },
           "f974fbbe-e15f-4b4a-a820-eb22c4f7808d" : {
             "VerticalCompact" : {
-              "x" : 39,
+              "x" : 37,
               "y" : 61
             }
           }
@@ -14308,186 +13829,6 @@
       }
     },
     "edges" : [ {
-      "source-node" : "be188ce3-24aa-4d35-ae53-84b7439027a1",
-      "target-node" : "e52435cd-e40e-458d-9999-2f6698581b6b",
-      "source-slot" : "Annotated data",
-      "target-slot" : "ZS",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "ed757310-b739-4527-8d83-98ff5f5e4a14",
-      "target-node" : "3cd4de7c-fdd5-4fda-9d20-5eb6be7e97de",
-      "source-slot" : "SD",
-      "target-slot" : "Input",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "3a9bda5c-9313-4f97-8b4e-0170b452cb8e",
-      "target-node" : "3499122d-6505-4aaf-832b-83faabb2f5f5",
-      "source-slot" : "Output",
-      "target-slot" : "Input",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "9d71b89e-57cb-4ecf-9652-9098ac4ba727",
-      "target-node" : "07ba4c3e-4352-499f-b84c-0dbeeadb9194",
-      "source-slot" : "Output",
-      "target-slot" : "Annotations",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "353cd6e7-5784-4551-a3a5-9867668c7a43",
-      "target-node" : "3a9bda5c-9313-4f97-8b4e-0170b452cb8e",
-      "source-slot" : "Output",
-      "target-slot" : "Input",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "3499122d-6505-4aaf-832b-83faabb2f5f5",
-      "target-node" : "0f576db6-7fc3-423a-84d0-a1ea9acfbc2e",
-      "source-slot" : "Output",
-      "target-slot" : "Input",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "e8d8220d-6859-4a5b-935c-5ef0d95b1a98",
-      "target-node" : "da85331a-a623-40b6-b0af-407f06927424",
-      "source-slot" : "Output",
-      "target-slot" : "Input",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "e52435cd-e40e-458d-9999-2f6698581b6b",
-      "target-node" : "549ab4da-ddf1-4592-8449-33a845d79ca8",
-      "source-slot" : "RAW",
-      "target-slot" : "Files",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "9d71b89e-57cb-4ecf-9652-9098ac4ba727",
-      "target-node" : "cfd24b0f-61e9-485a-a24c-58e5dfd141f1",
-      "source-slot" : "Output",
-      "target-slot" : "Input",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "adbbdab4-5c73-4029-8ee6-1226132a7703",
-      "target-node" : "deeb2697-51b2-4f9b-a2f2-4acbf741f880",
-      "source-slot" : "SD",
-      "target-slot" : "Input",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "9d71b89e-57cb-4ecf-9652-9098ac4ba727",
-      "target-node" : "036406c0-5d1b-4d92-afc7-3ca99685da13",
-      "source-slot" : "Output",
-      "target-slot" : "Input",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "86d7fd7b-bb5d-492e-87af-c71f02c2cd35",
-      "target-node" : "353cd6e7-5784-4551-a3a5-9867668c7a43",
-      "source-slot" : "Output",
-      "target-slot" : "Input",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "6fb28b41-b41e-46a9-980c-7ad6da983dec",
-      "target-node" : "86d7fd7b-bb5d-492e-87af-c71f02c2cd35",
-      "source-slot" : "Output",
-      "target-slot" : "Input",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "b2b35089-f59b-45c0-9097-a15e88e92a32",
-      "target-node" : "51028396-24b8-4700-90e4-11bb2e53b97d",
-      "source-slot" : "Output",
-      "target-slot" : "ROI",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "25d3068e-8eaa-46a1-b206-56fb172196ea",
-      "target-node" : "e36daf9a-2e3c-47da-aec3-24341638e126",
-      "source-slot" : "Output",
-      "target-slot" : "Labels",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "7152f27a-5b37-4c0b-bf86-5d9c6a0e8e6d",
-      "target-node" : "8cc466a9-b087-4c29-a3b0-2b4d5462bf8a",
-      "source-slot" : "Output",
-      "target-slot" : "Initial",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "de016058-04f6-4f3d-b07c-644a7ba8c411",
-      "target-node" : "9f662b82-4c1e-498a-9eb9-5bea428d0338",
-      "source-slot" : "Output",
-      "target-slot" : "Source",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "13459f04-53a6-4c32-9592-5393da0f8d26",
-      "target-node" : "001356ae-f336-462d-8d7c-e73910306449",
-      "source-slot" : "ROI",
-      "target-slot" : "ROI",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "de016058-04f6-4f3d-b07c-644a7ba8c411",
-      "target-node" : "c4f39dcf-327a-42f7-abc9-ccef0c1acdf6",
-      "source-slot" : "Output",
-      "target-slot" : "Input",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "b726a811-b145-4e97-861d-2dbf7bad7a53",
-      "target-node" : "e8d8220d-6859-4a5b-935c-5ef0d95b1a98",
-      "source-slot" : "Output",
-      "target-slot" : "Input",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
       "source-node" : "563d1b1f-8576-4af7-82ca-fbb52e5afc99",
       "target-node" : "d7bffc4f-7410-403e-a1f7-08a12fbc6d59",
       "source-slot" : "Output",
@@ -14497,161 +13838,8 @@
         "ui-shape" : "Elbow"
       }
     }, {
-      "source-node" : "e55e4bde-7f26-4ec1-aa89-855ff0031aa8",
-      "target-node" : "8cc466a9-b087-4c29-a3b0-2b4d5462bf8a",
-      "source-slot" : "Labels",
-      "target-slot" : "Labels",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "6ca69664-370b-4e7b-aa6c-291332b96405",
-      "target-node" : "89caad96-3cd5-4a9a-b80a-dda8c9f4ac5a",
-      "source-slot" : "Output",
-      "target-slot" : "Input",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "919d6b38-cef7-4008-82eb-fc8ea4b5a907",
-      "target-node" : "ed757310-b739-4527-8d83-98ff5f5e4a14",
-      "source-slot" : "Image",
-      "target-slot" : "SD",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "57dc28ac-a417-4202-a9a6-b72534eba6a8",
-      "target-node" : "25d3068e-8eaa-46a1-b206-56fb172196ea",
-      "source-slot" : "Output",
-      "target-slot" : "Mask",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "98ce0924-4989-4d11-b949-ba20812f9a41",
-      "target-node" : "a3d4a65f-030d-47fb-8234-b4b3e5852859",
-      "source-slot" : "Output",
-      "target-slot" : "Input",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "032a5b21-823f-4f79-ad2b-b85843541129",
-      "target-node" : "b726a811-b145-4e97-861d-2dbf7bad7a53",
-      "source-slot" : "Labels",
-      "target-slot" : "Input",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "4c1f4cfe-2ad4-481f-b072-932515456116",
-      "target-node" : "33c70e82-1e45-4d84-aa35-3a41f6649ab2",
-      "source-slot" : "Output",
-      "target-slot" : "Input",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "adbbdab4-5c73-4029-8ee6-1226132a7703",
-      "target-node" : "57dc28ac-a417-4202-a9a6-b72534eba6a8",
-      "source-slot" : "PL",
-      "target-slot" : "I3",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "830c1976-9190-425f-acf0-414e12021f6e",
-      "target-node" : "032a5b21-823f-4f79-ad2b-b85843541129",
-      "source-slot" : "Target",
-      "target-slot" : "Labels",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "608afdb7-d78a-4814-8116-fc6cce5075ec",
-      "target-node" : "9d71b89e-57cb-4ecf-9652-9098ac4ba727",
-      "source-slot" : "Output",
-      "target-slot" : "Input",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "907d79c5-b990-4b22-84a6-3bb7de7a5d35",
-      "target-node" : "14df9501-96f8-4c34-a96c-5f86da6c741c",
-      "source-slot" : "Output",
-      "target-slot" : "Input",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "7c7c2312-ad08-421b-8512-138e8e694f7d",
-      "target-node" : "2510033f-f356-4bd1-a9a3-07c55f791f1f",
-      "source-slot" : "Annotated data",
-      "target-slot" : "Input",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "663a58cc-95b6-4696-b955-47c39035a781",
-      "target-node" : "adbbdab4-5c73-4029-8ee6-1226132a7703",
-      "source-slot" : "Output",
-      "target-slot" : "SD",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "e55e4bde-7f26-4ec1-aa89-855ff0031aa8",
-      "target-node" : "8cc466a9-b087-4c29-a3b0-2b4d5462bf8a",
-      "source-slot" : "Values",
-      "target-slot" : "Values",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "032a5b21-823f-4f79-ad2b-b85843541129",
-      "target-node" : "1f1e94ac-0631-41b9-9936-2be4ab8b525e",
-      "source-slot" : "Measurements",
-      "target-slot" : "Input",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "7c7c2312-ad08-421b-8512-138e8e694f7d",
-      "target-node" : "93f0fe5d-54ff-41e7-a9a3-7a034d78f466",
-      "source-slot" : "Annotated data",
-      "target-slot" : "Input",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "9036b43d-b32a-4fe8-891e-b13a472c3284",
-      "target-node" : "6fb28b41-b41e-46a9-980c-7ad6da983dec",
-      "source-slot" : "Output",
-      "target-slot" : "Input",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "1f1e94ac-0631-41b9-9936-2be4ab8b525e",
-      "target-node" : "56ce946d-785b-43ea-bb8a-3fc46d799caf",
+      "source-node" : "d707e910-7904-4d58-81ab-ffd4936182a0",
+      "target-node" : "663a58cc-95b6-4696-b955-47c39035a781",
       "source-slot" : "Output",
       "target-slot" : "Input",
       "metadata" : {
@@ -14668,136 +13856,10 @@
         "ui-shape" : "Elbow"
       }
     }, {
-      "source-node" : "25d3068e-8eaa-46a1-b206-56fb172196ea",
-      "target-node" : "830c1976-9190-425f-acf0-414e12021f6e",
-      "source-slot" : "Output",
-      "target-slot" : "Target",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "01ee7d36-aab3-42a3-a583-5d79fbac6dce",
-      "target-node" : "c3d09378-5ad4-4ad2-9ba3-ba83f683aa83",
-      "source-slot" : "ROI",
-      "target-slot" : "Input",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "25ada13d-6f0e-48ec-bb7d-4054193fc5e4",
-      "target-node" : "6fb28b41-b41e-46a9-980c-7ad6da983dec",
-      "source-slot" : "Output",
-      "target-slot" : "Input",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "a3d4a65f-030d-47fb-8234-b4b3e5852859",
-      "target-node" : "add604e1-ceb0-43d4-96a8-f82ad5cfc1b3",
-      "source-slot" : "Output",
-      "target-slot" : "Input",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "e52435cd-e40e-458d-9999-2f6698581b6b",
-      "target-node" : "3b70eae2-58ed-42f7-990d-7c19260df0f4",
-      "source-slot" : "ZS",
-      "target-slot" : "Files",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "dc6039d0-76e1-47a2-adb7-0f80699dd2a5",
-      "target-node" : "6ca1cd34-9d79-480b-bc82-9918ddc721ed",
-      "source-slot" : "ROI",
-      "target-slot" : "Input",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "0122ba46-190f-4c05-982d-9b6b709d84d7",
-      "target-node" : "ac1ef081-4812-4223-9bcb-7cecb0cb7bfd",
-      "source-slot" : "Folder paths",
-      "target-slot" : "Folders",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "0f576db6-7fc3-423a-84d0-a1ea9acfbc2e",
-      "target-node" : "bd0b7758-2ce7-4724-aa6b-df16267d26b4",
-      "source-slot" : "Output",
-      "target-slot" : "Input",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "e09d3d8c-b8da-4cce-9d55-211378b12078",
-      "target-node" : "001356ae-f336-462d-8d7c-e73910306449",
-      "source-slot" : "Annotated image",
-      "target-slot" : "Image",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "001356ae-f336-462d-8d7c-e73910306449",
+      "source-node" : "7152f27a-5b37-4c0b-bf86-5d9c6a0e8e6d",
       "target-node" : "8cc466a9-b087-4c29-a3b0-2b4d5462bf8a",
-      "source-slot" : "Cropped",
-      "target-slot" : "Cropped Strip",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "c3d09378-5ad4-4ad2-9ba3-ba83f683aa83",
-      "target-node" : "8b249388-00f3-49ec-8c13-02dfe8eacc9d",
       "source-slot" : "Output",
-      "target-slot" : "ROI",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "549ab4da-ddf1-4592-8449-33a845d79ca8",
-      "target-node" : "7efbecf0-aef4-4db7-954a-588659bed865",
-      "source-slot" : "Image",
-      "target-slot" : "Input",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "8b249388-00f3-49ec-8c13-02dfe8eacc9d",
-      "target-node" : "74303208-da3a-4fbd-b5be-fc54ec52123f",
-      "source-slot" : "ROI",
-      "target-slot" : "ROI",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "81267a29-280c-417b-b04e-b6041b9b18f6",
-      "target-node" : "de016058-04f6-4f3d-b07c-644a7ba8c411",
-      "source-slot" : "Output",
-      "target-slot" : "Input",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "bfd0d6fb-b0de-4973-9457-0369b745dcab",
-      "target-node" : "b2b35089-f59b-45c0-9097-a15e88e92a32",
-      "source-slot" : "Output",
-      "target-slot" : "Input",
+      "target-slot" : "Initial",
       "metadata" : {
         "ui-visibility" : "Smart",
         "ui-shape" : "Elbow"
@@ -14812,64 +13874,19 @@
         "ui-shape" : "Elbow"
       }
     }, {
-      "source-node" : "3da953df-e2eb-4f06-b5e8-50966fa2c53a",
-      "target-node" : "3b2b16c3-e4c8-4c1a-a04b-fce9c50ecd40",
-      "source-slot" : "Output",
-      "target-slot" : "Input",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
       "source-node" : "adbbdab4-5c73-4029-8ee6-1226132a7703",
-      "target-node" : "13459f04-53a6-4c32-9592-5393da0f8d26",
-      "source-slot" : "SD",
-      "target-slot" : "Mask",
+      "target-node" : "51028396-24b8-4700-90e4-11bb2e53b97d",
+      "source-slot" : "RAW",
+      "target-slot" : "Image",
       "metadata" : {
         "ui-visibility" : "Smart",
         "ui-shape" : "Elbow"
       }
     }, {
-      "source-node" : "6e810537-6fa6-4225-99e3-372741397cd1",
-      "target-node" : "ba3e79bf-d5b0-4af8-b792-01f7300d6b84",
-      "source-slot" : "Output",
-      "target-slot" : "Input",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "deeb2697-51b2-4f9b-a2f2-4acbf741f880",
-      "target-node" : "57dc28ac-a417-4202-a9a6-b72534eba6a8",
-      "source-slot" : "Output",
-      "target-slot" : "I1",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "93f0fe5d-54ff-41e7-a9a3-7a034d78f466",
-      "target-node" : "bfd0d6fb-b0de-4973-9457-0369b745dcab",
-      "source-slot" : "Output",
-      "target-slot" : "Input",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "032a5b21-823f-4f79-ad2b-b85843541129",
-      "target-node" : "907d79c5-b990-4b22-84a6-3bb7de7a5d35",
-      "source-slot" : "Labels",
-      "target-slot" : "I1",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "22ef2aaa-50a8-4e05-a406-ce0b153c8f19",
-      "target-node" : "044ea95b-cee5-49e5-bd00-cff3dfe045b4",
-      "source-slot" : "Output",
-      "target-slot" : "Input",
+      "source-node" : "919d6b38-cef7-4008-82eb-fc8ea4b5a907",
+      "target-node" : "ed757310-b739-4527-8d83-98ff5f5e4a14",
+      "source-slot" : "Image",
+      "target-slot" : "SD",
       "metadata" : {
         "ui-visibility" : "Smart",
         "ui-shape" : "Elbow"
@@ -14884,51 +13901,6 @@
         "ui-shape" : "Elbow"
       }
     }, {
-      "source-node" : "1f1e94ac-0631-41b9-9936-2be4ab8b525e",
-      "target-node" : "4c1f4cfe-2ad4-481f-b072-932515456116",
-      "source-slot" : "Output",
-      "target-slot" : "Input",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "4c1f4cfe-2ad4-481f-b072-932515456116",
-      "target-node" : "bb267def-5e31-4061-87e6-879ef9ca87fe",
-      "source-slot" : "Output",
-      "target-slot" : "Input",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "40bd5388-0a6a-4c66-8e14-f228e43c10bf",
-      "target-node" : "e52435cd-e40e-458d-9999-2f6698581b6b",
-      "source-slot" : "Annotated data",
-      "target-slot" : "SD",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "923fe316-4596-44d3-ab0d-aa50a575afa2",
-      "target-node" : "3269c152-9f03-40a2-8d7f-0e9a0556307d",
-      "source-slot" : "Output",
-      "target-slot" : "Input",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "9dfbccbe-6f20-4801-92a4-250af5c5ed99",
-      "target-node" : "e52435cd-e40e-458d-9999-2f6698581b6b",
-      "source-slot" : "Annotated data",
-      "target-slot" : "RAW",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
       "source-node" : "d4a57be1-e272-48e9-bde7-a9da75ad2974",
       "target-node" : "ed757310-b739-4527-8d83-98ff5f5e4a14",
       "source-slot" : "Image",
@@ -14938,8 +13910,8 @@
         "ui-shape" : "Elbow"
       }
     }, {
-      "source-node" : "7152f27a-5b37-4c0b-bf86-5d9c6a0e8e6d",
-      "target-node" : "e55e4bde-7f26-4ec1-aa89-855ff0031aa8",
+      "source-node" : "0f576db6-7fc3-423a-84d0-a1ea9acfbc2e",
+      "target-node" : "bd0b7758-2ce7-4724-aa6b-df16267d26b4",
       "source-slot" : "Output",
       "target-slot" : "Input",
       "metadata" : {
@@ -14947,323 +13919,8 @@
         "ui-shape" : "Elbow"
       }
     }, {
-      "source-node" : "add604e1-ceb0-43d4-96a8-f82ad5cfc1b3",
-      "target-node" : "da8f1338-a7fa-4f20-87c1-860b616528ab",
-      "source-slot" : "Output",
-      "target-slot" : "Input",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "8cc466a9-b087-4c29-a3b0-2b4d5462bf8a",
-      "target-node" : "59f13a23-aeb1-4034-8b1c-e5274faa8eaf",
-      "source-slot" : "Labels",
-      "target-slot" : "Input",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "adbbdab4-5c73-4029-8ee6-1226132a7703",
-      "target-node" : "74303208-da3a-4fbd-b5be-fc54ec52123f",
-      "source-slot" : "RAW",
-      "target-slot" : "Image",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "d138e209-6845-46b7-ae3f-c6c9d0aeba6f",
-      "target-node" : "7c7c2312-ad08-421b-8512-138e8e694f7d",
-      "source-slot" : "Measurements",
-      "target-slot" : "Table",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "3b70eae2-58ed-42f7-990d-7c19260df0f4",
-      "target-node" : "ed757310-b739-4527-8d83-98ff5f5e4a14",
-      "source-slot" : "Image",
-      "target-slot" : "ZS",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "ed757310-b739-4527-8d83-98ff5f5e4a14",
-      "target-node" : "adbbdab4-5c73-4029-8ee6-1226132a7703",
-      "source-slot" : "RAW",
-      "target-slot" : "RAW_SEQ",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "1cc8443c-f452-4b72-9387-34b47d26b3c3",
-      "target-node" : "df083757-cb3f-44fd-9734-53703f7e8b1e",
-      "source-slot" : "Folder paths",
-      "target-slot" : "Folders",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "27b8db2a-e7b3-4dff-8512-3bcdf12185eb",
-      "target-node" : "07ba4c3e-4352-499f-b84c-0dbeeadb9194",
-      "source-slot" : "Annotated paths",
-      "target-slot" : "Data",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "ba3e79bf-d5b0-4af8-b792-01f7300d6b84",
-      "target-node" : "7152f27a-5b37-4c0b-bf86-5d9c6a0e8e6d",
-      "source-slot" : "Results",
-      "target-slot" : "Input",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "d707e910-7904-4d58-81ab-ffd4936182a0",
-      "target-node" : "663a58cc-95b6-4696-b955-47c39035a781",
-      "source-slot" : "Output",
-      "target-slot" : "Input",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "adbbdab4-5c73-4029-8ee6-1226132a7703",
-      "target-node" : "e36daf9a-2e3c-47da-aec3-24341638e126",
-      "source-slot" : "RAW",
-      "target-slot" : "Raw",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "ac1ef081-4812-4223-9bcb-7cecb0cb7bfd",
-      "target-node" : "4be2d0ca-e5a3-43b1-8fdc-2f82f2bda424",
-      "source-slot" : "Files",
-      "target-slot" : "Paths",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "c6934a6f-e13f-4015-8e8b-30831eed3370",
-      "target-node" : "563d1b1f-8576-4af7-82ca-fbb52e5afc99",
-      "source-slot" : "Parameters",
-      "target-slot" : "{Parameters}",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "74303208-da3a-4fbd-b5be-fc54ec52123f",
-      "target-node" : "7479e191-ada7-4901-ade7-4df093b60fa7",
-      "source-slot" : "Output",
-      "target-slot" : "Input",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "adbbdab4-5c73-4029-8ee6-1226132a7703",
-      "target-node" : "e09d3d8c-b8da-4cce-9d55-211378b12078",
-      "source-slot" : "RAW",
-      "target-slot" : "Image",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "7bd2f93d-5ac3-4f4a-8b79-0e2fcddfa8d6",
-      "target-node" : "7fc7ed74-b653-4d0e-9f27-3db47f6e5332",
-      "source-slot" : "Combined",
-      "target-slot" : "Data",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "4be2d0ca-e5a3-43b1-8fdc-2f82f2bda424",
-      "target-node" : "9dfbccbe-6f20-4801-92a4-250af5c5ed99",
-      "source-slot" : "Annotated paths",
-      "target-slot" : "Data",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "d99846f7-11eb-4665-a2a4-4d8b78b6ea34",
-      "target-node" : "3da953df-e2eb-4f06-b5e8-50966fa2c53a",
-      "source-slot" : "Output",
-      "target-slot" : "Input",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "ed757310-b739-4527-8d83-98ff5f5e4a14",
-      "target-node" : "d99846f7-11eb-4665-a2a4-4d8b78b6ea34",
-      "source-slot" : "PL",
-      "target-slot" : "Input",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "e55e4bde-7f26-4ec1-aa89-855ff0031aa8",
-      "target-node" : "8cc466a9-b087-4c29-a3b0-2b4d5462bf8a",
-      "source-slot" : "Failed",
-      "target-slot" : "Failed",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "8cc466a9-b087-4c29-a3b0-2b4d5462bf8a",
-      "target-node" : "25d3068e-8eaa-46a1-b206-56fb172196ea",
-      "source-slot" : "Labels",
-      "target-slot" : "Input",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "f36582ae-18ad-44cb-bc44-217083720b93",
-      "target-node" : "ff44442e-35bb-4a72-93b5-9120ac784474",
-      "source-slot" : "Folder paths",
-      "target-slot" : "Folders",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "7efbecf0-aef4-4db7-954a-588659bed865",
-      "target-node" : "ed757310-b739-4527-8d83-98ff5f5e4a14",
-      "source-slot" : "Output",
-      "target-slot" : "RAW",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "001356ae-f336-462d-8d7c-e73910306449",
-      "target-node" : "1847b729-41b3-400a-9c01-0c0ba3274f19",
-      "source-slot" : "Cropped",
-      "target-slot" : "Input",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "9d71b89e-57cb-4ecf-9652-9098ac4ba727",
-      "target-node" : "40bd5388-0a6a-4c66-8e14-f228e43c10bf",
-      "source-slot" : "Output",
-      "target-slot" : "Annotations",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "e52435cd-e40e-458d-9999-2f6698581b6b",
-      "target-node" : "919d6b38-cef7-4008-82eb-fc8ea4b5a907",
-      "source-slot" : "SD",
-      "target-slot" : "Files",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "ff44442e-35bb-4a72-93b5-9120ac784474",
-      "target-node" : "4fe0f2d8-040b-4097-82ed-5dd931f1a347",
-      "source-slot" : "Files",
-      "target-slot" : "Paths",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "da3e2408-9388-4542-8f62-ab44beaea2dc",
-      "target-node" : "57dc28ac-a417-4202-a9a6-b72534eba6a8",
-      "source-slot" : "Output",
-      "target-slot" : "I2",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "8cc466a9-b087-4c29-a3b0-2b4d5462bf8a",
-      "target-node" : "7c7c2312-ad08-421b-8512-138e8e694f7d",
-      "source-slot" : "Reconstructed",
-      "target-slot" : "Data",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "56ce946d-785b-43ea-bb8a-3fc46d799caf",
-      "target-node" : "afc5b46e-7a39-4ec6-ba05-de50ccc12319",
-      "source-slot" : "Output",
-      "target-slot" : "Input",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "59f13a23-aeb1-4034-8b1c-e5274faa8eaf",
-      "target-node" : "57dc28ac-a417-4202-a9a6-b72534eba6a8",
-      "source-slot" : "Output",
-      "target-slot" : "I4",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "da8f1338-a7fa-4f20-87c1-860b616528ab",
-      "target-node" : "c0176e7a-b64e-4fb0-a1aa-079c78461571",
-      "source-slot" : "Output",
-      "target-slot" : "Input",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "e36daf9a-2e3c-47da-aec3-24341638e126",
-      "target-node" : "0ffac864-18f5-4de4-86ef-9f3c6a8535ae",
-      "source-slot" : "Output",
-      "target-slot" : "Input",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "923fe316-4596-44d3-ab0d-aa50a575afa2",
-      "target-node" : "d707e910-7904-4d58-81ab-ffd4936182a0",
-      "source-slot" : "Output",
-      "target-slot" : "Input",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "0ffac864-18f5-4de4-86ef-9f3c6a8535ae",
-      "target-node" : "830c1976-9190-425f-acf0-414e12021f6e",
-      "source-slot" : "Output",
-      "target-slot" : "Source",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "510f4e8e-9b05-439c-ae3b-33e69533e524",
-      "target-node" : "9a24c790-dfb7-4c0e-a4a9-06518da540ea",
+      "source-node" : "81267a29-280c-417b-b04e-b6041b9b18f6",
+      "target-node" : "de016058-04f6-4f3d-b07c-644a7ba8c411",
       "source-slot" : "Output",
       "target-slot" : "Input",
       "metadata" : {
@@ -15280,26 +13937,8 @@
         "ui-shape" : "Elbow"
       }
     }, {
-      "source-node" : "3269c152-9f03-40a2-8d7f-0e9a0556307d",
-      "target-node" : "adbbdab4-5c73-4029-8ee6-1226132a7703",
-      "source-slot" : "Output",
-      "target-slot" : "RAW",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "9d71b89e-57cb-4ecf-9652-9098ac4ba727",
-      "target-node" : "be188ce3-24aa-4d35-ae53-84b7439027a1",
-      "source-slot" : "Output",
-      "target-slot" : "Annotations",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "d7bffc4f-7410-403e-a1f7-08a12fbc6d59",
-      "target-node" : "6e810537-6fa6-4225-99e3-372741397cd1",
+      "source-node" : "86d7fd7b-bb5d-492e-87af-c71f02c2cd35",
+      "target-node" : "353cd6e7-5784-4551-a3a5-9867668c7a43",
       "source-slot" : "Output",
       "target-slot" : "Input",
       "metadata" : {
@@ -15307,9 +13946,9 @@
         "ui-shape" : "Elbow"
       }
     }, {
-      "source-node" : "89caad96-3cd5-4a9a-b80a-dda8c9f4ac5a",
-      "target-node" : "adbbdab4-5c73-4029-8ee6-1226132a7703",
-      "source-slot" : "Output",
+      "source-node" : "07ba4c3e-4352-499f-b84c-0dbeeadb9194",
+      "target-node" : "e52435cd-e40e-458d-9999-2f6698581b6b",
+      "source-slot" : "Annotated data",
       "target-slot" : "PL",
       "metadata" : {
         "ui-visibility" : "Smart",
@@ -15325,10 +13964,874 @@
         "ui-shape" : "Elbow"
       }
     }, {
+      "source-node" : "a3d4a65f-030d-47fb-8234-b4b3e5852859",
+      "target-node" : "add604e1-ceb0-43d4-96a8-f82ad5cfc1b3",
+      "source-slot" : "Output",
+      "target-slot" : "Input",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "7bd2f93d-5ac3-4f4a-8b79-0e2fcddfa8d6",
+      "target-node" : "7fc7ed74-b653-4d0e-9f27-3db47f6e5332",
+      "source-slot" : "Combined",
+      "target-slot" : "Data",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "ba3e79bf-d5b0-4af8-b792-01f7300d6b84",
+      "target-node" : "7152f27a-5b37-4c0b-bf86-5d9c6a0e8e6d",
+      "source-slot" : "Results",
+      "target-slot" : "Input",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "adbbdab4-5c73-4029-8ee6-1226132a7703",
+      "target-node" : "deeb2697-51b2-4f9b-a2f2-4acbf741f880",
+      "source-slot" : "SD",
+      "target-slot" : "Input",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "6e810537-6fa6-4225-99e3-372741397cd1",
+      "target-node" : "ba3e79bf-d5b0-4af8-b792-01f7300d6b84",
+      "source-slot" : "Output",
+      "target-slot" : "Input",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "b3fc68fc-dc05-4627-8bdc-04946727b731",
+      "target-node" : "2ffbf58e-5ac4-4845-9928-7bd8ba8b59ec",
+      "source-slot" : "Output",
+      "target-slot" : "Input",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "4c1f4cfe-2ad4-481f-b072-932515456116",
+      "target-node" : "33c70e82-1e45-4d84-aa35-3a41f6649ab2",
+      "source-slot" : "Output",
+      "target-slot" : "Input",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "1f1e94ac-0631-41b9-9936-2be4ab8b525e",
+      "target-node" : "56ce946d-785b-43ea-bb8a-3fc46d799caf",
+      "source-slot" : "Output",
+      "target-slot" : "Input",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "9a24c790-dfb7-4c0e-a4a9-06518da540ea",
+      "target-node" : "05f1b6fa-7ace-4cc9-87bc-95a2bdc423c3",
+      "source-slot" : "Output",
+      "target-slot" : "Input",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "add604e1-ceb0-43d4-96a8-f82ad5cfc1b3",
+      "target-node" : "da8f1338-a7fa-4f20-87c1-860b616528ab",
+      "source-slot" : "Output",
+      "target-slot" : "Input",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "ed757310-b739-4527-8d83-98ff5f5e4a14",
+      "target-node" : "adbbdab4-5c73-4029-8ee6-1226132a7703",
+      "source-slot" : "RAW",
+      "target-slot" : "RAW_SEQ",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "549ab4da-ddf1-4592-8449-33a845d79ca8",
+      "target-node" : "7efbecf0-aef4-4db7-954a-588659bed865",
+      "source-slot" : "Image",
+      "target-slot" : "Input",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "adbbdab4-5c73-4029-8ee6-1226132a7703",
+      "target-node" : "e09d3d8c-b8da-4cce-9d55-211378b12078",
+      "source-slot" : "RAW",
+      "target-slot" : "Image",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "c4f39dcf-327a-42f7-abc9-ccef0c1acdf6",
+      "target-node" : "dc6039d0-76e1-47a2-adb7-0f80699dd2a5",
+      "source-slot" : "Output",
+      "target-slot" : "Mask",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "57dc28ac-a417-4202-a9a6-b72534eba6a8",
+      "target-node" : "25d3068e-8eaa-46a1-b206-56fb172196ea",
+      "source-slot" : "Output",
+      "target-slot" : "Mask",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "89caad96-3cd5-4a9a-b80a-dda8c9f4ac5a",
+      "target-node" : "adbbdab4-5c73-4029-8ee6-1226132a7703",
+      "source-slot" : "Output",
+      "target-slot" : "PL",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "907d79c5-b990-4b22-84a6-3bb7de7a5d35",
+      "target-node" : "14df9501-96f8-4c34-a96c-5f86da6c741c",
+      "source-slot" : "Output",
+      "target-slot" : "Input",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "032a5b21-823f-4f79-ad2b-b85843541129",
+      "target-node" : "907d79c5-b990-4b22-84a6-3bb7de7a5d35",
+      "source-slot" : "Labels",
+      "target-slot" : "I1",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "e8d8220d-6859-4a5b-935c-5ef0d95b1a98",
+      "target-node" : "da85331a-a623-40b6-b0af-407f06927424",
+      "source-slot" : "Output",
+      "target-slot" : "Input",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "001356ae-f336-462d-8d7c-e73910306449",
+      "target-node" : "8d14e086-1a52-4a31-8cdc-ba8e31cd34b1",
+      "source-slot" : "Cropped",
+      "target-slot" : "Input",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "adbbdab4-5c73-4029-8ee6-1226132a7703",
+      "target-node" : "da3e2408-9388-4542-8f62-ab44beaea2dc",
+      "source-slot" : "SD",
+      "target-slot" : "Input",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "22ef2aaa-50a8-4e05-a406-ce0b153c8f19",
+      "target-node" : "044ea95b-cee5-49e5-bd00-cff3dfe045b4",
+      "source-slot" : "Output",
+      "target-slot" : "Input",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "2510033f-f356-4bd1-a9a3-07c55f791f1f",
+      "target-node" : "b2b35089-f59b-45c0-9097-a15e88e92a32",
+      "source-slot" : "Output",
+      "target-slot" : "Input",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "adbbdab4-5c73-4029-8ee6-1226132a7703",
+      "target-node" : "57dc28ac-a417-4202-a9a6-b72534eba6a8",
+      "source-slot" : "PL",
+      "target-slot" : "I3",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "9dfbccbe-6f20-4801-92a4-250af5c5ed99",
+      "target-node" : "e52435cd-e40e-458d-9999-2f6698581b6b",
+      "source-slot" : "Annotated data",
+      "target-slot" : "RAW",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "ed757310-b739-4527-8d83-98ff5f5e4a14",
+      "target-node" : "d99846f7-11eb-4665-a2a4-4d8b78b6ea34",
+      "source-slot" : "PL",
+      "target-slot" : "Input",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "0f576db6-7fc3-423a-84d0-a1ea9acfbc2e",
+      "target-node" : "26ae2c3d-2640-4896-b7b6-7806b18da6fd",
+      "source-slot" : "Output",
+      "target-slot" : "Input",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "8cc466a9-b087-4c29-a3b0-2b4d5462bf8a",
+      "target-node" : "59f13a23-aeb1-4034-8b1c-e5274faa8eaf",
+      "source-slot" : "Labels",
+      "target-slot" : "Input",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "8cc466a9-b087-4c29-a3b0-2b4d5462bf8a",
+      "target-node" : "e8c425bd-0111-4a1b-bae8-fcd0b8361291",
+      "source-slot" : "Failed",
+      "target-slot" : "Input",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "25ada13d-6f0e-48ec-bb7d-4054193fc5e4",
+      "target-node" : "6fb28b41-b41e-46a9-980c-7ad6da983dec",
+      "source-slot" : "Output",
+      "target-slot" : "Input",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "8b249388-00f3-49ec-8c13-02dfe8eacc9d",
+      "target-node" : "74303208-da3a-4fbd-b5be-fc54ec52123f",
+      "source-slot" : "ROI",
+      "target-slot" : "ROI",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "40bd5388-0a6a-4c66-8e14-f228e43c10bf",
+      "target-node" : "e52435cd-e40e-458d-9999-2f6698581b6b",
+      "source-slot" : "Annotated data",
+      "target-slot" : "SD",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "7a9a9793-0492-4382-a58d-12d9c311b354",
+      "target-node" : "608afdb7-d78a-4814-8116-fc6cce5075ec",
+      "source-slot" : "Results table",
+      "target-slot" : "Input",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "bfd0d6fb-b0de-4973-9457-0369b745dcab",
+      "target-node" : "b2b35089-f59b-45c0-9097-a15e88e92a32",
+      "source-slot" : "Output",
+      "target-slot" : "Input",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "6fb28b41-b41e-46a9-980c-7ad6da983dec",
+      "target-node" : "86d7fd7b-bb5d-492e-87af-c71f02c2cd35",
+      "source-slot" : "Output",
+      "target-slot" : "Input",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "da3e2408-9388-4542-8f62-ab44beaea2dc",
+      "target-node" : "57dc28ac-a417-4202-a9a6-b72534eba6a8",
+      "source-slot" : "Output",
+      "target-slot" : "I2",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "923fe316-4596-44d3-ab0d-aa50a575afa2",
+      "target-node" : "6ca69664-370b-4e7b-aa6c-291332b96405",
+      "source-slot" : "Output",
+      "target-slot" : "Input",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "adbbdab4-5c73-4029-8ee6-1226132a7703",
+      "target-node" : "e36daf9a-2e3c-47da-aec3-24341638e126",
+      "source-slot" : "RAW",
+      "target-slot" : "Raw",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "25d3068e-8eaa-46a1-b206-56fb172196ea",
+      "target-node" : "e36daf9a-2e3c-47da-aec3-24341638e126",
+      "source-slot" : "Output",
+      "target-slot" : "Labels",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "032a5b21-823f-4f79-ad2b-b85843541129",
+      "target-node" : "b726a811-b145-4e97-861d-2dbf7bad7a53",
+      "source-slot" : "Labels",
+      "target-slot" : "Input",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "3da953df-e2eb-4f06-b5e8-50966fa2c53a",
+      "target-node" : "3b2b16c3-e4c8-4c1a-a04b-fce9c50ecd40",
+      "source-slot" : "Output",
+      "target-slot" : "Input",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "ed757310-b739-4527-8d83-98ff5f5e4a14",
+      "target-node" : "510f4e8e-9b05-439c-ae3b-33e69533e524",
+      "source-slot" : "RAW",
+      "target-slot" : "Input",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "923fe316-4596-44d3-ab0d-aa50a575afa2",
+      "target-node" : "d707e910-7904-4d58-81ab-ffd4936182a0",
+      "source-slot" : "Output",
+      "target-slot" : "Input",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "e55e4bde-7f26-4ec1-aa89-855ff0031aa8",
+      "target-node" : "8cc466a9-b087-4c29-a3b0-2b4d5462bf8a",
+      "source-slot" : "Values",
+      "target-slot" : "Values",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "dc6039d0-76e1-47a2-adb7-0f80699dd2a5",
+      "target-node" : "6ca1cd34-9d79-480b-bc82-9918ddc721ed",
+      "source-slot" : "ROI",
+      "target-slot" : "Input",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "e52435cd-e40e-458d-9999-2f6698581b6b",
+      "target-node" : "d4a57be1-e272-48e9-bde7-a9da75ad2974",
+      "source-slot" : "PL",
+      "target-slot" : "Files",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "9d71b89e-57cb-4ecf-9652-9098ac4ba727",
+      "target-node" : "07ba4c3e-4352-499f-b84c-0dbeeadb9194",
+      "source-slot" : "Output",
+      "target-slot" : "Annotations",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "923fe316-4596-44d3-ab0d-aa50a575afa2",
+      "target-node" : "3269c152-9f03-40a2-8d7f-0e9a0556307d",
+      "source-slot" : "Output",
+      "target-slot" : "Input",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "b2b35089-f59b-45c0-9097-a15e88e92a32",
+      "target-node" : "af8a9d1e-818e-4fff-8ee6-867692326ba6",
+      "source-slot" : "Output",
+      "target-slot" : "ROI",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "de016058-04f6-4f3d-b07c-644a7ba8c411",
+      "target-node" : "c4f39dcf-327a-42f7-abc9-ccef0c1acdf6",
+      "source-slot" : "Output",
+      "target-slot" : "Input",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "adbbdab4-5c73-4029-8ee6-1226132a7703",
+      "target-node" : "74303208-da3a-4fbd-b5be-fc54ec52123f",
+      "source-slot" : "RAW",
+      "target-slot" : "Image",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "7c7c2312-ad08-421b-8512-138e8e694f7d",
+      "target-node" : "93f0fe5d-54ff-41e7-a9a3-7a034d78f466",
+      "source-slot" : "Annotated data",
+      "target-slot" : "Input",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "adbbdab4-5c73-4029-8ee6-1226132a7703",
+      "target-node" : "13459f04-53a6-4c32-9592-5393da0f8d26",
+      "source-slot" : "SD",
+      "target-slot" : "Mask",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "6ca69664-370b-4e7b-aa6c-291332b96405",
+      "target-node" : "89caad96-3cd5-4a9a-b80a-dda8c9f4ac5a",
+      "source-slot" : "Output",
+      "target-slot" : "Input",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "9d71b89e-57cb-4ecf-9652-9098ac4ba727",
+      "target-node" : "40bd5388-0a6a-4c66-8e14-f228e43c10bf",
+      "source-slot" : "Output",
+      "target-slot" : "Annotations",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "74303208-da3a-4fbd-b5be-fc54ec52123f",
+      "target-node" : "7479e191-ada7-4901-ade7-4df093b60fa7",
+      "source-slot" : "Output",
+      "target-slot" : "Input",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "7efbecf0-aef4-4db7-954a-588659bed865",
+      "target-node" : "ed757310-b739-4527-8d83-98ff5f5e4a14",
+      "source-slot" : "Output",
+      "target-slot" : "RAW",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "001356ae-f336-462d-8d7c-e73910306449",
+      "target-node" : "8cc466a9-b087-4c29-a3b0-2b4d5462bf8a",
+      "source-slot" : "Cropped",
+      "target-slot" : "Cropped Strip",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "ff44442e-35bb-4a72-93b5-9120ac784474",
+      "target-node" : "4fe0f2d8-040b-4097-82ed-5dd931f1a347",
+      "source-slot" : "Files",
+      "target-slot" : "Paths",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "3269c152-9f03-40a2-8d7f-0e9a0556307d",
+      "target-node" : "adbbdab4-5c73-4029-8ee6-1226132a7703",
+      "source-slot" : "Output",
+      "target-slot" : "RAW",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "608afdb7-d78a-4814-8116-fc6cce5075ec",
+      "target-node" : "9d71b89e-57cb-4ecf-9652-9098ac4ba727",
+      "source-slot" : "Output",
+      "target-slot" : "Input",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "14df9501-96f8-4c34-a96c-5f86da6c741c",
+      "target-node" : "01ee7d36-aab3-42a3-a583-5d79fbac6dce",
+      "source-slot" : "Output",
+      "target-slot" : "Mask",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "13459f04-53a6-4c32-9592-5393da0f8d26",
+      "target-node" : "001356ae-f336-462d-8d7c-e73910306449",
+      "source-slot" : "ROI",
+      "target-slot" : "ROI",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "510f4e8e-9b05-439c-ae3b-33e69533e524",
+      "target-node" : "9a24c790-dfb7-4c0e-a4a9-06518da540ea",
+      "source-slot" : "Output",
+      "target-slot" : "Input",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "9d71b89e-57cb-4ecf-9652-9098ac4ba727",
+      "target-node" : "036406c0-5d1b-4d92-afc7-3ca99685da13",
+      "source-slot" : "Output",
+      "target-slot" : "Input",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "df083757-cb3f-44fd-9734-53703f7e8b1e",
+      "target-node" : "27b8db2a-e7b3-4dff-8512-3bcdf12185eb",
+      "source-slot" : "Files",
+      "target-slot" : "Paths",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "adb3fb6b-2bce-48ad-b160-3d675e118193",
+      "target-node" : "7fc7ed74-b653-4d0e-9f27-3db47f6e5332",
+      "source-slot" : "Output",
+      "target-slot" : "Table",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "032a5b21-823f-4f79-ad2b-b85843541129",
+      "target-node" : "1f1e94ac-0631-41b9-9936-2be4ab8b525e",
+      "source-slot" : "Measurements",
+      "target-slot" : "Input",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "e09d3d8c-b8da-4cce-9d55-211378b12078",
+      "target-node" : "001356ae-f336-462d-8d7c-e73910306449",
+      "source-slot" : "Annotated image",
+      "target-slot" : "Image",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "25d3068e-8eaa-46a1-b206-56fb172196ea",
+      "target-node" : "830c1976-9190-425f-acf0-414e12021f6e",
+      "source-slot" : "Output",
+      "target-slot" : "Target",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "1f1e94ac-0631-41b9-9936-2be4ab8b525e",
+      "target-node" : "4c1f4cfe-2ad4-481f-b072-932515456116",
+      "source-slot" : "Output",
+      "target-slot" : "Input",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
       "source-node" : "c0176e7a-b64e-4fb0-a1aa-079c78461571",
       "target-node" : "a7f7585d-1324-414c-bd52-a6ebe78305b3",
       "source-slot" : "Output",
       "target-slot" : "ROI",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "c6934a6f-e13f-4015-8e8b-30831eed3370",
+      "target-node" : "1847b729-41b3-400a-9c01-0c0ba3274f19",
+      "source-slot" : "Parameters",
+      "target-slot" : "{Parameters}",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "adbbdab4-5c73-4029-8ee6-1226132a7703",
+      "target-node" : "8b249388-00f3-49ec-8c13-02dfe8eacc9d",
+      "source-slot" : "RAW",
+      "target-slot" : "Reference",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "353cd6e7-5784-4551-a3a5-9867668c7a43",
+      "target-node" : "3a9bda5c-9313-4f97-8b4e-0170b452cb8e",
+      "source-slot" : "Output",
+      "target-slot" : "Input",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "ac1ef081-4812-4223-9bcb-7cecb0cb7bfd",
+      "target-node" : "4be2d0ca-e5a3-43b1-8fdc-2f82f2bda424",
+      "source-slot" : "Files",
+      "target-slot" : "Paths",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "ed757310-b739-4527-8d83-98ff5f5e4a14",
+      "target-node" : "3cd4de7c-fdd5-4fda-9d20-5eb6be7e97de",
+      "source-slot" : "SD",
+      "target-slot" : "Input",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "d138e209-6845-46b7-ae3f-c6c9d0aeba6f",
+      "target-node" : "7c7c2312-ad08-421b-8512-138e8e694f7d",
+      "source-slot" : "Measurements",
+      "target-slot" : "Table",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "b2b35089-f59b-45c0-9097-a15e88e92a32",
+      "target-node" : "51028396-24b8-4700-90e4-11bb2e53b97d",
+      "source-slot" : "Output",
+      "target-slot" : "ROI",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "c3d09378-5ad4-4ad2-9ba3-ba83f683aa83",
+      "target-node" : "8b249388-00f3-49ec-8c13-02dfe8eacc9d",
+      "source-slot" : "Output",
+      "target-slot" : "ROI",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "e52435cd-e40e-458d-9999-2f6698581b6b",
+      "target-node" : "919d6b38-cef7-4008-82eb-fc8ea4b5a907",
+      "source-slot" : "SD",
+      "target-slot" : "Files",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "d99846f7-11eb-4665-a2a4-4d8b78b6ea34",
+      "target-node" : "3da953df-e2eb-4f06-b5e8-50966fa2c53a",
+      "source-slot" : "Output",
+      "target-slot" : "Input",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "001356ae-f336-462d-8d7c-e73910306449",
+      "target-node" : "1847b729-41b3-400a-9c01-0c0ba3274f19",
+      "source-slot" : "Cropped",
+      "target-slot" : "Input",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "01ee7d36-aab3-42a3-a583-5d79fbac6dce",
+      "target-node" : "c3d09378-5ad4-4ad2-9ba3-ba83f683aa83",
+      "source-slot" : "ROI",
+      "target-slot" : "Input",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "deeb2697-51b2-4f9b-a2f2-4acbf741f880",
+      "target-node" : "57dc28ac-a417-4202-a9a6-b72534eba6a8",
+      "source-slot" : "Output",
+      "target-slot" : "I1",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "4fe0f2d8-040b-4097-82ed-5dd931f1a347",
+      "target-node" : "40bd5388-0a6a-4c66-8e14-f228e43c10bf",
+      "source-slot" : "Annotated paths",
+      "target-slot" : "Data",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "7152f27a-5b37-4c0b-bf86-5d9c6a0e8e6d",
+      "target-node" : "e55e4bde-7f26-4ec1-aa89-855ff0031aa8",
+      "source-slot" : "Output",
+      "target-slot" : "Input",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "56ce946d-785b-43ea-bb8a-3fc46d799caf",
+      "target-node" : "afc5b46e-7a39-4ec6-ba05-de50ccc12319",
+      "source-slot" : "Output",
+      "target-slot" : "Input",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "3b2b16c3-e4c8-4c1a-a04b-fce9c50ecd40",
+      "target-node" : "7bd2f93d-5ac3-4f4a-8b79-0e2fcddfa8d6",
+      "source-slot" : "Output",
+      "target-slot" : "Source",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "e52435cd-e40e-458d-9999-2f6698581b6b",
+      "target-node" : "549ab4da-ddf1-4592-8449-33a845d79ca8",
+      "source-slot" : "RAW",
+      "target-slot" : "Files",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "b726a811-b145-4e97-861d-2dbf7bad7a53",
+      "target-node" : "e8d8220d-6859-4a5b-935c-5ef0d95b1a98",
+      "source-slot" : "Output",
+      "target-slot" : "Input",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "8cc466a9-b087-4c29-a3b0-2b4d5462bf8a",
+      "target-node" : "7c7c2312-ad08-421b-8512-138e8e694f7d",
+      "source-slot" : "Reconstructed",
+      "target-slot" : "Data",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "e36daf9a-2e3c-47da-aec3-24341638e126",
+      "target-node" : "0ffac864-18f5-4de4-86ef-9f3c6a8535ae",
+      "source-slot" : "Output",
+      "target-slot" : "Input",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "3cd4de7c-fdd5-4fda-9d20-5eb6be7e97de",
+      "target-node" : "81267a29-280c-417b-b04e-b6041b9b18f6",
+      "source-slot" : "Output",
+      "target-slot" : "Input",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "3499122d-6505-4aaf-832b-83faabb2f5f5",
+      "target-node" : "0f576db6-7fc3-423a-84d0-a1ea9acfbc2e",
+      "source-slot" : "Output",
+      "target-slot" : "Input",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "0ffac864-18f5-4de4-86ef-9f3c6a8535ae",
+      "target-node" : "830c1976-9190-425f-acf0-414e12021f6e",
+      "source-slot" : "Output",
+      "target-slot" : "Source",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "6ca1cd34-9d79-480b-bc82-9918ddc721ed",
+      "target-node" : "98ce0924-4989-4d11-b949-ba20812f9a41",
+      "source-slot" : "Output",
+      "target-slot" : "Input",
       "metadata" : {
         "ui-visibility" : "Smart",
         "ui-shape" : "Elbow"
@@ -15352,269 +14855,53 @@
         "ui-shape" : "Elbow"
       }
     }, {
-      "source-node" : "32ed1b6d-bf56-47f3-8498-15fb00d0f42b",
-      "target-node" : "9b456697-7fef-4020-9615-1e2c26ab9ce8",
-      "source-slot" : "Folder paths",
-      "target-slot" : "Folders",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "9b456697-7fef-4020-9615-1e2c26ab9ce8",
-      "target-node" : "af973a43-4e6e-4afa-9455-03801e99946e",
-      "source-slot" : "Files",
-      "target-slot" : "Paths",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "adbbdab4-5c73-4029-8ee6-1226132a7703",
-      "target-node" : "8b249388-00f3-49ec-8c13-02dfe8eacc9d",
-      "source-slot" : "RAW",
-      "target-slot" : "Reference",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "2510033f-f356-4bd1-a9a3-07c55f791f1f",
-      "target-node" : "b2b35089-f59b-45c0-9097-a15e88e92a32",
+      "source-node" : "663a58cc-95b6-4696-b955-47c39035a781",
+      "target-node" : "adbbdab4-5c73-4029-8ee6-1226132a7703",
       "source-slot" : "Output",
-      "target-slot" : "Input",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "7fc7ed74-b653-4d0e-9f27-3db47f6e5332",
-      "target-node" : "923fe316-4596-44d3-ab0d-aa50a575afa2",
-      "source-slot" : "Annotated data",
-      "target-slot" : "Input",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "9a24c790-dfb7-4c0e-a4a9-06518da540ea",
-      "target-node" : "05f1b6fa-7ace-4cc9-87bc-95a2bdc423c3",
-      "source-slot" : "Output",
-      "target-slot" : "Input",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "001356ae-f336-462d-8d7c-e73910306449",
-      "target-node" : "8d14e086-1a52-4a31-8cdc-ba8e31cd34b1",
-      "source-slot" : "Cropped",
-      "target-slot" : "Input",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "adbbdab4-5c73-4029-8ee6-1226132a7703",
-      "target-node" : "51028396-24b8-4700-90e4-11bb2e53b97d",
-      "source-slot" : "RAW",
-      "target-slot" : "Image",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "c4f39dcf-327a-42f7-abc9-ccef0c1acdf6",
-      "target-node" : "dc6039d0-76e1-47a2-adb7-0f80699dd2a5",
-      "source-slot" : "Output",
-      "target-slot" : "Mask",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "7a9a9793-0492-4382-a58d-12d9c311b354",
-      "target-node" : "608afdb7-d78a-4814-8116-fc6cce5075ec",
-      "source-slot" : "Results table",
-      "target-slot" : "Input",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "d9fd11ef-97dd-46a8-8626-b1ec66bffc1a",
-      "target-node" : "da85331a-a623-40b6-b0af-407f06927424",
-      "source-slot" : "Output",
-      "target-slot" : "Mask",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "af973a43-4e6e-4afa-9455-03801e99946e",
-      "target-node" : "be188ce3-24aa-4d35-ae53-84b7439027a1",
-      "source-slot" : "Annotated paths",
-      "target-slot" : "Data",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "bc785d77-3338-4a3a-8166-fd512a676dd6",
-      "target-node" : "563d1b1f-8576-4af7-82ca-fbb52e5afc99",
-      "source-slot" : "Output",
-      "target-slot" : "Input",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "3cd4de7c-fdd5-4fda-9d20-5eb6be7e97de",
-      "target-node" : "81267a29-280c-417b-b04e-b6041b9b18f6",
-      "source-slot" : "Output",
-      "target-slot" : "Input",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "e52435cd-e40e-458d-9999-2f6698581b6b",
-      "target-node" : "d4a57be1-e272-48e9-bde7-a9da75ad2974",
-      "source-slot" : "PL",
-      "target-slot" : "Files",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "ed757310-b739-4527-8d83-98ff5f5e4a14",
-      "target-node" : "510f4e8e-9b05-439c-ae3b-33e69533e524",
-      "source-slot" : "RAW",
-      "target-slot" : "Input",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "923fe316-4596-44d3-ab0d-aa50a575afa2",
-      "target-node" : "6ca69664-370b-4e7b-aa6c-291332b96405",
-      "source-slot" : "Output",
-      "target-slot" : "Input",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "1f1e94ac-0631-41b9-9936-2be4ab8b525e",
-      "target-node" : "b3fc68fc-dc05-4627-8bdc-04946727b731",
-      "source-slot" : "Output",
-      "target-slot" : "Input",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "14df9501-96f8-4c34-a96c-5f86da6c741c",
-      "target-node" : "01ee7d36-aab3-42a3-a583-5d79fbac6dce",
-      "source-slot" : "Output",
-      "target-slot" : "Mask",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "da85331a-a623-40b6-b0af-407f06927424",
-      "target-node" : "22ef2aaa-50a8-4e05-a406-ce0b153c8f19",
-      "source-slot" : "Output",
-      "target-slot" : "Top",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "b3fc68fc-dc05-4627-8bdc-04946727b731",
-      "target-node" : "2ffbf58e-5ac4-4845-9928-7bd8ba8b59ec",
-      "source-slot" : "Output",
-      "target-slot" : "Input",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "9d71b89e-57cb-4ecf-9652-9098ac4ba727",
-      "target-node" : "9dfbccbe-6f20-4801-92a4-250af5c5ed99",
-      "source-slot" : "Output",
-      "target-slot" : "Annotations",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "07ba4c3e-4352-499f-b84c-0dbeeadb9194",
-      "target-node" : "e52435cd-e40e-458d-9999-2f6698581b6b",
-      "source-slot" : "Annotated data",
-      "target-slot" : "PL",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "4fe0f2d8-040b-4097-82ed-5dd931f1a347",
-      "target-node" : "40bd5388-0a6a-4c66-8e14-f228e43c10bf",
-      "source-slot" : "Annotated paths",
-      "target-slot" : "Data",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "df083757-cb3f-44fd-9734-53703f7e8b1e",
-      "target-node" : "27b8db2a-e7b3-4dff-8512-3bcdf12185eb",
-      "source-slot" : "Files",
-      "target-slot" : "Paths",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "c6934a6f-e13f-4015-8e8b-30831eed3370",
-      "target-node" : "1847b729-41b3-400a-9c01-0c0ba3274f19",
-      "source-slot" : "Parameters",
-      "target-slot" : "{Parameters}",
+      "target-slot" : "SD",
       "metadata" : {
         "ui-visibility" : "Smart",
         "ui-shape" : "Elbow"
       }
     }, {
       "source-node" : "8cc466a9-b087-4c29-a3b0-2b4d5462bf8a",
-      "target-node" : "e8c425bd-0111-4a1b-bae8-fcd0b8361291",
-      "source-slot" : "Failed",
+      "target-node" : "25d3068e-8eaa-46a1-b206-56fb172196ea",
+      "source-slot" : "Labels",
       "target-slot" : "Input",
       "metadata" : {
         "ui-visibility" : "Smart",
         "ui-shape" : "Elbow"
       }
     }, {
-      "source-node" : "adbbdab4-5c73-4029-8ee6-1226132a7703",
-      "target-node" : "af8a9d1e-818e-4fff-8ee6-867692326ba6",
-      "source-slot" : "RAW",
-      "target-slot" : "Input",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "3b2b16c3-e4c8-4c1a-a04b-fce9c50ecd40",
-      "target-node" : "7bd2f93d-5ac3-4f4a-8b79-0e2fcddfa8d6",
+      "source-node" : "59f13a23-aeb1-4034-8b1c-e5274faa8eaf",
+      "target-node" : "57dc28ac-a417-4202-a9a6-b72534eba6a8",
       "source-slot" : "Output",
-      "target-slot" : "Source",
+      "target-slot" : "I4",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "27b8db2a-e7b3-4dff-8512-3bcdf12185eb",
+      "target-node" : "07ba4c3e-4352-499f-b84c-0dbeeadb9194",
+      "source-slot" : "Annotated paths",
+      "target-slot" : "Data",
       "metadata" : {
         "ui-visibility" : "Smart",
         "ui-shape" : "Elbow"
       }
     }, {
       "source-node" : "0ffac864-18f5-4de4-86ef-9f3c6a8535ae",
-      "target-node" : "9036b43d-b32a-4fe8-891e-b13a472c3284",
+      "target-node" : "032a5b21-823f-4f79-ad2b-b85843541129",
+      "source-slot" : "Output",
+      "target-slot" : "Measurements",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "d7bffc4f-7410-403e-a1f7-08a12fbc6d59",
+      "target-node" : "6e810537-6fa6-4225-99e3-372741397cd1",
       "source-slot" : "Output",
       "target-slot" : "Input",
       "metadata" : {
@@ -15631,35 +14918,35 @@
         "ui-shape" : "Elbow"
       }
     }, {
-      "source-node" : "0ffac864-18f5-4de4-86ef-9f3c6a8535ae",
-      "target-node" : "032a5b21-823f-4f79-ad2b-b85843541129",
-      "source-slot" : "Output",
-      "target-slot" : "Measurements",
+      "source-node" : "1cc8443c-f452-4b72-9387-34b47d26b3c3",
+      "target-node" : "df083757-cb3f-44fd-9734-53703f7e8b1e",
+      "source-slot" : "Folder paths",
+      "target-slot" : "Folders",
       "metadata" : {
         "ui-visibility" : "Smart",
         "ui-shape" : "Elbow"
       }
     }, {
-      "source-node" : "adb3fb6b-2bce-48ad-b160-3d675e118193",
-      "target-node" : "7fc7ed74-b653-4d0e-9f27-3db47f6e5332",
-      "source-slot" : "Output",
-      "target-slot" : "Table",
+      "source-node" : "e55e4bde-7f26-4ec1-aa89-855ff0031aa8",
+      "target-node" : "8cc466a9-b087-4c29-a3b0-2b4d5462bf8a",
+      "source-slot" : "Failed",
+      "target-slot" : "Failed",
       "metadata" : {
         "ui-visibility" : "Smart",
         "ui-shape" : "Elbow"
       }
     }, {
-      "source-node" : "8d14e086-1a52-4a31-8cdc-ba8e31cd34b1",
-      "target-node" : "bc785d77-3338-4a3a-8166-fd512a676dd6",
-      "source-slot" : "Matched",
+      "source-node" : "9d71b89e-57cb-4ecf-9652-9098ac4ba727",
+      "target-node" : "cfd24b0f-61e9-485a-a24c-58e5dfd141f1",
+      "source-slot" : "Output",
       "target-slot" : "Input",
       "metadata" : {
         "ui-visibility" : "Smart",
         "ui-shape" : "Elbow"
       }
     }, {
-      "source-node" : "b726a811-b145-4e97-861d-2dbf7bad7a53",
-      "target-node" : "d9fd11ef-97dd-46a8-8626-b1ec66bffc1a",
+      "source-node" : "3a9bda5c-9313-4f97-8b4e-0170b452cb8e",
+      "target-node" : "3499122d-6505-4aaf-832b-83faabb2f5f5",
       "source-slot" : "Output",
       "target-slot" : "Input",
       "metadata" : {
@@ -15676,8 +14963,8 @@
         "ui-shape" : "Elbow"
       }
     }, {
-      "source-node" : "0f576db6-7fc3-423a-84d0-a1ea9acfbc2e",
-      "target-node" : "26ae2c3d-2640-4896-b7b6-7806b18da6fd",
+      "source-node" : "4c1f4cfe-2ad4-481f-b072-932515456116",
+      "target-node" : "bb267def-5e31-4061-87e6-879ef9ca87fe",
       "source-slot" : "Output",
       "target-slot" : "Input",
       "metadata" : {
@@ -15685,8 +14972,8 @@
         "ui-shape" : "Elbow"
       }
     }, {
-      "source-node" : "6ca1cd34-9d79-480b-bc82-9918ddc721ed",
-      "target-node" : "98ce0924-4989-4d11-b949-ba20812f9a41",
+      "source-node" : "9036b43d-b32a-4fe8-891e-b13a472c3284",
+      "target-node" : "6fb28b41-b41e-46a9-980c-7ad6da983dec",
       "source-slot" : "Output",
       "target-slot" : "Input",
       "metadata" : {
@@ -15694,10 +14981,163 @@
         "ui-shape" : "Elbow"
       }
     }, {
-      "source-node" : "b2b35089-f59b-45c0-9097-a15e88e92a32",
+      "source-node" : "adbbdab4-5c73-4029-8ee6-1226132a7703",
       "target-node" : "af8a9d1e-818e-4fff-8ee6-867692326ba6",
+      "source-slot" : "RAW",
+      "target-slot" : "Input",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "e55e4bde-7f26-4ec1-aa89-855ff0031aa8",
+      "target-node" : "8cc466a9-b087-4c29-a3b0-2b4d5462bf8a",
+      "source-slot" : "Reconstructed",
+      "target-slot" : "Reconstructed",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "e55e4bde-7f26-4ec1-aa89-855ff0031aa8",
+      "target-node" : "8cc466a9-b087-4c29-a3b0-2b4d5462bf8a",
+      "source-slot" : "Labels",
+      "target-slot" : "Labels",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "98ce0924-4989-4d11-b949-ba20812f9a41",
+      "target-node" : "a3d4a65f-030d-47fb-8234-b4b3e5852859",
       "source-slot" : "Output",
-      "target-slot" : "ROI",
+      "target-slot" : "Input",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "1f1e94ac-0631-41b9-9936-2be4ab8b525e",
+      "target-node" : "b3fc68fc-dc05-4627-8bdc-04946727b731",
+      "source-slot" : "Output",
+      "target-slot" : "Input",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "93f0fe5d-54ff-41e7-a9a3-7a034d78f466",
+      "target-node" : "bfd0d6fb-b0de-4973-9457-0369b745dcab",
+      "source-slot" : "Output",
+      "target-slot" : "Input",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "0ffac864-18f5-4de4-86ef-9f3c6a8535ae",
+      "target-node" : "9036b43d-b32a-4fe8-891e-b13a472c3284",
+      "source-slot" : "Output",
+      "target-slot" : "Input",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "9d71b89e-57cb-4ecf-9652-9098ac4ba727",
+      "target-node" : "9dfbccbe-6f20-4801-92a4-250af5c5ed99",
+      "source-slot" : "Output",
+      "target-slot" : "Annotations",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "0122ba46-190f-4c05-982d-9b6b709d84d7",
+      "target-node" : "ac1ef081-4812-4223-9bcb-7cecb0cb7bfd",
+      "source-slot" : "Folder paths",
+      "target-slot" : "Folders",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "da85331a-a623-40b6-b0af-407f06927424",
+      "target-node" : "22ef2aaa-50a8-4e05-a406-ce0b153c8f19",
+      "source-slot" : "Output",
+      "target-slot" : "Top",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "da8f1338-a7fa-4f20-87c1-860b616528ab",
+      "target-node" : "c0176e7a-b64e-4fb0-a1aa-079c78461571",
+      "source-slot" : "Output",
+      "target-slot" : "Input",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "de016058-04f6-4f3d-b07c-644a7ba8c411",
+      "target-node" : "9f662b82-4c1e-498a-9eb9-5bea428d0338",
+      "source-slot" : "Output",
+      "target-slot" : "Source",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "4be2d0ca-e5a3-43b1-8fdc-2f82f2bda424",
+      "target-node" : "9dfbccbe-6f20-4801-92a4-250af5c5ed99",
+      "source-slot" : "Annotated paths",
+      "target-slot" : "Data",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "830c1976-9190-425f-acf0-414e12021f6e",
+      "target-node" : "032a5b21-823f-4f79-ad2b-b85843541129",
+      "source-slot" : "Target",
+      "target-slot" : "Labels",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "c6934a6f-e13f-4015-8e8b-30831eed3370",
+      "target-node" : "563d1b1f-8576-4af7-82ca-fbb52e5afc99",
+      "source-slot" : "Parameters",
+      "target-slot" : "{Parameters}",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "7fc7ed74-b653-4d0e-9f27-3db47f6e5332",
+      "target-node" : "923fe316-4596-44d3-ab0d-aa50a575afa2",
+      "source-slot" : "Annotated data",
+      "target-slot" : "Input",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "7c7c2312-ad08-421b-8512-138e8e694f7d",
+      "target-node" : "2510033f-f356-4bd1-a9a3-07c55f791f1f",
+      "source-slot" : "Annotated data",
+      "target-slot" : "Input",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "b726a811-b145-4e97-861d-2dbf7bad7a53",
+      "target-node" : "d9fd11ef-97dd-46a8-8626-b1ec66bffc1a",
+      "source-slot" : "Output",
+      "target-slot" : "Input",
       "metadata" : {
         "ui-visibility" : "Smart",
         "ui-shape" : "Elbow"
@@ -15712,19 +15152,37 @@
         "ui-shape" : "Elbow"
       }
     }, {
-      "source-node" : "adbbdab4-5c73-4029-8ee6-1226132a7703",
-      "target-node" : "da3e2408-9388-4542-8f62-ab44beaea2dc",
-      "source-slot" : "SD",
+      "source-node" : "8d14e086-1a52-4a31-8cdc-ba8e31cd34b1",
+      "target-node" : "bc785d77-3338-4a3a-8166-fd512a676dd6",
+      "source-slot" : "Matched",
       "target-slot" : "Input",
       "metadata" : {
         "ui-visibility" : "Smart",
         "ui-shape" : "Elbow"
       }
     }, {
-      "source-node" : "e55e4bde-7f26-4ec1-aa89-855ff0031aa8",
-      "target-node" : "8cc466a9-b087-4c29-a3b0-2b4d5462bf8a",
-      "source-slot" : "Reconstructed",
-      "target-slot" : "Reconstructed",
+      "source-node" : "bc785d77-3338-4a3a-8166-fd512a676dd6",
+      "target-node" : "563d1b1f-8576-4af7-82ca-fbb52e5afc99",
+      "source-slot" : "Output",
+      "target-slot" : "Input",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "f36582ae-18ad-44cb-bc44-217083720b93",
+      "target-node" : "ff44442e-35bb-4a72-93b5-9120ac784474",
+      "source-slot" : "Folder paths",
+      "target-slot" : "Folders",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "d9fd11ef-97dd-46a8-8626-b1ec66bffc1a",
+      "target-node" : "da85331a-a623-40b6-b0af-407f06927424",
+      "source-slot" : "Output",
+      "target-slot" : "Mask",
       "metadata" : {
         "ui-visibility" : "Smart",
         "ui-shape" : "Elbow"
@@ -15778,12 +15236,12 @@
           "jipipe:node-info-id" : "jipipe:project-compartment",
           "jipipe:node:ui-locked" : false,
           "show-limited-parameters" : false,
+          "exported-parameters" : {
+            "parameter-reference-groups" : [ ]
+          },
           "project-overview-color" : {
             "content" : "#FFFFFF",
             "enabled" : false
-          },
-          "exported-parameters" : {
-            "parameter-reference-groups" : [ ]
           },
           "show-in-project-overview" : true,
           "jipipe:node:bookmarked" : false,
@@ -15830,12 +15288,12 @@
           "jipipe:node-info-id" : "jipipe:project-compartment",
           "jipipe:node:ui-locked" : false,
           "show-limited-parameters" : false,
+          "exported-parameters" : {
+            "parameter-reference-groups" : [ ]
+          },
           "project-overview-color" : {
             "content" : "#FFFFFF",
             "enabled" : false
-          },
-          "exported-parameters" : {
-            "parameter-reference-groups" : [ ]
           },
           "show-in-project-overview" : true,
           "jipipe:node:bookmarked" : false,
@@ -15882,12 +15340,12 @@
           "jipipe:node-info-id" : "jipipe:project-compartment",
           "jipipe:node:ui-locked" : false,
           "show-limited-parameters" : false,
+          "exported-parameters" : {
+            "parameter-reference-groups" : [ ]
+          },
           "project-overview-color" : {
             "content" : "#FFFFFF",
             "enabled" : false
-          },
-          "exported-parameters" : {
-            "parameter-reference-groups" : [ ]
           },
           "show-in-project-overview" : true,
           "jipipe:node:bookmarked" : false,
@@ -15923,12 +15381,12 @@
           "jipipe:node-info-id" : "jipipe:project-compartment",
           "jipipe:node:ui-locked" : false,
           "show-limited-parameters" : false,
+          "exported-parameters" : {
+            "parameter-reference-groups" : [ ]
+          },
           "project-overview-color" : {
             "content" : "#FFFFFF",
             "enabled" : false
-          },
-          "exported-parameters" : {
-            "parameter-reference-groups" : [ ]
           },
           "show-in-project-overview" : true,
           "jipipe:node:bookmarked" : false,
@@ -15975,12 +15433,12 @@
           "jipipe:node-info-id" : "jipipe:project-compartment",
           "jipipe:node:ui-locked" : false,
           "show-limited-parameters" : false,
+          "exported-parameters" : {
+            "parameter-reference-groups" : [ ]
+          },
           "project-overview-color" : {
             "content" : "#FFFFFF",
             "enabled" : false
-          },
-          "exported-parameters" : {
-            "parameter-reference-groups" : [ ]
           },
           "show-in-project-overview" : true,
           "jipipe:node:bookmarked" : false,
@@ -16016,12 +15474,12 @@
           "jipipe:node-info-id" : "jipipe:project-compartment",
           "jipipe:node:ui-locked" : false,
           "show-limited-parameters" : false,
+          "exported-parameters" : {
+            "parameter-reference-groups" : [ ]
+          },
           "project-overview-color" : {
             "content" : "#FFFFFF",
             "enabled" : false
-          },
-          "exported-parameters" : {
-            "parameter-reference-groups" : [ ]
           },
           "show-in-project-overview" : true,
           "jipipe:node:bookmarked" : false,
@@ -16040,25 +15498,7 @@
         }
       }, {
         "source-node" : "68014b9b-e352-42bc-99e0-e3c7fd5e4a34",
-        "target-node" : "f974fbbe-e15f-4b4a-a820-eb22c4f7808d",
-        "source-slot" : "Output",
-        "target-slot" : "Input",
-        "metadata" : {
-          "ui-visibility" : "Smart",
-          "ui-shape" : "Elbow"
-        }
-      }, {
-        "source-node" : "80640220-1066-41b8-9cfb-1d9be1fb5aa0",
-        "target-node" : "f974fbbe-e15f-4b4a-a820-eb22c4f7808d",
-        "source-slot" : "Output",
-        "target-slot" : "Input",
-        "metadata" : {
-          "ui-visibility" : "Smart",
-          "ui-shape" : "Elbow"
-        }
-      }, {
-        "source-node" : "f974fbbe-e15f-4b4a-a820-eb22c4f7808d",
-        "target-node" : "e0411412-045e-437f-b700-180112b40857",
+        "target-node" : "b3f163a6-0b5b-44ea-9cdd-71443eceb89f",
         "source-slot" : "Output",
         "target-slot" : "Input",
         "metadata" : {
@@ -16067,7 +15507,7 @@
         }
       }, {
         "source-node" : "68014b9b-e352-42bc-99e0-e3c7fd5e4a34",
-        "target-node" : "b3f163a6-0b5b-44ea-9cdd-71443eceb89f",
+        "target-node" : "f974fbbe-e15f-4b4a-a820-eb22c4f7808d",
         "source-slot" : "Output",
         "target-slot" : "Input",
         "metadata" : {
@@ -16077,6 +15517,15 @@
       }, {
         "source-node" : "80640220-1066-41b8-9cfb-1d9be1fb5aa0",
         "target-node" : "b3f163a6-0b5b-44ea-9cdd-71443eceb89f",
+        "source-slot" : "Output",
+        "target-slot" : "Input",
+        "metadata" : {
+          "ui-visibility" : "Smart",
+          "ui-shape" : "Elbow"
+        }
+      }, {
+        "source-node" : "80640220-1066-41b8-9cfb-1d9be1fb5aa0",
+        "target-node" : "f974fbbe-e15f-4b4a-a820-eb22c4f7808d",
         "source-slot" : "Output",
         "target-slot" : "Input",
         "metadata" : {
@@ -16095,6 +15544,15 @@
       }, {
         "source-node" : "fb3bfe3a-c9c1-4ec4-908b-3f1b7380a851",
         "target-node" : "68014b9b-e352-42bc-99e0-e3c7fd5e4a34",
+        "source-slot" : "Output",
+        "target-slot" : "Input",
+        "metadata" : {
+          "ui-visibility" : "Smart",
+          "ui-shape" : "Elbow"
+        }
+      }, {
+        "source-node" : "f974fbbe-e15f-4b4a-a820-eb22c4f7808d",
+        "target-node" : "e0411412-045e-437f-b700-180112b40857",
         "source-slot" : "Output",
         "target-slot" : "Input",
         "metadata" : {

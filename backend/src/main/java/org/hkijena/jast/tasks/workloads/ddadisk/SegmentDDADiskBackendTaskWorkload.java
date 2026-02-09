@@ -29,11 +29,11 @@ public class SegmentDDADiskBackendTaskWorkload implements BackendTaskWorkload {
     private static final List<BackendTaskWorkloadDataSlot> INPUTS = Collections.singletonList(JASTDataSlot.Plate.toSlot());
     private static final List<BackendTaskWorkloadDataSlot> OUTPUTS = Collections.singletonList(JASTDataSlot.StripDisk.toSlot());
     private static final List<BackendTaskWorkloadParameterSlot> PARAMETERS = List.of(
-            new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotType.Boolean, "fastAlgorithm", "Use fast algorithm", "Use a faster algorithm that assumes that the DDA disk is close to the center of the plate", true),
-            new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotType.Number, "minCirc", "Minimum circularity (0-1)", "Minimum circularity of the disk", 0.5),
-            new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotType.Number, "minFeret", "Minimum diameter (mm)", "Minimum diameter in millimeters. A lower than expected value is better.", 2),
-            new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotType.Number, "maxFeret", "Maximum diameter (mm)", "Maximum diameter in millimeters. A higher than expected value is better.", 12),
-            new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotType.Number, "areaScale", "Fast algorithm: Area scale (0-1)", "Scale the plate area down for searching for the disk. Applies only to the fast algorithm.", 0.25)
+            new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotDataType.Boolean, BackendTaskWorkloadParameterSlotType.Common, "fastAlgorithm", "Use fast algorithm", "Use a faster algorithm that assumes that the DDA disk is close to the center of the plate", true),
+            new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotDataType.Number, BackendTaskWorkloadParameterSlotType.Advanced, "minCirc", "Minimum circularity (0-1)", "Minimum circularity of the disk", 0.5),
+            new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotDataType.Number, BackendTaskWorkloadParameterSlotType.Advanced, "minFeret", "Minimum diameter (mm)", "Minimum diameter in millimeters. A lower than expected value is better.", 2),
+            new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotDataType.Number, BackendTaskWorkloadParameterSlotType.Advanced, "maxFeret", "Maximum diameter (mm)", "Maximum diameter in millimeters. A higher than expected value is better.", 12),
+            new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotDataType.Number, BackendTaskWorkloadParameterSlotType.Advanced, "areaScale", "Fast algorithm: Area scale (0-1)", "Scale the plate area down for searching for the disk. Applies only to the fast algorithm.", 0.25)
     );
     private static final Map<String, String> PARAMETER_OVERRIDES = new HashMap<>();
 

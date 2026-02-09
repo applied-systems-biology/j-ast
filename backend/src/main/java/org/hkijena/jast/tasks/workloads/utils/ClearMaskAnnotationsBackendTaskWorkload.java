@@ -27,9 +27,9 @@ public class ClearMaskAnnotationsBackendTaskWorkload implements BackendTaskWorkl
     private static final List<BackendTaskWorkloadDataSlot> INPUTS = List.of(JASTDataSlot.Raw.toSlot());
     private static final List<BackendTaskWorkloadDataSlot> OUTPUTS = List.of(JASTDataSlot.Raw.toSlot());
     private static final List<BackendTaskWorkloadParameterSlot> PARAMETERS = List.of(
-            new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotType.Boolean, "clear-plate", "Clear plate", "Removes the plate annotations", true),
-            new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotType.Boolean, "clear-strip-disk", "Clear disk/strip", "Removes the DDA disk/E-Test strip", true),
-            new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotType.Boolean, "clear-zoi-shape", "Clear ZOI shape", "Removes the E-Test ZOI shape", true)
+            new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotDataType.Boolean, BackendTaskWorkloadParameterSlotType.Common, "clear-plate", "Clear plate", "Removes the plate annotations", true),
+            new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotDataType.Boolean, BackendTaskWorkloadParameterSlotType.Common, "clear-strip-disk", "Clear disk/strip", "Removes the DDA disk/E-Test strip", true),
+            new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotDataType.Boolean, BackendTaskWorkloadParameterSlotType.Common, "clear-zoi-shape", "Clear ZOI shape", "Removes the E-Test ZOI shape", true)
     );
     private final ImageRepository imageRepository;
     private final MaskImageAnnotationRepository maskImageAnnotationRepository;

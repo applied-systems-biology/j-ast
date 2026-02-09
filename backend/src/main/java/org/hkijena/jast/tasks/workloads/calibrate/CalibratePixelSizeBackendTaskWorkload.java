@@ -27,7 +27,7 @@ public class CalibratePixelSizeBackendTaskWorkload implements BackendTaskWorkloa
     private static final List<BackendTaskWorkloadDataSlot> INPUTS = Collections.singletonList(JASTDataSlot.Plate.toSlot());
     private static final List<BackendTaskWorkloadDataSlot> OUTPUTS = Collections.singletonList(JASTDataSlot.PixelSize.toSlot());
     private static final List<BackendTaskWorkloadParameterSlot> PARAMETERS = Collections.singletonList(
-            new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotType.Number, "plate-diameter-mm", "Plate diameter (mm)", "The plate diameter in millimeters", 90));
+            new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotDataType.Number, BackendTaskWorkloadParameterSlotType.Common, "plate-diameter-mm", "Plate diameter (mm)", "The plate diameter in millimeters", 90));
     private final BackendTaskUtils taskUtils;
     private final ImageRepository imageRepository;
     private final FileStorageService fileStorageService;

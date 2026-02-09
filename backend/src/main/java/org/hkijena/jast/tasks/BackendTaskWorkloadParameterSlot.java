@@ -1,16 +1,18 @@
 package org.hkijena.jast.tasks;
 
 public class BackendTaskWorkloadParameterSlot {
-    private BackendTaskWorkloadParameterSlotType type;
+    private BackendTaskWorkloadParameterSlotDataType dataType;
     private String id;
     private String label;
     private String description;
     private Object defaultValue;
+    private BackendTaskWorkloadParameterSlotType type;
 
     public BackendTaskWorkloadParameterSlot() {
     }
 
-    public BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotType type, String id, String label, String description, Object defaultValue) {
+    public BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotDataType dataType, BackendTaskWorkloadParameterSlotType type, String id, String label, String description, Object defaultValue) {
+        this.dataType = dataType;
         this.type = type;
         this.id = id;
         this.label = label;
@@ -18,12 +20,12 @@ public class BackendTaskWorkloadParameterSlot {
         this.defaultValue = defaultValue;
     }
 
-    public BackendTaskWorkloadParameterSlotType getType() {
-        return type;
+    public BackendTaskWorkloadParameterSlotDataType getDataType() {
+        return dataType;
     }
 
-    public void setType(BackendTaskWorkloadParameterSlotType type) {
-        this.type = type;
+    public void setDataType(BackendTaskWorkloadParameterSlotDataType dataType) {
+        this.dataType = dataType;
     }
 
     public String getId() {
@@ -61,11 +63,19 @@ public class BackendTaskWorkloadParameterSlot {
     @Override
     public String toString() {
         return "BackendTaskWorkloadParameterSlot{" +
-                "type=" + type +
+                "dataType=" + dataType +
                 ", id='" + id + '\'' +
                 ", label='" + label + '\'' +
                 ", description='" + description + '\'' +
                 ", defaultValue=" + defaultValue +
                 '}';
+    }
+
+    public BackendTaskWorkloadParameterSlotType getType() {
+        return type;
+    }
+
+    public void setType(BackendTaskWorkloadParameterSlotType type) {
+        this.type = type;
     }
 }

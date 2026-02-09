@@ -29,9 +29,9 @@ public class SegmentPlateBackendTaskWorkload implements BackendTaskWorkload {
     private static final List<BackendTaskWorkloadDataSlot> INPUTS = Collections.emptyList();
     private static final List<BackendTaskWorkloadDataSlot> OUTPUTS = Collections.singletonList(JASTDataSlot.Plate.toSlot());
     private static final List<BackendTaskWorkloadParameterSlot> PARAMETERS = List.of(
-            new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotType.Boolean, "fastAlgorithm", "Use fast algorithm", "Use a faster algorithm that assumes that there is no visible background behind the plate", false),
-            new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotType.Boolean, "calibrateAfterwards", "Calibrate afterwards", "Automatically calibrate the pixel size to the plate size", true),
-            new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotType.Number, "plate-diameter-mm", "Calibration: Plate diameter (mm)", "The plate diameter in millimeters. Only applies if calibration is enabled.", 90)
+            new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotDataType.Boolean, BackendTaskWorkloadParameterSlotType.Common, "fastAlgorithm", "Use fast algorithm", "Use a faster algorithm that assumes that there is no visible background behind the plate", false),
+            new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotDataType.Boolean, BackendTaskWorkloadParameterSlotType.Common, "calibrateAfterwards", "Calibrate afterwards", "Automatically calibrate the pixel size to the plate size", true),
+            new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotDataType.Number, BackendTaskWorkloadParameterSlotType.Common, "plate-diameter-mm", "Calibration: Plate diameter (mm)", "The plate diameter in millimeters. Only applies if calibration is enabled.", 90)
     );
     private final ImageRepository imageRepository;
     private final FileStorageService fileStorageService;
@@ -119,7 +119,7 @@ public class SegmentPlateBackendTaskWorkload implements BackendTaskWorkload {
         if(withCalibrate) {
             BackendTaskPayload subTaskPayload = new BackendTaskPayload();
             subTaskPayload.setTaskId("image-calibrate-pixel-size-by-plate");
-            subTaskPayload.setParameter("plate-diameter-mm", BackendTaskWorkloadParameterSlotType.Number, plateDiameterMillimeters);
+            subTaskPayload.setParameter("plate-diameter-mm", BackendTaskWorkloadParameterSlotDataType.Number, plateDiameterMillimeters);
             subTaskPayload.setProjectId(params.getPayload().getProjectId());
             subTaskPayload.setImageIds(params.getPayload().getImageIds());
             taskUtils.scheduleSubTask(subTaskPayload, registry, progressInfo);

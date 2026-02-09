@@ -6,7 +6,6 @@ import org.hkijena.jast.config.SystemPackage;
 import org.hkijena.jast.model.AssayType;
 import org.hkijena.jast.model.ViewMode;
 import org.hkijena.jast.model.entities.Project;
-import org.hkijena.jast.payloads.task.BackendTaskParameterPayload;
 import org.hkijena.jast.repositories.ImageRepository;
 import org.hkijena.jast.repositories.ProjectRepository;
 import org.hkijena.jast.repositories.ResultRepository;
@@ -36,22 +35,17 @@ public class FindMICAnalysisWorkload implements BackendTaskWorkload {
             JASTDataSlot.StripDisk.toSlot());
     private static final List<BackendTaskWorkloadDataSlot> OUTPUTS = Collections.emptyList();
     private static final List<BackendTaskWorkloadParameterSlot> PARAMETERS = List.of(
-            new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotType.String, "result-name", "Result name", "The name of the generated result folder", "DiskImageR-style result (single)"),
-            new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotType.String, "result-description", "Result description", "Description of the generated result", "RAD/FoG/ZOI"),
-            new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotType.Number, "bgr-subtraction-start-radius", "Background subtraction start radius (px)", "The lowest background subtraction radius", 20),
-            new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotType.Number, "bgr-subtraction-end-radius", "Background subtraction end radius (px)", "The highest background subtraction radius", 64),
-            new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotType.Number, "bgr-subtraction-radius-increment", "Background subtraction radius increment (px)", "Increment for the background subtraction radius sweep", 4),
-            new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotType.Number, "confidence-threshold", "Confidence threshold (%)", "The minimum confidence for the OCR algorithm results", 90),
-            new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotType.Number, "target-dpi", "Target DPI", "The target DPI for image upscaling. OCR algorithms require a high DPI to work properly.", 600),
-            new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotType.Number, "strip-safety-distance", "Exclusion distance around strip (mm)", "The area around the strip annotation that is excluded from the measurement process. Must be large enough to exclude the strip itself.", 1),
-            new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotType.Number, "strip-measure-distance", "Measurement distance around strip (mm)", "The area around the strip annotation that is used for the measurement process.", 10),
-            new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotType.Boolean, "add-inverted-candidates", "Generate inverted OCR inputs (slow)", "If enabled, create also inverted images for OCR processing. Doubles the required processing time", false)
+            new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotDataType.String, BackendTaskWorkloadParameterSlotType.Common, "result-name", "Result name", "The name of the generated result folder", "MIC analysis"),
+            new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotDataType.String, BackendTaskWorkloadParameterSlotType.Common, "result-description", "Result description", "Description of the generated result", ""),
+            new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotDataType.Number, BackendTaskWorkloadParameterSlotType.Advanced, "bgr-subtraction-start-radius", "Background subtraction start radius (px)", "The lowest background subtraction radius", 20),
+            new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotDataType.Number, BackendTaskWorkloadParameterSlotType.Advanced, "bgr-subtraction-end-radius", "Background subtraction end radius (px)", "The highest background subtraction radius", 64),
+            new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotDataType.Number, BackendTaskWorkloadParameterSlotType.Advanced, "bgr-subtraction-radius-increment", "Background subtraction radius increment (px)", "Increment for the background subtraction radius sweep", 4),
+            new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotDataType.Number, BackendTaskWorkloadParameterSlotType.Common, "confidence-threshold", "Confidence threshold (%)", "The minimum confidence for the OCR algorithm results", 90),
+            new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotDataType.Number, BackendTaskWorkloadParameterSlotType.Advanced, "target-dpi", "Target DPI", "The target DPI for image upscaling. OCR algorithms require a high DPI to work properly.", 600),
+            new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotDataType.Number, BackendTaskWorkloadParameterSlotType.Common, "strip-safety-distance", "Exclusion distance around strip (mm)", "The area around the strip annotation that is excluded from the measurement process. Must be large enough to exclude the strip itself.", 1),
+            new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotDataType.Number, BackendTaskWorkloadParameterSlotType.Common, "strip-measure-distance", "Measurement distance around strip (mm)", "The area around the strip annotation that is used for the measurement process.", 10),
+            new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotDataType.Boolean, BackendTaskWorkloadParameterSlotType.Advanced, "add-inverted-candidates", "Generate inverted OCR inputs (slow)", "If enabled, create also inverted images for OCR processing. Doubles the required processing time", false)
     );
-    private static final Map<String, String> PARAMETER_OVERRIDES = new HashMap<>();
-
-    static {
-        PARAMETER_OVERRIDES.put("__thresholds", "3d3aba6c-2688-47bd-94af-aef3ebf058bf/variables/thresholds");
-    }
 
     private final ImageRepository imageRepository;
     private final ProjectRepository projectRepository;
@@ -141,29 +135,20 @@ public class FindMICAnalysisWorkload implements BackendTaskWorkload {
 
         Map<String, Object> parameterOverrides = new HashMap<>();
 
-        // Parse and read the thresholds
-        String rawThresholds = StringUtils.nullToEmpty(params.getPayload().getParameter("thresholds").getValue());
-        List<Integer> thresholds = StringUtils.getIntegersFromRangeString(rawThresholds);
-        parameterOverrides.put(PARAMETER_OVERRIDES.get("__thresholds"), thresholds.stream().map(t -> t / 100.0).toList());
-
         taskUtils.writeRawImages(params, params.getPayload().getImageIds(), imageRepository, fileStorageService, progressInfo, verbose);
         taskUtils.writeMaskAnnotations(params, params.getPayload().getImageIds(), "plate", imageRepository, fileStorageService, progressInfo, verbose);
         taskUtils.writeMaskAnnotations(params, params.getPayload().getImageIds(), "strip-disk", imageRepository, fileStorageService, progressInfo, verbose);
-        taskUtils.writeRowFirstMaskAnnotations(params, params.getPayload().getImageIds(), "zoi-shape", imageRepository, fileStorageService, progressInfo, verbose);
 
-        for (BackendTaskParameterPayload parameter : params.getPayload().getParameters()) {
-            String overriddenKey = PARAMETER_OVERRIDES.get(parameter.getId());
-            if (overriddenKey != null) {
-                parameterOverrides.put(overriddenKey, parameter.getValue());
-            }
-        }
+        parameterOverrides.put("/bgrSubtractionStartRadius", params.getPayload().getParameterAsDouble("bgr-subtraction-start-radius", 20));
+        parameterOverrides.put("/bgrSubtractionEndRadius", params.getPayload().getParameterAsDouble("bgr-subtraction-end-radius", 64));
+        parameterOverrides.put("/bgrSubtractionRadiusIncrement", params.getPayload().getParameterAsDouble("bgr-subtraction-radius-increment", 4));
+        parameterOverrides.put("/confidenceThreshold", params.getPayload().getParameterAsDouble("confidence-threshold", 90));
+        parameterOverrides.put("/targetDPI", params.getPayload().getParameterAsDouble("target-dpi", 600));
+        parameterOverrides.put("/stripSafetyDistanceMillimeters", params.getPayload().getParameterAsDouble("strip-safety-distance", 1));
+        parameterOverrides.put("/stripMeasurementDistanceMillimeters", params.getPayload().getParameterAsDouble("strip-measure-distance", 10));
+        parameterOverrides.put("/handleInvertedImages", params.getPayload().getParameterAsBoolean("add-inverted-candidates", false));
 
-        parameterOverrides.put("/plateShaveOffMillimeters", params.getPayload().getParameterAsDouble("global-plate-shave-off-mm", 10));
-        parameterOverrides.put("/labelWidthMillimeters", params.getPayload().getParameterAsDouble("global-label-thickness-mm", 1));
-
-        boolean useNumDiff = params.getPayload().getParameterAsBoolean("num-diff", true);
-
-        Path projectFilePath = taskUtils.writeSharedFile(params, useNumDiff ? Path.of("workflows", "disk-image-r-analysis-single-numdiff.jip") : Path.of("workflows", "disk-image-r-analysis-single.jip"));
+        Path projectFilePath = taskUtils.writeSharedFile(params, Path.of("workflows", "read-mic.jip"));
 
         progressInfo.log("Project file is " + projectFilePath);
         taskUtils.runJIPipe(params, projectFilePath, parameterOverrides, "", progressInfo, systemPackages, preferSystemPackages, verbose);
