@@ -104,6 +104,7 @@ public class CalibratePixelSizeBackendTaskWorkload implements BackendTaskWorkloa
         final List<SystemPackage> systemPackages = params.getRuntimeConfig().getSystemPackages();
 
         taskUtils.writeRawImages(params, params.getPayload().getImageIds(), imageRepository, fileStorageService, progressInfo, verbose);
+        taskUtils.writeMetadata(params, params.getPayload().getImageIds(), imageRepository, progressInfo, verbose);
         taskUtils.writeMaskAnnotations(params, params.getPayload().getImageIds(), "plate", imageRepository, fileStorageService, progressInfo, verbose);
 
         Path projectFilePath = taskUtils.writeSharedFile(params, Path.of("workflows","image-calibrate-pixel-size-by-plate.jip"));

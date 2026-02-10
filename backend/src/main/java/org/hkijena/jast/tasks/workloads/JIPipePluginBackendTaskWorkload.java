@@ -178,6 +178,7 @@ public class JIPipePluginBackendTaskWorkload implements BackendTaskWorkload {
         Map<String, Object> parameterOverrides = new HashMap<>();
 
         taskUtils.writeRawImages(params, params.getPayload().getImageIds(), imageRepository, fileStorageService, progressInfo, verbose);
+        taskUtils.writeMetadata(params, params.getPayload().getImageIds(), imageRepository, progressInfo, verbose);
         for (BackendTaskWorkloadDataSlot input : inputs) {
             if(input.getType() == BackendTaskWorkloadDataSlotType.ImageMaskAnnotation) {
                 taskUtils.writeMaskAnnotations(params, params.getPayload().getImageIds(), input.getName(), imageRepository, fileStorageService, progressInfo, verbose);

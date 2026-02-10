@@ -102,6 +102,7 @@ public class InvertRawImageBackendTaskWorkload implements BackendTaskWorkload {
         final List<SystemPackage> systemPackages = params.getRuntimeConfig().getSystemPackages();
 
         taskUtils.writeRawImages(params, params.getPayload().getImageIds(), imageRepository, fileStorageService, progressInfo, verbose);
+        taskUtils.writeMetadata(params, params.getPayload().getImageIds(), imageRepository, progressInfo, verbose);
 
         Path projectFilePath = taskUtils.writeSharedFile(params, Path.of("workflows","invert-image.jip"));
         progressInfo.log("Project file is " + projectFilePath);

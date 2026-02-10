@@ -108,6 +108,7 @@ public class SegmentPlateBackendTaskWorkload implements BackendTaskWorkload {
         double plateDiameterMillimeters = ((Number) params.getPayload().getParameter("plate-diameter-mm").getValue()).doubleValue();
 
         taskUtils.writeRawImages(params, params.getPayload().getImageIds(), imageRepository, fileStorageService, progressInfo, verbose);
+        taskUtils.writeMetadata(params, params.getPayload().getImageIds(), imageRepository, progressInfo, verbose);
         Path projectFilePath = taskUtils.writeSharedFile(params, fastAlgorithm ? Path.of("workflows","image-segment-plate-fast.jip") : Path.of("workflows","image-segment-plate.jip"));
         progressInfo.log("Project file is " + projectFilePath);
         taskUtils.runJIPipe(params, projectFilePath, null, "", progressInfo, systemPackages, preferSystemPackages, params.getRuntimeConfig().isVerbose());
