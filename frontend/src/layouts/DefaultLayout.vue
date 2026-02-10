@@ -5,7 +5,7 @@
         <q-toolbar-title>
           <HeaderLogoButtonComponent/>
         </q-toolbar-title>
-        <LoginButtonComponent/>
+        <UserManagerComponent/>
         <DocumentationComponent/>
       </q-toolbar>
     </q-header>
@@ -20,7 +20,7 @@
 
 <script setup lang="ts">
 import ImprintComponent from "components/layout/ImprintComponent.vue";
-import LoginButtonComponent from "components/layout/AuthManagerComponent.vue";
+import UserManagerComponent from "components/layout/UserManagerComponent.vue";
 import HeaderLogoButtonComponent from "components/layout/HeaderLogoButtonComponent.vue";
 import DocumentationComponent from "components/layout/DocumentationComponent.vue";
 

@@ -30,7 +30,7 @@
           />
           <div v-else>{{ resultPayload.name }}</div>
         </q-toolbar-title>
-        <AuthManagerComponent/>
+        <UserManagerComponent/>
         <DocumentationComponent/>
       </q-toolbar>
       <q-toolbar class="bg-primary text-white edit-toolbar">
@@ -101,7 +101,7 @@
 
 <script setup lang="ts">
 import HeaderLogoButtonComponent from 'components/layout/HeaderLogoButtonComponent.vue';
-import AuthManagerComponent from 'components/layout/AuthManagerComponent.vue';
+import UserManagerComponent from 'components/layout/UserManagerComponent.vue';
 import {useRoute, useRouter} from 'vue-router';
 import {computed, onMounted, ref, Ref} from 'vue';
 import {ProjectMetadataPayload} from 'src/types/project';

@@ -1,121 +1,122 @@
 <template>
-  <q-card class="q-mb-lg" v-if="hasTaskRunning">
+  <q-card v-if="hasTaskRunning" class="q-mb-lg">
     <q-card-section>
       <q-icon name="lock" size="l"/>
       <span class="text-caption text-bold">Currently being processed</span>
     </q-card-section>
-    <q-card-section> You will not be able to make any changes </q-card-section>
+    <q-card-section> You will not be able to make any changes</q-card-section>
   </q-card>
   <q-btn
-    icon="fa-solid fa-arrow-up-right-from-square"
-    align="left"
-    color="secondary"
-    label="Show image"
-    class="w-100"
-    @click="showImage"
+      align="left"
+      class="w-100"
+      color="secondary"
+      icon="fa-solid fa-arrow-up-right-from-square"
+      label="Show image"
+      @click="showImage"
   />
   <q-input
-    class="w-100"
-    :model-value="model?.fileName"
-    :disable="hasTaskRunning"
-    filled
-    label="File name"
-    @update:model-value="onUpdateFileName"
+      :disable="hasTaskRunning"
+      :model-value="model?.fileName"
+      class="w-100"
+      filled
+      label="File name"
+      @update:model-value="onUpdateFileName"
   />
   <q-input
-    class="w-100"
-    :model-value="model?.experiment"
-    :disable="hasTaskRunning"
-    filled
-    label="Experiment"
-    @update:model-value="onUpdateExperiment"
+      :disable="hasTaskRunning"
+      :model-value="model?.experiment"
+      class="w-100"
+      filled
+      label="Experiment"
+      @update:model-value="onUpdateExperiment"
   />
   <q-input
-    class="w-100"
-    :model-value="model?.sample"
-    :disable="hasTaskRunning"
-    filled
-    label="Sample"
-    @update:model-value="onUpdateSample"
+      :disable="hasTaskRunning"
+      :model-value="model?.sample"
+      class="w-100"
+      filled
+      label="Sample"
+      @update:model-value="onUpdateSample"
   />
   <q-input
-    class="w-100"
-    :model-value="model?.timePoint"
-    :disable="hasTaskRunning"
-    filled
-    label="Time point"
-    @update:model-value="onUpdateTimePoint"
+      :disable="hasTaskRunning"
+      :model-value="model?.timePoint"
+      class="w-100"
+      filled
+      label="Time point"
+      @update:model-value="onUpdateTimePoint"
   />
   <q-select
-    class="w-100"
-    :model-value="model?.assayType"
-    :disable="hasTaskRunning"
-    filled
-    label="Assay type"
-    :options="['DDA', 'ETest', 'Unknown']"
-    @update:model-value="onUpdateAssayType"
+      :disable="hasTaskRunning"
+      :model-value="model?.assayType"
+      :options="['DDA', 'ETest', 'Unknown']"
+      class="w-100"
+      filled
+      label="Assay type"
+      @update:model-value="onUpdateAssayType"
   />
   <q-input
-    class="w-100"
-    :model-value="model?.pixelSizeMillimeter"
-    :disable="hasTaskRunning"
-    filled
-    label="Pixel size (mm)"
-    type="number"
-    @update:model-value="onUpdatePixelSize"
+      :disable="hasTaskRunning"
+      :model-value="model?.pixelSizeMillimeter"
+      class="w-100"
+      filled
+      label="Pixel size (mm)"
+      type="number"
+      @update:model-value="onUpdatePixelSize"
   />
   <q-input
-    class="w-100"
-    :model-value="model?.mic"
-    :disable="hasTaskRunning"
-    filled
-    label="MIC"
-    type="number"
-    v-if="model?.assayType == 'ETest'"
-    @update:model-value="onUpdateMIC"
+      v-if="model?.assayType == 'ETest'"
+      :disable="hasTaskRunning"
+      :model-value="model?.mic"
+      class="w-100"
+      filled
+      label="MIC"
+      type="number"
+      @update:model-value="onUpdateMIC"
   />
   <MaskImageAnnotationButton
-    class="w-100"
-    :disable="hasTaskRunning"
-    v-model="model"
-    annotation-type-id="plate"
+      v-model="model"
+      :disable="hasTaskRunning"
+      annotation-type-id="plate"
+      class="w-100"
   />
   <MaskImageAnnotationButton
-    class="w-100"
-    :disable="hasTaskRunning"
-    v-if="model?.assayType != 'Unknown'"
-    v-model="model"
-    annotation-type-id="strip-disk"
+      v-if="model?.assayType != 'Unknown'"
+      v-model="model"
+      :disable="hasTaskRunning"
+      annotation-type-id="strip-disk"
+      class="w-100"
   />
   <MaskImageAnnotationButton
-    class="w-100"
-    :disable="hasTaskRunning"
-    v-if="model && imageSupportsMaskAnnotation(model, 'zoi-shape')"
-    v-model="model"
-    annotation-type-id="zoi-shape"
+      v-if="model && imageSupportsMaskAnnotation(model, 'zoi-shape')"
+      v-model="model"
+      :disable="hasTaskRunning"
+      annotation-type-id="zoi-shape"
+      class="w-100"
+  />
+  <StripPresetAnnotationButton
+      v-if="model && imageSupportsMetadata(model, 'stripPreset')"
+      v-model="model"
+      :disable="hasTaskRunning"
+      class="w-100"
   />
 </template>
-<script setup lang="ts">
-import { debounce } from 'quasar';
-import { plainToInstance } from 'class-transformer';
+<script lang="ts" setup>
+import {debounce} from 'quasar';
+import {plainToInstance} from 'class-transformer';
 import MaskImageAnnotationButton from 'components/drawers/MaskImageAnnotationButton.vue';
-import { sendFailureNotification } from 'src/types/notification';
-import { AssayType } from 'src/types/assayType';
-import { ImagePayload, imageSupportsMaskAnnotation } from 'src/types/image';
-import {
-  BackendTaskPayload
-} from 'src/types/backendTasks';
-import { computed } from 'vue';
-import {
-  ResultItemPayload,
-  ResultItemType,
-  showResultItem,
-} from 'src/types/results';
+import {sendFailureNotification} from 'src/types/notification';
+import {AssayType} from 'src/types/assayType';
+import {ImagePayload, imageSupportsMaskAnnotation, imageSupportsMetadata} from 'src/types/image';
+import {BackendTaskPayload} from 'src/types/backendTasks';
+import {computed} from 'vue';
+import {ResultItemPayload, ResultItemType, showResultItem,} from 'src/types/results';
+import StripPresetAnnotationButton from "components/drawers/StripPresetAnnotationButton.vue";
 
 type SelectValue = string | number | null;
 const model = defineModel<ImagePayload>();
 const projectBackendTasks = defineModel<BackendTaskPayload[]>(
-  'projectBackendTasks'
+    'projectBackendTasks'
 );
 const hasTaskRunning = computed(() => {
   if (projectBackendTasks.value) {

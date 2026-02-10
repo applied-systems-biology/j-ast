@@ -19,7 +19,7 @@
           <div>/</div>
           <div>Tasks</div>
         </q-toolbar-title>
-        <AuthManagerComponent />
+        <UserManagerComponent />
         <DocumentationComponent/>
       </q-toolbar>
       <q-toolbar class="bg-primary text-white edit-toolbar">
@@ -101,7 +101,7 @@ import { useIntervalFn } from '@vueuse/core';
 import { api } from 'boot/axios';
 import {QScrollArea, useQuasar} from 'quasar';
 import ProjectBackendTaskButton from 'components/layout/ProjectBackendTaskButton.vue';
-import AuthManagerComponent from 'components/layout/AuthManagerComponent.vue';
+import UserManagerComponent from 'components/layout/UserManagerComponent.vue';
 import ProjectResultsButton from 'components/layout/ProjectResultsButton.vue';
 import { ResultPayload } from 'src/types/results';
 import ToggleButton from "components/utils/ToggleButton.vue";

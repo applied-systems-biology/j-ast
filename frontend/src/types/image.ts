@@ -9,6 +9,7 @@ import {
     createSampleBadge,
     createTimePointBadge
 } from 'src/types/badge';
+import {StripPresetPayload} from "src/types/presets";
 
 export class MaskImageAnnotationPayload {
     @Expose()
@@ -138,6 +139,9 @@ export class ImagePayload {
         if (this.pixelSizeMillimeter && this.pixelSizeMillimeter > 0) {
             result.push(createPixelSizeBadge(`${this.pixelSizeMillimeter} mm`));
         }
+        if(this.getStripPreset()) {
+
+        }
         if (this.assayType && this.assayType != AssayType.Unknown) {
             result.push(createAssayTypeBadge(this.assayType));
         }
@@ -157,6 +161,10 @@ export class ImagePayload {
             }
         }
         return result;
+    }
+
+    getStripPreset() : StripPresetPayload | undefined {
+        return undefined
     }
 
     getMetadata(name: string) {

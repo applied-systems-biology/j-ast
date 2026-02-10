@@ -29,7 +29,7 @@
             >Save annotation
           </q-btn>
         </q-toolbar-title>
-        <LoginButtonComponent />
+        <UserManagerComponent />
         <DocumentationComponent/>
       </q-toolbar>
       <q-toolbar class="bg-primary text-white edit-toolbar">
@@ -228,7 +228,7 @@
 </template>
 
 <script setup lang="ts">
-import LoginButtonComponent from 'components/layout/AuthManagerComponent.vue';
+import UserManagerComponent from 'components/layout/UserManagerComponent.vue';
 import HeaderLogoButtonComponent from 'components/layout/HeaderLogoButtonComponent.vue';
 import {
   computed,

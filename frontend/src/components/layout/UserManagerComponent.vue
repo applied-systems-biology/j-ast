@@ -25,6 +25,14 @@
       >Admin
     </q-btn>
     <q-btn
+        v-if="authStore.isLoggedIn"
+        to="/presets"
+        no-caps
+        color="blue-grey"
+        icon="fact_check"
+    >Presets
+    </q-btn>
+    <q-btn
       v-if="authStore.isLoggedIn"
       no-caps
       color="blue-grey"

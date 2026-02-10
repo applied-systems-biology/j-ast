@@ -5,7 +5,7 @@
         <q-toolbar-title class="row items-center q-gutter-sm">
           <HeaderLogoButtonComponent/>
         </q-toolbar-title>
-        <AuthManagerComponent/>
+        <UserManagerComponent/>
         <DocumentationComponent/>
       </q-toolbar>
     </q-header>
@@ -152,7 +152,7 @@
 
 <script setup lang="ts">
 import HeaderLogoButtonComponent from "components/layout/HeaderLogoButtonComponent.vue";
-import AuthManagerComponent from "components/layout/AuthManagerComponent.vue";
+import UserManagerComponent from "components/layout/UserManagerComponent.vue";
 import * as EmailValidator from "email-validator";
 import {UserPayload, UserRole} from "src/types/registration";
 import {computed, onMounted, ref} from "vue";

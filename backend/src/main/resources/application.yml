@@ -49,6 +49,16 @@ runtime:
       key: [ "settings", "org.hkijena.jipipe:r", "org.hkijena.jipipe:ij-ocr" ]
       value: '{ "content" : { "load-from-artifact" : false, "arguments" : { "expression" : "cli_parameters" }, "executable-path" : "/usr/bin/tesseract" }, "enabled" : true }'
   prefer-system-packages: true
+presets:
+  strip-presets:
+    -
+      name: "E 256-0.016"
+      interpolation: Linear
+      ticks: [256, 192, 128, 96, 64, 48, 32, 24, 16, 12, 8, 6, 4, 3, 2, 1.5, 1, 0.75, 0.5, 0.38, 0.25, 0.19, 0.125, 0.094, 0.064, 0.047, 0.032, 0.023, 0.016]
+    -
+      name: "E 32-0.002"
+      interpolation: Linear
+      ticks: [32, 24, 16, 12, 8, 6, 4, 3, 2, 1.5, 1, 0.75, 0.5, 0.38, 0.25, 0.19, 0.125, 0.094, 0.064, 0.047, 0.032, 0.023, 0.016, 0.012, 0.008, 0.006, 0.004, 0.003, 0.002]
 provider:
   provider-name: 'Localhost'
   provider-url: 'http://localhost'

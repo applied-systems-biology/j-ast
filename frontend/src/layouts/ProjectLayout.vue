@@ -58,7 +58,7 @@
           </q-btn-dropdown>
           <q-btn color="blue" icon="fa-solid fa-magnifying-glass" label="Browse" @click="goToBrowser"/>
         </q-toolbar-title>
-        <AuthManagerComponent/>
+        <UserManagerComponent/>
         <DocumentationComponent/>
       </q-toolbar>
       <q-toolbar class="bg-primary text-white edit-toolbar">
@@ -167,6 +167,7 @@
             color="accent"
             icon="fa-solid fa-gear"
             label="Process"
+            no-wrap
         >
           <q-menu>
             <q-list style="min-width: 100px">
@@ -356,7 +357,7 @@
 </template>
 
 <script lang="ts" setup>
-import AuthManagerComponent from 'components/layout/AuthManagerComponent.vue';
+import UserManagerComponent from 'components/layout/UserManagerComponent.vue';
 import HeaderLogoButtonComponent from 'components/layout/HeaderLogoButtonComponent.vue';
 import {computed, onMounted, ref, Ref, useTemplateRef} from 'vue';
 import ToggleButton from 'components/utils/ToggleButton.vue';

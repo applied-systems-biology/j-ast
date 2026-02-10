@@ -15,7 +15,7 @@
             icon="fa-solid fa-arrow-left"
           />
         </q-toolbar-title>
-        <AuthManagerComponent />
+        <UserManagerComponent />
         <DocumentationComponent />
       </q-toolbar>
     </q-header>
@@ -69,7 +69,7 @@
 </template>
 
 <script setup lang="ts">
-import AuthManagerComponent from 'components/layout/AuthManagerComponent.vue';
+import UserManagerComponent from 'components/layout/UserManagerComponent.vue';
 import HeaderLogoButtonComponent from 'components/layout/HeaderLogoButtonComponent.vue';
 import { computed, onMounted, ref, Ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';

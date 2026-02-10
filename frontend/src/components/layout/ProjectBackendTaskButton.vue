@@ -1,5 +1,5 @@
 <template>
-  <q-btn color="cyan" @click="goToTasksView">
+  <q-btn no-wrap color="cyan" @click="goToTasksView">
     <q-spinner v-if="numRunning > 0" class="q-mr-md" />
     <q-icon name="check" v-if="numRunning == 0" class="q-mr-md" />
     <div v-if="numRunning == 0">All tasks finished</div>
