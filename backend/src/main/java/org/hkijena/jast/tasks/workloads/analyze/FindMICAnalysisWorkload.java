@@ -32,7 +32,8 @@ public class FindMICAnalysisWorkload implements BackendTaskWorkload {
 
     private static final List<BackendTaskWorkloadDataSlot> INPUTS = List.of(
             JASTDataSlot.Plate.toSlot(),
-            JASTDataSlot.StripDisk.toSlot());
+            JASTDataSlot.StripDisk.toSlot(),
+            JASTDataSlot.StripPreset.toSlot());
     private static final List<BackendTaskWorkloadDataSlot> OUTPUTS = Collections.emptyList();
     private static final List<BackendTaskWorkloadParameterSlot> PARAMETERS = List.of(
             new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotDataType.String, BackendTaskWorkloadParameterSlotType.Common, "result-name", "Result name", "The name of the generated result folder", "MIC analysis"),
@@ -88,7 +89,8 @@ public class FindMICAnalysisWorkload implements BackendTaskWorkload {
         return "Applies an optical character recognition (OCR) approach to align the ticks on the strip to the provided reference sequence. " +
                 "The area around the strip given by the minimum and maximum distance is used to capture the average colony intensity for a given concentration. " +
                 "Based on the resulting measurements the MIC is determined and stored within the generated results and the image." +
-                "Please note that the pixel size must be correctly calibrated for the analysis to work.";
+                "Please note that the pixel size must be correctly calibrated for the analysis to work. " +
+                "Please note that each E-Test needs to be annotated with a strip preset that contains the number sequence and other metadata.";
     }
 
     @Override

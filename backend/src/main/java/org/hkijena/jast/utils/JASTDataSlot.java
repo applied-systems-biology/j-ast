@@ -10,6 +10,7 @@ public enum JASTDataSlot {
     StripDisk("strip-disk", BackendTaskWorkloadDataSlotType.ImageMaskAnnotation),
     ZOIShape("zoi-shape", BackendTaskWorkloadDataSlotType.ImageMaskAnnotation),
     PixelSize("pixelSize", BackendTaskWorkloadDataSlotType.Metadata),
+    StripPreset("stripPreset", BackendTaskWorkloadDataSlotType.Metadata),
     MIC("mic", BackendTaskWorkloadDataSlotType.Metadata);
 
     private final String key;

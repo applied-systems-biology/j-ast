@@ -140,7 +140,7 @@ defineExpose({ selectAll })
 
 </script>
 <style scoped lang="scss">
-$grid-item-width: 18rem;
+$grid-item-width: 22rem;
 $grid-item-height: 8rem;
 $grid-row-label-width: 10rem;
 $grid-column-label-height: 5rem;

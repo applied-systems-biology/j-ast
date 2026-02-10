@@ -37,6 +37,22 @@ export function renderMaskAnnotationId2(id: string) {
   return id;
 }
 
+export function renderDataSlot(id: string) {
+    switch (id) {
+        case 'strip-disk':
+            return "DDA disk / ETest strip"
+        case 'zoi-shape':
+            return 'ETest ZOI shape';
+        case 'plate':
+            return 'Plate';
+        case 'raw':
+            return 'Raw image';
+        case 'stripPreset':
+            return "ETest strip preset";
+    }
+    return id;
+}
+
 export function showLoadingWithTimeout(timeout: number, message: string) {
   Loading.show({ message: message });
   setTimeout(() => {

@@ -1,8 +1,10 @@
 <template>
   <q-btn
     no-caps
+    align="left"
     class="shadow-3 item text-black"
     :color="selectionColor"
+    :ripple="false"
     @click.stop="clicked($event)"
   >
     <div class="content q-gutter-sm">
@@ -95,6 +97,7 @@ watch(
 </script>
 <style scoped lang="scss">
 $thumbnail-size: 6rem;
+$label-size: 13rem;
 
 .thumbnail {
   width: $thumbnail-size;
@@ -102,7 +105,7 @@ $thumbnail-size: 6rem;
 }
 
 .label {
-  width: 10rem;
+  width: $label-size;
   height: $thumbnail-size;
   display: flex;
   flex-direction: column;
