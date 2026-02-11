@@ -98,6 +98,7 @@
           :disable="hasTaskRunning"
           class="w-100"
       />
+      <div style="height: 32px"></div>
     </q-tab-panel>
     <q-tab-panel class="d-flex-column" name="process">
       <ProjectImageProcessorList v-model:current-view-mode="currentViewMode"

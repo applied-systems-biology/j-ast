@@ -16,6 +16,8 @@
              label="Set sample" @click="setAllStringMetadata('Sample', 'sample')"/>
       <q-btn :disable="hasTaskRunning" align="left" class="w-100" color="primary" icon="fa-solid fa-clock"
              label="Set time point" @click="setAllStringMetadata('Time point', 'timePoint')"/>
+      <q-btn :disable="hasTaskRunning" align="left" class="w-100" color="primary" icon="fa-solid fa-gear"
+             label="Set assay type" @click="setAllAssayType"/>
     </q-tab-panel>
     <q-tab-panel class="d-flex-column" name="process">
       <ProjectImageProcessorList v-model:current-view-mode="currentViewMode"
@@ -37,6 +39,7 @@ import ProjectImageProcessorList from "components/drawers/ProjectImageProcessorL
 import {ViewMode} from "src/types/view";
 import {ProjectImagesPayload} from "src/types/projectImages";
 import {FrontEndImageProcessor} from "src/types/frontendTasks";
+import {AssayType} from "src/types/assayType";
 
 const selectedImageIds = defineModel<Array<number>>("selectedImageIds", {required: true})
 const projectImages = defineModel<ProjectImagesPayload>("projectImages", {required: true})
@@ -77,6 +80,32 @@ function setAllStringMetadata(name: string, key: string) {
   }).onOk((data: string) => {
     for (const image of model.value!) {
       setImageMetadata(image, key, data)
+      const payload = plainToInstance(ImagePayload, image);
+      payload.uploadToBackend().catch(() => {
+        sendFailureNotification('Error while updating');
+      });
+    }
+  });
+}
+
+function setAllAssayType() {
+  $q.dialog({
+    title: 'Set assay type',
+    message: "This will set the assay type for all selected " + model.value!.length + " images.",
+    options: {
+      type: 'radio',
+      model: AssayType.Unknown,
+      // inline: true
+      items: [
+        { label: 'Unknown', value: AssayType.Unknown },
+        { label: 'DDA', value: AssayType.DDA },
+        { label: 'E-Test', value: AssayType.ETest }
+      ]
+    },
+    cancel: true
+  }).onOk((data: string) => {
+    for (const image of model.value!) {
+      setImageMetadata(image, "assayType", data)
       const payload = plainToInstance(ImagePayload, image);
       payload.uploadToBackend().catch(() => {
         sendFailureNotification('Error while updating');
