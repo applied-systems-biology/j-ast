@@ -1,4 +1,4 @@
-import {Expose, instanceToPlain} from 'class-transformer';
+import {Expose, instanceToPlain, plainToInstance} from 'class-transformer';
 import {AssayType} from 'src/types/assayType';
 import {api} from 'boot/axios';
 import {
@@ -7,6 +7,7 @@ import {
     createExperimentBadge,
     createPixelSizeBadge,
     createSampleBadge,
+    createStripPresetBadge,
     createTimePointBadge
 } from 'src/types/badge';
 import {StripPresetPayload} from "src/types/presets";
@@ -139,8 +140,11 @@ export class ImagePayload {
         if (this.pixelSizeMillimeter && this.pixelSizeMillimeter > 0) {
             result.push(createPixelSizeBadge(`${this.pixelSizeMillimeter} mm`));
         }
-        if(this.getStripPreset()) {
-
+        if(this.assayType == AssayType.ETest) {
+            const stripPreset = this.getStripPreset()
+            if(stripPreset) {
+                result.push(createStripPresetBadge(stripPreset.name))
+            }
         }
         if (this.assayType && this.assayType != AssayType.Unknown) {
             result.push(createAssayTypeBadge(this.assayType));
@@ -164,19 +168,26 @@ export class ImagePayload {
     }
 
     getStripPreset() : StripPresetPayload | undefined {
+        const v = this.getMetadata("stripPreset")
+        if(v) {
+            return plainToInstance(StripPresetPayload, v)
+        }
         return undefined
     }
 
     getMetadata(name: string) {
-        return this.getMetadataAsDict()[name]
+        return this.getMetadataAsFlatDict()[name]
     }
 
     hasMetadata(name: string) {
-        const value = this.getMetadataAsDict()[name];
-        console.log(name + "=" + value);
+        const value = this.getMetadataAsFlatDict()[name];
         if(value) {
             if(name == "pixelSizeMillimeter") {
                 return value > 0
+            }
+            else if(name == "stripPreset") {
+                const instance = plainToInstance(StripPresetPayload, value)
+                return instance.isPresent()
             }
             else {
                 return true
@@ -204,6 +215,9 @@ export function setImageMetadata(image: ImagePayload, key: string, value: any) {
     }
     else if(key == "pixelSizeMillimeter") {
         image.pixelSizeMillimeter = value;
+    }
+    else if(key == "stripPreset") {
+        image.metadata["stripPreset"] = value;
     }
 }
 

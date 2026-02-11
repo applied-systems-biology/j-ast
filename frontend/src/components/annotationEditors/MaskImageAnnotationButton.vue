@@ -32,7 +32,7 @@ import { computed, onMounted, ref, watch } from 'vue';
 import { Dialog, useQuasar } from 'quasar';
 import { useMaskImageAnnotationThumbnailStore } from 'stores/mask-image-annotation-thumbnail-store';
 import {ImagePayload, incrementImageMaskAnnotationVersion, MaskImageAnnotationPayload} from 'src/types/image';
-import MaskImageAnnotationEditorDialog from '../annotationEditors/MaskImageAnnotationEditorDialog.vue';
+import MaskImageAnnotationEditorDialog from './MaskImageAnnotationEditorDialog.vue';
 
 const $q = useQuasar();
 // const router = useRouter()

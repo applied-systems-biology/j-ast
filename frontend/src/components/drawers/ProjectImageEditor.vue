@@ -112,13 +112,13 @@
 <script lang="ts" setup>
 import {debounce} from 'quasar';
 import {plainToInstance} from 'class-transformer';
-import MaskImageAnnotationButton from 'components/drawers/MaskImageAnnotationButton.vue';
+import MaskImageAnnotationButton from 'components/annotationEditors/MaskImageAnnotationButton.vue';
 import {sendFailureNotification} from 'src/types/notification';
 import {AssayType} from 'src/types/assayType';
 import {ImagePayload, imageSupportsMaskAnnotation, imageSupportsMetadata} from 'src/types/image';
 import {BackendTaskPayload} from 'src/types/backendTasks';
 import {computed} from 'vue';
-import StripPresetAnnotationButton from "components/drawers/StripPresetAnnotationButton.vue";
+import StripPresetAnnotationButton from "components/annotationEditors/StripPresetAnnotationButton.vue";
 import ProjectImageProcessorList from "components/drawers/ProjectImageProcessorList.vue";
 import {ViewMode} from "src/types/view";
 import {ProjectImagesPayload} from "src/types/projectImages";

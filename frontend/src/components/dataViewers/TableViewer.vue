@@ -6,7 +6,7 @@
     </q-toolbar>
   </div>
   <q-scroll-area class="row col-grow q-pa-sm" style="height: 400px; max-width: 100vw;">
-    <q-table :rows="tableData" :pagination="tablePagination">
+    <q-table :rows="tableData" :columns="tableColumns" :pagination="tablePagination">
       <template v-slot:body-cell="props">
         <q-td :props="props">
           <div v-if="!enhancedView">
@@ -29,7 +29,7 @@
 <script setup lang="ts">
 import Papa from "papaparse"
 import { onMounted, ref, watch } from "vue";
-import { useQuasar } from 'quasar';
+import {QTableColumn, useQuasar} from 'quasar';
 import { api } from 'boot/axios';
 import { sendFailureNotification } from 'src/types/notification';
 import { downloadFromApi, ensureExtension } from 'src/types/common';
@@ -47,6 +47,7 @@ const tablePagination = {
   rowsPerPage: 100
 }
 const tableData = ref<Array<any>>([])
+const tableColumns = ref<QTableColumn[]>([])
 
 function queryFromBackend() {
   if(props.tableBackendUrl) {
@@ -62,6 +63,17 @@ function queryFromBackend() {
           skipEmptyLines: true,
           complete: (results) => {
             tableData.value = results.data;
+
+            // Build columns from CSV headers (Papa gives you these)
+            const fields = (results.meta.fields ?? []) as string[]
+            tableColumns.value = fields.map((f) => ({
+              name: f,
+              field: f,
+              label: f,          // keep original casing
+              align: 'left',
+              sortable: true,
+              headerStyle: 'text-transform: none;' // optional: also kill CSS uppercase
+            }))
           },
           error: (error) => {
             sendFailureNotification("Error loading table");

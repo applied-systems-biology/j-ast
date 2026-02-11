@@ -28,14 +28,7 @@
               <q-separator/>
               <q-card-section>
                 <q-scroll-area visible class="w-100" style="height: 64px;">
-                  <div class="ticks-preview" :style="{ width: (preset.ticks.length) * 48 + 'px' }">
-                    <template v-for="(mark, index) in preset.ticks" :key="index">
-                      <div class="tick">
-                        <div>|</div>
-                        <div>{{ mark }}</div>
-                      </div>
-                    </template>
-                  </div>
+                  <StripPreviewComponent :preset="preset" />
                 </q-scroll-area>
               </q-card-section>
             </q-card>
@@ -53,6 +46,7 @@ import DocumentationComponent from "components/layout/DocumentationComponent.vue
 import {onMounted, ref} from "vue";
 import {StripPresetPayload} from "src/types/presets";
 import {loadPayloadInstanceFromApi} from "src/types/common";
+import StripPreviewComponent from "components/utils/StripPreviewComponent.vue";
 
 defineOptions({
   name: 'PresetsManagerLayout',
@@ -65,17 +59,3 @@ onMounted(() => {
 })
 
 </script>
-<style lang="scss" scoped>
-.ticks-preview {
-  display: flex;
-  flex-direction: row;
-  background-color: aliceblue;
-  border-radius: 5px;
-  border: 1px solid gray;
-}
-
-.ticks-preview .tick {
-  width: 48px;
-  text-align: center;
-}
-</style>

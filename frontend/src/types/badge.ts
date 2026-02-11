@@ -54,7 +54,7 @@ export function createStripPresetBadge(value: string): Badge {
     return {
         text: value,
         icon: 'fa-solid fa-ruler-vertical',
-        color: '#41acac',
-        type: 'Strip profile'
+        color: '#ac4141',
+        type: 'Strip preset'
     };
 }

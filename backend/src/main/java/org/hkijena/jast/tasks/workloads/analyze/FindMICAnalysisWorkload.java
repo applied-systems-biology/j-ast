@@ -1,10 +1,12 @@
 package org.hkijena.jast.tasks.workloads.analyze;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.google.common.base.Predicates;
 import jakarta.transaction.Transactional;
 import org.hkijena.jast.config.SystemPackage;
 import org.hkijena.jast.model.AssayType;
 import org.hkijena.jast.model.ViewMode;
+import org.hkijena.jast.model.entities.Image;
 import org.hkijena.jast.model.entities.Project;
 import org.hkijena.jast.repositories.ImageRepository;
 import org.hkijena.jast.repositories.ProjectRepository;
@@ -12,8 +14,10 @@ import org.hkijena.jast.repositories.ResultRepository;
 import org.hkijena.jast.services.BackendTaskRegistry;
 import org.hkijena.jast.services.BackendTaskUtils;
 import org.hkijena.jast.services.FileStorageService;
+import org.hkijena.jast.services.ImageMetadata;
 import org.hkijena.jast.tasks.*;
 import org.hkijena.jast.utils.JASTDataSlot;
+import org.hkijena.jast.utils.JsonUtils;
 import org.hkijena.jast.utils.ProgressInfo;
 import org.hkijena.jast.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,10 +25,9 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 import java.nio.file.Path;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.nio.file.Paths;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Component
 @BackendTaskType(typeId = "find-mic")
@@ -45,7 +48,8 @@ public class FindMICAnalysisWorkload implements BackendTaskWorkload {
             new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotDataType.Number, BackendTaskWorkloadParameterSlotType.Advanced, "target-dpi", "Target DPI", "The target DPI for image upscaling. OCR algorithms require a high DPI to work properly.", 600),
             new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotDataType.Number, BackendTaskWorkloadParameterSlotType.Common, "strip-safety-distance", "Exclusion distance around strip (mm)", "The area around the strip annotation that is excluded from the measurement process. Must be large enough to exclude the strip itself.", 1),
             new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotDataType.Number, BackendTaskWorkloadParameterSlotType.Common, "strip-measure-distance", "Measurement distance around strip (mm)", "The area around the strip annotation that is used for the measurement process.", 10),
-            new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotDataType.Boolean, BackendTaskWorkloadParameterSlotType.Advanced, "add-inverted-candidates", "Generate inverted OCR inputs (slow)", "If enabled, create also inverted images for OCR processing. Doubles the required processing time", false)
+            new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotDataType.Boolean, BackendTaskWorkloadParameterSlotType.Advanced, "add-inverted-candidates", "Generate inverted OCR inputs (slow)", "If enabled, create also inverted images for OCR processing. Doubles the required processing time", false),
+            new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotDataType.Boolean, BackendTaskWorkloadParameterSlotType.Common, "write-mic", "Set MIC metadata", "If enabled, set the MIC metadata of the image from the calculated values.", true)
     );
 
     private final ImageRepository imageRepository;
@@ -138,7 +142,25 @@ public class FindMICAnalysisWorkload implements BackendTaskWorkload {
         Map<String, Object> parameterOverrides = new HashMap<>();
 
         taskUtils.writeRawImages(params, params.getPayload().getImageIds(), imageRepository, fileStorageService, progressInfo, verbose);
-        taskUtils.writeMetadata(params, params.getPayload().getImageIds(), imageRepository, progressInfo, verbose);
+        taskUtils.writeMetadata(params, params.getPayload().getImageIds(), imageRepository, progressInfo, verbose, new ImageMetadata("StripSequence", image -> {
+            Object stripPreset = image.getMetadata().get("stripPreset");
+            if(stripPreset == null){
+                throw new NullPointerException("No strip preset found");
+            }
+            if(stripPreset instanceof String){
+                // parse as JSON object
+                stripPreset = JsonUtils.readFromString((String) stripPreset, JsonNode.class);
+            }
+            if(stripPreset instanceof Map map) {
+                return ((List<?>)map.get("ticks")).stream().map(Object::toString).collect(Collectors.joining(","));
+            }
+            if(stripPreset instanceof JsonNode node) {
+                List<Double> items = new ArrayList<>();
+                node.get("ticks").elements().forEachRemaining(nd -> items.add(nd.asDouble()));
+                return items.stream().map(Object::toString).collect(Collectors.joining(","));
+            }
+            throw new UnsupportedOperationException("Not supported");
+        }));
         taskUtils.writeMaskAnnotations(params, params.getPayload().getImageIds(), "plate", imageRepository, fileStorageService, progressInfo, verbose);
         taskUtils.writeMaskAnnotations(params, params.getPayload().getImageIds(), "strip-disk", imageRepository, fileStorageService, progressInfo, verbose);
 
@@ -161,5 +183,25 @@ public class FindMICAnalysisWorkload implements BackendTaskWorkload {
         Project project = projectRepository.findById(params.getPayload().getProjectId()).get();
 
         taskUtils.readResultsDirectory(resultName, resultDescription, params.getTmpPath().resolve("results"), project, projectRepository, fileStorageService, Predicates.alwaysTrue(), progressInfo, verbose);
+
+        if(params.getPayload().getParameterAsBoolean("write-mic", true)) {
+            List<Map<String, String>> updatedMetadata = taskUtils.readCsv(params,  params.getTmpPath().resolve("results").resolve("mic_results.csv"));
+            List<Image> toSave = new ArrayList<>();
+            for (Map<String, String> map : updatedMetadata) {
+                String imageId = map.get("#ImageId");
+                String mic = map.get("MIC");
+                if (imageId != null && mic != null) {
+                    long imageId_ = Long.parseLong(imageId);
+                    double mic_ = Double.parseDouble(mic);
+                    Optional<Image> image = imageRepository.findById(imageId_);
+                    if (image.isPresent()) {
+                        image.get().setMic(mic_);
+                        toSave.add(image.get());
+                    }
+                }
+            }
+
+            imageRepository.saveAll(toSave);
+        }
     }
 }
