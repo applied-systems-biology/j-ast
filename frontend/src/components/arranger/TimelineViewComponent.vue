@@ -64,8 +64,8 @@
           color="secondary"
           @click.stop="selectAllUnsorted"
           icon="select_all"
-          >Select all unsorted
-        </q-btn>
+          label="Select all unsorted"
+        />
         <q-btn
           color="green"
           @click.stop="quickAllInOnePreparation"
@@ -169,9 +169,8 @@
         flat
         class="q-ma-sm"
         @click="maxNumRenderedRows += 5"
-      >
-        Load more rows ({{ Math.max(0, numRows - numRenderedRows) }} left)
-      </q-btn>
+        :label="'Load more rows (' + Math.max(0, numRows - numRenderedRows) + ' left)'"
+        />
     </q-infinite-scroll>
   </div>
 </template>
@@ -215,12 +214,10 @@ class SlotIndex {
   }
 }
 
-const selectedImageIds = defineModel<Array<number>>('selectedImageIds', {
-  required: true,
-});
-const projectBackendTasks = defineModel<BackendTaskPayload[]>('backendTasks');
-const projectImages = defineModel<ProjectImagesPayload>();
-const filterText = defineModel<string>('filterText');
+const selectedImageIds = defineModel<Array<number>>('selectedImageIds', { required: true });
+const projectBackendTasks = defineModel<BackendTaskPayload[]>('backendTasks', { required: true });
+const projectImages = defineModel<ProjectImagesPayload>({ required: true });
+const filterText = defineModel<string>('filterText', { required: true });
 
 const numCols = computed(() =>
   projectImages.value ? projectImages.value.maxColumn() + 1 : 0

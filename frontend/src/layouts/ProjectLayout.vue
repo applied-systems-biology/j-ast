@@ -4,59 +4,73 @@
       <q-toolbar>
         <q-toolbar-title class="row items-center q-gutter-sm">
           <HeaderLogoButtonComponent/>
-          <q-btn-dropdown size="xl" flat no-caps>
+          <q-btn-dropdown flat no-caps size="xl">
             <template v-slot:label>
               <q-skeleton v-if="!projectName" style="width: 200px" type="text"/>
               <div v-else>{{ projectName }}</div>
             </template>
             <q-list>
-              <q-item clickable v-close-popup @click="editProjectName" :disable="hasTaskRunning">
+              <q-item v-close-popup clickable @click="goToBrowser">
                 <q-item-section avatar>
-                  <q-icon name="edit" />
+                  <q-icon name="fa-solid fa-magnifying-glass"/>
                 </q-item-section>
                 <q-item-section>
-                  <q-item-label>Edit name</q-item-label>
+                  <q-item-label>Browse</q-item-label>
                 </q-item-section>
               </q-item>
-              <q-item clickable v-close-popup @click="deleteProject" :disable="hasTaskRunning">
+              <q-separator />
+              <q-item clickable>
                 <q-item-section avatar>
-                  <q-icon name="delete" />
+                  <q-icon :name="currentViewMode == ViewMode.Timeline ? 'fa-solid fa-timeline' : 'fa-solid fa-grip'"/>
+                </q-item-section>
+                <q-item-section>Change type</q-item-section>
+                <q-item-section side>
+                  <q-icon name="keyboard_arrow_right"/>
+                </q-item-section>
+                <q-menu anchor="top end" self="top start" >
+                  <q-item v-close-popup clickable @click="changeViewMode(ViewMode.Timeline)">
+                    <q-item-section avatar>
+                      <q-icon name="fa-solid fa-timeline"/>
+                    </q-item-section>
+                    <q-item-section>
+                      <q-item-label>Timeline</q-item-label>
+                    </q-item-section>
+                    <q-tooltip>
+                      Use this view for projects that have a time component. You will need to sort the images into
+                      timelines.
+                    </q-tooltip>
+                  </q-item>
+                  <q-item v-close-popup clickable @click="changeViewMode(ViewMode.Grid)">
+                    <q-item-section avatar>
+                      <q-icon name="fa-solid fa-grip"/>
+                    </q-item-section>
+                    <q-item-section>
+                      <q-item-label>Single images</q-item-label>
+                    </q-item-section>
+                    <q-tooltip>
+                      Use this view for projects where each image is independent.
+                    </q-tooltip>
+                  </q-item>
+                </q-menu>
+              </q-item>
+              <q-item v-close-popup :disable="hasTaskRunning" clickable @click="editProjectName">
+                <q-item-section avatar>
+                  <q-icon name="edit"/>
                 </q-item-section>
                 <q-item-section>
-                  <q-item-label>Delete project</q-item-label>
+                  <q-item-label>Rename</q-item-label>
+                </q-item-section>
+              </q-item>
+              <q-item v-close-popup :disable="hasTaskRunning" clickable @click="deleteProject">
+                <q-item-section avatar>
+                  <q-icon name="delete"/>
+                </q-item-section>
+                <q-item-section>
+                  <q-item-label>Delete</q-item-label>
                 </q-item-section>
               </q-item>
             </q-list>
           </q-btn-dropdown>
-          <q-btn-dropdown :icon="currentViewMode == ViewMode.Timeline ? 'fa-solid fa-timeline' : 'fa-solid fa-grip'" :label="currentViewMode == ViewMode.Timeline ? 'Timeline' : 'Single images'"
-                          color="blue">
-            <q-list>
-              <q-item v-close-popup clickable @click="changeViewMode(ViewMode.Timeline)">
-                <q-item-section avatar>
-                  <q-icon name="fa-solid fa-timeline"/>
-                </q-item-section>
-                <q-item-section>
-                  <q-item-label>Timeline</q-item-label>
-                </q-item-section>
-                <q-tooltip>
-                  Use this view for projects that have a time component. You will need to sort the images into
-                  timelines.
-                </q-tooltip>
-              </q-item>
-              <q-item v-close-popup clickable @click="changeViewMode(ViewMode.Grid)">
-                <q-item-section avatar>
-                  <q-icon name="fa-solid fa-grip"/>
-                </q-item-section>
-                <q-item-section>
-                  <q-item-label>Single images</q-item-label>
-                </q-item-section>
-                <q-tooltip>
-                  Use this view for projects where each image is independent.
-                </q-tooltip>
-              </q-item>
-            </q-list>
-          </q-btn-dropdown>
-          <q-btn color="blue" icon="fa-solid fa-magnifying-glass" label="Browse" @click="goToBrowser"/>
         </q-toolbar-title>
         <UserManagerComponent/>
         <DocumentationComponent/>
@@ -65,10 +79,10 @@
         <ToggleButton
             v-model="drawerLeft"
             class="bg-green"
+            label="Upload"
             not-selected-icon="upload"
             selected-icon="close"
         >
-          Upload
           <q-tooltip>
             Allows you to upload raw image files. Please note that all new
             images will be put into the "Unsorted images" list.
@@ -117,17 +131,10 @@
               ? 'bg-secondary'
               : 'bg-blue'
           "
+            :label="projectImages?.unsortedRow.images.length ? 'Unsorted images (' + (projectImages?.unsortedRow.images.length || 0) + ')' : 'Unsorted images'"
             not-selected-icon="sort"
             selected-icon="close"
         >
-          <span
-              v-if="projectImages?.unsortedRow.images.length"
-              class="text-bold flex flex-center"
-          >Unsorted images ({{
-              projectImages?.unsortedRow.images.length || 0
-            }})</span
-          >
-          <span v-else class="text-bold flex flex-center">Unsorted images</span>
           <q-tooltip
           >All images that have not yet been organized are stored here.
           </q-tooltip>
@@ -150,91 +157,6 @@
             @click="selectedImageIds = []"
         >
           <q-tooltip> Clears the current selection</q-tooltip>
-        </q-btn>
-        <q-btn
-            v-if="selectedImageIds.length > 0"
-            :disable="hasTaskRunning"
-            color="red-4"
-            icon="delete"
-            @click="deleteSelectedImages"
-        >
-          <q-tooltip> Deletes the selected image(s)</q-tooltip>
-        </q-btn>
-        <div class="q-ml-sm"></div>
-        <q-btn
-            v-if="selectedImageIds.length > 0"
-            :disable="hasTaskRunning"
-            color="accent"
-            icon="fa-solid fa-gear"
-            label="Process"
-            no-wrap
-        >
-          <q-menu>
-            <q-list style="min-width: 100px">
-              <!-- Front-end processors -->
-              <template v-for="tool in frontEndImageProcessors"
-                        :key="tool.label">
-                <q-item
-                    v-if="tool.viewMode == undefined || tool.viewMode == currentViewMode"
-                    v-close-popup
-                    clickable
-                    @click="doFrontEndProcessor(tool)"
-                >
-                  <q-item-section avatar>
-                    <q-icon :name="tool.icon"/>
-                  </q-item-section>
-                  <q-item-section>{{ tool.label }}</q-item-section>
-                  <q-tooltip>{{ tool.tooltip }}</q-tooltip>
-                </q-item>
-              </template>
-              <q-separator/>
-              <q-item
-                  v-for="category in availableBackendTasksCategories"
-                  :key="category"
-                  clickable
-              >
-                <q-item-section>{{ category }}</q-item-section>
-                <q-item-section side>
-                  <q-icon name="keyboard_arrow_right"/>
-                </q-item-section>
-
-                <q-menu anchor="top end" self="top start">
-                  <q-item
-                      v-for="tool in availableBackendTasks.filter(
-                      (task) => task.category == category
-                    )"
-                      :key="tool.taskId"
-                      v-close-popup
-                      :disable="tool.viewModeRestriction != currentViewMode && tool.viewModeRestriction != null"
-                      clickable
-                      @click="doBackendTaskClicked(tool)"
-                  >
-                    <q-item-section avatar>
-                      <q-icon name="fa-solid fa-wand-magic-sparkles"/>
-                    </q-item-section>
-                    <q-item-section>{{ tool.name }}</q-item-section>
-                    <q-tooltip>{{ tool.shortDescription }}</q-tooltip>
-                  </q-item>
-                </q-menu>
-              </q-item>
-              <q-item
-                  v-for="tool in availableBackendTasks.filter(
-                  (task) => !task.category
-                )"
-                  :key="tool.taskId"
-                  v-close-popup
-                  :disable="tool.viewModeRestriction != currentViewMode && tool.viewModeRestriction != null"
-                  clickable
-                  @click="doBackendTaskClicked(tool)"
-              >
-                <q-item-section avatar>
-                  <q-icon name="fa-solid fa-wand-magic-sparkles"/>
-                </q-item-section>
-                <q-item-section>{{ tool.name }}</q-item-section>
-                <q-tooltip>{{ tool.shortDescription }}</q-tooltip>
-              </q-item>
-            </q-list>
-          </q-menu>
         </q-btn>
         <div class="col-grow"/>
         <ToggleButton
@@ -313,22 +235,66 @@
         class="q-pa-md q-gutter-sm properties-panel"
         elevated
         side="right"
+        :width="400"
     >
-      <div class="row reverse">
+      <div class="row q-gutter-sm">
+        <q-btn dense icon="deselect" outline @click="selectedImageIds = []">
+          <q-badge color="primary" floating>{{ selectedImageIds.length }}</q-badge>
+          <q-tooltip>Deselects the images</q-tooltip>
+        </q-btn>
+        <q-btn
+            dense
+            icon="fa-solid fa-magnifying-glass"
+            outline
+            @click="showSelectedImage"
+            v-if="selectedImageIds.length == 1"
+        >
+          <q-tooltip>Shows the image in a viewer</q-tooltip>
+        </q-btn>
+        <q-btn
+            :disable="hasTaskRunning"
+            color="red-4"
+            dense
+            icon="delete"
+            outline
+            @click="deleteSelectedImages"
+        >
+          <q-tooltip>Deletes the selected image(s)</q-tooltip>
+        </q-btn>
+        <q-space/>
         <q-btn
             flat
             icon="close"
             padding="none"
-            @click="selectedImageIds = []"
-        />
+            @click="selectedImageIds = []"/>
       </div>
+      <q-separator/>
+      <q-card v-if="hasTaskRunning" class="q-mb-lg">
+        <q-card-section>
+          <q-icon name="lock" size="l"/>
+          <span class="text-caption text-bold">Currently being processed</span>
+        </q-card-section>
+        <q-card-section> You will not be able to make any changes</q-card-section>
+      </q-card>
       <ProjectMultiImageEditor
           v-if="selectedImageIds.length > 1"
-          v-model="selectedImageIds"
+          v-model="selectedImages"
+          v-model:project-backend-tasks="projectBackendTasks"
+          v-model:properties-panel-tab="propertiesPanelTab"
+          v-model:current-view-mode="currentViewMode"
+          v-model:project-images="projectImages"
+          v-model:selected-image-ids="selectedImageIds"
+          @on-frontend-task-finished="onTaskFinished"
       />
       <ProjectImageEditor
+          v-if="selectedImageIds.length == 1"
           v-model="lastSelectedImage"
           v-model:project-backend-tasks="projectBackendTasks"
+          v-model:properties-panel-tab="propertiesPanelTab"
+          v-model:current-view-mode="currentViewMode"
+          v-model:project-images="projectImages"
+          v-model:selected-image-ids="selectedImageIds"
+          @on-frontend-task-finished="onTaskFinished"
       />
     </q-drawer>
     <q-page-container>
@@ -371,29 +337,14 @@ import ProjectImageEditor from 'components/drawers/ProjectImageEditor.vue';
 import {plainToInstance} from 'class-transformer';
 import TimelineViewComponent from 'components/arranger/TimelineViewComponent.vue';
 import ProjectMultiImageEditor from 'components/drawers/ProjectMultiImageEditor.vue';
-import {
-  FrontEndImageProcessor,
-  frontEndImageProcessors,
-} from 'src/types/frontendTasks';
 import {onDialogYes} from 'src/types/dialog';
-import {
-  sendFailureNotification,
-  sendSuccessNotification,
-} from 'src/types/notification';
-import {
-  CreateEditProjectRequest,
-  ProjectMetadataPayload,
-} from 'src/types/project';
+import {CreateEditProjectRequest, ProjectMetadataPayload,} from 'src/types/project';
 import {ProjectImagesPayload} from 'src/types/projectImages';
-import {
-  BackendTaskTypePayload,
-  BackendTaskPayload,
-  doBackendTask,
-} from 'src/types/backendTasks';
+import {BackendTaskPayload, BackendTaskTypePayload, } from 'src/types/backendTasks';
 import {useIntervalFn} from '@vueuse/core';
 import ProjectBackendTaskButton from 'components/layout/ProjectBackendTaskButton.vue';
 import ProjectResultsButton from 'components/layout/ProjectResultsButton.vue';
-import {ResultPayload} from "src/types/results";
+import {ResultItemPayload, ResultItemType, ResultPayload, showResultItem} from "src/types/results";
 import {generateAndDownloadZip, ZipItem} from "src/types/zip";
 import {formatFileSize} from "src/types/utils";
 import BackendTaskProgressOverlay from 'components/backendProcessors/BackendTaskProgressOverlay.vue';
@@ -426,6 +377,7 @@ const projectBackendTasks = ref<Array<BackendTaskPayload>>([createDummyBackendTa
 const resultList = ref<ResultPayload[]>();
 const filterText = ref("")
 const currentViewMode = ref(ViewMode.Timeline);
+const propertiesPanelTab = ref("edit")
 
 const timelineViewComponent = useTemplateRef<any>("timelineViewComponent");
 const gridViewComponent = useTemplateRef<any>("gridViewComponent");
@@ -442,26 +394,6 @@ const hasTaskRunning = computed(() => {
   return true; // Waiting still for info
 });
 
-const availableBackendTasksCategories = computed(() => {
-  const predefinedOrder = ["Preprocessing", "Plate", "DDA", "E-Test", "Analyze"];
-  const result = new Set<string>();
-  for (const taskType of availableBackendTasks.value) {
-    result.add(taskType.category || '');
-  }
-
-  // Convert the Set to an Array and sort
-  const predefinedOrderSet = new Set(predefinedOrder);
-  const sortedList = Array.from(result).sort((a, b) => {
-    const indexA = predefinedOrderSet.has(a) ? predefinedOrder.indexOf(a) : predefinedOrder.length;
-    const indexB = predefinedOrderSet.has(b) ? predefinedOrder.indexOf(b) : predefinedOrder.length;
-    if (indexA !== indexB) {
-      return indexA - indexB; // Sort by predefined order
-    }
-    return a.localeCompare(b); // Sort alphabetically for items not in the predefined order
-  });
-
-  return sortedList.filter((item) => !!item);
-});
 
 // Computed values
 const drawerRight = computed(() => selectedImageIds.value.length > 0);
@@ -555,6 +487,17 @@ function deleteSelectedImages() {
         queryBackend();
       });
     });
+  }
+}
+
+function showSelectedImage() {
+  if (selectedImages.value.length == 1) {
+    const item = new ResultItemPayload();
+    item.type = ResultItemType.Image;
+    item.visualizationType = ResultItemType.Null;
+    item.overrideUrl = `/image/${selectedImages.value[0].id}/raw`;
+    item.name = selectedImages.value[0].fileName || 'Unnamed';
+    showResultItem(item);
   }
 }
 
@@ -703,42 +646,6 @@ function selectAll() {
   //     ),
   //   ];
   // }
-}
-
-function doFrontEndProcessor(tool: FrontEndImageProcessor) {
-  if (selectedImageIds.value && projectImages.value) {
-    tool
-        .fn(selectedImages.value, projectImages.value)
-        .then((response) => {
-          sendSuccessNotification(`Successfully applied "${tool.label}"`);
-          if (response.needsUpload) {
-            projectImages.value
-                .uploadToBackend()
-                .then(queryBackend)
-                .catch(() =>
-                    sendFailureNotification(`Failed to update selected images`)
-                );
-          } else if (response.needsFullReload) {
-            queryBackend();
-          }
-        })
-        .catch(() => {
-          sendFailureNotification(`Error while applying "${tool.label}"`);
-        })
-        .finally(() => {
-        });
-  }
-}
-
-function doBackendTaskClicked(tool: BackendTaskTypePayload) {
-  if (selectedImageIds.value && projectImages.value) {
-    doBackendTask(
-        [...selectedImages.value],
-        Number(projectId),
-        tool,
-        projectImages.value
-    );
-  }
 }
 
 function onTaskFinished() {

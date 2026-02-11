@@ -44,12 +44,17 @@
       side="right"
       bordered
       :model-value="true"
+      :width="400"
       class="q-pa-md q-gutter-sm properties-panel"
     >
       <ProjectImageEditor
         v-if="selectedImageId > 0"
         v-model="selectedImage"
         v-model:project-backend-tasks="projectBackendTasks"
+        v-model:properties-panel-tab="propertiesPanelTab"
+        v-model:current-view-mode="currentViewMode"
+        v-model:project-images="projectImages"
+        v-model:selected-image-ids="selectedImageIds"
       />
     </q-drawer>
     <q-page-container>
@@ -109,10 +114,15 @@ const selectedImageId = ref<number>(-1);
 const selectedImage = computed(() =>
   projectImages.value.getImageById(selectedImageId.value)
 );
+const selectedImageIds = computed(() => [selectedImageId.value]);
+const propertiesPanelTab = ref("edit")
 const availableBackendTasks = ref<Array<BackendTaskTypePayload>>([]);
 const projectBackendTasks = ref<Array<BackendTaskPayload>>([
   createDummyBackendTask(),
 ]);
+const currentViewMode = computed(() => {
+  return projectPayload.value.viewMode
+})
 const resultList = ref<ResultPayload[]>();
 const filterText = ref("")
 const filteredImageIds = computed(() => {

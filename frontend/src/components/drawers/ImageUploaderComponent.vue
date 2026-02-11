@@ -9,7 +9,7 @@
       <q-icon name="info" />
       Please note that you can only have up to {{ authStore.limits.guestMaxImages }} images per project due to the guest account restrictions.
     </q-banner>
-    <q-btn :disable="uploader?.isBusy" class="full-width q-mb-sm" color="green" icon="upload" @click="uploadNow">Upload now</q-btn>
+    <q-btn :disable="uploader?.isBusy" class="full-width q-mb-sm" color="green" icon="upload" @click="uploadNow" label="Upload now"/>
     <div class="uploader-panel" >
       <q-uploader
         ref="uploader"

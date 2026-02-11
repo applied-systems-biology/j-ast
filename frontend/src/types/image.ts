@@ -186,6 +186,27 @@ export class ImagePayload {
     }
 }
 
+export function setImageMetadata(image: ImagePayload, key: string, value: any) {
+    if(key == "experiment") {
+        image.experiment = value;
+    }
+    else if(key == "sample") {
+        image.sample = value;
+    }
+    else if(key == "timePoint") {
+        image.timePoint = value;
+    }
+    else if(key == "assayType") {
+        image.assayType = value;
+    }
+    else if(key == "mic") {
+        image.mic = value;
+    }
+    else if(key == "pixelSizeMillimeter") {
+        image.pixelSizeMillimeter = value;
+    }
+}
+
 export function incrementImageMaskAnnotationVersion(image: ImagePayload, annotationType: string) {
     let found: MaskImageAnnotationPayload | null = null
     for (const annotation of image.maskImageAnnotations) {

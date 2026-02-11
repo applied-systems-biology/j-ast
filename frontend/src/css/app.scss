@@ -15,3 +15,17 @@
 .border-red {
   border: 1px solid red;
 }
+
+.d-flex-column {
+  display: flex;
+  flex-direction: column;
+}
+
+.properties-panel {
+  display: flex;
+  flex-direction: column;
+}
+
+.grow {
+  flex-grow: 1;
+}

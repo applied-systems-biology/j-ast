@@ -24,8 +24,7 @@
           <div v-else>{{ imagePayload.fileName }}</div>
           <div>/</div>
           <div>{{ annotationName }}</div>
-          <q-btn color="green" icon="upload" size="lg" @click="postToBackend">Save annotation
-          </q-btn>
+          <q-btn color="green" icon="upload" size="lg" @click="postToBackend" label="Save annotation"/>
           <q-space />
           <q-btn icon="close" flat @click="closeWithoutSaving" />
         </q-toolbar-title>
@@ -36,9 +35,7 @@
             v-model="currentAnnotationColorId"
             :options="annotationColors"
           >
-            <q-tooltip
-            >Determines whether the foreground or the background is drawn
-            </q-tooltip>
+            <q-tooltip>Determines whether the foreground or the background is drawn</q-tooltip>
           </q-btn-toggle>
           <q-btn-toggle
             color="blue-grey"

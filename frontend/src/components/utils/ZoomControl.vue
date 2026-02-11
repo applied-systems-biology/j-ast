@@ -1,15 +1,15 @@
 <template>
   <div class="row items-center no-wrap shadow-2 bg-blue rounded-borders" style="min-height: 2.572em">
-    <q-btn flat dense icon="remove" @click="decreaseZoom" />
-    <q-btn flat dense class="q-mx-sm" style="min-width: 60px;">
+    <q-btn dense flat icon="remove" @click="decreaseZoom"/>
+    <q-btn class="q-mx-sm" dense flat style="min-width: 60px;">
       {{ Math.round(model! * 100) }}%
       <q-menu auto-close>
         <q-list style="min-width: 100px">
           <q-item
-            v-for="option in zoomOptions"
-            :key="option"
-            clickable
-            @click="selectZoom(option / 100)"
+              v-for="option in zoomOptions"
+              :key="option"
+              clickable
+              @click="selectZoom(option / 100)"
           >
             <q-item-section>{{ option }}%</q-item-section>
           </q-item>
@@ -17,14 +17,14 @@
       </q-menu>
     </q-btn>
 
-    <q-btn flat dense icon="add" @click="increaseZoom" />
+    <q-btn dense flat icon="add" @click="increaseZoom"/>
   </div>
 </template>
 
-<script setup lang="ts">
-import { defineModel } from 'vue'
+<script lang="ts" setup>
+import {defineModel} from 'vue'
 
-const model = defineModel<number>()
+const model = defineModel<number>({required: true})
 
 // Preset display options (percent format)
 const zoomOptions = [25, 50, 75, 100, 125, 150, 200, 250, 300]

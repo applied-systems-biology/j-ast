@@ -14,12 +14,9 @@
     </q-card-section>
     <q-separator />
     <q-card-actions>
-      <q-btn :disable="props.disable" flat icon="edit" @click="openEditor"
-        >Edit</q-btn
-      >
-      <q-btn :disable="props.disable" flat icon="download" @click="downloadMask"
-        >Download</q-btn
-      >
+      <q-btn :disable="props.disable" flat icon="edit" @click="openEditor" label="Edit" />
+      <q-space />
+      <q-btn :disable="props.disable" flat icon="download" @click="downloadMask" />
     </q-card-actions>
   </q-card>
 </template>
@@ -39,7 +36,7 @@ import MaskImageAnnotationEditorDialog from '../annotationEditors/MaskImageAnnot
 
 const $q = useQuasar();
 // const router = useRouter()
-const image = defineModel<ImagePayload>();
+const image = defineModel<ImagePayload>({ required: true });
 const annotation = ref<MaskImageAnnotationPayload>(
   new MaskImageAnnotationPayload()
 );

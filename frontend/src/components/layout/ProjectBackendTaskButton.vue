@@ -1,34 +1,30 @@
 <template>
-  <q-btn no-wrap color="cyan" @click="goToTasksView">
-    <q-spinner v-if="numRunning > 0" class="q-mr-md" />
-    <q-icon name="check" v-if="numRunning == 0" class="q-mr-md" />
+  <q-btn color="cyan" no-wrap @click="goToTasksView">
+    <q-spinner v-if="numRunning > 0" class="q-mr-md"/>
+    <q-icon v-if="numRunning == 0" class="q-mr-md" name="check"/>
     <div v-if="numRunning == 0">All tasks finished</div>
     <div v-if="numRunning > 1">{{ numRunning }} tasks are running</div>
     <div v-if="numRunning == 1">1 task is running</div>
-    <q-badge floating class="container-badge">
-      <q-badge color="red" v-if="numFailures > 0">{{ numFailures }}</q-badge>
-      <q-badge color="green" v-if="numSuccesses > 0"
-        >{{ numSuccesses }}
+    <q-badge class="container-badge" floating>
+      <q-badge v-if="numFailures > 0" color="red">{{ numFailures }}</q-badge>
+      <q-badge v-if="numSuccesses > 0" color="green"
+      >{{ numSuccesses }}
       </q-badge>
     </q-badge>
   </q-btn>
 </template>
-<script setup lang="ts">
-import { BackendTaskPayload, TaskStatus } from 'src/types/backendTasks';
-import { computed, watch } from 'vue';
-import { useRouter } from 'vue-router';
-import {
-  sendFailureNotification,
-  sendInfoNotification,
-  sendSuccessNotification,
-} from 'src/types/notification';
+<script lang="ts" setup>
+import {BackendTaskPayload, TaskStatus} from 'src/types/backendTasks';
+import {computed, watch} from 'vue';
+import {useRouter} from 'vue-router';
+import {sendFailureNotification, sendInfoNotification, sendSuccessNotification,} from 'src/types/notification';
 
 defineOptions({
   name: 'ProjectTasksLayout',
 });
 
 const $router = useRouter();
-const projectBackendTasks = defineModel<BackendTaskPayload[]>();
+const projectBackendTasks = defineModel<BackendTaskPayload[]>({required: true});
 const numSuccesses = computed(() => {
   let count = 0;
   if (projectBackendTasks.value) {
@@ -56,8 +52,8 @@ const numRunning = computed(() => {
   if (projectBackendTasks.value) {
     for (const task of projectBackendTasks.value) {
       if (
-        task.status == TaskStatus.Running ||
-        task.status == TaskStatus.Ready
+          task.status == TaskStatus.Running ||
+          task.status == TaskStatus.Ready
       ) {
         count++;
       }
@@ -82,14 +78,14 @@ function goToTasksView() {
 
 function handleNewTaskDetected(task: BackendTaskPayload) {
   sendInfoNotification(
-    `Started "${task.name}" on ${task.imageIds.length} images`
+      `Started "${task.name}" on ${task.imageIds.length} images`
   );
 }
 
 function handleTaskStatusChanged(
-  task: BackendTaskPayload,
-  from: TaskStatus,
-  to: TaskStatus
+    task: BackendTaskPayload,
+    from: TaskStatus,
+    to: TaskStatus
 ) {
   if (from == TaskStatus.Running && to == TaskStatus.Failed) {
     emit("onTaskFailed", task);
@@ -115,9 +111,9 @@ watch(projectBackendTasks, () => {
           handleNewTaskDetected(task);
         } else if (lastTaskStates[task.id.toString()] != task.status) {
           handleTaskStatusChanged(
-            task,
-            lastTaskStates[task.id.toString()],
-            task.status
+              task,
+              lastTaskStates[task.id.toString()],
+              task.status
           );
         }
         lastTaskStates[task.id.toString()] = task.status;
@@ -126,7 +122,7 @@ watch(projectBackendTasks, () => {
   }
 });
 </script>
-<style scoped lang="scss">
+<style lang="scss" scoped>
 .container-badge {
   background: transparent;
   top: -10px;

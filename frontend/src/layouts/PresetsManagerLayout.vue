@@ -28,7 +28,7 @@
               <q-separator/>
               <q-card-section>
                 <q-scroll-area visible class="w-100" style="height: 64px;">
-                  <div class="ticks-preview">
+                  <div class="ticks-preview" :style="{ width: (preset.ticks.length) * 48 + 'px' }">
                     <template v-for="(mark, index) in preset.ticks" :key="index">
                       <div class="tick">
                         <div>|</div>
@@ -75,7 +75,7 @@ onMounted(() => {
 }
 
 .ticks-preview .tick {
-  width: 64px;
+  width: 48px;
   text-align: center;
 }
 </style>

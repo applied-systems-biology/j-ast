@@ -1,6 +1,6 @@
 <template>
   <q-btn to="/" size="lg" flat>
-    <img :src="logo" class="logo"/>
+    <img :src="logo" class="logo" alt="Logo"/>
 <!--    <q-icon left size="3em" name="fa-solid fa-chart-simple" />-->
 <!--    <div>J-AST</div>-->
   </q-btn>

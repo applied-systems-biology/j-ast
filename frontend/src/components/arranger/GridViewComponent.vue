@@ -20,9 +20,8 @@
           flat
           class="q-ma-sm"
           @click="maxNumRenderedImages += 30"
-        >
-          Load more images ({{ Math.max(0, numImages - numRenderedImages) }} left)
-        </q-btn>
+          :label="'Load more images (' + Math.max(0, numImages - numRenderedImages) + ' left)'"
+        />
       </div>
     </q-infinite-scroll>
   </div>
@@ -38,12 +37,10 @@ import {
 } from 'src/types/backendTasks';
 import { filterAppliesToImage } from 'src/types/filters';
 
-const selectedImageIds = defineModel<Array<number>>('selectedImageIds', {
-  required: true,
-});
-const projectBackendTasks = defineModel<BackendTaskPayload[]>('backendTasks');
-const projectImages = defineModel<ProjectImagesPayload>();
-const filterText = defineModel<string>('filterText');
+const selectedImageIds = defineModel<Array<number>>('selectedImageIds', { required: true });
+const projectBackendTasks = defineModel<BackendTaskPayload[]>('backendTasks', { required: true });
+const projectImages = defineModel<ProjectImagesPayload>({ required: true });
+const filterText = defineModel<string>('filterText', { required: true });
 
 const numImages = computed(() =>
   projectImages.value ? projectImages.value.imageIds.length : 0
