@@ -1,6 +1,7 @@
 package org.hkijena.jast.payloads;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.hkijena.jast.model.entities.Preset;
 
 import java.util.ArrayList;
 import java.util.List;

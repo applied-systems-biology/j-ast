@@ -1,6 +1,6 @@
 <template>
-  <div class="ticks-preview" :style="{ width: (props.preset.ticks.length) * 48 + 'px' }">
-    <template v-for="(mark, index) in props.preset.ticks" :key="index">
+  <div class="ticks-preview" :style="{ width: (props.ticks.length) * 48 + 'px' }">
+    <template v-for="(mark, index) in props.ticks" :key="index">
       <div class="tick">
         <div>|</div>
         <div>{{ mark }}</div>
@@ -9,10 +9,8 @@
   </div>
 </template>
 <script setup lang="ts">
-import {StripPresetPayload} from "src/types/presets";
-
 const props = defineProps<{
-  preset: StripPresetPayload;
+  ticks: Array<number>;
 }>();
 
 </script>

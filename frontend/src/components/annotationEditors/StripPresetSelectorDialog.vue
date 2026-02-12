@@ -16,6 +16,17 @@
         <div>To create custom presets, please click the <strong>Presets</strong> button at the top right of the application.</div>
       </q-card-section>
       <q-separator />
+      <q-card-section v-if="props.existing">
+        <div class="text-bold">Current</div>
+        <q-scroll-area v-if="payload" visible class="w-100" style="height: 64px;">
+          <StripPreviewComponent :ticks="props.existing.ticks" />
+        </q-scroll-area>
+        <q-separator/>
+        <div class="w-100 text-center">
+          <q-icon name="fa-solid fa-chevron-down" />
+        </div>
+        <q-separator/>
+      </q-card-section>
       <q-card-section>
         <q-select v-model="payload" :options="stripPresets" filled option-label="name">
           <template v-slot:prepend>
@@ -24,8 +35,9 @@
         </q-select>
       </q-card-section>
       <q-card-section>
+        <div class="text-bold">Preview</div>
         <q-scroll-area v-if="payload" visible class="w-100" style="height: 64px;">
-          <StripPreviewComponent :preset="payload" />
+          <StripPreviewComponent :ticks="payload.ticks" />
         </q-scroll-area>
       </q-card-section>
       <q-card-actions align="right">
@@ -44,6 +56,10 @@ import StripPreviewComponent from "components/utils/StripPreviewComponent.vue";
 
 const stripPresets = ref<StripPresetPayload[]>()
 const payload = ref<StripPresetPayload>();
+
+const props = defineProps<{
+  existing?: StripPresetPayload;
+}>();
 
 // const props = defineProps({
 //   // ...your custom props

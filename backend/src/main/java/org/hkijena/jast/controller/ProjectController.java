@@ -96,9 +96,7 @@ public class ProjectController {
         Project project = new Project();
         project.setName(StringUtils.orElse(request.getName(), "Unnamed project"));
         project.setViewMode(request.getViewMode());
-        if (authentication != null && authentication.getPrincipal() instanceof UserPrincipal) {
-            project.setOwner(((UserPrincipal) authentication.getPrincipal()).getUser());
-        }
+        project.setOwner(userService.authenticationToUser(authentication));
         project = projectRepository.save(project);
         return ResponseEntity.ok(new ProjectMetadataPayload(project));
     }

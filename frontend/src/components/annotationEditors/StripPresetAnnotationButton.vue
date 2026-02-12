@@ -47,6 +47,7 @@ function openEditor() {
     component: StripPresetSelectorDialog,
     componentProps: {
       persistent: true,
+      existing: annotation.value
     },
   })
     .onOk((payload : StripPresetPayload) => {

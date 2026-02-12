@@ -14,21 +14,29 @@
     <q-page-container>
       <q-page class="q-gutter-sm" padding>
         <q-card>
-          <q-card-section>
+          <q-card-section class="flex">
             <div class="text-h6">E-Test strips</div>
+            <q-space/>
+            <q-btn color="green" icon="add" label="Add" no-caps no-wrap @click="createStripPreset"/>
           </q-card-section>
           <q-separator/>
           <q-card-section class="q-gutter-sm">
-            <q-card class="bg-blue-grey-1" v-for="preset in stripPresets" :key="preset.id">
+            <q-card v-for="preset in stripPresets" :key="preset.id" class="bg-blue-grey-1 q-mb-sm">
               <q-card-section class="flex">
                 <div class="text-h7">{{ preset.name }}</div>
-                <q-space />
-                <q-icon name="lock"/>
+                <q-space/>
+                <div v-if="preset.id > 0" class="q-gutter-sm">
+                  <q-btn color="red-4" icon="delete" no-caps @click="deletePreset(preset.id, 'E-Strip preset', preset.name)"/>
+                  <q-btn color="primary" icon="edit" label="Edit" no-caps @click="editStripPreset(preset)"/>
+                </div>
+                <template v-else>
+                  <q-icon name="lock"/>
+                </template>
               </q-card-section>
               <q-separator/>
               <q-card-section>
-                <q-scroll-area visible class="w-100" style="height: 64px;">
-                  <StripPreviewComponent :preset="preset" />
+                <q-scroll-area class="w-100" style="height: 64px;" visible>
+                  <StripPreviewComponent :ticks="preset.ticks"/>
                 </q-scroll-area>
               </q-card-section>
             </q-card>
@@ -47,6 +55,12 @@ import {onMounted, ref} from "vue";
 import {StripPresetPayload} from "src/types/presets";
 import {loadPayloadInstanceFromApi} from "src/types/common";
 import StripPreviewComponent from "components/utils/StripPreviewComponent.vue";
+import {Dialog} from "quasar";
+import StripPresetEditorDialog from "components/presets/StripPresetEditorDialog.vue";
+import {api} from "boot/axios";
+import {instanceToPlain} from "class-transformer";
+import {sendSuccessNotification} from "src/types/notification";
+import {onDialogYes} from "src/types/dialog";
 
 defineOptions({
   name: 'PresetsManagerLayout',
@@ -54,8 +68,60 @@ defineOptions({
 
 const stripPresets = ref<StripPresetPayload[]>()
 
-onMounted(() => {
+function createStripPreset() {
+  Dialog.create({
+    component: StripPresetEditorDialog,
+    componentProps: {
+      persistent: true,
+    },
+  })
+      .onOk((payload: StripPresetPayload) => {
+        api.post("/add-preset/strip", instanceToPlain(payload)).then(() => {
+          queryBackend()
+          sendSuccessNotification("Created new E-strip preset '" + payload.name + "'")
+        })
+      })
+      .onCancel(() => {
+      })
+      .onDismiss(() => {
+      });
+}
+
+function editStripPreset(preset: StripPresetPayload) {
+  Dialog.create({
+    component: StripPresetEditorDialog,
+    componentProps: {
+      preset: preset,
+      persistent: true,
+    },
+  })
+      .onOk((payload: StripPresetPayload) => {
+        api.post("/update-preset/strip", instanceToPlain(payload)).then(() => {
+          queryBackend()
+          sendSuccessNotification(`Updated E-strip preset '${payload.name}'`)
+        })
+      })
+      .onCancel(() => {
+      })
+      .onDismiss(() => {
+      });
+}
+
+function deletePreset(id: number, typeName: string, name: string) {
+    onDialogYes("Delete preset", `Do you really want to delete the ${typeName} '${name}'?`).then(() => {
+      api.post("/delete-preset/" + id).then(() => {
+        queryBackend()
+        sendSuccessNotification(`Deleted ${typeName} '${name}'`)
+      })
+    })
+}
+
+function queryBackend() {
   loadPayloadInstanceFromApi("/get-presets/strip", StripPresetPayload, stripPresets)
+}
+
+onMounted(() => {
+  queryBackend()
 })
 
 </script>
