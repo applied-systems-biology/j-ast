@@ -155,8 +155,8 @@
         </q-scroll-area>
       </q-card-section>
       <q-card-actions align="right">
-        <q-btn color="blue-grey" label="Cancel" @click="onDialogCancel"/>
-        <q-btn color="red" label="OK" @click="onOKClick"/>
+        <q-btn color="blue-grey" label="Cancel" no-caps no-wrap @click="onDialogCancel"/>
+        <q-btn color="red" label="OK" no-caps no-wrap @click="onOKClick"/>
       </q-card-actions>
     </q-card>
   </q-dialog>

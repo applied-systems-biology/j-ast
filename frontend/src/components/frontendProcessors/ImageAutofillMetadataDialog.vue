@@ -84,8 +84,8 @@
       </q-card-section>
       <q-separator />
       <q-card-actions align="right">
-        <q-btn color="blue-grey" label="Cancel" @click="onDialogCancel" />
-        <q-btn color="red" label="OK" @click="onOKClick" />
+        <q-btn no-caps no-wrap color="blue-grey" label="Cancel" @click="onDialogCancel" />
+        <q-btn no-caps no-wrap color="red" label="OK" @click="onOKClick" />
       </q-card-actions>
     </q-card>
   </q-dialog>

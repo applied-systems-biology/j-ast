@@ -10,14 +10,19 @@
   </q-tabs>
   <q-tab-panels v-model="propertiesPanelTab" animated class="grow">
     <q-tab-panel class="q-gutter-sm grow" name="edit">
-      <q-btn :disable="hasTaskRunning" align="left" class="w-100" color="primary" icon="fa-solid fa-vial-virus"
+      <q-btn no-caps no-wrap :disable="hasTaskRunning" align="left" class="w-100" color="primary" icon="fa-solid fa-vial-virus"
              label="Set experiment" @click="setAllStringMetadata('Experiment', 'experiment')"/>
-      <q-btn :disable="hasTaskRunning" align="left" class="w-100" color="primary" icon="fa-solid fa-flask"
+      <q-btn no-caps no-wrap :disable="hasTaskRunning" align="left" class="w-100" color="primary" icon="fa-solid fa-flask"
              label="Set sample" @click="setAllStringMetadata('Sample', 'sample')"/>
-      <q-btn :disable="hasTaskRunning" align="left" class="w-100" color="primary" icon="fa-solid fa-clock"
+      <q-btn no-caps no-wrap :disable="hasTaskRunning" align="left" class="w-100" color="primary" icon="fa-solid fa-clock"
              label="Set time point" @click="setAllStringMetadata('Time point', 'timePoint')"/>
-      <q-btn :disable="hasTaskRunning" align="left" class="w-100" color="primary" icon="fa-solid fa-gear"
+      <q-btn no-caps no-wrap :disable="hasTaskRunning" align="left" class="w-100" color="primary" icon="fa-solid fa-gear"
              label="Set assay type" @click="setAllAssayType"/>
+      <template v-if="hasSelectedETest">
+        <q-separator/>
+        <q-btn no-caps no-wrap :disable="hasTaskRunning" align="left" class="w-100" color="primary" icon="fa-solid fa-ruler-vertical"
+               label="Set strip profile" @click="setAllAssayType"/>
+      </template>
     </q-tab-panel>
     <q-tab-panel class="d-flex-column" name="process">
       <ProjectImageProcessorList v-model:current-view-mode="currentViewMode"
@@ -56,6 +61,15 @@ const hasTaskRunning = computed(() => {
   }
   return true; // Waiting still for info
 });
+const hasSelectedETest = computed(() => {
+  for (const id of selectedImageIds.value) {
+    const img = projectImages.value.getImageById(id)
+    if (img.assayType == AssayType.ETest) {
+      return true
+    }
+  }
+  return false
+})
 const model = defineModel<ImagePayload[]>({required: true});
 const currentViewMode = defineModel<ViewMode>("currentViewMode", {required: true})
 const $q = useQuasar();
@@ -97,9 +111,9 @@ function setAllAssayType() {
       model: AssayType.Unknown,
       // inline: true
       items: [
-        { label: 'Unknown', value: AssayType.Unknown },
-        { label: 'DDA', value: AssayType.DDA },
-        { label: 'E-Test', value: AssayType.ETest }
+        {label: 'Unknown', value: AssayType.Unknown},
+        {label: 'DDA', value: AssayType.DDA},
+        {label: 'E-Test', value: AssayType.ETest}
       ]
     },
     cancel: true

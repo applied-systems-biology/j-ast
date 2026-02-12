@@ -13,9 +13,11 @@
         node-key="label"
     >
       <template v-slot:default-header="prop">
-        <q-btn no-wrap v-if="prop.node.action" :disable="hasTaskRunning" :icon="prop.node.icon" :label="prop.node.label" align="left" class="w-100"
-               dense flat no-caps @click="prop.node.action">
-          <q-tooltip>{{prop.node.description}}</q-tooltip>
+        <q-btn v-if="prop.node.action" :disable="hasTaskRunning" :icon="prop.node.icon" :label="prop.node.label"
+               align="left"
+               class="w-100" dense flat
+               no-caps no-wrap @click="prop.node.action">
+          <q-tooltip>{{ prop.node.description }}</q-tooltip>
         </q-btn>
         <span v-else>{{ prop.node.label }}</span>
       </template>

@@ -12,7 +12,7 @@
     </q-card-section>
     <q-separator/>
     <q-card-actions>
-      <q-btn :disable="props.disable" flat icon="edit" label="Edit" @click="openEditor"/>
+      <q-btn no-caps no-wrap :disable="props.disable" flat icon="edit" label="Edit" @click="openEditor"/>
     </q-card-actions>
   </q-card>
 </template>

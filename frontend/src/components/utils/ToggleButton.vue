@@ -1,5 +1,5 @@
 <template>
-  <q-btn no-wrap :flat="props.flat" :icon="model ? selectedIcon : notSelectedIcon" @click="model = !model" :label="label">
+  <q-btn no-caps no-wrap :flat="props.flat" :icon="model ? selectedIcon : notSelectedIcon" @click="model = !model" :label="label">
     <slot />
   </q-btn>
 </template>

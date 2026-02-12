@@ -23,11 +23,9 @@
         <DocumentationComponent/>
       </q-toolbar>
       <q-toolbar class="bg-primary text-white edit-toolbar">
-        <q-btn color="secondary" icon="clear_all" @click="clearAll"
-          >Clear
-        </q-btn>
-        <q-btn color="green" icon="download" label="Download log" v-if="!currentlyDisplayedTask.isRunning() && currentlyDisplayedTask.id > 0" @click="downloadFullLog"/>
-        <q-btn color="red-4" icon="cancel" label="Cancel task" v-if="currentlyDisplayedTask.isRunning() && currentlyDisplayedTask.id > 0" @click="cancelTask"/>
+        <q-btn no-caps no-wrap color="secondary" icon="clear_all" @click="clearAll" label="Clear"/>
+        <q-btn no-caps no-wrap color="green" icon="download" label="Download log" v-if="!currentlyDisplayedTask.isRunning() && currentlyDisplayedTask.id > 0" @click="downloadFullLog"/>
+        <q-btn no-caps no-wrap color="red-4" icon="cancel" label="Cancel task" v-if="currentlyDisplayedTask.isRunning() && currentlyDisplayedTask.id > 0" @click="cancelTask"/>
         <ToggleButton v-model="autoScrollEnabled" color="blue-5" selected-icon="fa-solid fa-square-check" not-selected-icon="fa-solid fa-square" label="Auto scroll" v-if="currentlyDisplayedTask.isRunning() && currentlyDisplayedTask.id > 0" @click="downloadFullLog"/>
         <div class="col-grow" />
         <ProjectResultsButton :project-id="projectId[0]" v-model="resultList"/>

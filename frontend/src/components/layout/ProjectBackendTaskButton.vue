@@ -1,9 +1,9 @@
 <template>
-  <q-btn color="cyan" no-wrap @click="goToTasksView">
+  <q-btn color="cyan" no-caps no-wrap @click="goToTasksView">
     <q-spinner v-if="numRunning > 0" class="q-mr-md"/>
     <q-icon v-if="numRunning == 0" class="q-mr-md" name="check"/>
-    <div v-if="numRunning == 0">All tasks finished</div>
-    <div v-if="numRunning > 1">{{ numRunning }} tasks are running</div>
+    <div v-if="numRunning == 0">Tasks</div>
+    <div v-if="numRunning > 1">{{ numRunning }} task is running</div>
     <div v-if="numRunning == 1">1 task is running</div>
     <q-badge class="container-badge" floating>
       <q-badge v-if="numFailures > 0" color="red">{{ numFailures }}</q-badge>

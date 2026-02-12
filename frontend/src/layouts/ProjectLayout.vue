@@ -88,7 +88,7 @@
             images will be put into the "Unsorted images" list.
           </q-tooltip>
         </ToggleButton>
-        <q-btn-dropdown color="green" icon="download" label="Download">
+        <q-btn-dropdown no-caps no-wrap color="green" icon="download" label="Download">
           <q-list>
             <q-item v-if="selectedImageIds.length > 0" v-close-popup clickable @click="downloadZip(selectedImageIds)">
               <q-item-section>
@@ -140,6 +140,7 @@
           </q-tooltip>
         </ToggleButton>
         <q-btn
+            no-caps no-wrap
             v-if="selectedImageIds.length == 0"
             color="blue"
             icon="select_all"
@@ -151,6 +152,7 @@
           </q-tooltip>
         </q-btn>
         <q-btn
+            no-caps no-wrap
             v-if="selectedImageIds.length > 0"
             color="blue"
             icon="deselect"
@@ -167,6 +169,7 @@
         >
         </ToggleButton>
         <q-btn
+            no-caps no-wrap
             :disable="hasTaskRunning"
             flat
             icon="refresh"
@@ -190,10 +193,10 @@
             <q-icon name="search"/>
           </template>
         </q-input>
-        <q-btn dense flat icon="filter_alt" label="No plate" no-caps @click="filterText = 'hasPlate:no'"/>
-        <q-btn dense flat icon="filter_alt" label="No disk/strip" no-caps @click="filterText = 'hasDiskStrip:no'"/>
-        <q-btn dense flat icon="filter_alt" label="No ZOI shape" no-caps @click="filterText = 'hasZOIShape:no'"/>
-        <q-btn dense flat icon="filter_alt" label="More ..." no-caps>
+        <q-btn dense flat icon="filter_alt" label="No plate" no-caps no-wrap @click="filterText = 'hasPlate:no'"/>
+        <q-btn dense flat icon="filter_alt" label="No disk/strip" no-caps no-wrap @click="filterText = 'hasDiskStrip:no'"/>
+        <q-btn dense flat icon="filter_alt" label="No ZOI shape" no-caps no-wrap @click="filterText = 'hasZOIShape:no'"/>
+        <q-btn dense flat icon="filter_alt" label="More ..." no-caps no-wrap>
           <q-menu>
             <q-item v-close-popup clickable @click="filterText = 'experiment:'">
               <q-item-section avatar>
@@ -243,6 +246,7 @@
           <q-tooltip>Deselects the images</q-tooltip>
         </q-btn>
         <q-btn
+            no-caps no-wrap
             dense
             icon="fa-solid fa-magnifying-glass"
             outline
@@ -252,6 +256,7 @@
           <q-tooltip>Shows the image in a viewer</q-tooltip>
         </q-btn>
         <q-btn
+            no-caps no-wrap
             :disable="hasTaskRunning"
             color="red-4"
             dense
@@ -263,6 +268,7 @@
         </q-btn>
         <q-space/>
         <q-btn
+            no-caps no-wrap
             flat
             icon="close"
             padding="none"
@@ -613,7 +619,7 @@ function downloadProjectArchive(imageIds: Array<number> | null) {
       dialog.hide()
     })
 
-    generateAndDownloadZip(zipItems, projectPayload.value.name + ".project.zip", (percentage, info) => {
+    generateAndDownloadZip(zipItems, projectPayload.value.name + ".jast.zip", (percentage, info) => {
       dialog.update({
         message: `${percentage}% ${info}`
       })

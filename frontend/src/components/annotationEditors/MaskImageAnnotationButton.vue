@@ -14,9 +14,9 @@
     </q-card-section>
     <q-separator />
     <q-card-actions>
-      <q-btn :disable="props.disable" flat icon="edit" @click="openEditor" label="Edit" />
+      <q-btn no-caps no-wrap :disable="props.disable" flat icon="edit" @click="openEditor" label="Edit" />
       <q-space />
-      <q-btn :disable="props.disable" flat icon="download" @click="downloadMask" />
+      <q-btn no-caps no-wrap :disable="props.disable" flat icon="download" @click="downloadMask" />
     </q-card-actions>
   </q-card>
 </template>

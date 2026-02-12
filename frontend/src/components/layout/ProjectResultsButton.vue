@@ -1,5 +1,5 @@
 <template>
-  <q-btn color="cyan" no-wrap @click="goToResultsView">
+  <q-btn color="cyan" no-caps no-wrap @click="goToResultsView">
     <q-icon class="q-mr-md" name="archive"/>
     <div>Results</div>
     <q-badge class="container-badge" floating>

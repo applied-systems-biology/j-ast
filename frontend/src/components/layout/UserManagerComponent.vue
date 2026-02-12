@@ -1,6 +1,6 @@
 <template>
   <div v-if="isWebApp()" class="q-gutter-sm flex row flex-center">
-    <q-btn v-if="authStore.isGuest" color="orange-5" no-caps @click="displayGuestInfoDialog = true">
+    <q-btn v-if="authStore.isGuest" color="orange-5" no-caps no-wrap @click="displayGuestInfoDialog = true">
       <q-icon class="q-mr-sm" name="warning"/>
       <div class="q-mr-md">Limited account</div>
       <q-circular-progress
@@ -24,14 +24,14 @@
         color="blue-grey"
         icon="settings"
         label="Admin"
-        no-caps
+        no-caps no-wrap
         to="/admin"/>
     <q-btn
         v-if="authStore.isLoggedIn"
         color="blue-grey"
         icon="fact_check"
         label="Presets"
-        no-caps
+        no-caps no-wrap
         to="/presets"
     />
     <q-btn
@@ -39,16 +39,17 @@
         :label="authStore.username + ' (' + authStore.role + ')'"
         color="blue-grey"
         icon="person"
-        no-caps
+        no-caps no-wrap
         to="/account"
     />
     <q-btn
         v-if="!authStore.isLoggedIn"
         color="green"
         label="Register"
+        no-caps no-wrap
         @click="showRegisterDialog"/>
-    <q-btn v-if="!authStore.isLoggedIn" color="green" label="Login" @click="showLoginDialog"/>
-    <q-btn v-if="authStore.isLoggedIn" color="red" label="Logout" @click="doLogout"/>
+    <q-btn v-if="!authStore.isLoggedIn" color="green" label="Login" no-caps no-wrap @click="showLoginDialog"/>
+    <q-btn v-if="authStore.isLoggedIn" color="red" label="Logout" no-caps no-wrap @click="doLogout"/>
   </div>
 
   <!-- Guest info dialog -->

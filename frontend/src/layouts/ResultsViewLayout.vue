@@ -1,32 +1,32 @@
 <template>
-  <q-layout view="hHh lpR fFf">
+  <q-layout view="hHh lpR fFf" class="h-vh100">
     <q-header>
       <q-toolbar>
         <q-toolbar-title class="row items-center q-gutter-sm">
           <HeaderLogoButtonComponent/>
           <div>/</div>
           <q-skeleton
-            v-if="!projectPayload.name"
-            type="text"
-            style="width: 200px"
+              v-if="!projectPayload.name"
+              style="width: 200px"
+              type="text"
           />
           <router-link
-            style="text-decoration: underline; color: inherit"
-            v-else
-            :to="`/project/${projectId}`"
+              v-else
+              :to="`/project/${projectId}`"
+              style="text-decoration: underline; color: inherit"
           >{{ projectPayload.name }}
           </router-link>
           <div>/</div>
           <router-link
-            style="text-decoration: underline; color: inherit"
-            :to="`/results/list/${projectId}`"
+              :to="`/results/list/${projectId}`"
+              style="text-decoration: underline; color: inherit"
           >Results
           </router-link>
           <div>/</div>
           <q-skeleton
-            v-if="!resultPayload"
-            type="text"
-            style="width: 200px"
+              v-if="!resultPayload"
+              style="width: 200px"
+              type="text"
           />
           <div v-else>{{ resultPayload.name }}</div>
         </q-toolbar-title>
@@ -34,14 +34,14 @@
         <DocumentationComponent/>
       </q-toolbar>
       <q-toolbar class="bg-primary text-white edit-toolbar">
-        <q-btn-dropdown color="green" icon="download" label="Download">
+        <q-btn-dropdown color="green" icon="download" label="Download" no-caps no-wrap>
           <q-list>
-            <q-item clickable v-close-popup @click="downloadZip('/')">
+            <q-item v-close-popup clickable @click="downloadZip('/')">
               <q-item-section>
                 <q-item-label>Download everything (*.zip)</q-item-label>
               </q-item-section>
             </q-item>
-            <q-item clickable v-close-popup @click="downloadZip('/' + resultPath)">
+            <q-item v-close-popup clickable @click="downloadZip('/' + resultPath)">
               <q-item-section>
                 <q-item-label>Download current folder (*.zip)</q-item-label>
               </q-item-section>
@@ -51,38 +51,47 @@
       </q-toolbar>
     </q-header>
     <q-drawer
-      side="left"
-      :model-value="true"
-      elevated
-      class="q-pa-sm q-gutter-sm"
+        ref="sidebar"
+        :model-value="true"
+        class="q-pa-sm q-gutter-sm"
+        elevated
+        side="left"
     >
-      <q-list dense padding class="rounded-borders">
-        <q-item v-for="directoryPath in directoryList" :key="directoryPath" clickable v-ripple
-                @click="navigateToFolder(directoryPath)" :active="('/' + resultPath) == directoryPath">
-          <q-item-section avatar>
-            <q-icon name="folder"/>
-          </q-item-section>
-          <q-item-section>
-            {{ directoryPath }}
-          </q-item-section>
-        </q-item>
-      </q-list>
+      <q-tree
+          :nodes="treeNodes"
+          node-key="path"
+          v-model:selected="selected"
+          v-model:expanded="expanded"
+          selected-color="primary"
+          @update:selected="(p) => { if (p) navigateToFolder(p) }"
+      >
+        <!-- optional: customize how each node row looks -->
+        <template #default-header="prop">
+          <div class="row items-center no-wrap q-gutter-sm">
+            <q-icon name="folder" />
+            <div class="ellipsis">{{ prop.node.label }}</div>
+          </div>
+        </template>
+      </q-tree>
     </q-drawer>
     <q-page-container>
       <q-page padding>
-        <q-table :rows="vfsCurrentDirectoryItems" :columns="filesViewColumns" :pagination="filesViewPagination"
-                 @row-click="onRowClick" row-key="key">
+        <q-table ref="table" :columns="filesViewColumns" :pagination="filesViewPagination"
+                 :rows="vfsCurrentDirectoryItems" :rows-per-page-options="[0]" :virtual-scroll-sticky-size-start="48" class="file-view-table"
+                 row-key="key"
+                 virtual-scroll
+                 @row-click="onRowClick">
           <template v-slot:body-cell-thumbnail="props">
             <q-td :props="props">
               <ResultItemThumbnailComponent v-if="props.row.id >= 0" :result-item="props.row"/>
-              <q-icon v-else-if="props.row.id == -2" class="thumbnail" name="fa-solid fa-arrow-up" color="blue"
+              <q-icon v-else-if="props.row.id == -2" class="thumbnail" color="blue" name="fa-solid fa-arrow-up"
                       size="xl"/>
-              <q-icon v-else class="thumbnail" name="fa-solid fa-folder" color="blue" size="xl"/>
+              <q-icon v-else class="thumbnail" color="blue" name="fa-solid fa-folder" size="xl"/>
             </q-td>
           </template>
           <template v-slot:body-cell-actions="props">
             <q-td :props="props">
-              <div class="q-gutter-sm" v-if="props.row.id >= 0">
+              <div v-if="props.row.id >= 0" class="q-gutter-sm">
                 <q-btn icon="download" @click.stop="downloadResultItem(props.row.id)"/>
                 <q-btn icon="search" @click.stop="displayResultItem(props.row.id)"/>
               </div>
@@ -90,7 +99,7 @@
           </template>
           <template v-slot:body-cell-fileSize="props">
             <q-td :props="props">
-             <span v-if="props.row.id >= 0">{{ formatFileSize(props.row.size) }}</span>
+              <span v-if="props.row.id >= 0">{{ formatFileSize(props.row.size) }}</span>
             </q-td>
           </template>
         </q-table>
@@ -99,22 +108,22 @@
   </q-layout>
 </template>
 
-<script setup lang="ts">
+<script lang="ts" setup>
 import HeaderLogoButtonComponent from 'components/layout/HeaderLogoButtonComponent.vue';
 import UserManagerComponent from 'components/layout/UserManagerComponent.vue';
 import {useRoute, useRouter} from 'vue-router';
-import {computed, onMounted, ref, Ref} from 'vue';
+import {ComponentPublicInstance, computed, onBeforeUnmount, onMounted, ref, Ref, useTemplateRef, watch} from 'vue';
 import {ProjectMetadataPayload} from 'src/types/project';
 import {downloadFromApi, loadPayloadInstanceFromApi} from 'src/types/common';
-import { FullResultPayload, generateAndDownloadResultsZip, ResultItemPayload, showResultItem } from 'src/types/results';
-import { formatFileSize, sortPathsByHierarchy } from "src/types/utils";
-import {QSpinnerHourglass, QTableColumn, useQuasar} from "quasar";
+import {FullResultPayload, generateAndDownloadResultsZip, ResultItemPayload, showResultItem} from 'src/types/results';
+import {formatFileSize, sortPathsByHierarchy} from "src/types/utils";
+import {QSpinnerHourglass, QTableColumn, QTreeNode, useQuasar} from "quasar";
 import ResultItemThumbnailComponent from "components/results/ResultItemThumbnailComponent.vue";
 import {sendFailureNotification} from "src/types/notification";
 import DocumentationComponent from "components/layout/DocumentationComponent.vue";
 
 const filesViewPagination = {
-  rowsPerPage: 100
+  rowsPerPage: 0
 }
 const filesViewColumns: QTableColumn[] = [
   {
@@ -164,6 +173,77 @@ interface VfsEntry {
   size: number;
 }
 
+type DirNode = QTreeNode & {
+  path: string
+  children?: DirNode[]
+}
+
+function normalizePath(p: string): string {
+  if (!p) return '/'
+  // ensure leading slash
+  let s = p.startsWith('/') ? p : `/${p}`
+  // collapse repeated slashes
+  s = s.replace(/\/{2,}/g, '/')
+  // remove trailing slash except root
+  if (s.length > 1 && s.endsWith('/')) s = s.slice(0, -1)
+  return s
+}
+
+function buildDirectoryTree(paths: string[]): DirNode[] {
+  const root: DirNode = {
+    label: '/',
+    path: '/',
+    // node-key must be unique -> we’ll use full path as key
+    // (QTree uses `node[nodeKey]` internally; we set nodeKey="path")
+    children: []
+  }
+
+  // quick lookup: path -> node
+  const byPath = new Map<string, DirNode>()
+  byPath.set('/', root)
+
+  // sort to ensure parents are created before children
+  const sorted = [...new Set(paths.map(normalizePath))].sort((a, b) => a.localeCompare(b))
+
+  for (const full of sorted) {
+    if (full === '/') continue
+
+    const parts = full.split('/').filter(Boolean) // "folder1", "subfolder"
+    let currentPath = ''
+    let parent = root
+
+    for (let i = 0; i < parts.length; i++) {
+      const part = parts[i]
+      currentPath = currentPath + '/' + part // builds "/folder1", "/folder1/subfolder", ...
+
+      let node = byPath.get(currentPath)
+      if (!node) {
+        node = {
+          label: part,
+          path: currentPath,
+          children: []
+        }
+        byPath.set(currentPath, node)
+        parent.children ||= []
+        parent.children.push(node)
+      }
+
+      parent = node
+    }
+  }
+
+  // Optional: sort children alphabetically
+  const sortRec = (n: DirNode) => {
+    if (n.children?.length) {
+      n.children.sort((a, b) => String(a.label).localeCompare(String(b.label)))
+      n.children.forEach(sortRec)
+    }
+  }
+  sortRec(root)
+
+  return [root]
+}
+
 const $q = useQuasar()
 const $route = useRoute();
 const $router = useRouter()
@@ -171,7 +251,7 @@ const resultId = $route.params.id;
 const resultPath = computed(() => $route.params.path || "");
 const projectId = computed(() => resultPayload.value.projectId ? resultPayload.value.projectId.toString() : '');
 const projectPayload: Ref<ProjectMetadataPayload> = ref(
-  new ProjectMetadataPayload()
+    new ProjectMetadataPayload()
 );
 const resultPayload = ref<FullResultPayload>(new FullResultPayload());
 const directoryList = computed(() => {
@@ -253,6 +333,23 @@ const vfsCurrentDirectoryItems = computed(() => {
   return itemList
 })
 
+const treeNodes = computed<DirNode[]>(() => buildDirectoryTree(directoryList.value))
+
+// selection: store the selected node key (we use full path)
+const selected = ref<string | null>(null)
+
+// expand control (optional)
+const expanded = ref<string[]>(['/']) // start with root expanded
+
+// keep selection in sync with your existing active logic:
+watch(
+    () => '/' + resultPath.value,   // whatever `resultPath` is in your component
+    (activePath) => {
+      selected.value = normalizePath(activePath)
+    },
+    { immediate: true }
+)
+
 defineOptions({
   name: 'ResultsViewLayout',
 });
@@ -269,8 +366,7 @@ function onRowClick(evt: any, row: VfsEntry) {
     if (typeof row.content === "string") {
       navigateToFolder(row.content)
     }
-  }
-  else {
+  } else {
     displayResultItem(row.id)
   }
 }
@@ -279,8 +375,8 @@ function downloadResultItem(id: number) {
   const resultItem = resultPayload.value.items.findLast(v => v.id == id)
   if (resultItem) {
     downloadFromApi(
-      `/result-item/${id}/raw`,
-      resultItem.name
+        `/result-item/${id}/raw`,
+        resultItem.name
     );
   } else {
     sendFailureNotification("Unable to retrieve result item with id " + id)
@@ -297,19 +393,19 @@ function displayResultItem(id: number) {
 }
 
 function downloadZip(path: string) {
-  const toDownload : Array<ResultItemPayload> = []
-  for(const item of resultPayload.value.items) {
+  const toDownload: Array<ResultItemPayload> = []
+  for (const item of resultPayload.value.items) {
     const displayPath = "/" + item.path;
-    if(displayPath.startsWith(path)) {
+    if (displayPath.startsWith(path)) {
       toDownload.push(item)
     }
   }
-  if(toDownload.length == 0) {
+  if (toDownload.length == 0) {
     sendFailureNotification("Nothing to download.")
     return
   }
   let downloadSizeBytes = 0
-  for(const resultItem of toDownload) {
+  for (const resultItem of toDownload) {
     downloadSizeBytes += resultItem.size
   }
   $q.dialog({
@@ -340,30 +436,78 @@ function downloadZip(path: string) {
         message: `${percentage}% ${info}`
       })
     }, () => shouldCancel.value)
-      .finally(() => {
-        dialog.hide()
-      })
+        .finally(() => {
+          dialog.hide()
+        })
 
   })
 }
 
+// Table height sync
+const sidebar = useTemplateRef<ComponentPublicInstance>('sidebar')
+const table = useTemplateRef<ComponentPublicInstance>('table')
+
+function getDrawerAsideEl(): HTMLElement | null {
+  const root = sidebar.value?.$el as HTMLElement | undefined
+  if (!root) return null
+  // root is .q-drawer-container; the real drawer is the aside
+  return root.querySelector('aside.q-drawer') as HTMLElement | null
+}
+
+function getTableRootEl(): HTMLElement | null {
+  return (table.value?.$el as HTMLElement | undefined) ?? null
+}
+
+function syncHeight() {
+
+  const aside = getDrawerAsideEl()
+  const tbl = getTableRootEl()
+  if (!aside || !tbl) return
+
+  const h = aside.getBoundingClientRect().height - 48
+  tbl.style.height = `${Math.floor(h)}px`
+}
+
+let ro: ResizeObserver | null = null
+
+function createResizeObserver() {
+  ro = new ResizeObserver(syncHeight)
+
+  const drawerEl = sidebar.value?.$el as HTMLElement | undefined
+  if (drawerEl) ro.observe(drawerEl)
+
+  window.addEventListener('resize', syncHeight, { passive: true })
+}
+
+// Mount
 onMounted(() => {
+
+  // Load payloads
   loadPayloadInstanceFromApi(
-    `/result/${resultId}`,
-    FullResultPayload,
-    resultPayload
+      `/result/${resultId}`,
+      FullResultPayload,
+      resultPayload
   ).then(() => {
     if (projectId.value) {
       loadPayloadInstanceFromApi(
-        `/project/${projectId.value}`,
-        ProjectMetadataPayload,
-        projectPayload
+          `/project/${projectId.value}`,
+          ProjectMetadataPayload,
+          projectPayload
       );
     }
   });
+
+  // Handle table size sync
+  syncHeight()
+  createResizeObserver()
 });
+
+onBeforeUnmount(() => {
+  ro?.disconnect()
+  window.removeEventListener('resize', syncHeight)
+})
 </script>
-<style scoped lang="scss">
+<style lang="scss" scoped>
 .directory-list {
   display: flex;
   flex-direction: column;
@@ -373,4 +517,9 @@ onMounted(() => {
   width: 100px;
   height: 100px;
 }
+
+.file-view-table {
+  height: 80vh;
+}
+
 </style>
