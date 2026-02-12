@@ -4,10 +4,10 @@
       <q-card-section>
         <div class="text-h6">Auto-sort by metadata</div>
       </q-card-section>
-      <q-separator />
+      <q-separator/>
       <q-card-section>
         <div class="text-bold">
-          <q-icon name="help" />
+          <q-icon name="help"/>
           Info
         </div>
         <div>
@@ -16,32 +16,36 @@
           Images that are already sorted into the table will be not affected by this operation.
         </div>
         <div class="text-red">
-          Please ensure that the time point order is correct. J-AST will not check for you if your order is in any way sensible!
+          Please ensure that the time point order is correct. J-AST will not check for you if your order is in any way
+          sensible!
         </div>
       </q-card-section>
-      <q-separator />
+      <q-separator/>
       <q-card-section class="q-gutter-sm">
-        <q-select filled v-model="payload.timePointOrder" multiple label="Time point order" :options="timePointOptions" clearable >
+        <q-select v-model="payload.timePointOrder" :options="timePointOptions" clearable filled label="Time point order"
+                  multiple>
           <template v-slot:selected-item="item">
             <q-chip
-              removable
-              dense
-              @remove="item.removeAtIndex(item.index)"
-              :tabindex="item.tabindex"
-              color="amber-9"
-              text-color="white"
-              class="badge"
+                :tabindex="item.tabindex"
+                class="badge"
+                color="amber-9"
+                dense
+                removable
+                text-color="white"
+                @remove="item.removeAtIndex(item.index)"
             >
-              <q-icon name="fa-solid fa-clock" class="q-mr-sm"/>
+              <q-icon class="q-mr-sm" name="fa-solid fa-clock"/>
               <div>{{ item.opt }}</div>
             </q-chip>
           </template>
         </q-select>
-        <div v-if="payload.timePointOrder.length == 0" class="text-caption text-red">Please select at least one time point!</div>
+        <div v-if="payload.timePointOrder.length == 0" class="text-caption text-red">Please select at least one time
+          point!
+        </div>
       </q-card-section>
       <q-card-actions align="right">
-        <q-btn color="blue-grey" label="Cancel" @click="onDialogCancel" />
-        <q-btn color="red" label="OK" @click="onOKClick" />
+        <q-btn color="blue-grey" label="Cancel" no-caps no-wrap @click="onDialogCancel"/>
+        <q-btn color="red" label="OK" no-caps no-wrap @click="onOKClick"/>
       </q-card-actions>
     </q-card>
   </q-dialog>
@@ -52,11 +56,11 @@ export interface ImageAutoSortByMetadataDialogPayload {
   timePointOrder: Array<string>;
 }
 </script>
-<script setup lang="ts">
-import { useDialogPluginComponent } from 'quasar';
+<script lang="ts" setup>
+import {useDialogPluginComponent} from 'quasar';
 import {computed, onMounted, ref} from 'vue';
-import { ImagePayload } from 'src/types/image';
-import { ProjectImagesPayload } from 'src/types/projectImages';
+import {ImagePayload} from 'src/types/image';
+import {ProjectImagesPayload} from 'src/types/projectImages';
 
 const payload = ref<ImageAutoSortByMetadataDialogPayload>({
   timePointOrder: []
@@ -75,11 +79,11 @@ defineEmits([
 
 const initialTimePointOrder = computed(() => {
   const maxColumn = props.projectImages.maxColumn()
-  const result : Array<string> = []
-  for (let i = 0; i <= maxColumn ; i++) {
+  const result: Array<string> = []
+  for (let i = 0; i <= maxColumn; i++) {
     const badges = props.projectImages.getColumnMetadataAsBadges(i)
-    if(badges.length == 1) {
-      if(!result.includes(badges[0].text)) {
+    if (badges.length == 1) {
+      if (!result.includes(badges[0].text)) {
         result.push(badges[0].text)
       }
     }
@@ -89,16 +93,16 @@ const initialTimePointOrder = computed(() => {
 
 const timePointOptions = computed(() => {
   const result = new Set<string>()
-  for(const id of props.projectImages.imageIds) {
-    if(props.projectImages.imagesById[id].timePoint) {
+  for (const id of props.projectImages.imageIds) {
+    if (props.projectImages.imagesById[id].timePoint) {
       result.add(props.projectImages.imagesById[id].timePoint);
     }
   }
   return [...result]
 })
 
-const { dialogRef, onDialogHide, onDialogOK, onDialogCancel } =
-  useDialogPluginComponent();
+const {dialogRef, onDialogHide, onDialogOK, onDialogCancel} =
+    useDialogPluginComponent();
 // dialogRef      - Vue ref to be applied to QDialog
 // onDialogHide   - Function to be used as handler for @hide on QDialog
 // onDialogOK     - Function to call to settle dialog with "ok" outcome
@@ -120,7 +124,7 @@ onMounted(() => {
 })
 
 </script>
-<style scoped lang="scss">
+<style lang="scss" scoped>
 .q-dialog-plugin {
   width: 700px;
   max-width: 80vw;

@@ -1,4 +1,4 @@
-package org.hkijena.jast.tasks.workloads;
+package org.hkijena.jast.tasks.workloads.etest;
 
 import jakarta.transaction.Transactional;
 import org.hkijena.jast.config.SystemPackage;
@@ -108,6 +108,7 @@ public class ETestCopyRegisteredZOIShapeWorkload implements BackendTaskWorkload 
         final List<SystemPackage> systemPackages = params.getRuntimeConfig().getSystemPackages();
 
         taskUtils.writeRawImages(params, params.getPayload().getImageIds(), imageRepository, fileStorageService, progressInfo, verbose);
+        taskUtils.writeMetadata(params, params.getPayload().getImageIds(), imageRepository, progressInfo, verbose);
         taskUtils.writeMaskAnnotations(params, params.getPayload().getImageIds(), "strip-disk", imageRepository, fileStorageService, progressInfo, verbose);
         taskUtils.writeRowFirstMaskAnnotations(params, params.getPayload().getImageIds(), "zoi-shape", imageRepository, fileStorageService, progressInfo, verbose);
 
@@ -116,7 +117,7 @@ public class ETestCopyRegisteredZOIShapeWorkload implements BackendTaskWorkload 
             parameterOverrides.put(PARAMETER_OVERRIDES.get(parameter.getId()), parameter.getValue());
         }
 
-        Path projectFilePath = taskUtils.writeSharedFile(params, "etest-copy-registered-zoi-shape.jip");
+        Path projectFilePath = taskUtils.writeSharedFile(params, Path.of("workflows", "etest-copy-registered-zoi-shape.jip"));
         progressInfo.log("Project file is " + projectFilePath);
         taskUtils.runJIPipe(params, projectFilePath, parameterOverrides, "", progressInfo, systemPackages, preferSystemPackages, verbose);
 

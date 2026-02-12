@@ -1,22 +1,22 @@
 <template>
-  <q-btn color="cyan" @click="goToResultsView">
-    <q-icon name="archive" class="q-mr-md" />
+  <q-btn color="cyan" no-caps no-wrap @click="goToResultsView">
+    <q-icon class="q-mr-md" name="archive"/>
     <div>Results</div>
-    <q-badge floating class="container-badge">
-      <q-badge color="green" v-if="numNew > 0"
-        >{{ numNew }}
+    <q-badge class="container-badge" floating>
+      <q-badge v-if="numNew > 0" color="green"
+      >{{ numNew }}
       </q-badge>
     </q-badge>
   </q-btn>
 </template>
-<script setup lang="ts">
-import { computed } from 'vue';
-import { useRouter } from 'vue-router';
-import { ResultPayload } from 'src/types/results';
+<script lang="ts" setup>
+import {computed} from 'vue';
+import {useRouter} from 'vue-router';
+import {ResultPayload} from 'src/types/results';
 
 const $router = useRouter();
 const numNew = computed(() => {
-  if(resultsList.value) {
+  if (resultsList.value) {
     return resultsList.value.filter(result => !result.viewed).length;
   }
   return 0;
@@ -34,6 +34,7 @@ const resultsList = defineModel<ResultPayload[]>()
 function goToResultsView() {
   $router.push(`/results/list/${props.projectId}`);
 }
+
 //
 // function handleNewTaskDetected(task: BackendTaskPayload) {
 //   sendInfoNotification(
@@ -79,7 +80,7 @@ function goToResultsView() {
 //   }
 // });
 </script>
-<style scoped lang="scss">
+<style lang="scss" scoped>
 .container-badge {
   background: transparent;
   top: -10px;

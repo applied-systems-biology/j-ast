@@ -1,4 +1,4 @@
-package org.hkijena.jast.tasks.workloads;
+package org.hkijena.jast.tasks.workloads.visualize;
 
 import com.google.common.base.Predicates;
 import jakarta.transaction.Transactional;
@@ -28,17 +28,17 @@ import java.util.List;
 import java.util.Map;
 
 @Component
-@BackendTaskType(typeId = "generate-visualizations-single")
-public class GenerateVisualizationsSingleWorkload implements BackendTaskWorkload {
+@BackendTaskType(typeId = "generate-visualizations-time-series")
+public class GenerateVisualizationsTimeSeriesWorkload implements BackendTaskWorkload {
 
     private static final List<BackendTaskWorkloadDataSlot> INPUTS = List.of(JASTDataSlot.Plate.toSlot(BackendTaskWorkloadDataSlotValidationMode.Optional),
             JASTDataSlot.ZOIShape.toSlot(BackendTaskWorkloadDataSlotValidationMode.Optional),
             JASTDataSlot.StripDisk.toSlot(BackendTaskWorkloadDataSlotValidationMode.Optional));
     private static final List<BackendTaskWorkloadDataSlot> OUTPUTS = Collections.emptyList();
     private static final List<BackendTaskWorkloadParameterSlot> PARAMETERS = List.of(
-            new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotType.String, "result-name", "Result name", "The name of the generated result folder", "Visualization"),
-            new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotType.String, "result-description", "Result description", "Description of the generated result", ""),
-            new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotType.Number, "line-width", "Line width", "The annotation's line width in pixels", 3)
+            new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotDataType.String, BackendTaskWorkloadParameterSlotType.Common, "result-name", "Result name", "The name of the generated result folder", "Visualization"),
+            new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotDataType.String, BackendTaskWorkloadParameterSlotType.Common, "result-description", "Result description", "Description of the generated result", ""),
+            new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotDataType.Number, BackendTaskWorkloadParameterSlotType.Common, "line-width", "Line width", "The annotation's line width in pixels", 3)
     );
     private static final Map<String, String> PARAMETER_OVERRIDES = new HashMap<>();
     private final ImageRepository imageRepository;
@@ -49,7 +49,7 @@ public class GenerateVisualizationsSingleWorkload implements BackendTaskWorkload
     private BackendTaskRegistry registry;
 
     @Autowired
-    public GenerateVisualizationsSingleWorkload(ImageRepository imageRepository, ResultRepository resultRepository, ProjectRepository projectRepository, FileStorageService fileStorageService, BackendTaskUtils taskUtils) {
+    public GenerateVisualizationsTimeSeriesWorkload(ImageRepository imageRepository, ResultRepository resultRepository, ProjectRepository projectRepository, FileStorageService fileStorageService, BackendTaskUtils taskUtils) {
         this.imageRepository = imageRepository;
         this.resultRepository = resultRepository;
         this.projectRepository = projectRepository;
@@ -68,12 +68,12 @@ public class GenerateVisualizationsSingleWorkload implements BackendTaskWorkload
 
     @Override
     public String getName() {
-        return "Generate visualizations (single)";
+        return "Generate visualizations (time series)";
     }
 
     @Override
     public String getDescription() {
-        return "Generates visualizations of the images and annotations (plate, strip/disk, ZOI shape).";
+        return "Generates visualizations of the images and annotations (plate, strip/disk, ZOI shape). This algorithm requires that images are properly organized into time series.";
     }
 
     @Override
@@ -113,17 +113,19 @@ public class GenerateVisualizationsSingleWorkload implements BackendTaskWorkload
 
     @Override
     public ViewMode getViewModeRestriction() {
-        return null;
+        return ViewMode.Timeline;
     }
 
     @Override
     @Transactional(Transactional.TxType.REQUIRES_NEW)
     public void execute(BackendTaskWorkloadParams params, ProgressInfo progressInfo) throws Throwable {
+
         final boolean verbose = params.getRuntimeConfig().isVerbose();
         final boolean preferSystemPackages = params.getRuntimeConfig().isPreferSystemPackages();
         final List<SystemPackage> systemPackages = params.getRuntimeConfig().getSystemPackages();
 
         taskUtils.writeRawImages(params, params.getPayload().getImageIds(), imageRepository, fileStorageService, progressInfo, verbose);
+        taskUtils.writeMetadata(params, params.getPayload().getImageIds(), imageRepository, progressInfo, verbose);
         taskUtils.writeMaskAnnotations(params, params.getPayload().getImageIds(), "strip-disk", imageRepository, fileStorageService, progressInfo, verbose);
         taskUtils.writeMaskAnnotations(params, params.getPayload().getImageIds(), "zoi-shape", imageRepository, fileStorageService, progressInfo, verbose);
         taskUtils.writeMaskAnnotations(params, params.getPayload().getImageIds(), "plate", imageRepository, fileStorageService, progressInfo, verbose);
@@ -136,7 +138,7 @@ public class GenerateVisualizationsSingleWorkload implements BackendTaskWorkload
             }
         }
 
-        Path projectFilePath = taskUtils.writeSharedFile(params, "generate-visualizations-single.jip");
+        Path projectFilePath = taskUtils.writeSharedFile(params, Path.of("workflows","generate-visualizations.jip"));
         progressInfo.log("Project file is " + projectFilePath);
         taskUtils.runJIPipe(params, projectFilePath, parameterOverrides, "", progressInfo, systemPackages, preferSystemPackages, verbose);
 

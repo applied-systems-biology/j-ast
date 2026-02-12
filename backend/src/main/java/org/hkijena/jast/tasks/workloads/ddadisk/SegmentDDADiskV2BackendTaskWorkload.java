@@ -1,4 +1,4 @@
-package org.hkijena.jast.tasks.workloads;
+package org.hkijena.jast.tasks.workloads.ddadisk;
 
 import jakarta.transaction.Transactional;
 import org.hkijena.jast.config.SystemPackage;
@@ -29,8 +29,8 @@ public class SegmentDDADiskV2BackendTaskWorkload implements BackendTaskWorkload 
     private static final List<BackendTaskWorkloadDataSlot> INPUTS = Collections.singletonList(JASTDataSlot.Plate.toSlot());
     private static final List<BackendTaskWorkloadDataSlot> OUTPUTS = Collections.singletonList(JASTDataSlot.StripDisk.toSlot());
     private static final List<BackendTaskWorkloadParameterSlot> PARAMETERS = List.of(
-            new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotType.Number, "expectedDiameter", "Expected diameter (mm)", "Expected disk diameter in millimeters", 6),
-            new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotType.Number, "localVarianceDivisor", "Local variance divisor", "Determines the kernel size of the local variance operation. The expected diameter is divided by that value.", 6)
+            new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotDataType.Number, BackendTaskWorkloadParameterSlotType.Common, "expectedDiameter", "Expected diameter (mm)", "Expected disk diameter in millimeters", 6),
+            new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotDataType.Number, BackendTaskWorkloadParameterSlotType.Advanced, "localVarianceDivisor", "Local variance divisor", "Determines the kernel size of the local variance operation. The expected diameter is divided by that value.", 6)
     );
     private static final Map<String, String> PARAMETER_OVERRIDES = new HashMap<>();
 
@@ -114,6 +114,7 @@ public class SegmentDDADiskV2BackendTaskWorkload implements BackendTaskWorkload 
         final List<SystemPackage> systemPackages = params.getRuntimeConfig().getSystemPackages();
 
         taskUtils.writeRawImages(params, params.getPayload().getImageIds(), imageRepository, fileStorageService, progressInfo, verbose);
+        taskUtils.writeMetadata(params, params.getPayload().getImageIds(), imageRepository, progressInfo, verbose);
         taskUtils.writeMaskAnnotations(params, params.getPayload().getImageIds(), "plate", imageRepository, fileStorageService, progressInfo, verbose);
 
         Map<String, Object> parameterOverrides = new HashMap<>();
@@ -124,7 +125,7 @@ public class SegmentDDADiskV2BackendTaskWorkload implements BackendTaskWorkload 
             }
         }
 
-        Path projectFilePath = taskUtils.writeSharedFile(params, "image-segment-dda-disk-v2.jip");
+        Path projectFilePath = taskUtils.writeSharedFile(params, Path.of("workflows","image-segment-dda-disk-v2.jip"));
         progressInfo.log("Project file is " + projectFilePath);
         taskUtils.runJIPipe(params, projectFilePath, parameterOverrides, "", progressInfo, systemPackages, preferSystemPackages, verbose);
 

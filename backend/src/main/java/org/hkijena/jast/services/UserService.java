@@ -192,4 +192,11 @@ public class UserService implements UserDetailsService, ApplicationContextAware 
         }
         return true;
     }
+
+    public User authenticationToUser(Authentication authentication) {
+        if (authentication != null && authentication.getPrincipal() instanceof UserPrincipal) {
+            return (((UserPrincipal) authentication.getPrincipal()).getUser());
+        }
+        return null;
+    }
 }

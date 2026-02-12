@@ -119,8 +119,8 @@ public class BackendTaskRegistry {
 
         // Inject result parameters
         if (generatesResults) {
-            parameters.add(new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotType.String, "__jast__result-name", "Result name", "The name of the generated result folder", "DiskImageR-style result (single)"));
-            parameters.add(new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotType.String, "__jast__result-description", "Result description", "Description of the generated result", "RAD/FoG/ZOI"));
+            parameters.add(new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotDataType.String, BackendTaskWorkloadParameterSlotType.Common, "__jast__result-name", "Result name", "The name of the generated result folder", "DiskImageR-style result (single)"));
+            parameters.add(new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotDataType.String, BackendTaskWorkloadParameterSlotType.Common, "__jast__result-description", "Result description", "Description of the generated result", "RAD/FoG/ZOI"));
         }
 
         // Auto-discover global parameters
@@ -138,8 +138,8 @@ public class BackendTaskRegistry {
             // We only support basic primitive parameters
             switch (typeId) {
                 case "java.lang.String":
-                    parameters.add(new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotType.String,
-                            "/" + entry.getKey(),
+                    parameters.add(new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotDataType.String,
+                            BackendTaskWorkloadParameterSlotType.Common, "/" + entry.getKey(),
                             parameterName,
                             parameterDescription,
                             entry.getValue().path("value").asText()));
@@ -156,16 +156,16 @@ public class BackendTaskRegistry {
                 case "primitive.short":
                 case "java.lang.Byte":
                 case "primitive.byte":
-                    parameters.add(new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotType.Number,
-                            "/" + entry.getKey(),
+                    parameters.add(new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotDataType.Number,
+                            BackendTaskWorkloadParameterSlotType.Common, "/" + entry.getKey(),
                             parameterName,
                             parameterDescription,
                             entry.getValue().path("value").asDouble()));
                     break;
                 case "java.lang.Boolean":
                 case "primitive.boolean":
-                    parameters.add(new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotType.Boolean,
-                            "/" + entry.getKey(),
+                    parameters.add(new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotDataType.Boolean,
+                            BackendTaskWorkloadParameterSlotType.Common, "/" + entry.getKey(),
                             parameterName,
                             parameterDescription,
                             entry.getValue().path("value").asBoolean()));
@@ -204,22 +204,22 @@ public class BackendTaskRegistry {
                         // We only accept number/boolean/string fields
                         if (nodeParameterNode.isTextual()) {
                             logger.warn("Referenced parameter '" + parameterKey + "' in node '" + nodeUUID + "' (" + pluginFile + ") is determined to be a string. Please note that parameter references are not yet fully supported.");
-                            parameters.add(new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotType.String,
-                                    path,
+                            parameters.add(new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotDataType.String,
+                                    BackendTaskWorkloadParameterSlotType.Common, path,
                                     parameterName,
                                     parameterDescription,
                                     nodeParameterNode.asText()));
                         } else if (nodeParameterNode.isNumber()) {
                             logger.warn("Referenced parameter '" + parameterKey + "' in node '" + nodeUUID + "' (" + pluginFile + ") is determined to be a number. Please note that parameter references are not yet fully supported.");
-                            parameters.add(new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotType.Number,
-                                    path,
+                            parameters.add(new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotDataType.Number,
+                                    BackendTaskWorkloadParameterSlotType.Common, path,
                                     parameterName,
                                     parameterDescription,
                                     nodeParameterNode.asDouble()));
                         } else if (nodeParameterNode.isBoolean()) {
                             logger.warn("Referenced parameter '" + parameterKey + "' in node '" + nodeUUID + "' (" + pluginFile + ") is determined to be a boolean. Please note that parameter references are not yet fully supported.");
-                            parameters.add(new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotType.Boolean,
-                                    path,
+                            parameters.add(new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotDataType.Boolean,
+                                    BackendTaskWorkloadParameterSlotType.Common, path,
                                     parameterName,
                                     parameterDescription,
                                     nodeParameterNode.asBoolean()));

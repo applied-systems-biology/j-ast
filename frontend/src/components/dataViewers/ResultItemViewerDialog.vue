@@ -5,7 +5,7 @@
         <q-toolbar-title class="row items-center q-gutter-sm">
           <div class="q-ml-md">{{ props.resultItem.path }} / {{ props.resultItem.name }}</div>
           <q-space />
-          <q-btn icon="close" flat @click="onDialogOK" />
+          <q-btn no-caps no-wrap icon="close" flat @click="onDialogOK" />
         </q-toolbar-title>
       </q-header>
       <q-page-container>
@@ -26,7 +26,7 @@
             Currently, the web application does not know how to display {{ props.resultItem.name }}.<br/>
             Please download the file and view it on your computer.
             <template v-slot:action>
-              <q-btn color="green" label="Download" @click="downloadResultItem"/>
+              <q-btn no-caps no-wrap color="green" label="Download" @click="downloadResultItem"/>
             </template>
           </q-banner>
         </q-page>

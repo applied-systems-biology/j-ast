@@ -73,6 +73,18 @@ public class BackendTaskUtils {
         return params.getTmpPath().resolve(targetPath);
     }
 
+    /**
+     * Copies the shared file to the temporary directory; the directory is ignored
+     *
+     * @param params     the params
+     * @param sourcePath the source path
+     * @return where the shared file is written
+     * @throws IOException on exception
+     */
+    public Path writeSharedFile(BackendTaskWorkloadParams params, Path sourcePath) throws IOException {
+        return writeSharedFile(params, sourcePath, sourcePath.getFileName());
+    }
+
     public Path writeSharedFile(BackendTaskWorkloadParams params, String sourcePath, String targetPath) throws IOException {
         return writeSharedFile(params, Paths.get(sourcePath), Paths.get(targetPath));
     }
@@ -94,23 +106,43 @@ public class BackendTaskUtils {
 
     public void writeRawImages(BackendTaskWorkloadParams params, Iterable<Long> imageIds, ImageRepository repository, FileStorageService fileStorageService, ProgressInfo progressInfo, boolean verbose) throws IOException {
         Path rawPath = PathUtils.resolveAndMakeSubDirectory(params.getTmpPath(), "raw");
-        Path csvPath = params.getTmpPath().resolve("metadata.csv");
-        final String[] csvHeader = new String[]{"#ImageId", "#Experiment", "#Sample", "#TimePoint", "#AssayType", "PixelSize", "GroupRow", "GroupColumn"};
         progressInfo.log("Writing raw image data ...");
+        ImmutableList<Image> images = ImmutableList.copyOf(repository.findAllById(imageIds));
+        for (int i = 0; i < images.size(); i++) {
+            progressInfo.setProgress(i, images.size());
+            Image image = images.get(i);
+            if (verbose) {
+                progressInfo.log("Writing raw image data " + image.getId());
+            }
+            Path pngPath = rawPath.resolve(image.getId() + ".png");
+            Files.write(pngPath, image.getRawData(fileStorageService));
+        }
+
+    }
+
+    public void writeMetadata(BackendTaskWorkloadParams params, Iterable<Long> imageIds, ImageRepository repository, ProgressInfo progressInfo, boolean verbose, ImageMetadata... additionalMetadata) throws IOException {
+        List<ImageMetadata> metadata = new ArrayList<>();
+        metadata.add(new ImageMetadata("#ImageId", Image::getId));
+        metadata.add(new ImageMetadata("#Experiment", Image::getExperiment));
+        metadata.add(new ImageMetadata("#Sample", Image::getSample));
+        metadata.add(new ImageMetadata("#TimePoint", Image::getTimePoint));
+        metadata.add(new ImageMetadata("#AssayType", Image::getAssayType));
+        metadata.add(new ImageMetadata("PixelSize", Image::getPixelSizeMillimeter));
+        metadata.add(new ImageMetadata("GroupRow", Image::getGroupRow));
+        metadata.add(new ImageMetadata("GroupColumn", Image::getGroupColumn));
+        metadata.addAll(Arrays.asList(additionalMetadata));
+
+        progressInfo.log("Writing image metadata ...");
+        Path csvPath = params.getTmpPath().resolve("metadata.csv");
+        final String[] csvHeader = metadata.stream().map(ImageMetadata::getColumnName).toArray(String[]::new);
         try (FileWriter csvFileWriter = new FileWriter(csvPath.toFile())) {
             CSVPrinter csvPrinter = new CSVPrinter(csvFileWriter, CSVFormat.Builder.create().setDelimiter(',').setQuote('"').setHeader(csvHeader).build());
             ImmutableList<Image> images = ImmutableList.copyOf(repository.findAllById(imageIds));
             for (int i = 0; i < images.size(); i++) {
-                progressInfo.setProgress(i, images.size());
                 Image image = images.get(i);
-                if(verbose) {
-                    progressInfo.log("Writing raw image data " + image.getId());
-                }
-                Path pngPath = rawPath.resolve(image.getId() + ".png");
-                Files.write(pngPath, image.getRawData(fileStorageService));
 
                 // Write metadata
-                csvPrinter.printRecord(image.getId(), image.getExperiment(), image.getSample(), image.getTimePoint(), image.getAssayType(), image.getPixelSizeMillimeter(), image.getGroupRow(), image.getGroupColumn());
+                csvPrinter.printRecord(metadata.stream().map(m -> m.getValueGenerator().apply(image)).toArray(Object[]::new));
             }
         }
     }
@@ -123,7 +155,7 @@ public class BackendTaskUtils {
         for (int i = 0; i < images.size(); i++) {
             progressInfo.setProgress(i, images.size());
             Image image = images.get(i);
-            if(verbose) {
+            if (verbose) {
                 progressInfo.log("Writing mask annotation " + annotationTypeId + " image data " + image.getId());
             }
             MaskImageAnnotation annotation = image.getMaskImageAnnotation(annotationTypeId);
@@ -146,7 +178,7 @@ public class BackendTaskUtils {
         progressInfo.log("Writing per-row first available mask annotation for " + annotationTypeId + " ...");
 
         for (int groupRow : images.stream().map(Image::getGroupRow).collect(Collectors.toSet())) {
-            if(verbose) {
+            if (verbose) {
                 progressInfo.log("Processing row " + groupRow);
             }
             byte[] firstAnnotation = null;
@@ -156,7 +188,7 @@ public class BackendTaskUtils {
                 }
                 MaskImageAnnotation annotation = image.getMaskImageAnnotation(annotationTypeId);
                 if (annotation != null) {
-                    if(verbose) {
+                    if (verbose) {
                         progressInfo.log("Found first available annotation " + annotationTypeId + " image data " + image.getId());
                     }
                     firstAnnotation = annotation.getRawData(fileStorageService);
@@ -167,7 +199,7 @@ public class BackendTaskUtils {
                 if (image.getGroupRow() != groupRow) {
                     continue;
                 }
-                if(verbose) {
+                if (verbose) {
                     progressInfo.log("Writing first available mask annotation " + annotationTypeId + " image data " + image.getId());
                 }
                 MaskImageAnnotation annotation = image.getMaskImageAnnotation(annotationTypeId);
@@ -201,7 +233,7 @@ public class BackendTaskUtils {
                 Path imageDirectory = entry.getValue();
                 Path imageFileName = imageDirectory.resolve(image.getId() + ".png");
                 if (Files.isRegularFile(imageFileName)) {
-                    if(verbose) {
+                    if (verbose) {
                         progressInfo.log("Reading annotation from " + imageFileName);
                     }
                     try {
@@ -213,7 +245,7 @@ public class BackendTaskUtils {
                         }
 
                         // Check if it's not empty
-                        if(ImageUtils.isImageNotEmpty(rawImage)) {
+                        if (ImageUtils.isImageNotEmpty(rawImage)) {
                             // Get or create annotation and increment its version
                             MaskImageAnnotation annotation = image.getOrCreateMaskAnnotation(annotationTypeId, null);
                             annotation.setRawData(fileStorageService, ImageUtils.toPNGByteArray(rawImage));
@@ -222,8 +254,7 @@ public class BackendTaskUtils {
 
                             // Mark as changed
                             changed = true;
-                        }
-                        else {
+                        } else {
                             progressInfo.log("Refusing to read annotation from " + imageFileName + ", as the image is empty!");
                         }
 
@@ -257,7 +288,7 @@ public class BackendTaskUtils {
 
             Path imageFileName = imageDirectory.resolve(image.getId() + ".png");
             if (Files.isRegularFile(imageFileName)) {
-                if(verbose) {
+                if (verbose) {
                     progressInfo.log("Reading raw image from " + imageFileName);
                 }
                 try {
@@ -296,7 +327,7 @@ public class BackendTaskUtils {
         resultItem.setName(name);
         resultItem.setPath(path);
 
-        if(verbose) {
+        if (verbose) {
             progressInfo.log("Processing result " + path + "/" + name);
         }
 
@@ -351,7 +382,7 @@ public class BackendTaskUtils {
             @Override
             public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
                 try {
-                    if(filter.test(file)) {
+                    if (filter.test(file)) {
                         ResultItem item = createResultItemFromPath(file, resultDirectory, fileStorageService, progressInfo, verbose);
                         if (item != null) {
                             result.addResultItem(item);
@@ -399,24 +430,23 @@ public class BackendTaskUtils {
         Path tmpPath = params.getTmpPath().toAbsolutePath().normalize();
 
         // Do system package transformation
-        if(preferSystemPackages) {
+        if (preferSystemPackages) {
             progressInfo.log("--> SYSTEM PACKAGES ARE SET AS PREFERENCE <--");
             final JsonNode projectNode = JsonUtils.readFromFile(projectFile, JsonNode.class);
             for (SystemPackage systemPackage : systemPackages) {
-                if(systemPackage.isPresent()) {
+                if (systemPackage.isPresent()) {
                     JsonNode settingsNode = projectNode;
                     List<String> key = systemPackage.getKey();
                     for (int i = 0; i < key.size() - 1; i++) {
                         String k = key.get(i);
                         settingsNode = settingsNode.path(k);
                     }
-                    if(settingsNode.isObject() && settingsNode instanceof ObjectNode objectNode) {
+                    if (settingsNode.isObject() && settingsNode instanceof ObjectNode objectNode) {
                         String lastKey = key.getLast();
                         JsonNode value = JsonUtils.readFromString(systemPackage.getValue(), JsonNode.class);
                         objectNode.set(lastKey, value);
                         progressInfo.log("Using system package override for " + String.join("/", systemPackage.getKey()));
-                    }
-                    else {
+                    } else {
                         progressInfo.log("Unable to setup system package override for " + String.join("/", systemPackage.getKey()) + " - settings node does not exist!");
                     }
                 }
@@ -489,11 +519,10 @@ public class BackendTaskUtils {
         ProcessUtils.ExtendedExecutor executor = new ProcessUtils.ExtendedExecutor(ExecuteWatchdog.INFINITE_TIMEOUT, jipipeProgress, params.getLockFilePath());
         executor.setWorkingDirectory(jipipeRootPath.toFile());
 
-        if(verbose) {
+        if (verbose) {
             // Dump all JIPipe progress into info
             ProcessUtils.setupLogger(commandLine, executor, jipipeProgress);
-        }
-        else {
+        } else {
             // Use extractor to only capture relevant JIPipe outputs
             setupLeanJIPipeLogger(commandLine, executor, jipipeProgress);
         }
@@ -508,28 +537,28 @@ public class BackendTaskUtils {
 
     private void setupLeanJIPipeLogger(CommandLine commandLine, ProcessUtils.ExtendedExecutor executor, ProgressInfo progressInfo) {
         progressInfo.log("Running " + commandLine.toString());
-        String[] lastLine = new String[] { "" };
+        String[] lastLine = new String[]{""};
 
         LogOutputStream progressInfoLog = new LogOutputStream() {
             @Override
             protected void processLine(String s, int i) {
                 for (String s1 : s.split("\\r")) {
-                    if(s1.contains("|")) {
+                    if (s1.contains("|")) {
                         String s2 = s1.split("\\|")[0];
-                        if(s2.contains("{") || s2.contains("}") || s2.contains("(")) {
+                        if (s2.contains("{") || s2.contains("}") || s2.contains("(")) {
                             // Filter out code
                             continue;
                         }
-                        if(s1.contains("GC")) {
+                        if (s1.contains("GC")) {
                             continue;
                         }
-                        if(s1.contains("Copying data")) {
+                        if (s1.contains("Copying data")) {
                             continue;
                         }
-                        if(!s1.contains("Executing")) {
+                        if (!s1.contains("Executing")) {
                             continue;
                         }
-                        if(!lastLine[0].equals(s2)) {
+                        if (!lastLine[0].equals(s2)) {
                             lastLine[0] = s2;
                             progressInfo.log(WordUtils.wrap(s1, 120));
                         }
@@ -544,8 +573,8 @@ public class BackendTaskUtils {
     /**
      * Schedules a new sub-task
      *
-     * @param payload the payload for the subtask
-     * @param registry       the task registry
+     * @param payload      the payload for the subtask
+     * @param registry     the task registry
      * @param progressInfo the progress info
      */
     @Transactional
@@ -554,7 +583,7 @@ public class BackendTaskUtils {
         progressInfo.log("Scheduling new task " + payload.getTaskId());
 
         Optional<Project> project_ = projectRepository.findById(payload.getProjectId());
-        if(project_.isEmpty()) {
+        if (project_.isEmpty()) {
             throw new RuntimeException("Project not found");
         }
         Project project = project_.get();

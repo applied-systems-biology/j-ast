@@ -49,3 +49,12 @@ export function createPixelSizeBadge(value: string): Badge {
     type: 'Assay type'
   };
 }
+
+export function createStripPresetBadge(value: string): Badge {
+    return {
+        text: value,
+        icon: 'fa-solid fa-ruler-vertical',
+        color: '#ac4141',
+        type: 'Strip preset'
+    };
+}

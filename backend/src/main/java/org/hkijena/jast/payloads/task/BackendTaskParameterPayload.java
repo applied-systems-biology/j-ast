@@ -2,9 +2,13 @@ package org.hkijena.jast.payloads.task;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hkijena.jast.tasks.BackendTaskWorkloadParameterSlot;
+import org.hkijena.jast.tasks.BackendTaskWorkloadParameterSlotDataType;
 import org.hkijena.jast.tasks.BackendTaskWorkloadParameterSlotType;
 
 public class BackendTaskParameterPayload {
+    @JsonProperty
+    private BackendTaskWorkloadParameterSlotDataType dataType;
+
     @JsonProperty
     private BackendTaskWorkloadParameterSlotType type;
 
@@ -24,6 +28,7 @@ public class BackendTaskParameterPayload {
     }
 
     public BackendTaskParameterPayload(BackendTaskWorkloadParameterSlot slot) {
+        this.dataType = slot.getDataType();
         this.type = slot.getType();
         this.id = slot.getId();
         this.label = slot.getLabel();
@@ -31,12 +36,12 @@ public class BackendTaskParameterPayload {
         this.value = slot.getDefaultValue();
     }
 
-    public BackendTaskWorkloadParameterSlotType getType() {
-        return type;
+    public BackendTaskWorkloadParameterSlotDataType getDataType() {
+        return dataType;
     }
 
-    public void setType(BackendTaskWorkloadParameterSlotType type) {
-        this.type = type;
+    public void setDataType(BackendTaskWorkloadParameterSlotDataType dataType) {
+        this.dataType = dataType;
     }
 
     public String getId() {

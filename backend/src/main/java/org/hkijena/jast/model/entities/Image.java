@@ -65,7 +65,6 @@ public class Image {
     @Column(name = "group_column")
     private Integer groupColumn = -1;
 
-
     @Column(name = "raw_data_file_id", columnDefinition = "TEXT")
     private String rawDataFileId;
 
@@ -305,6 +304,7 @@ public class Image {
         setTimePoint(payload.getTimePoint());
         setGroupColumn(payload.getGroupColumn());
         setGroupRow(payload.getGroupRow());
+        setMetadata(payload.getMetadata());
     }
 
     @Transactional

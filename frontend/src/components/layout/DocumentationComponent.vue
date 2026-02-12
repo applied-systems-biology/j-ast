@@ -3,7 +3,7 @@
   <q-dialog full-height seamless :position="isLeft ? 'left' : 'right'" v-model="showDocumentation">
     <q-card class="column full-height" style="width: 20vw; max-width: 500px">
       <q-card-section class="row items-center">
-        <div class="text-h6">Documentation</div>
+        <div class="text-h6">Quick handbook</div>
         <q-space/>
         <q-btn v-if="!isLeft" size="sm" flat icon="fa-solid fa-chevron-left" @click="isLeft = true">
           <q-tooltip>Move to left side</q-tooltip>
@@ -94,9 +94,9 @@
                 <q-card-section>
                   <ol>
                     <li>Click <q-btn class="q-ma-md" color="secondary" label="Select all unsorted" icon="select_all"/></li>
-                    <li>Click <q-btn class="q-ma-md"  color="accent"
+                    <li>Select the <q-btn class="q-ma-md" outline color="accent"
                                      label="Process"
-                                     icon="fa-solid fa-gear"/></li>
+                                     icon="fa-solid fa-gear"/> tab</li>
                     <li>Navigate to <strong>Preprocessing | Invert raw image</strong></li>
                     <li>Scroll down in the dialog and click <q-btn label="OK" color="red"/> </li>
                     <li>Wait a few minutes/seconds until your images are processed</li>
@@ -121,7 +121,7 @@
                   <q-icon name="info"/>
                   If the operations fail, you can still do the preparation step-by-step (see other categories below).
                   You can also reset all assignments made by this operation by selecting the image(s) and using the
-                  operations in the <q-btn class="q-ma-md"  color="accent" label="Process" icon="fa-solid fa-gear"/> menu.
+                  operations in the <q-btn class="q-ma-md"  color="accent" outline label="Process" icon="fa-solid fa-gear"/> tab.
                 </q-card-section>
                 <q-card-section>
                   Assuming you start with unsorted images, you can execute the operation by clicking the following button:
@@ -146,8 +146,8 @@
                   <strong>Annotating manually: </strong> Just select the image and edit the fields on the right-hand side.
                 </q-card-section>
                 <q-card-section>
-                  <strong>Annotating automatically: </strong> Select the images to annotate and click
-                  <q-btn class="q-ma-md"  color="accent" label="Process" icon="fa-solid fa-gear"/>. <br/>Here you select the <strong>Auto-fill metadata</strong> operation.
+                  <strong>Annotating automatically: </strong> Select the images to annotate and select the
+                  <q-btn class="q-ma-md"  color="accent" label="Process" icon="fa-solid fa-gear" outline/> tab. <br/>Here you select the <strong>Auto-fill metadata</strong> operation.
                 </q-card-section>
               </q-card>
             </q-expansion-item>
@@ -168,8 +168,8 @@
                   <strong>Sorting manually: </strong> Just drag and drop the images within the grid.
                 </q-card-section>
                 <q-card-section>
-                  <strong>Annotating automatically: </strong> Select the images to annotate and click
-                  <q-btn class="q-ma-md"  color="accent" label="Process" icon="fa-solid fa-gear"/>. <br/>Here you select the <strong>Auto-sort by metadata </strong> operation.
+                  <strong>Annotating automatically: </strong> Select the images to annotate and select the
+                  <q-btn class="q-ma-md"  color="accent" label="Process" icon="fa-solid fa-gear" outline/> tab. <br/>Here you select the <strong>Auto-sort by metadata </strong> operation.
                 </q-card-section>
               </q-card>
             </q-expansion-item>
@@ -199,14 +199,14 @@
                   button to open the image editor. Do not forget to save the annotation when finished.
                 </q-card-section>
                 <q-card-section>
-                  <strong>Annotating automatically: </strong> Select the images to annotate and click
-                  <q-btn class="q-ma-md"  color="accent" label="Process" icon="fa-solid fa-gear"/>. <br/>Browse through the list of algorithms and select the one you require.
+                  <strong>Annotating automatically: </strong> Select the images to annotate and select the
+                  <q-btn class="q-ma-md"  color="accent" label="Process" icon="fa-solid fa-gear" outline/> tab. <br/>Browse through the list of algorithms and select the one you require.
                 </q-card-section>
                 <q-card-section>
                   <strong>Registering ZOI shapes: </strong> If you have the ZOI shape of an E-test for the first time point, you can use an automated algorithm to
                   register the ZOI shape to the other time points. The algorithm will account for slight variances between the images.
-                  Select the images to annotate and click
-                  <q-btn class="q-ma-md"  color="accent" label="Process" icon="fa-solid fa-gear"/>. Then navigate to <strong>E-Test | Copy and register ZOI shape across timeline</strong>.
+                  Select the images to annotate and select the
+                  <q-btn class="q-ma-md"  color="accent" label="Process" icon="fa-solid fa-gear" outline/> tab. Then navigate to <strong>E-Test | Copy and register ZOI shape across timeline</strong>.
                 </q-card-section>
               </q-card>
             </q-expansion-item>
@@ -219,7 +219,7 @@
             >
               <q-card>
                 <q-card-section>
-                  Select the images to analyze and click the <q-btn class="q-ma-md"  color="accent" label="Process" icon="fa-solid fa-gear"/>.
+                  Select the images to analyze and select the <q-btn class="q-ma-md"  color="accent" label="Process" icon="fa-solid fa-gear" outline/> tab.
                   Here you can find operations in the <strong>Visualize</strong> and <strong>Analyze</strong> categories.
                 </q-card-section>
                 <q-card-section>
@@ -238,7 +238,7 @@
             >
               <q-card>
                 <q-card-section>
-                  On starting a longer process via the <strong>Process</strong> menu, J-AST will lock the whole project and display information about the currently running task at the bottom of the window.
+                  On starting a longer process via the <strong>Process</strong> tab, J-AST will lock the whole project and display information about the currently running task at the bottom of the window.
                 </q-card-section>
                 <q-card-section>
                   To review past tasks or cancel the current task, click the <q-btn label="All Tasks Finished" icon="check" color="cyan"/> / <q-btn label="x tasks are running" icon="fa-solid fa-circle-notch" color="cyan"/> button and select

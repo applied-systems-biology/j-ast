@@ -6,15 +6,17 @@
         icon="add"
         color="green"
         @click="newProject"
-        >New project</q-btn
-      >
+        label="New project"
+        no-caps
+        no-wrap />
       <q-btn
         :disable="!authStore.isLoggedIn"
         icon="refresh"
         color="blue-5"
         @click="refreshProjectList"
-        >Refresh</q-btn
-      >
+        label="Refresh"
+        no-caps
+        no-wrap />
     </q-toolbar>
     <q-scroll-area class="q-pa-md project-list" v-if="authStore.isLoggedIn">
       <div class="row q-gutter-md">

@@ -1,8 +1,8 @@
 <template>
   <div class="flex column col-grow">
     <q-toolbar class="bg-primary text-white edit-toolbar">
-      <q-btn label="Download" icon="fa-solid fa-download" color="green" @click="download"/>
-      <q-btn label="Reset view" icon="fa-solid fa-expand" color="blue" @click="resetLocationAndZoom"/>
+      <q-btn no-caps no-wrap label="Download" icon="fa-solid fa-download" color="green" @click="download"/>
+      <q-btn no-caps no-wrap label="Reset view" icon="fa-solid fa-expand" color="blue" @click="resetLocationAndZoom"/>
       <ZoomControl v-model="zoom" />
     </q-toolbar>
     <div class="row col-grow" style="width: calc(100vw - 10px)">

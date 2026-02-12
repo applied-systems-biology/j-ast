@@ -1,4 +1,4 @@
-package org.hkijena.jast.tasks.workloads;
+package org.hkijena.jast.tasks.workloads.analyze;
 
 import com.google.common.base.Predicates;
 import jakarta.transaction.Transactional;
@@ -37,12 +37,12 @@ public class DiskImageRTimelineAnalysisWorkload implements BackendTaskWorkload {
             JASTDataSlot.ZOIShape.toSlot(BackendTaskWorkloadDataSlotValidationMode.OncePerRow));
     private static final List<BackendTaskWorkloadDataSlot> OUTPUTS = Collections.emptyList();
     private static final List<BackendTaskWorkloadParameterSlot> PARAMETERS = List.of(
-            new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotType.String, "result-name", "Result name", "The name of the generated result folder", "DiskImageR-style result"),
-            new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotType.String, "result-description", "Result description", "Description of the generated result", "RAD/FoG/ZOI"),
-            new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotType.String, "thresholds", "Thresholds (%)", "The thresholds in percent (separate items with a semicolon)", "20; 50; 80"),
-            new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotType.Number, "global-plate-shave-off-mm", "Plate edge thickness (mm)", "The thickness of the plate edge, which is subtracted from the plate area. If not set appropriately, the measurements will be skewed by the bright plate edge.", 10),
-            new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotType.Boolean, "num-diff", "Numeric integration", "If enabled, use less accurate numeric integration for calculating the AUC. Otherwise, a function is fitted to the measurements, which may yield to crashes", true),
-            new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotType.Number, "global-label-thickness-mm", "Measurement label thickness (mm)", "The thickness of the measurement labels. A lower value increases the resolution, but also may introduce some additional noise.", 1)
+            new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotDataType.String, BackendTaskWorkloadParameterSlotType.Common, "result-name", "Result name", "The name of the generated result folder", "DiskImageR-style result"),
+            new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotDataType.String, BackendTaskWorkloadParameterSlotType.Common, "result-description", "Result description", "Description of the generated result", "RAD/FoG/ZOI"),
+            new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotDataType.String, BackendTaskWorkloadParameterSlotType.Common, "thresholds", "Thresholds (%)", "The thresholds in percent (separate items with a semicolon)", "20; 50; 80"),
+            new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotDataType.Number, BackendTaskWorkloadParameterSlotType.Common, "global-plate-shave-off-mm", "Plate edge thickness (mm)", "The thickness of the plate edge, which is subtracted from the plate area. If not set appropriately, the measurements will be skewed by the bright plate edge.", 10),
+            new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotDataType.Boolean, BackendTaskWorkloadParameterSlotType.Advanced, "num-diff", "Numeric integration", "If enabled, use less accurate numeric integration for calculating the AUC. Otherwise, a function is fitted to the measurements, which may yield to crashes", true),
+            new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotDataType.Number, BackendTaskWorkloadParameterSlotType.Advanced, "global-label-thickness-mm", "Measurement label thickness (mm)", "The thickness of the measurement labels. A lower value increases the resolution, but also may introduce some additional noise.", 1)
     );
     private static final Map<String, String> PARAMETER_OVERRIDES = new HashMap<>();
 
@@ -147,6 +147,7 @@ public class DiskImageRTimelineAnalysisWorkload implements BackendTaskWorkload {
         parameterOverrides.put(PARAMETER_OVERRIDES.get("__thresholds"), thresholds.stream().map(t -> t / 100.0).toList());
 
         taskUtils.writeRawImages(params, params.getPayload().getImageIds(), imageRepository, fileStorageService, progressInfo, verbose);
+        taskUtils.writeMetadata(params, params.getPayload().getImageIds(), imageRepository, progressInfo, verbose);
         taskUtils.writeMaskAnnotations(params, params.getPayload().getImageIds(), "plate", imageRepository, fileStorageService, progressInfo, verbose);
         taskUtils.writeMaskAnnotations(params, params.getPayload().getImageIds(), "strip-disk", imageRepository, fileStorageService, progressInfo, verbose);
         taskUtils.writeRowFirstMaskAnnotations(params, params.getPayload().getImageIds(), "zoi-shape", imageRepository, fileStorageService, progressInfo, verbose);
@@ -163,7 +164,7 @@ public class DiskImageRTimelineAnalysisWorkload implements BackendTaskWorkload {
 
         boolean useNumDiff = params.getPayload().getParameterAsBoolean("num-diff", true);
 
-        Path projectFilePath = taskUtils.writeSharedFile(params, useNumDiff ? "disk-image-r-analysis-timeline-v2-numdiff.jip" : "disk-image-r-analysis-timeline-v2.jip");
+        Path projectFilePath = taskUtils.writeSharedFile(params, useNumDiff ? Path.of("workflows", "disk-image-r-analysis-timeline-v2-numdiff.jip") : Path.of("workflows", "disk-image-r-analysis-timeline-v2.jip"));
         progressInfo.log("Project file is " + projectFilePath);
         taskUtils.runJIPipe(params, projectFilePath, parameterOverrides, "", progressInfo, systemPackages, preferSystemPackages, verbose);
 

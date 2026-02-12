@@ -1,99 +1,98 @@
 <template>
-  <q-dialog ref="dialogRef" @hide="onDialogHide" maximized persistent>
-    <q-layout view="hHh lpR fFf" container class="layout">
+  <q-dialog ref="dialogRef" maximized persistent @hide="onDialogHide">
+    <q-layout class="layout" container view="hHh lpR fFf">
       <q-header>
         <q-toolbar-title class="row items-center q-gutter-sm q-pa-sm">
           <div class="q-ml-lg">/</div>
           <q-skeleton
-            v-if="!projectPayload.name"
-            type="text"
-            style="width: 200px"
+              v-if="!projectPayload.name"
+              style="width: 200px"
+              type="text"
           />
           <router-link
-            style="text-decoration: underline; color: inherit"
-            v-else
-            :to="`/project/${imagePayload.projectId}`"
+              v-else
+              :to="`/project/${imagePayload.projectId}`"
+              style="text-decoration: underline; color: inherit"
           >{{ projectPayload.name }}
           </router-link>
           <div>/</div>
           <q-skeleton
-            v-if="!imagePayload.fileName"
-            type="text"
-            style="width: 200px"
+              v-if="!imagePayload.fileName"
+              style="width: 200px"
+              type="text"
           />
           <div v-else>{{ imagePayload.fileName }}</div>
           <div>/</div>
           <div>{{ annotationName }}</div>
-          <q-btn color="green" icon="upload" size="lg" @click="postToBackend">Save annotation
-          </q-btn>
-          <q-space />
-          <q-btn icon="close" flat @click="closeWithoutSaving" />
+          <q-btn color="green" icon="upload" label="Save annotation" no-caps no-wrap size="lg" @click="postToBackend"/>
+          <q-space/>
+          <q-btn flat icon="close" @click="closeWithoutSaving"/>
         </q-toolbar-title>
         <q-toolbar class="bg-primary text-white edit-toolbar">
           <q-btn-toggle
-            color="blue-grey"
-            toggle-color="green"
-            v-model="currentAnnotationColorId"
-            :options="annotationColors"
+              v-model="currentAnnotationColorId" :options="annotationColors"
+              color="blue-grey"
+              no-caps
+              no-wrap
+              toggle-color="green"
           >
-            <q-tooltip
-            >Determines whether the foreground or the background is drawn
-            </q-tooltip>
+            <q-tooltip>Determines whether the foreground or the background is drawn</q-tooltip>
           </q-btn-toggle>
           <q-btn-toggle
-            color="blue-grey"
-            toggle-color="green"
-            v-model="currentAnnotationToolId"
-            :options="annotationTools"
+              v-model="currentAnnotationToolId" :options="annotationTools"
+              color="blue-grey"
+              no-caps
+              no-wrap
+              toggle-color="green"
           >
             <q-tooltip>The tool to draw the foreground/background</q-tooltip>
           </q-btn-toggle>
-          <q-btn color="blue-grey" label="Tools" icon="fa-solid fa-gear">
+          <q-btn no-caps no-wrap color="blue-grey" icon="fa-solid fa-gear" label="Tools">
             <q-menu>
               <q-list style="min-width: 100px">
-                <q-item clickable v-close-popup @click="resetLocationAndZoom">
+                <q-item v-close-popup clickable @click="resetLocationAndZoom">
                   <q-item-section avatar>
-                    <q-icon name="fa-solid fa-expand" />
+                    <q-icon name="fa-solid fa-expand"/>
                   </q-item-section>
                   <q-item-section>Reset view</q-item-section>
                 </q-item>
-                <q-separator />
+                <q-separator/>
                 <q-item
-                  clickable
-                  v-close-popup
-                  @click="onUserRequestClearAnnotation"
+                    v-close-popup
+                    clickable
+                    @click="onUserRequestClearAnnotation"
                 >
                   <q-item-section avatar>
-                    <q-icon name="fa-solid fa-eraser" />
+                    <q-icon name="fa-solid fa-eraser"/>
                   </q-item-section>
                   <q-item-section>Clear</q-item-section>
                 </q-item>
                 <q-item
-                  clickable
-                  v-close-popup
-                  @click="onUserRequestRestoreSavedState"
+                    v-close-popup
+                    clickable
+                    @click="onUserRequestRestoreSavedState"
                 >
                   <q-item-section avatar>
-                    <q-icon name="fa-solid fa-undo" />
+                    <q-icon name="fa-solid fa-undo"/>
                   </q-item-section>
                   <q-item-section>Restore saved state</q-item-section>
                 </q-item>
               </q-list>
             </q-menu>
           </q-btn>
-          <q-btn color="blue-grey" label="Download" icon="fa-solid fa-download">
+          <q-btn no-caps no-wrap color="blue-grey" icon="fa-solid fa-download" label="Download">
             <q-menu>
               <q-list style="min-width: 100px">
-                <q-item clickable v-close-popup @click="downloadRaw">
+                <q-item v-close-popup clickable @click="downloadRaw">
                   <q-item-section avatar>
-                    <q-icon name="fa-solid fa-image" />
+                    <q-icon name="fa-solid fa-image"/>
                   </q-item-section>
                   <q-item-section>Raw image</q-item-section>
                 </q-item>
-                <q-separator />
-                <q-item clickable v-close-popup @click="downloadMask">
+                <q-separator/>
+                <q-item v-close-popup clickable @click="downloadMask">
                   <q-item-section avatar>
-                    <q-icon name="fa-solid fa-image" />
+                    <q-icon name="fa-solid fa-image"/>
                   </q-item-section>
                   <q-item-section>Mask</q-item-section>
                 </q-item>
@@ -103,86 +102,86 @@
         </q-toolbar>
       </q-header>
       <q-drawer
-        side="left"
-        :model-value="true"
-        elevated
-        class="q-pa-lg tool-control-container"
+          :model-value="true"
+          class="q-pa-lg tool-control-container"
+          elevated
+          side="left"
       >
         <div class="tool-control">
-          <q-badge color="primary" class="tool-control-badge">
+          <q-badge class="tool-control-badge" color="primary">
             <div class="label">Zoom</div>
-            <q-btn size="xs" icon="fa-solid fa-undo" @click="zoom = 1">
+            <q-btn no-caps no-wrap icon="fa-solid fa-undo" size="xs" @click="zoom = 1">
               <q-tooltip>Reset zoom</q-tooltip>
             </q-btn>
           </q-badge>
           <q-slider
-            v-model="zoom"
-            :min="0.25"
-            :max="3"
-            :markers="0.25"
-            :step="0"
-            label
-            :marker-labels="zoomLabels"
-            switch-label-side
+              v-model="zoom"
+              :marker-labels="zoomLabels"
+              :markers="0.25"
+              :max="3"
+              :min="0.25"
+              :step="0"
+              label
+              switch-label-side
           ></q-slider>
         </div>
         <div
-          class="tool-control"
-          v-if="
+            v-if="
           currentAnnotationToolId == 'draw' || currentAnnotationToolId == 'line'
         "
+            class="tool-control"
         >
-          <q-badge color="secondary" class="tool-control-badge">
+          <q-badge class="tool-control-badge" color="secondary">
             <div class="label">Brush size</div>
           </q-badge>
           <q-slider
-            v-model="brushSize"
-            :min="1"
-            :step="1"
-            :max="250"
-            snap
-            label
-            :markers="50"
-            marker-labels
-            switch-label-side
+              v-model="brushSize"
+              :markers="50"
+              :max="250"
+              :min="1"
+              :step="1"
+              label
+              marker-labels
+              snap
+              switch-label-side
           ></q-slider>
         </div>
-        <div class="tool-control" v-if="currentAnnotationToolId == 'polygon'">
-          <q-badge color="secondary" class="tool-control-badge">
+        <div v-if="currentAnnotationToolId == 'polygon'" class="tool-control">
+          <q-badge class="tool-control-badge" color="secondary">
             <div class="label">Polygon tool</div>
-            <q-toggle v-model="polygonToolDoFill" label="Fill" left-label />
+            <q-toggle v-model="polygonToolDoFill" label="Fill" left-label/>
           </q-badge>
           <div class="text-caption q-gutter-sm q-pt-sm">
             <q-badge color="cyan">
-              <q-icon name="fa-solid fa-computer-mouse" />
+              <q-icon name="fa-solid fa-computer-mouse"/>
               Left: Add point
             </q-badge>
             <q-badge color="cyan">
-              <q-icon name="fa-solid fa-computer-mouse" />
+              <q-icon name="fa-solid fa-computer-mouse"/>
               Right: Remove point
             </q-badge>
             <q-badge color="cyan">
-              <q-icon name="fa-solid fa-computer-mouse" />
+              <q-icon name="fa-solid fa-computer-mouse"/>
               2xLeft: Confirm
             </q-badge>
           </div>
         </div>
-        <div class="tool-control" v-if="currentAnnotationToolId == 'symmetry'">
-          <q-badge color="secondary" class="tool-control-badge">
+        <div v-if="currentAnnotationToolId == 'symmetry'" class="tool-control">
+          <q-badge class="tool-control-badge" color="secondary">
             <div class="label">Symmetry tool</div>
           </q-badge>
           <div class="text-caption q-gutter-sm q-pt-sm">
             <q-option-group
-              v-model="symmetryToolMode"
-              :options="symmetryToolModes"
+                v-model="symmetryToolMode"
+                :options="symmetryToolModes"
             />
           </div>
         </div>
         <div v-if="isEdited">
-          <q-badge color="secondary" class="tool-control-badge">
+          <q-badge class="tool-control-badge" color="secondary">
             <div class="label">Unsaved changes</div>
-            <q-btn size="xs" icon="undo" color="red" @click="queryFromBackend" />
-            <q-btn size="xs" icon="upload" color="green" @click="postToBackend" />
+            <q-btn no-caps no-wrap color="red" icon="undo" size="xs" @click="queryFromBackend"/>
+            <q-btn no-caps no-wrap color="green" icon="upload" size="xs" @click="postToBackend"/>
           </q-badge>
           <div class="text-caption q-gutter-sm q-pa-sm q-pt-md">
             Please do not forget to save your changes. Otherwise they will be
@@ -191,31 +190,31 @@
         </div>
       </q-drawer>
       <q-page-container>
-        <q-page padding class="flex column q-gutter-sm">
+        <q-page class="flex column q-gutter-sm" padding>
           <div class="full-width stage-container">
             <konva-stage
-              ref="stage"
-              :config="stageConfig"
-              @mousedown="onStageMouseDown"
-              @mousemove="onStageMouseMove"
-              @mouseup="onStageMouseUp"
-              @mouseenter="onStageMouseEnter"
-              @mouseleave="onStageMouseLeave"
-              @click="onStageMouseClick($event, 1)"
-              @dblclick="onStageMouseClick($event, 2)"
-              @contextmenu="onStageContextMenu"
-              @wheel="onStageMouseWheel"
+                ref="stage"
+                :config="stageConfig"
+                @click="onStageMouseClick($event, 1)"
+                @contextmenu="onStageContextMenu"
+                @dblclick="onStageMouseClick($event, 2)"
+                @mousedown="onStageMouseDown"
+                @mouseenter="onStageMouseEnter"
+                @mouseleave="onStageMouseLeave"
+                @mousemove="onStageMouseMove"
+                @mouseup="onStageMouseUp"
+                @wheel="onStageMouseWheel"
             >
               <konva-layer>
-                <konva-image :config="backgroundImageConfig" />
+                <konva-image :config="backgroundImageConfig"/>
               </konva-layer>
               <konva-layer ref="foregroundLayer" :config="{ opacity: 0.5 }">
-                <konva-image :config="foregroundImageConfig" />
+                <konva-image :config="foregroundImageConfig"/>
               </konva-layer>
               <konva-layer ref="previewLayer">
-                <konva-circle :config="brushPreviewConfig" />
-                <konva-line :config="linePreviewConfig" />
-                <konva-line :config="polygonPreviewConfig" />
+                <konva-circle :config="brushPreviewConfig"/>
+                <konva-line :config="linePreviewConfig"/>
+                <konva-line :config="polygonPreviewConfig"/>
               </konva-layer>
             </konva-stage>
           </div>
@@ -224,22 +223,29 @@
     </q-layout>
   </q-dialog>
 </template>
-<script setup lang="ts">
-import { useDialogPluginComponent, useQuasar } from 'quasar';
-import { downloadDataString, downloadFromApi, ensureExtension, loadImageElementFromDataString, removeExtensionIfPresent, uploadImage } from 'src/types/common';
-import { onBeforeRouteLeave } from 'vue-router';
-import { computed, onMounted, reactive, Ref, ref, useTemplateRef, watch } from 'vue';
-import { mirrorImageData, MirrorOperationMode } from 'src/types/drawingMirror';
-import { KonvaEvent, MouseEventType, Position } from 'src/types/konva';
-import { ImagePayload, MaskImageAnnotationPayload } from 'src/types/image';
-import { ProjectMetadataPayload } from 'src/types/project';
-import { AssayType } from 'src/types/assayType';
+<script lang="ts" setup>
+import {useDialogPluginComponent, useQuasar} from 'quasar';
+import {
+  downloadDataString,
+  downloadFromApi,
+  ensureExtension,
+  loadImageElementFromDataString,
+  removeExtensionIfPresent,
+  uploadImage
+} from 'src/types/common';
+import {onBeforeRouteLeave} from 'vue-router';
+import {computed, onMounted, reactive, Ref, ref, useTemplateRef, watch} from 'vue';
+import {mirrorImageData, MirrorOperationMode} from 'src/types/drawingMirror';
+import {KonvaEvent, MouseEventType, Position} from 'src/types/konva';
+import {ImagePayload, MaskImageAnnotationPayload} from 'src/types/image';
+import {ProjectMetadataPayload} from 'src/types/project';
+import {AssayType} from 'src/types/assayType';
 import FloodFill from 'q-floodfill';
-import { sendFailureNotification, sendSuccessNotification } from 'src/types/notification';
-import { onDialogYes } from 'src/types/dialog';
-import { api } from 'boot/axios';
-import { plainToInstance } from 'class-transformer';
-import { useEventListener } from '@vueuse/core';
+import {sendFailureNotification, sendSuccessNotification} from 'src/types/notification';
+import {onDialogYes} from 'src/types/dialog';
+import {api} from 'boot/axios';
+import {plainToInstance} from 'class-transformer';
+import {useEventListener} from '@vueuse/core';
 
 const $q = useQuasar();
 const brushSize = ref(20);
@@ -256,8 +262,8 @@ const props = defineProps<{
 defineEmits([...useDialogPluginComponent.emits]);
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const { dialogRef, onDialogHide, onDialogOK, onDialogCancel } =
-  useDialogPluginComponent();
+const {dialogRef, onDialogHide, onDialogOK, onDialogCancel} =
+    useDialogPluginComponent();
 
 const stageConfig = reactive({
   width: 16,
@@ -320,16 +326,16 @@ defineOptions({
 });
 
 const annotationTools = [
-  { label: '', value: 'pan', icon: 'fa-solid fa-hand' },
-  { label: '', value: 'draw', icon: 'fa-solid fa-pencil' },
-  { label: '', value: 'polygon', icon: 'fa-solid fa-draw-polygon' },
-  { label: '', value: 'line', icon: 'fa-solid fa-slash' },
-  { label: '', value: 'symmetry', icon: 'fa-solid fa-percent fa-rotate-90' },
-  { label: '', value: 'fill', icon: 'fa-solid fa-fill-drip' },
+  {label: '', value: 'pan', icon: 'fa-solid fa-hand'},
+  {label: '', value: 'draw', icon: 'fa-solid fa-pencil'},
+  {label: '', value: 'polygon', icon: 'fa-solid fa-draw-polygon'},
+  {label: '', value: 'line', icon: 'fa-solid fa-slash'},
+  {label: '', value: 'symmetry', icon: 'fa-solid fa-percent fa-rotate-90'},
+  {label: '', value: 'fill', icon: 'fa-solid fa-fill-drip'},
 ];
 const annotationColors = [
-  { label: 'Foreground', value: '#FFFFFF', icon: 'fa-solid fa-square' },
-  { label: 'Background', value: '#000000', icon: 'fa-solid fa-eraser' },
+  {label: 'Foreground', value: '#FFFFFF', icon: 'fa-solid fa-square'},
+  {label: 'Background', value: '#000000', icon: 'fa-solid fa-eraser'},
 ];
 const symmetryToolModes = [
   {
@@ -358,10 +364,10 @@ const currentAnnotationColorId = ref('#FFFFFF');
 
 const imagePayload: Ref<ImagePayload> = ref(new ImagePayload());
 const projectPayload: Ref<ProjectMetadataPayload> = ref(
-  new ProjectMetadataPayload()
+    new ProjectMetadataPayload()
 );
 const annotationPayload: Ref<MaskImageAnnotationPayload> = ref(
-  new MaskImageAnnotationPayload()
+    new MaskImageAnnotationPayload()
 );
 
 const annotationName = computed(() => {
@@ -381,7 +387,7 @@ const annotationName = computed(() => {
   return props.annotationTypeId;
 });
 
-function zoomLabels(value : number) {
+function zoomLabels(value: number) {
   return value == 1 ? "100%" : " "
 }
 
@@ -447,9 +453,9 @@ function doToolPolygon(eventType: MouseEventType) {
   if (eventType == MouseEventType.MouseMove) {
     if (polygonPreviewConfig.points.length > 1) {
       polygonPreviewConfig.points[polygonPreviewConfig.points.length - 2] =
-        pos.x;
+          pos.x;
       polygonPreviewConfig.points[polygonPreviewConfig.points.length - 1] =
-        pos.y;
+          pos.y;
       previewLayer.value.getNode().batchDraw();
     }
   } else if (eventType == MouseEventType.LeftMouseClick) {
@@ -464,16 +470,16 @@ function doToolPolygon(eventType: MouseEventType) {
   } else if (eventType == MouseEventType.RightMouseClick) {
     if (polygonPreviewConfig.points.length > 1) {
       polygonPreviewConfig.points.splice(
-        polygonPreviewConfig.points.length - 2,
-        2
+          polygonPreviewConfig.points.length - 2,
+          2
       );
 
       // Update the last pos
       if (polygonPreviewConfig.points.length > 1) {
         polygonPreviewConfig.points[polygonPreviewConfig.points.length - 2] =
-          pos.x;
+            pos.x;
         polygonPreviewConfig.points[polygonPreviewConfig.points.length - 1] =
-          pos.y;
+            pos.y;
       }
 
       previewLayer.value.getNode().batchDraw();
@@ -495,13 +501,13 @@ function doToolPolygon(eventType: MouseEventType) {
       context.lineWidth = 1;
       context.beginPath();
       context.moveTo(
-        polygonPreviewConfig.points[0],
-        polygonPreviewConfig.points[1]
+          polygonPreviewConfig.points[0],
+          polygonPreviewConfig.points[1]
       );
       for (let i = 2; i < polygonPreviewConfig.points.length; i += 2) {
         context.lineTo(
-          polygonPreviewConfig.points[i],
-          polygonPreviewConfig.points[i + 1]
+            polygonPreviewConfig.points[i],
+            polygonPreviewConfig.points[i + 1]
         );
       }
       context.closePath();
@@ -587,12 +593,12 @@ function doToolSymmetry(eventType: MouseEventType) {
       }
 
       mirrorImageData(
-        context.canvas,
-        pos.x,
-        pos.y,
-        lastPosition.x,
-        lastPosition.y,
-        symmetryToolMode.value!
+          context.canvas,
+          pos.x,
+          pos.y,
+          lastPosition.x,
+          lastPosition.y,
+          symmetryToolMode.value!
       );
 
       renderMaskToForeground();
@@ -622,10 +628,10 @@ function doToolFill() {
 
   const floodFill = new FloodFill(imageData);
   floodFill.fill(
-    currentAnnotationColorId.value!,
-    Math.floor(pos.x),
-    Math.floor(pos.y),
-    0
+      currentAnnotationColorId.value!,
+      Math.floor(pos.x),
+      Math.floor(pos.y),
+      0
   );
   context.putImageData(floodFill.imageData, 0, 0);
 
@@ -649,8 +655,8 @@ function updatePreview() {
   polygonPreviewConfig.visible = false;
 
   if (
-    currentAnnotationToolId.value === 'draw' ||
-    currentAnnotationToolId.value === 'line'
+      currentAnnotationToolId.value === 'draw' ||
+      currentAnnotationToolId.value === 'line'
   ) {
     brushPreviewConfig.x = pos.x;
     brushPreviewConfig.y = pos.y;
@@ -670,8 +676,7 @@ function doTool(eventType: MouseEventType) {
     return;
   }
   switch (currentAnnotationToolId.value) {
-    case 'draw':
-    {
+    case 'draw': {
       if (eventType == MouseEventType.LeftMouseDown) {
         doToolDraw();
       } else if (eventType == MouseEventType.MouseMove) {
@@ -683,18 +688,15 @@ function doTool(eventType: MouseEventType) {
       }
     }
       break;
-    case 'line':
-    {
+    case 'line': {
       doToolLine(eventType);
     }
       break;
-    case 'symmetry':
-    {
+    case 'symmetry': {
       doToolSymmetry(eventType);
     }
       break;
-    case 'polygon':
-    {
+    case 'polygon': {
       doToolPolygon(eventType);
     }
       break;
@@ -725,10 +727,10 @@ function doThresholding() {
     return;
   }
   const imageData = context.getImageData(
-    0,
-    0,
-    context.canvas.width,
-    context.canvas.height
+      0,
+      0,
+      context.canvas.width,
+      context.canvas.height
   );
   const data = imageData.data;
 
@@ -758,10 +760,10 @@ function renderMaskToForeground() {
     return;
   }
   const imageData = srcContext.getImageData(
-    0,
-    0,
-    srcContext.canvas.width,
-    srcContext.canvas.height
+      0,
+      0,
+      srcContext.canvas.width,
+      srcContext.canvas.height
   );
   const data = imageData.data;
 
@@ -803,7 +805,7 @@ function onStageMouseDown(event: KonvaEvent<MouseEvent>) {
     if (stage.value) {
       isPanning = true;
       const stagePos = stage.value.getStage().getPosition() as Position;
-      const mousePos = { x: event.evt.x, y: event.evt.y };
+      const mousePos = {x: event.evt.x, y: event.evt.y};
       panMouseDxDy = {
         x: stagePos.x - mousePos.x,
         y: stagePos.y - mousePos.y,
@@ -872,7 +874,7 @@ function onStageMouseWheel(event: KonvaEvent<WheelEvent>) {
     y: (pointer.y - node.y()) / oldScale,
   };
 
-  node.scale({ x: newScale, y: newScale });
+  node.scale({x: newScale, y: newScale});
 
   const newPos = {
     x: pointer.x - mousePointTo.x * newScale,
@@ -896,12 +898,11 @@ function getMaskAsDataString(): string | undefined {
 }
 
 function closeWithoutSaving() {
-  if(isEdited.value) {
+  if (isEdited.value) {
     onDialogYes("Close annotation editor", "There are unsaved changes. Continue?").then(() => {
       onDialogCancel()
     })
-  }
-  else {
+  } else {
     onDialogCancel()
   }
 }
@@ -910,22 +911,22 @@ function postToBackend() {
   if (maskDataContext.value) {
     doThresholding();
     const pngData = maskDataContext.value.canvas.toDataURL('image/png');
-    $q.loading.show({ message: 'Uploading image data ...' });
+    $q.loading.show({message: 'Uploading image data ...'});
     uploadImage(
-      `/mask-image-annotation/${annotationPayload.value?.imageId}/${annotationPayload.value?.annotationTypeId}/raw`,
-      pngData
+        `/mask-image-annotation/${annotationPayload.value?.imageId}/${annotationPayload.value?.annotationTypeId}/raw`,
+        pngData
     )
-      .then(() => {
-        sendSuccessNotification('Annotation was successfully uploaded');
-        onDialogOK();
-        isEdited.value = false;
-      })
-      .catch(() => {
-        sendFailureNotification('Error while uploading!');
-      })
-      .finally(() => {
-        $q.loading.hide();
-      });
+        .then(() => {
+          sendSuccessNotification('Annotation was successfully uploaded');
+          onDialogOK();
+          isEdited.value = false;
+        })
+        .catch(() => {
+          sendFailureNotification('Error while uploading!');
+        })
+        .finally(() => {
+          $q.loading.hide();
+        });
   }
 }
 
@@ -947,16 +948,16 @@ function clear() {
 function onZoomChanged() {
   if (stage.value) {
     const node = stage.value.getNode();
-    node.scale({ x: zoom.value, y: zoom.value });
+    node.scale({x: zoom.value, y: zoom.value});
     node.batchDraw();
   }
 }
 
 function downloadRaw() {
-  $q.loading.show({ message: 'Preparing ...' });
+  $q.loading.show({message: 'Preparing ...'});
   downloadFromApi(
-    `/image/${props.imageId}/raw`,
-    ensureExtension(imagePayload.value.fileName, ['.png'])
+      `/image/${props.imageId}/raw`,
+      ensureExtension(imagePayload.value.fileName, ['.png'])
   ).finally(() => {
     $q.loading.hide();
   });
@@ -964,25 +965,25 @@ function downloadRaw() {
 
 function downloadMask() {
   downloadDataString(
-    getMaskAsDataString()!,
-    removeExtensionIfPresent(imagePayload.value.fileName) +
-    '_' +
-    annotationPayload.value.annotationTypeId +
-    '.png'
+      getMaskAsDataString()!,
+      removeExtensionIfPresent(imagePayload.value.fileName) +
+      '_' +
+      annotationPayload.value.annotationTypeId +
+      '.png'
   );
 }
 
 function onUserRequestRestoreSavedState() {
   onDialogYes(
-    'Restore from saved annotation',
-    'Do you really want to reset the annotation from the saved state?'
+      'Restore from saved annotation',
+      'Do you really want to reset the annotation from the saved state?'
   ).then(queryFromBackend);
 }
 
 function onUserRequestClearAnnotation() {
   onDialogYes(
-    'Clear annotation',
-    'Do you really want to erase the annotation?'
+      'Clear annotation',
+      'Do you really want to erase the annotation?'
   ).then(clear);
 }
 
@@ -996,78 +997,78 @@ function queryFromBackend() {
   api.get(`/image/${props.imageId}`).then((response) => {
     imagePayload.value = plainToInstance(ImagePayload, response.data);
     api
-      .get<ProjectMetadataPayload>(`/project/${imagePayload.value.projectId}`)
-      .then((response) => {
-        projectPayload.value = plainToInstance(
-          ProjectMetadataPayload,
-          response.data
-        );
-      });
+        .get<ProjectMetadataPayload>(`/project/${imagePayload.value.projectId}`)
+        .then((response) => {
+          projectPayload.value = plainToInstance(
+              ProjectMetadataPayload,
+              response.data
+          );
+        });
     api
-      .get(`/mask-image-annotation/${props.imageId}/${props.annotationTypeId}`)
-      .then((response) => {
-        annotationPayload.value = plainToInstance(
-          MaskImageAnnotationPayload,
-          response.data
-        );
+        .get(`/mask-image-annotation/${props.imageId}/${props.annotationTypeId}`)
+        .then((response) => {
+          annotationPayload.value = plainToInstance(
+              MaskImageAnnotationPayload,
+              response.data
+          );
 
-        // Load the image
-        if (annotationPayload.value && annotationPayload.value.imageId >= 0) {
-          api
-            .get(`/image/${annotationPayload.value.imageId}/raw`, {
-              responseType: 'blob',
-            })
-            .then((backgroundResponse) => {
-              loadImageElementFromDataString(backgroundResponse.data).then(
-                (backgroundImage) => {
-                  backgroundImageConfig.image = backgroundImage;
+          // Load the image
+          if (annotationPayload.value && annotationPayload.value.imageId >= 0) {
+            api
+                .get(`/image/${annotationPayload.value.imageId}/raw`, {
+                  responseType: 'blob',
+                })
+                .then((backgroundResponse) => {
+                  loadImageElementFromDataString(backgroundResponse.data).then(
+                      (backgroundImage) => {
+                        backgroundImageConfig.image = backgroundImage;
 
-                  const width = backgroundImage.width;
-                  const height = backgroundImage.height;
+                        const width = backgroundImage.width;
+                        const height = backgroundImage.height;
 
-                  // Create a canvas that only holds the mask data
-                  const dataCanvas = document.createElement('canvas');
-                  dataCanvas.width = width;
-                  dataCanvas.height = height;
-                  const context = dataCanvas.getContext('2d')!;
-                  // context.drawImage(fgImg, 0, 0, stageConfig.width, stageConfig.height);
+                        // Create a canvas that only holds the mask data
+                        const dataCanvas = document.createElement('canvas');
+                        dataCanvas.width = width;
+                        dataCanvas.height = height;
+                        const context = dataCanvas.getContext('2d')!;
+                        // context.drawImage(fgImg, 0, 0, stageConfig.width, stageConfig.height);
 
-                  // Create another canvas that contains the rendered mask (false-coloring)
-                  const renderCanvas = document.createElement('canvas');
-                  renderCanvas.width = width;
-                  renderCanvas.height = height;
+                        // Create another canvas that contains the rendered mask (false-coloring)
+                        const renderCanvas = document.createElement('canvas');
+                        renderCanvas.width = width;
+                        renderCanvas.height = height;
 
-                  foregroundCanvas.value = dataCanvas;
-                  maskDataContext.value = context;
-                  foregroundContext.value = renderCanvas.getContext('2d')!;
-                  foregroundImageConfig.image = renderCanvas;
+                        foregroundCanvas.value = dataCanvas;
+                        maskDataContext.value = context;
+                        foregroundContext.value = renderCanvas.getContext('2d')!;
+                        foregroundImageConfig.image = renderCanvas;
 
-                  api
-                    .get(
-                      `/mask-image-annotation/${annotationPayload.value?.imageId}/${annotationPayload.value?.annotationTypeId}/raw`,
-                      { responseType: 'blob' }
-                    )
-                    .then((foregroundResponse) => {
-                      loadImageElementFromDataString(
-                        foregroundResponse.data
-                      ).then((foregroundImage) => {
-                        context.drawImage(
-                          foregroundImage,
-                          0,
-                          0,
-                          foregroundImage.width,
-                          foregroundImage.height
-                        );
-                        isEdited.value = false;
-                        renderMaskToForeground();
-                        $q.loading.hide();
-                      });
-                    });
-                }
-              );
-            });
-        }
-      });
+                        api
+                            .get(
+                                `/mask-image-annotation/${annotationPayload.value?.imageId}/${annotationPayload.value?.annotationTypeId}/raw`,
+                                {responseType: 'blob'}
+                            )
+                            .then((foregroundResponse) => {
+                              loadImageElementFromDataString(
+                                  foregroundResponse.data
+                              ).then((foregroundImage) => {
+                                context.drawImage(
+                                    foregroundImage,
+                                    0,
+                                    0,
+                                    foregroundImage.width,
+                                    foregroundImage.height
+                                );
+                                isEdited.value = false;
+                                renderMaskToForeground();
+                                $q.loading.hide();
+                              });
+                            });
+                      }
+                  );
+                });
+          }
+        });
   });
 }
 
@@ -1078,7 +1079,7 @@ function updateStageSize() {
 
 function resetLocationAndZoom() {
   if (stage.value) {
-    stage.value.getStage().position({ x: 0, y: 0 });
+    stage.value.getStage().position({x: 0, y: 0});
   }
   zoom.value = 1;
 }
@@ -1095,8 +1096,8 @@ watch(zoom, onZoomChanged);
 // When the user leave the page in your Vue app
 onBeforeRouteLeave(() => {
   if (
-    isEdited.value &&
-    !confirm('You have unsaved changes. Are you sure you want to leave?')
+      isEdited.value &&
+      !confirm('You have unsaved changes. Are you sure you want to leave?')
   ) {
     return false;
   }
@@ -1111,10 +1112,10 @@ useEventListener(window, 'beforeunload', (event) => {
 
 </script>
 
-<style scoped lang="scss">
+<style lang="scss" scoped>
 .stage-container {
   box-shadow: 0 1px 5px rgba(0, 0, 0, 0.2), 0 2px 2px rgba(0, 0, 0, 0.14),
-    0 3px 1px -2px rgba(0, 0, 0, 0.12);
+  0 3px 1px -2px rgba(0, 0, 0, 0.12);
   flex-grow: 1;
   overflow: hidden;
   height: 0;

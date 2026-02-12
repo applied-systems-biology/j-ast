@@ -1,52 +1,46 @@
 <template>
   <div class="grid-container" @click="selectedImageIds = []">
     <q-infinite-scroll class="table-scroll-area q-mt-md q-ml-md" @load="loadNextImages">
-      <div style="max-width: calc(100vw - 350px);" class="q-gutter-md">
+      <div class="q-gutter-md" style="max-width: calc(100vw - 350px);">
         <template
-          v-for="(i, imageIndex) in numRenderedImages"
-          :key="`image-id-${imageIndex}`"
+            v-for="(i, imageIndex) in numRenderedImages"
+            :key="`image-id-${imageIndex}`"
         >
           <ProjectImageButton
-            v-if="filterAppliesToImageIndex(imageIndex)"
-            :current-image="getImageByIndex(imageIndex)!"
-            :selected-image-ids="selectedImageIds"
-            class="draggable-item"
-            @image-selected="onImageSelected"
-            :disabled="hasTaskRunning"
+              v-if="filterAppliesToImageIndex(imageIndex)"
+              :current-image="getImageByIndex(imageIndex)!"
+              :disabled="hasTaskRunning"
+              :selected-image-ids="selectedImageIds"
+              class="draggable-item"
+              @image-selected="onImageSelected"
           />
         </template>
         <q-btn
-          icon="refresh"
-          flat
-          class="q-ma-sm"
-          @click="maxNumRenderedImages += 30"
-        >
-          Load more images ({{ Math.max(0, numImages - numRenderedImages) }} left)
-        </q-btn>
+            :label="'Load more images (' + Math.max(0, numImages - numRenderedImages) + ' left)'" class="q-ma-sm"
+            flat
+            icon="refresh"
+            no-caps
+            no-wrap
+            @click="maxNumRenderedImages += 30"
+        />
       </div>
     </q-infinite-scroll>
   </div>
 </template>
-<script setup lang="ts">
-import { computed, onMounted, ref, watch } from 'vue';
+<script lang="ts" setup>
+import {computed, onMounted, ref, watch} from 'vue';
 import ProjectImageButton from 'components/arranger/ProjectImageButton.vue';
-import {
-  ProjectImagesPayload,
-} from 'src/types/projectImages';
-import {
-  BackendTaskPayload,
-} from 'src/types/backendTasks';
-import { filterAppliesToImage } from 'src/types/filters';
+import {ProjectImagesPayload,} from 'src/types/projectImages';
+import {BackendTaskPayload,} from 'src/types/backendTasks';
+import {filterAppliesToImage} from 'src/types/filters';
 
-const selectedImageIds = defineModel<Array<number>>('selectedImageIds', {
-  required: true,
-});
-const projectBackendTasks = defineModel<BackendTaskPayload[]>('backendTasks');
-const projectImages = defineModel<ProjectImagesPayload>();
-const filterText = defineModel<string>('filterText');
+const selectedImageIds = defineModel<Array<number>>('selectedImageIds', {required: true});
+const projectBackendTasks = defineModel<BackendTaskPayload[]>('backendTasks', {required: true});
+const projectImages = defineModel<ProjectImagesPayload>({required: true});
+const filterText = defineModel<string>('filterText', {required: true});
 
 const numImages = computed(() =>
-  projectImages.value ? projectImages.value.imageIds.length : 0
+    projectImages.value ? projectImages.value.imageIds.length : 0
 );
 const maxNumRenderedImages = ref(10);
 const numRenderedImages = computed(() => {
@@ -69,7 +63,7 @@ const lastProjectId = ref(-1);
 function filterAppliesToImageIndex(imageIndex: number) {
   if (filterText.value && filterText.value.length > 0 && projectImages.value) {
     const imageId = projectImages.value.imageIds[imageIndex]
-    if(!imageId) {
+    if (!imageId) {
       return true;
     }
     const image = projectImages.value.imagesById[imageId];
@@ -83,7 +77,7 @@ function filterAppliesToImageIndex(imageIndex: number) {
 }
 
 function getImageByIndex(imageIndex: number) {
-  if(!projectImages.value) {
+  if (!projectImages.value) {
     return undefined;
   }
   const imageId = projectImages.value.imageIds[imageIndex]
@@ -117,10 +111,10 @@ function onImageSelected(imageId: number, exclusive: boolean) {
 }
 
 function selectAll() {
-  const newSelected : Array<number> = []
-  if(projectImages.value) {
-    for(const imageId of projectImages.value.imageIds) {
-      if(filterAppliesToImageIndex(imageId)) {
+  const newSelected: Array<number> = []
+  if (projectImages.value) {
+    for (const imageId of projectImages.value.imageIds) {
+      if (filterAppliesToImageIndex(imageId)) {
         newSelected.push(imageId);
       }
     }
@@ -136,11 +130,11 @@ onMounted(() => {
   });
 });
 
-defineExpose({ selectAll })
+defineExpose({selectAll})
 
 </script>
-<style scoped lang="scss">
-$grid-item-width: 18rem;
+<style lang="scss" scoped>
+$grid-item-width: 22rem;
 $grid-item-height: 8rem;
 $grid-row-label-width: 10rem;
 $grid-column-label-height: 5rem;

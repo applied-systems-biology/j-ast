@@ -39,19 +39,19 @@ public class AllInOnePreparationBackendTaskWorkload implements BackendTaskWorklo
             JASTDataSlot.ZOIShape.toSlot(),
             JASTDataSlot.PixelSize.toSlot());
     private static final List<BackendTaskWorkloadParameterSlot> PARAMETERS = List.of(
-            new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotType.Boolean, "do-autofill", "Enable auto-fill metadata (if needed)", "If enabled, the operation will try to extract the assay type, experiment, and sample from the image names. If an image already has metadata, nothing will be changed.", true),
-            new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotType.Boolean, "do-autosort", "Enable auto-sort by metadata (if needed)", "If enabled, the operation will attempt to sort metadata into time lines. If an image is already sorted, nothing will be changed.", true),
-            new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotType.Boolean, "do-find-plate", "Enable plate finder (+ calibrate)", "If enabled, find the plate with an automated operation. Will also calibrate the pixel size.", true),
-            new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotType.Boolean, "do-find-dda-disk", "Enable DDA disk finder", "If enabled, find the disks inside DDA images", true),
-            new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotType.Boolean, "do-find-etest-strips", "Enable E-Test strip finder", "If enabled, find the strips inside E-test images. Please note that this algorithm might not always work perfectly.", true),
-            new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotType.Boolean, "do-find-etest-zoi-shape", "Enable E-Test ZOI shape finder", "If enabled, find the E-test ZOI shapes. Please note that this algorithm is very experimental and doesn't always work.", true),
-            new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotType.String, "time-points", "Time points", "List of time points in order. Separate with a space. Can include additional values (will be ignored).", "24hr 24 48hr 48"),
-            new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotType.String, "metadata-key-dda", "Keywords (DDA)", "List of possible key words that identify a DDA.  Separate with space.", "DDA"),
-            new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotType.String, "metadata-key-etest", "Keywords (E-Test)", "List of possible key words that identify an E-Test. Separate with a space", "E-Test ETest"),
-            new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotType.String, "metadata-default-assay-type", "Default assay type (DDA/ETest)", "Set to DDA or ETest", "DDA"),
-            new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotType.String, "filename-delimiters", "File name delimiters", "For automated metadata filling.", "-_;."),
-            new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotType.Number, "plate-diameter-mm", "Plate diameter (mm)", "The plate diameter in millimeters. Used for calibrating the pixel size.", 90),
-            new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotType.Number, "dda-disk-diameter-mm", "DDA disk diameter (mm)", "The diameter of the DDA disk.", 6));
+            new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotDataType.Boolean, BackendTaskWorkloadParameterSlotType.Common, "do-autofill", "Enable auto-fill metadata (if needed)", "If enabled, the operation will try to extract the assay type, experiment, and sample from the image names. If an image already has metadata, nothing will be changed.", true),
+            new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotDataType.Boolean, BackendTaskWorkloadParameterSlotType.Common, "do-autosort", "Enable auto-sort by metadata (if needed)", "If enabled, the operation will attempt to sort metadata into time lines. If an image is already sorted, nothing will be changed.", true),
+            new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotDataType.Boolean, BackendTaskWorkloadParameterSlotType.Common, "do-find-plate", "Enable plate finder (+ calibrate)", "If enabled, find the plate with an automated operation. Will also calibrate the pixel size.", true),
+            new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotDataType.Boolean, BackendTaskWorkloadParameterSlotType.Common, "do-find-dda-disk", "Enable DDA disk finder", "If enabled, find the disks inside DDA images", true),
+            new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotDataType.Boolean, BackendTaskWorkloadParameterSlotType.Common, "do-find-etest-strips", "Enable E-Test strip finder", "If enabled, find the strips inside E-test images. Please note that this algorithm might not always work perfectly.", true),
+            new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotDataType.Boolean, BackendTaskWorkloadParameterSlotType.Common, "do-find-etest-zoi-shape", "Enable E-Test ZOI shape finder", "If enabled, find the E-test ZOI shapes. Please note that this algorithm is very experimental and doesn't always work.", true),
+            new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotDataType.String, BackendTaskWorkloadParameterSlotType.Common, "time-points", "Time points", "List of time points in order. Separate with a space. Can include additional values (will be ignored).", "24hr 24 48hr 48"),
+            new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotDataType.String, BackendTaskWorkloadParameterSlotType.Common, "metadata-key-dda", "Keywords (DDA)", "List of possible key words that identify a DDA.  Separate with space.", "DDA"),
+            new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotDataType.String, BackendTaskWorkloadParameterSlotType.Common, "metadata-key-etest", "Keywords (E-Test)", "List of possible key words that identify an E-Test. Separate with a space", "E-Test ETest"),
+            new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotDataType.String, BackendTaskWorkloadParameterSlotType.Common, "metadata-default-assay-type", "Default assay type (DDA/ETest)", "Set to DDA or ETest", "DDA"),
+            new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotDataType.String, BackendTaskWorkloadParameterSlotType.Common, "filename-delimiters", "File name delimiters", "For automated metadata filling.", "-_;."),
+            new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotDataType.Number, BackendTaskWorkloadParameterSlotType.Common, "plate-diameter-mm", "Plate diameter (mm)", "The plate diameter in millimeters. Used for calibrating the pixel size.", 90),
+            new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotDataType.Number, BackendTaskWorkloadParameterSlotType.Common, "dda-disk-diameter-mm", "DDA disk diameter (mm)", "The diameter of the DDA disk.", 6));
     private final BackendTaskUtils taskUtils;
     private final ImageRepository imageRepository;
     private final ProjectRepository projectRepository;
@@ -180,7 +180,8 @@ public class AllInOnePreparationBackendTaskWorkload implements BackendTaskWorklo
                 {
                     taskUtils.clearTmp(params.getTmpPath(), plateProgress);
                     taskUtils.writeRawImages(params, idsToProcess, imageRepository, fileStorageService, plateProgress, verbose);
-                    Path projectFilePath = taskUtils.writeSharedFile(params, "image-segment-plate-fast.jip");
+                    taskUtils.writeMetadata(params, idsToProcess, imageRepository, plateProgress, verbose);
+                    Path projectFilePath = taskUtils.writeSharedFile(params, Path.of("workflows", "image-segment-plate-fast.jip"));
                     plateProgress.log("Project file is " + projectFilePath);
                     taskUtils.runJIPipe(params, projectFilePath, null, "", plateProgress, systemPackages, preferSystemPackages, verbose);
 
@@ -192,9 +193,10 @@ public class AllInOnePreparationBackendTaskWorkload implements BackendTaskWorklo
                 {
                     taskUtils.clearTmp(params.getTmpPath(), plateProgress);
                     taskUtils.writeRawImages(params, idsToProcess, imageRepository, fileStorageService, plateProgress, verbose);
+                    taskUtils.writeMetadata(params, idsToProcess, imageRepository, plateProgress, verbose);
                     taskUtils.writeMaskAnnotations(params, idsToProcess, "plate", imageRepository, fileStorageService, plateProgress, verbose);
 
-                    Path projectFilePath = taskUtils.writeSharedFile(params, "image-calibrate-pixel-size-by-plate.jip");
+                    Path projectFilePath = taskUtils.writeSharedFile(params, Path.of("workflows","image-calibrate-pixel-size-by-plate.jip"));
                     plateProgress.log("Project file is " + projectFilePath);
                     taskUtils.runJIPipe(params, projectFilePath, null, "", plateProgress, systemPackages, preferSystemPackages, verbose);
 
@@ -229,9 +231,10 @@ public class AllInOnePreparationBackendTaskWorkload implements BackendTaskWorklo
                 taskUtils.clearTmp(params.getTmpPath(), ddaProgress);
 
                 taskUtils.writeRawImages(params, idsToProcess, imageRepository, fileStorageService, ddaProgress, verbose);
+                taskUtils.writeMetadata(params, idsToProcess, imageRepository, ddaProgress, verbose);
                 taskUtils.writeMaskAnnotations(params, idsToProcess, "plate", imageRepository, fileStorageService, ddaProgress, verbose);
 
-                Path projectFilePath = taskUtils.writeSharedFile(params, "image-segment-dda-disk-v3.jip");
+                Path projectFilePath = taskUtils.writeSharedFile(params, Path.of("workflows","image-segment-dda-disk-v3.jip"));
                 ddaProgress.log("Project file is " + projectFilePath);
                 Map<String, Object> ddaParameters = new HashMap<>();
                 ddaParameters.put("/expectedDiskDiameter", params.getPayload().getParameterAsDouble("dda-disk-diameter-mm", 6));
@@ -253,9 +256,10 @@ public class AllInOnePreparationBackendTaskWorkload implements BackendTaskWorklo
                 taskUtils.clearTmp(params.getTmpPath(), etestProgress);
 
                 taskUtils.writeRawImages(params, idsToProcess, imageRepository, fileStorageService, etestProgress, verbose);
+                taskUtils.writeMetadata(params, idsToProcess, imageRepository, etestProgress, verbose);
                 taskUtils.writeMaskAnnotations(params, idsToProcess, "plate", imageRepository, fileStorageService, etestProgress, verbose);
 
-                Path projectFilePath = taskUtils.writeSharedFile(params, "image-segment-etest-strip.jip");
+                Path projectFilePath = taskUtils.writeSharedFile(params, Path.of("workflows","image-segment-etest-strip.jip"));
                 etestProgress.log("Project file is " + projectFilePath);
                 taskUtils.runJIPipe(params, projectFilePath, Collections.emptyMap(), "", etestProgress, systemPackages, preferSystemPackages, verbose);
 
@@ -274,10 +278,11 @@ public class AllInOnePreparationBackendTaskWorkload implements BackendTaskWorklo
                 ProgressInfo zoiShapeProgress = progressInfo.resolve("Find ZOI shape");
                 taskUtils.clearTmp(params.getTmpPath(), zoiShapeProgress);
                 taskUtils.writeRawImages(params, idsToProcess, imageRepository, fileStorageService, zoiShapeProgress, verbose);
+                taskUtils.writeMetadata(params, idsToProcess, imageRepository, zoiShapeProgress, verbose);
                 taskUtils.writeMaskAnnotations(params, idsToProcess, "plate", imageRepository, fileStorageService, zoiShapeProgress, verbose);
                 taskUtils.writeMaskAnnotations(params, idsToProcess, "strip-disk", imageRepository, fileStorageService, zoiShapeProgress, verbose);
 
-                Path projectFilePath = taskUtils.writeSharedFile(params, "image-segment-zoi-shape.jip");
+                Path projectFilePath = taskUtils.writeSharedFile(params, Path.of("workflows","image-segment-zoi-shape.jip"));
                 zoiShapeProgress.log("Project file is " + projectFilePath);
                 taskUtils.runJIPipe(params, projectFilePath, Collections.emptyMap(), "", zoiShapeProgress, systemPackages, preferSystemPackages, verbose);
 
@@ -296,10 +301,11 @@ public class AllInOnePreparationBackendTaskWorkload implements BackendTaskWorklo
                 taskUtils.clearTmp(params.getTmpPath(), zoiShapeProgress);
 
                 taskUtils.writeRawImages(params, idsToProcess, imageRepository, fileStorageService, zoiShapeProgress, verbose);
+                taskUtils.writeMetadata(params, idsToProcess, imageRepository, zoiShapeProgress, verbose);
                 taskUtils.writeMaskAnnotations(params, idsToProcess, "strip-disk", imageRepository, fileStorageService, zoiShapeProgress, verbose);
                 taskUtils.writeRowFirstMaskAnnotations(params, idsToProcess, "zoi-shape", imageRepository, fileStorageService, zoiShapeProgress, verbose);
 
-                Path projectFilePath = taskUtils.writeSharedFile(params, "etest-copy-registered-zoi-shape.jip");
+                Path projectFilePath = taskUtils.writeSharedFile(params, Path.of("workflows","etest-copy-registered-zoi-shape.jip"));
                 zoiShapeProgress.log("Project file is " + projectFilePath);
                 taskUtils.runJIPipe(params, projectFilePath, Collections.emptyMap(), "", zoiShapeProgress, systemPackages, preferSystemPackages, verbose);
 

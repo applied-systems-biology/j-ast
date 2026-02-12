@@ -19,15 +19,13 @@
           <div>/</div>
           <div>Tasks</div>
         </q-toolbar-title>
-        <AuthManagerComponent />
+        <UserManagerComponent />
         <DocumentationComponent/>
       </q-toolbar>
       <q-toolbar class="bg-primary text-white edit-toolbar">
-        <q-btn color="secondary" icon="clear_all" @click="clearAll"
-          >Clear
-        </q-btn>
-        <q-btn color="green" icon="download" label="Download log" v-if="!currentlyDisplayedTask.isRunning() && currentlyDisplayedTask.id > 0" @click="downloadFullLog"/>
-        <q-btn color="red-4" icon="cancel" label="Cancel task" v-if="currentlyDisplayedTask.isRunning() && currentlyDisplayedTask.id > 0" @click="cancelTask"/>
+        <q-btn no-caps no-wrap color="secondary" icon="clear_all" @click="clearAll" label="Clear"/>
+        <q-btn no-caps no-wrap color="green" icon="download" label="Download log" v-if="!currentlyDisplayedTask.isRunning() && currentlyDisplayedTask.id > 0" @click="downloadFullLog"/>
+        <q-btn no-caps no-wrap color="red-4" icon="cancel" label="Cancel task" v-if="currentlyDisplayedTask.isRunning() && currentlyDisplayedTask.id > 0" @click="cancelTask"/>
         <ToggleButton v-model="autoScrollEnabled" color="blue-5" selected-icon="fa-solid fa-square-check" not-selected-icon="fa-solid fa-square" label="Auto scroll" v-if="currentlyDisplayedTask.isRunning() && currentlyDisplayedTask.id > 0" @click="downloadFullLog"/>
         <div class="col-grow" />
         <ProjectResultsButton :project-id="projectId[0]" v-model="resultList"/>
@@ -101,7 +99,7 @@ import { useIntervalFn } from '@vueuse/core';
 import { api } from 'boot/axios';
 import {QScrollArea, useQuasar} from 'quasar';
 import ProjectBackendTaskButton from 'components/layout/ProjectBackendTaskButton.vue';
-import AuthManagerComponent from 'components/layout/AuthManagerComponent.vue';
+import UserManagerComponent from 'components/layout/UserManagerComponent.vue';
 import ProjectResultsButton from 'components/layout/ProjectResultsButton.vue';
 import { ResultPayload } from 'src/types/results';
 import ToggleButton from "components/utils/ToggleButton.vue";

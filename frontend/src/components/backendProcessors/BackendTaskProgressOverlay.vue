@@ -46,7 +46,7 @@ const displayedLogs = ref<{ id: number; text: string }[]>([]);
 const maxDisplayedLogs = 5;
 let logId = 0;
 
-const projectBackendTasks = defineModel<BackendTaskPayload[]>('backendTasks');
+const projectBackendTasks = defineModel<BackendTaskPayload[]>('backendTasks', { required: true });
 
 const currentTask = computed(() => {
   if(projectBackendTasks.value) {

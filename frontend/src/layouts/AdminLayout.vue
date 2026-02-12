@@ -5,7 +5,7 @@
         <q-toolbar-title class="row items-center q-gutter-sm">
           <HeaderLogoButtonComponent/>
         </q-toolbar-title>
-        <AuthManagerComponent/>
+        <UserManagerComponent/>
         <DocumentationComponent/>
       </q-toolbar>
     </q-header>
@@ -16,19 +16,19 @@
       class="q-pa-sm q-gutter-sm"
     >
       <div class="flex q-mb-lg">
-        <q-btn color="green" icon="add" @click="showAddUserDialog">Add new user</q-btn>
+        <q-btn no-caps no-wrap color="green" icon="add" @click="showAddUserDialog">Add new user</q-btn>
         <div class="col-grow" />
-        <q-btn color="primary" icon="refresh" @click="queryBackend"/>
+        <q-btn no-caps no-wrap color="primary" icon="refresh" @click="queryBackend"/>
       </div>
       <div class="flex column">
-        <q-btn class="user-button" @click="showUserPage(new UserPayload())" align="left" no-caps :color="!currentlyDisplayedUserData.email ? 'primary' : 'blue-grey-3'">
+        <q-btn no-caps no-wrap class="user-button" @click="showUserPage(new UserPayload())" align="left" :color="!currentlyDisplayedUserData.email ? 'primary' : 'blue-grey-3'">
           <div class="text-left">
             <div><q-icon name="person"/> <i>Administrator</i></div>
             <div class="text-weight-regular"><q-icon name=""/> Administrator</div>
           </div>
         </q-btn>
         <template v-for="user in userList" :key="user.id">
-          <q-btn class="user-button" @click="showUserPage(user)" align="left" no-caps :color="user.email == currentlyDisplayedUserData.email ? 'primary' : 'blue-grey-3'">
+          <q-btn no-caps no-wrap class="user-button" @click="showUserPage(user)" align="left" :color="user.email == currentlyDisplayedUserData.email ? 'primary' : 'blue-grey-3'">
             <div class="text-left">
               <div><q-icon name="person"/> {{ user.email }}</div>
               <div class="text-weight-regular"><q-icon name=""/> {{ user.role }}{{ !user.allowLogin ? " (Inactive)" : "" }}</div>
@@ -40,10 +40,10 @@
     <q-page-container>
       <q-page padding>
         <q-toolbar class="bg-primary text-white rounded-borders q-mb-lg">
-          <q-btn :disable="!currentlyDisplayedUserData.email" color="green" icon="edit" @click="showEditUserDialog(currentlyDisplayedUserData)">Edit {{currentlyDisplayedUserData.email}}</q-btn>
+          <q-btn no-caps no-wrap :disable="!currentlyDisplayedUserData.email" color="green" icon="edit" @click="showEditUserDialog(currentlyDisplayedUserData)">Edit {{currentlyDisplayedUserData.email}}</q-btn>
         </q-toolbar>
         <div class="flex column">
-          <q-btn v-for="project in projectList" :key="project.id" no-caps align="left" class="q-mb-sm" :to="`/project/${project.id}`">
+          <q-btn no-caps no-wrap v-for="project in projectList" :key="project.id" align="left" class="q-mb-sm" :to="`/project/${project.id}`">
             <div class="text-left">
               <div><q-icon name="folder"/> {{ project.name }}</div>
               <div class="text-weight-regular"><q-icon name=""/> ID: {{ project.id }}</div>
@@ -152,7 +152,7 @@
 
 <script setup lang="ts">
 import HeaderLogoButtonComponent from "components/layout/HeaderLogoButtonComponent.vue";
-import AuthManagerComponent from "components/layout/AuthManagerComponent.vue";
+import UserManagerComponent from "components/layout/UserManagerComponent.vue";
 import * as EmailValidator from "email-validator";
 import {UserPayload, UserRole} from "src/types/registration";
 import {computed, onMounted, ref} from "vue";
