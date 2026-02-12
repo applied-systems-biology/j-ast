@@ -18,11 +18,11 @@
              label="Set time point" @click="setAllStringMetadata('Time point', 'timePoint')"/>
       <q-btn no-caps no-wrap :disable="hasTaskRunning" align="left" class="w-100" color="primary" icon="fa-solid fa-gear"
              label="Set assay type" @click="setAllAssayType"/>
-      <template v-if="hasSelectedETest">
-        <q-separator/>
-        <q-btn no-caps no-wrap :disable="hasTaskRunning" align="left" class="w-100" color="primary" icon="fa-solid fa-ruler-vertical"
-               label="Set strip profile" @click="setAllAssayType"/>
-      </template>
+      <q-separator/>
+      <q-btn no-caps no-wrap :disable="hasTaskRunning" align="left" class="w-100" color="primary" icon="fa-solid fa-ruler"
+             label="Set pixel size" @click="setAllPixelSize"/>
+      <q-btn v-if="hasSelectedETest" no-caps no-wrap :disable="hasTaskRunning" align="left" class="w-100" color="primary" icon="fa-solid fa-ruler-vertical"
+             label="Set E-Test strip preset" @click="setAllStripPreset"/>
     </q-tab-panel>
     <q-tab-panel class="d-flex-column" name="process">
       <ProjectImageProcessorList v-model:current-view-mode="currentViewMode"
@@ -34,7 +34,7 @@
   </q-tab-panels>
 </template>
 <script lang="ts" setup>
-import {useQuasar} from "quasar";
+import {Dialog, useQuasar} from "quasar";
 import {BackendTaskPayload} from "src/types/backendTasks";
 import {computed} from "vue";
 import {ImagePayload, setImageMetadata} from "src/types/image";
@@ -45,6 +45,8 @@ import {ViewMode} from "src/types/view";
 import {ProjectImagesPayload} from "src/types/projectImages";
 import {FrontEndImageProcessor} from "src/types/frontendTasks";
 import {AssayType} from "src/types/assayType";
+import StripPresetSelectorDialog from "components/annotationEditors/StripPresetSelectorDialog.vue";
+import {StripPresetPayload} from "src/types/presets";
 
 const selectedImageIds = defineModel<Array<number>>("selectedImageIds", {required: true})
 const projectImages = defineModel<ProjectImagesPayload>("projectImages", {required: true})
@@ -126,6 +128,48 @@ function setAllAssayType() {
       });
     }
   });
+}
+
+function setAllPixelSize() {
+  $q.dialog({
+    title: 'Set pixel size',
+    message: "This will set the pixel size (in millimeters) for all selected " + model.value!.length + " images.",
+    prompt: {
+      model: '0',
+      type: 'number',
+    },
+    cancel: true
+  }).onOk((data: number) => {
+    for (const image of model.value!) {
+      image.pixelSizeMillimeter = data
+      const payload = plainToInstance(ImagePayload, image);
+      payload.uploadToBackend().catch(() => {
+        sendFailureNotification('Error while updating');
+      });
+    }
+  });
+}
+
+function setAllStripPreset() {
+  Dialog.create({
+    component: StripPresetSelectorDialog,
+    componentProps: {
+      persistent: true,
+    },
+  })
+      .onOk((payload : StripPresetPayload) => {
+        if(payload) {
+          for (const image of model.value!) {
+            setImageMetadata(image, "stripPreset", payload)
+            image.version += 1
+            plainToInstance(ImagePayload, image).uploadToBackend().catch(() => {
+              sendFailureNotification('Error while updating');
+            });
+          }
+        }
+      })
+      .onCancel(() => {})
+      .onDismiss(() => {});
 }
 
 </script>

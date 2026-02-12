@@ -19,6 +19,7 @@
         to="/"
         label="Go Home"
         no-caps
+        no-wrap
       />
     </div>
   </div>
