@@ -83,6 +83,7 @@ package_electron:
     - chmod +x dist/electron/build.sh
     - echo "Building Electron packages..."
     - cd dist/electron
+    - chmod +x ./build.sh
     - ./build.sh
     - cd ../..
   artifacts:
@@ -106,6 +107,7 @@ package_server:
     - chmod +x dist/server/build.sh
     - echo "Building server packages..."
     - cd dist/server
+    - chmod +x ./build.sh
     - ./build.sh $CI_PIPELINE_IID / /api
     - cd ../..
   artifacts:
@@ -128,6 +130,7 @@ package_server_leibniz_hki:
     - chmod +x dist/server/build.sh
     - echo "Building server packages for Leibniz-HKI..."
     - cd dist/server-hki
+    - chmod +x ./build.sh
     - ./build.sh $CI_PIPELINE_IID /j-ast-app /j-ast-app/api
     - cd ../..
   artifacts:
