@@ -1,5 +1,6 @@
 package org.hkijena.jast.model.entities;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import io.hypersistence.utils.hibernate.type.json.JsonType;
 import jakarta.persistence.*;
 import jakarta.transaction.Transactional;
@@ -10,15 +11,16 @@ import org.hkijena.jast.payloads.ImagePayload;
 import org.hkijena.jast.services.FileStorageService;
 import org.hkijena.jast.utils.ColorUtils;
 import org.hkijena.jast.utils.ImageUtils;
+import org.hkijena.jast.utils.JsonUtils;
 import org.hkijena.jast.utils.StringUtils;
 
 import java.awt.image.BufferedImage;
-import java.io.Serial;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.stream.Collectors;
 
 /**
  * An image dataset
@@ -95,7 +97,7 @@ public class Image {
     }
 
     public double getMic() {
-        if(mic == null) {
+        if (mic == null) {
             mic = 0d;
         }
         return mic;
@@ -382,5 +384,25 @@ public class Image {
             annotation.deleteFilesLater(fileStorageService);
         }
 
+    }
+
+    public String getStripSequenceString() {
+        Object stripPreset = getMetadata().get("stripPreset");
+        if (stripPreset == null) {
+            return "";
+        }
+        if (stripPreset instanceof String) {
+            // parse as JSON object
+            stripPreset = JsonUtils.readFromString((String) stripPreset, JsonNode.class);
+        }
+        if (stripPreset instanceof Map map) {
+            return ((List<?>) map.get("ticks")).stream().map(Object::toString).collect(Collectors.joining(","));
+        }
+        if (stripPreset instanceof JsonNode node) {
+            List<Double> items = new ArrayList<>();
+            node.get("ticks").elements().forEachRemaining(nd -> items.add(nd.asDouble()));
+            return items.stream().map(Object::toString).collect(Collectors.joining(","));
+        }
+        return "";
     }
 }

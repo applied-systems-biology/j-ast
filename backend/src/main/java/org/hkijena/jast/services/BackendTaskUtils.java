@@ -122,6 +122,7 @@ public class BackendTaskUtils {
 
     public void writeMetadata(BackendTaskWorkloadParams params, Iterable<Long> imageIds, ImageRepository repository, ProgressInfo progressInfo, boolean verbose, ImageMetadata... additionalMetadata) throws IOException {
         List<ImageMetadata> metadata = new ArrayList<>();
+        metadata.add(new ImageMetadata("FileName", Image::getOriginalFileName));
         metadata.add(new ImageMetadata("#ImageId", Image::getId));
         metadata.add(new ImageMetadata("#Experiment", Image::getExperiment));
         metadata.add(new ImageMetadata("#Sample", Image::getSample));
@@ -130,6 +131,7 @@ public class BackendTaskUtils {
         metadata.add(new ImageMetadata("PixelSize", Image::getPixelSizeMillimeter));
         metadata.add(new ImageMetadata("GroupRow", Image::getGroupRow));
         metadata.add(new ImageMetadata("GroupColumn", Image::getGroupColumn));
+        metadata.add(new ImageMetadata("StripSequence", Image::getStripSequenceString));
         metadata.addAll(Arrays.asList(additionalMetadata));
 
         progressInfo.log("Writing image metadata ...");
