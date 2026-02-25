@@ -9,7 +9,7 @@
       "title" : null,
       "first-name" : "Ruman",
       "last-name" : "Gerst",
-      "affiliations-list" : [ "HKI Jena" ],
+      "affiliations-list" : [ "HKI Jena", "Leibniz-HKI" ],
       "website" : null,
       "contact" : "ruman.gerst@leibniz-hki.de",
       "first-author" : false,
@@ -114,472 +114,6 @@
     "restore-tabs" : true
   },
   "dependencies" : [ {
-    "metadata" : {
-      "name" : "Filesystem types and algorithms",
-      "description" : "<html><head></head><body>A JIPipe project</body></html>",
-      "summary" : "<html><head></head><body></body></html>",
-      "authors" : [ ],
-      "acknowledgements" : [ ],
-      "website" : "",
-      "license" : "",
-      "citation" : "",
-      "dependency-citations" : [ ],
-      "categories" : [ ]
-    },
-    "id" : "org.hkijena.jipipe:filesystem",
-    "version" : "5.3.0",
-    "provides" : [ ],
-    "ij:update-site-dependencies" : [ ],
-    "dependencies" : [ ],
-    "ij:update-site-providers" : [ ]
-  }, {
-    "metadata" : {
-      "name" : "Core",
-      "description" : "<html><head></head><body>A JIPipe project</body></html>",
-      "summary" : "<html><head></head><body></body></html>",
-      "authors" : [ ],
-      "acknowledgements" : [ ],
-      "website" : "",
-      "license" : "",
-      "citation" : "",
-      "dependency-citations" : [ ],
-      "categories" : [ ]
-    },
-    "id" : "org.hkijena.jipipe:core",
-    "version" : "5.3.0",
-    "provides" : [ ],
-    "ij:update-site-dependencies" : [ ],
-    "dependencies" : [ ],
-    "ij:update-site-providers" : [ ]
-  }, {
-    "metadata" : {
-      "name" : "Multi parameter algorithms",
-      "description" : "<html><head></head><body>A JIPipe project</body></html>",
-      "summary" : "<html><head></head><body></body></html>",
-      "authors" : [ ],
-      "acknowledgements" : [ ],
-      "website" : "",
-      "license" : "",
-      "citation" : "",
-      "dependency-citations" : [ ],
-      "categories" : [ ]
-    },
-    "id" : "org.hkijena.jipipe:multi-parameters-algorithms",
-    "version" : "5.3.0",
-    "provides" : [ ],
-    "ij:update-site-dependencies" : [ ],
-    "dependencies" : [ ],
-    "ij:update-site-providers" : [ ]
-  }, {
-    "metadata" : {
-      "name" : "Node grouping",
-      "description" : "<html><head></head><body>Provides algorithms that wrap around algorithm graphs</body></html>",
-      "summary" : "<html><head></head><body>Provides algorithms that wrap around algorithm graphs</body></html>",
-      "authors" : [ {
-        "title" : null,
-        "first-name" : "Zoltán",
-        "last-name" : "Cseresnyés",
-        "affiliations-list" : [ "Applied Systems Biology, Leibniz Institute for Natural Product Research and Infection Biology – Hans-Knöll-Institute, Jena, Germany" ],
-        "website" : "https://www.leibniz-hki.de/en/staff-details.html?member=144",
-        "contact" : "zoltan.cseresnyes@leibniz-hki.de",
-        "first-author" : true,
-        "corresponding-author" : false,
-        "orcid" : "https://orcid.org/0000-0002-6574-2588",
-        "custom-text" : "<html><head></head><body></body></html>"
-      }, {
-        "title" : null,
-        "first-name" : "Ruman",
-        "last-name" : "Gerst",
-        "affiliations-list" : [ "Applied Systems Biology, Leibniz Institute for Natural Product Research and Infection Biology – Hans-Knöll-Institute, Jena, Germany", "Faculty of Biological Sciences, Friedrich Schiller University Jena, Germany" ],
-        "website" : "https://www.leibniz-hki.de/en/staff-details.html?member=1027",
-        "contact" : "ruman.gerst@leibniz-hki.de",
-        "first-author" : true,
-        "corresponding-author" : false,
-        "orcid" : "https://orcid.org/0000-0002-0723-6038",
-        "custom-text" : "<html><head></head><body></body></html>"
-      }, {
-        "title" : null,
-        "first-name" : "Marc Thilo",
-        "last-name" : "Figge",
-        "affiliations-list" : [ "Applied Systems Biology, Leibniz Institute for Natural Product Research and Infection Biology – Hans-Knöll-Institute, Jena, Germany", "Institute of Microbiology, Faculty of Biological Sciences, Friedrich Schiller University Jena, Germany" ],
-        "website" : "https://www.leibniz-hki.de/en/staff-details.html?member=81",
-        "contact" : "thilo.figge@leibniz-hki.de",
-        "first-author" : false,
-        "corresponding-author" : true,
-        "orcid" : "https://orcid.org/0000-0002-4044-9166",
-        "custom-text" : "<html><head></head><body></body></html>"
-      } ],
-      "acknowledgements" : [ ],
-      "website" : "https://www.jipipe.org/",
-      "license" : "MIT",
-      "citation" : "Gerst, R., Cseresnyés, Z. & Figge, M.T. JIPipe: visual batch processing for ImageJ. Nat Methods (2023). https://doi.org/10.1038/s41592-022-01744-4",
-      "dependency-citations" : [ ],
-      "categories" : [ "Core" ]
-    },
-    "id" : "org.hkijena.jipipe:grouping",
-    "version" : "5.3.0",
-    "provides" : [ ],
-    "ij:update-site-dependencies" : [ ],
-    "dependencies" : [ ],
-    "ij:update-site-providers" : [ ]
-  }, {
-    "metadata" : {
-      "name" : "Utilities",
-      "description" : "<html><head></head><body>Utility algorithms</body></html>",
-      "summary" : "<html><head></head><body>Utility algorithms</body></html>",
-      "authors" : [ {
-        "title" : null,
-        "first-name" : "Zoltán",
-        "last-name" : "Cseresnyés",
-        "affiliations-list" : [ "Applied Systems Biology, Leibniz Institute for Natural Product Research and Infection Biology – Hans-Knöll-Institute, Jena, Germany" ],
-        "website" : "https://www.leibniz-hki.de/en/staff-details.html?member=144",
-        "contact" : "zoltan.cseresnyes@leibniz-hki.de",
-        "first-author" : true,
-        "corresponding-author" : false,
-        "orcid" : "https://orcid.org/0000-0002-6574-2588",
-        "custom-text" : "<html><head></head><body></body></html>"
-      }, {
-        "title" : null,
-        "first-name" : "Ruman",
-        "last-name" : "Gerst",
-        "affiliations-list" : [ "Applied Systems Biology, Leibniz Institute for Natural Product Research and Infection Biology – Hans-Knöll-Institute, Jena, Germany", "Faculty of Biological Sciences, Friedrich Schiller University Jena, Germany" ],
-        "website" : "https://www.leibniz-hki.de/en/staff-details.html?member=1027",
-        "contact" : "ruman.gerst@leibniz-hki.de",
-        "first-author" : true,
-        "corresponding-author" : false,
-        "orcid" : "https://orcid.org/0000-0002-0723-6038",
-        "custom-text" : "<html><head></head><body></body></html>"
-      }, {
-        "title" : null,
-        "first-name" : "Marc Thilo",
-        "last-name" : "Figge",
-        "affiliations-list" : [ "Applied Systems Biology, Leibniz Institute for Natural Product Research and Infection Biology – Hans-Knöll-Institute, Jena, Germany", "Institute of Microbiology, Faculty of Biological Sciences, Friedrich Schiller University Jena, Germany" ],
-        "website" : "https://www.leibniz-hki.de/en/staff-details.html?member=81",
-        "contact" : "thilo.figge@leibniz-hki.de",
-        "first-author" : false,
-        "corresponding-author" : true,
-        "orcid" : "https://orcid.org/0000-0002-4044-9166",
-        "custom-text" : "<html><head></head><body></body></html>"
-      } ],
-      "acknowledgements" : [ ],
-      "website" : "https://www.jipipe.org/",
-      "license" : "MIT",
-      "citation" : "Gerst, R., Cseresnyés, Z. & Figge, M.T. JIPipe: visual batch processing for ImageJ. Nat Methods (2023). https://doi.org/10.1038/s41592-022-01744-4",
-      "dependency-citations" : [ ],
-      "categories" : [ "Data processing", "Scripting" ]
-    },
-    "id" : "org.hkijena.jipipe:utils",
-    "version" : "5.3.0",
-    "provides" : [ ],
-    "ij:update-site-dependencies" : [ ],
-    "dependencies" : [ ],
-    "ij:update-site-providers" : [ ]
-  }, {
-    "metadata" : {
-      "name" : "ImageJ integration",
-      "description" : "<html><head></head><body>Adds support for commonly used ImageJ data types</body></html>",
-      "summary" : "<html><head></head><body>Adds support for commonly used ImageJ data types</body></html>",
-      "authors" : [ {
-        "title" : null,
-        "first-name" : "Zoltán",
-        "last-name" : "Cseresnyés",
-        "affiliations-list" : [ "Applied Systems Biology, Leibniz Institute for Natural Product Research and Infection Biology – Hans-Knöll-Institute, Jena, Germany" ],
-        "website" : "https://www.leibniz-hki.de/en/staff-details.html?member=144",
-        "contact" : "zoltan.cseresnyes@leibniz-hki.de",
-        "first-author" : true,
-        "corresponding-author" : false,
-        "orcid" : "https://orcid.org/0000-0002-6574-2588",
-        "custom-text" : "<html><head></head><body></body></html>"
-      }, {
-        "title" : null,
-        "first-name" : "Ruman",
-        "last-name" : "Gerst",
-        "affiliations-list" : [ "Applied Systems Biology, Leibniz Institute for Natural Product Research and Infection Biology – Hans-Knöll-Institute, Jena, Germany", "Faculty of Biological Sciences, Friedrich Schiller University Jena, Germany" ],
-        "website" : "https://www.leibniz-hki.de/en/staff-details.html?member=1027",
-        "contact" : "ruman.gerst@leibniz-hki.de",
-        "first-author" : true,
-        "corresponding-author" : false,
-        "orcid" : "https://orcid.org/0000-0002-0723-6038",
-        "custom-text" : "<html><head></head><body></body></html>"
-      }, {
-        "title" : null,
-        "first-name" : "Marc Thilo",
-        "last-name" : "Figge",
-        "affiliations-list" : [ "Applied Systems Biology, Leibniz Institute for Natural Product Research and Infection Biology – Hans-Knöll-Institute, Jena, Germany", "Institute of Microbiology, Faculty of Biological Sciences, Friedrich Schiller University Jena, Germany" ],
-        "website" : "https://www.leibniz-hki.de/en/staff-details.html?member=81",
-        "contact" : "thilo.figge@leibniz-hki.de",
-        "first-author" : false,
-        "corresponding-author" : true,
-        "orcid" : "https://orcid.org/0000-0002-4044-9166",
-        "custom-text" : "<html><head></head><body></body></html>"
-      } ],
-      "acknowledgements" : [ {
-        "title" : null,
-        "first-name" : "Curtis T.",
-        "last-name" : "Rueden",
-        "affiliations-list" : [ "Laboratory for Optical and Computational Instrumentation, University of Wisconsin at Madison, Madison, Wisconsin, USA" ],
-        "website" : "",
-        "contact" : "",
-        "first-author" : true,
-        "corresponding-author" : false,
-        "orcid" : "",
-        "custom-text" : "<html><head></head><body></body></html>"
-      }, {
-        "title" : null,
-        "first-name" : "Johannes",
-        "last-name" : "Schindelin",
-        "affiliations-list" : [ "Laboratory for Optical and Computational Instrumentation, University of Wisconsin at Madison, Madison, Wisconsin, USA", "Morgridge Institute for Research, Madison, Wisconsin, USA" ],
-        "website" : "",
-        "contact" : "",
-        "first-author" : false,
-        "corresponding-author" : false,
-        "orcid" : "",
-        "custom-text" : "<html><head></head><body></body></html>"
-      }, {
-        "title" : null,
-        "first-name" : "Mark C.",
-        "last-name" : "Hiner",
-        "affiliations-list" : [ "Laboratory for Optical and Computational Instrumentation, University of Wisconsin at Madison, Madison, Wisconsin, USA" ],
-        "website" : "",
-        "contact" : "",
-        "first-author" : false,
-        "corresponding-author" : false,
-        "orcid" : "",
-        "custom-text" : "<html><head></head><body></body></html>"
-      }, {
-        "title" : null,
-        "first-name" : "Barry E.",
-        "last-name" : "DeZonia",
-        "affiliations-list" : [ "Laboratory for Optical and Computational Instrumentation, University of Wisconsin at Madison, Madison, Wisconsin, USA" ],
-        "website" : "",
-        "contact" : "",
-        "first-author" : false,
-        "corresponding-author" : false,
-        "orcid" : "",
-        "custom-text" : "<html><head></head><body></body></html>"
-      }, {
-        "title" : null,
-        "first-name" : "Alison E.",
-        "last-name" : "Walter",
-        "affiliations-list" : [ "Laboratory for Optical and Computational Instrumentation, University of Wisconsin at Madison, Madison, Wisconsin, USA", "Morgridge Institute for Research, Madison, Wisconsin, USA" ],
-        "website" : "",
-        "contact" : "",
-        "first-author" : false,
-        "corresponding-author" : false,
-        "orcid" : "",
-        "custom-text" : "<html><head></head><body></body></html>"
-      }, {
-        "title" : null,
-        "first-name" : "Ellen T.",
-        "last-name" : "Arena",
-        "affiliations-list" : [ "Laboratory for Optical and Computational Instrumentation, University of Wisconsin at Madison, Madison, Wisconsin, USA", "Morgridge Institute for Research, Madison, Wisconsin, USA" ],
-        "website" : "",
-        "contact" : "",
-        "first-author" : false,
-        "corresponding-author" : false,
-        "orcid" : "",
-        "custom-text" : "<html><head></head><body></body></html>"
-      }, {
-        "title" : null,
-        "first-name" : "Kevin W.",
-        "last-name" : "Eliceiri",
-        "affiliations-list" : [ "Laboratory for Optical and Computational Instrumentation, University of Wisconsin at Madison, Madison, Wisconsin, USA", "Morgridge Institute for Research, Madison, Wisconsin, USA" ],
-        "website" : "",
-        "contact" : "",
-        "first-author" : false,
-        "corresponding-author" : true,
-        "orcid" : "",
-        "custom-text" : "<html><head></head><body></body></html>"
-      }, {
-        "title" : null,
-        "first-name" : "Caroline A.",
-        "last-name" : "Schneider",
-        "affiliations-list" : [ "Laboratory for Optical and Computational Instrumentation, University of Wisconsin at Madison, Madison, Wisconsin, USA" ],
-        "website" : "",
-        "contact" : "",
-        "first-author" : true,
-        "corresponding-author" : false,
-        "orcid" : "",
-        "custom-text" : "<html><head></head><body></body></html>"
-      }, {
-        "title" : null,
-        "first-name" : "Wayne S.",
-        "last-name" : "Rasband",
-        "affiliations-list" : [ "Section on Instrumentation, US National Institutes of Health, Bethesda, Maryland, USA" ],
-        "website" : "",
-        "contact" : "",
-        "first-author" : false,
-        "corresponding-author" : false,
-        "orcid" : "",
-        "custom-text" : "<html><head></head><body></body></html>"
-      }, {
-        "title" : null,
-        "first-name" : "Melissa",
-        "last-name" : "Linkert",
-        "affiliations-list" : [ "Laboratory for Optical and Computational Instrumentation, Department of Molecular Biology", "Department of Biomedical Engineering, Graduate School, University of Wisconsin at Madison, Madison, WI 53711", "Glencoe Software, Inc., Seattle, WA 98101" ],
-        "website" : "",
-        "contact" : "",
-        "first-author" : true,
-        "corresponding-author" : false,
-        "orcid" : "",
-        "custom-text" : "<html><head></head><body></body></html>"
-      }, {
-        "title" : null,
-        "first-name" : "Chris",
-        "last-name" : "Allan",
-        "affiliations-list" : [ "Wellcome Trust Centre for Gene Regulation and Expression, College of Life Sciences, University of Dundee, Dundee DD1 5EH, Scotland, UK", "Glencoe Software, Inc., Seattle, WA 98101" ],
-        "website" : "",
-        "contact" : "",
-        "first-author" : false,
-        "corresponding-author" : false,
-        "orcid" : "",
-        "custom-text" : "<html><head></head><body></body></html>"
-      }, {
-        "title" : null,
-        "first-name" : "Jean-Marie",
-        "last-name" : "Burel",
-        "affiliations-list" : [ "Wellcome Trust Centre for Gene Regulation and Expression, College of Life Sciences, University of Dundee, Dundee DD1 5EH, Scotland, UK" ],
-        "website" : "",
-        "contact" : "",
-        "first-author" : false,
-        "corresponding-author" : false,
-        "orcid" : "",
-        "custom-text" : "<html><head></head><body></body></html>"
-      }, {
-        "title" : null,
-        "first-name" : "Will",
-        "last-name" : "Moore",
-        "affiliations-list" : [ "Wellcome Trust Centre for Gene Regulation and Expression, College of Life Sciences, University of Dundee, Dundee DD1 5EH, Scotland, UK" ],
-        "website" : "",
-        "contact" : "",
-        "first-author" : false,
-        "corresponding-author" : false,
-        "orcid" : "",
-        "custom-text" : "<html><head></head><body></body></html>"
-      }, {
-        "title" : null,
-        "first-name" : "Andrew",
-        "last-name" : "Patterson",
-        "affiliations-list" : [ "Wellcome Trust Centre for Gene Regulation and Expression, College of Life Sciences, University of Dundee, Dundee DD1 5EH, Scotland, UK" ],
-        "website" : "",
-        "contact" : "",
-        "first-author" : false,
-        "corresponding-author" : false,
-        "orcid" : "",
-        "custom-text" : "<html><head></head><body></body></html>"
-      }, {
-        "title" : null,
-        "first-name" : "Brian",
-        "last-name" : "Loranger",
-        "affiliations-list" : [ "Wellcome Trust Centre for Gene Regulation and Expression, College of Life Sciences, University of Dundee, Dundee DD1 5EH, Scotland, UK" ],
-        "website" : "",
-        "contact" : "",
-        "first-author" : false,
-        "corresponding-author" : false,
-        "orcid" : "",
-        "custom-text" : "<html><head></head><body></body></html>"
-      }, {
-        "title" : null,
-        "first-name" : "Josh",
-        "last-name" : "Moore",
-        "affiliations-list" : [ "Glencoe Software, Inc., Seattle, WA 98101" ],
-        "website" : "",
-        "contact" : "",
-        "first-author" : false,
-        "corresponding-author" : false,
-        "orcid" : "",
-        "custom-text" : "<html><head></head><body></body></html>"
-      }, {
-        "title" : null,
-        "first-name" : "Carlos",
-        "last-name" : "Neves",
-        "affiliations-list" : [ "Glencoe Software, Inc., Seattle, WA 98101" ],
-        "website" : "",
-        "contact" : "",
-        "first-author" : false,
-        "corresponding-author" : false,
-        "orcid" : "",
-        "custom-text" : "<html><head></head><body></body></html>"
-      }, {
-        "title" : null,
-        "first-name" : "Donald",
-        "last-name" : "MacDonald",
-        "affiliations-list" : [ "Wellcome Trust Centre for Gene Regulation and Expression, College of Life Sciences, University of Dundee, Dundee DD1 5EH, Scotland, UK" ],
-        "website" : "",
-        "contact" : "",
-        "first-author" : false,
-        "corresponding-author" : false,
-        "orcid" : "",
-        "custom-text" : "<html><head></head><body></body></html>"
-      }, {
-        "title" : null,
-        "first-name" : "Aleksandra",
-        "last-name" : "Tarkowska",
-        "affiliations-list" : [ "Wellcome Trust Centre for Gene Regulation and Expression, College of Life Sciences, University of Dundee, Dundee DD1 5EH, Scotland, UK" ],
-        "website" : "",
-        "contact" : "",
-        "first-author" : false,
-        "corresponding-author" : false,
-        "orcid" : "",
-        "custom-text" : "<html><head></head><body></body></html>"
-      }, {
-        "title" : null,
-        "first-name" : "Caitlin",
-        "last-name" : "Sticco",
-        "affiliations-list" : [ "Laboratory for Optical and Computational Instrumentation, Department of Molecular Biology", "Department of Biomedical Engineering, Graduate School, University of Wisconsin at Madison, Madison, WI 53711" ],
-        "website" : "",
-        "contact" : "",
-        "first-author" : false,
-        "corresponding-author" : false,
-        "orcid" : "",
-        "custom-text" : "<html><head></head><body></body></html>"
-      }, {
-        "title" : null,
-        "first-name" : "Emma",
-        "last-name" : "Hill",
-        "affiliations-list" : [ "The Rockefeller University Press, New York, NY 10065" ],
-        "website" : "",
-        "contact" : "",
-        "first-author" : false,
-        "corresponding-author" : false,
-        "orcid" : "",
-        "custom-text" : "<html><head></head><body></body></html>"
-      }, {
-        "title" : null,
-        "first-name" : "Mike",
-        "last-name" : "Rossner",
-        "affiliations-list" : [ "The Rockefeller University Press, New York, NY 10065" ],
-        "website" : "",
-        "contact" : "",
-        "first-author" : false,
-        "corresponding-author" : false,
-        "orcid" : "",
-        "custom-text" : "<html><head></head><body></body></html>"
-      }, {
-        "title" : null,
-        "first-name" : "Jason R.",
-        "last-name" : "Swedlow",
-        "affiliations-list" : [ "Wellcome Trust Centre for Gene Regulation and Expression, College of Life Sciences, University of Dundee, Dundee DD1 5EH, Scotland, UK", "Glencoe Software, Inc., Seattle, WA 98101" ],
-        "website" : "",
-        "contact" : "",
-        "first-author" : false,
-        "corresponding-author" : true,
-        "orcid" : "",
-        "custom-text" : "<html><head></head><body></body></html>"
-      } ],
-      "website" : "https://www.jipipe.org/",
-      "license" : "MIT",
-      "citation" : "Gerst, R., Cseresnyés, Z. & Figge, M.T. JIPipe: visual batch processing for ImageJ. Nat Methods (2023). https://doi.org/10.1038/s41592-022-01744-4",
-      "dependency-citations" : [ "Rueden, C. T.; Schindelin, J. & Hiner, M. C. et al. (2017), \"ImageJ2: ImageJ for the next generation of scientific image data\", BMC Bioinformatics 18:529", "Schneider, C. A.; Rasband, W. S. & Eliceiri, K. W. (2012), \"NIH Image to ImageJ: 25 years of image analysis\", Nature methods 9(7): 671-675", "Melissa Linkert, Curtis T. Rueden, Chris Allan, Jean-Marie Burel, Will Moore, Andrew Patterson, Brian Loranger, Josh Moore, Carlos Neves, Donald MacDonald, Aleksandra Tarkowska, Caitlin Sticco, Emma Hill, Mike Rossner, Kevin W. Eliceiri, and Jason R. Swedlow (2010) Metadata matters: access to image data in the real world. The Journal of Cell Biology 189(5), 777-782" ],
-      "categories" : [ "Import-Export", "Image Annotation", "OME" ]
-    },
-    "id" : "org.hkijena.jipipe:imagej-integration",
-    "version" : "5.3.0",
-    "provides" : [ ],
-    "ij:update-site-dependencies" : [ ],
-    "dependencies" : [ ],
-    "ij:update-site-providers" : [ ]
-  }, {
     "metadata" : {
       "name" : "ImageJ algorithms",
       "description" : "<html><head></head><body>Integrates ImageJ algorithms into JIPipe</body></html>",
@@ -1073,28 +607,9 @@
     "ij:update-site-providers" : [ ]
   }, {
     "metadata" : {
-      "name" : "Napari integration",
-      "description" : "<html><head></head><body>A JIPipe project</body></html>",
-      "summary" : "<html><head></head><body></body></html>",
-      "authors" : [ ],
-      "acknowledgements" : [ ],
-      "website" : "",
-      "license" : "",
-      "citation" : "",
-      "dependency-citations" : [ ],
-      "categories" : [ ]
-    },
-    "id" : "org.hkijena.jipipe:napari",
-    "version" : "5.3.0",
-    "provides" : [ ],
-    "ij:update-site-dependencies" : [ ],
-    "dependencies" : [ ],
-    "ij:update-site-providers" : [ ]
-  }, {
-    "metadata" : {
-      "name" : "Multi parameters data types",
-      "description" : "<html><head></head><body>Extension that provides the necessary data types for handling multiple parameters</body></html>",
-      "summary" : "<html><head></head><body>Extension that provides the necessary data types for handling multiple parameters</body></html>",
+      "name" : "Compartment management",
+      "description" : "<html><head></head><body>Data types required for graph compartment management</body></html>",
+      "summary" : "<html><head></head><body>Data types required for graph compartment management</body></html>",
       "authors" : [ {
         "title" : null,
         "first-name" : "Zoltán",
@@ -1136,7 +651,7 @@
       "dependency-citations" : [ ],
       "categories" : [ "Core" ]
     },
-    "id" : "org.hkijena.jipipe:multi-parameters",
+    "id" : "org.hkijena.jipipe:compartments",
     "version" : "5.3.0",
     "provides" : [ ],
     "ij:update-site-dependencies" : [ ],
@@ -1144,7 +659,7 @@
     "ij:update-site-providers" : [ ]
   }, {
     "metadata" : {
-      "name" : "Standard table operations",
+      "name" : "Core",
       "description" : "<html><head></head><body>A JIPipe project</body></html>",
       "summary" : "<html><head></head><body></body></html>",
       "authors" : [ ],
@@ -1155,7 +670,78 @@
       "dependency-citations" : [ ],
       "categories" : [ ]
     },
-    "id" : "org.hkijena.jipipe:table-operations",
+    "id" : "org.hkijena.jipipe:core",
+    "version" : "5.3.0",
+    "provides" : [ ],
+    "ij:update-site-dependencies" : [ ],
+    "dependencies" : [ ],
+    "ij:update-site-providers" : [ ]
+  }, {
+    "metadata" : {
+      "name" : "Multi parameter algorithms",
+      "description" : "<html><head></head><body>Extension that provides capabilities to run multiple parameters</body></html>",
+      "summary" : "<html><head></head><body>Extension that provides capabilities to run multiple parameters</body></html>",
+      "authors" : [ {
+        "title" : null,
+        "first-name" : "Zoltán",
+        "last-name" : "Cseresnyés",
+        "affiliations-list" : [ "Applied Systems Biology, Leibniz Institute for Natural Product Research and Infection Biology – Hans-Knöll-Institute, Jena, Germany" ],
+        "website" : "https://www.leibniz-hki.de/en/staff-details.html?member=144",
+        "contact" : "zoltan.cseresnyes@leibniz-hki.de",
+        "first-author" : true,
+        "corresponding-author" : false,
+        "orcid" : "https://orcid.org/0000-0002-6574-2588",
+        "custom-text" : "<html><head></head><body></body></html>"
+      }, {
+        "title" : null,
+        "first-name" : "Ruman",
+        "last-name" : "Gerst",
+        "affiliations-list" : [ "Applied Systems Biology, Leibniz Institute for Natural Product Research and Infection Biology – Hans-Knöll-Institute, Jena, Germany", "Faculty of Biological Sciences, Friedrich Schiller University Jena, Germany" ],
+        "website" : "https://www.leibniz-hki.de/en/staff-details.html?member=1027",
+        "contact" : "ruman.gerst@leibniz-hki.de",
+        "first-author" : true,
+        "corresponding-author" : false,
+        "orcid" : "https://orcid.org/0000-0002-0723-6038",
+        "custom-text" : "<html><head></head><body></body></html>"
+      }, {
+        "title" : null,
+        "first-name" : "Marc Thilo",
+        "last-name" : "Figge",
+        "affiliations-list" : [ "Applied Systems Biology, Leibniz Institute for Natural Product Research and Infection Biology – Hans-Knöll-Institute, Jena, Germany", "Institute of Microbiology, Faculty of Biological Sciences, Friedrich Schiller University Jena, Germany" ],
+        "website" : "https://www.leibniz-hki.de/en/staff-details.html?member=81",
+        "contact" : "thilo.figge@leibniz-hki.de",
+        "first-author" : false,
+        "corresponding-author" : true,
+        "orcid" : "https://orcid.org/0000-0002-4044-9166",
+        "custom-text" : "<html><head></head><body></body></html>"
+      } ],
+      "acknowledgements" : [ ],
+      "website" : "https://www.jipipe.org/",
+      "license" : "MIT",
+      "citation" : "Gerst, R., Cseresnyés, Z. & Figge, M.T. JIPipe: visual batch processing for ImageJ. Nat Methods (2023). https://doi.org/10.1038/s41592-022-01744-4",
+      "dependency-citations" : [ ],
+      "categories" : [ "Core", "Scripting" ]
+    },
+    "id" : "org.hkijena.jipipe:multi-parameters-algorithms",
+    "version" : "5.3.0",
+    "provides" : [ ],
+    "ij:update-site-dependencies" : [ ],
+    "dependencies" : [ ],
+    "ij:update-site-providers" : [ ]
+  }, {
+    "metadata" : {
+      "name" : "Napari integration",
+      "description" : "<html><head></head><body>A JIPipe project</body></html>",
+      "summary" : "<html><head></head><body></body></html>",
+      "authors" : [ ],
+      "acknowledgements" : [ ],
+      "website" : "",
+      "license" : "",
+      "citation" : "",
+      "dependency-citations" : [ ],
+      "categories" : [ ]
+    },
+    "id" : "org.hkijena.jipipe:napari",
     "version" : "5.3.0",
     "provides" : [ ],
     "ij:update-site-dependencies" : [ ],
@@ -1215,25 +801,6 @@
     "ij:update-site-providers" : [ ]
   }, {
     "metadata" : {
-      "name" : "Strings",
-      "description" : "<html><head></head><body>A JIPipe project</body></html>",
-      "summary" : "<html><head></head><body></body></html>",
-      "authors" : [ ],
-      "acknowledgements" : [ ],
-      "website" : "",
-      "license" : "",
-      "citation" : "",
-      "dependency-citations" : [ ],
-      "categories" : [ ]
-    },
-    "id" : "org.hkijena.jipipe:strings",
-    "version" : "5.3.0",
-    "provides" : [ ],
-    "ij:update-site-dependencies" : [ ],
-    "dependencies" : [ ],
-    "ij:update-site-providers" : [ ]
-  }, {
-    "metadata" : {
       "name" : "Forms",
       "description" : "<html><head></head><body>A JIPipe project</body></html>",
       "summary" : "<html><head></head><body></body></html>",
@@ -1253,9 +820,352 @@
     "ij:update-site-providers" : [ ]
   }, {
     "metadata" : {
-      "name" : "Compartment management",
-      "description" : "<html><head></head><body>Data types required for graph compartment management</body></html>",
-      "summary" : "<html><head></head><body>Data types required for graph compartment management</body></html>",
+      "name" : "ImageJ integration",
+      "description" : "<html><head></head><body>Adds support for commonly used ImageJ data types</body></html>",
+      "summary" : "<html><head></head><body>Adds support for commonly used ImageJ data types</body></html>",
+      "authors" : [ {
+        "title" : null,
+        "first-name" : "Zoltán",
+        "last-name" : "Cseresnyés",
+        "affiliations-list" : [ "Applied Systems Biology, Leibniz Institute for Natural Product Research and Infection Biology – Hans-Knöll-Institute, Jena, Germany" ],
+        "website" : "https://www.leibniz-hki.de/en/staff-details.html?member=144",
+        "contact" : "zoltan.cseresnyes@leibniz-hki.de",
+        "first-author" : true,
+        "corresponding-author" : false,
+        "orcid" : "https://orcid.org/0000-0002-6574-2588",
+        "custom-text" : "<html><head></head><body></body></html>"
+      }, {
+        "title" : null,
+        "first-name" : "Ruman",
+        "last-name" : "Gerst",
+        "affiliations-list" : [ "Applied Systems Biology, Leibniz Institute for Natural Product Research and Infection Biology – Hans-Knöll-Institute, Jena, Germany", "Faculty of Biological Sciences, Friedrich Schiller University Jena, Germany" ],
+        "website" : "https://www.leibniz-hki.de/en/staff-details.html?member=1027",
+        "contact" : "ruman.gerst@leibniz-hki.de",
+        "first-author" : true,
+        "corresponding-author" : false,
+        "orcid" : "https://orcid.org/0000-0002-0723-6038",
+        "custom-text" : "<html><head></head><body></body></html>"
+      }, {
+        "title" : null,
+        "first-name" : "Marc Thilo",
+        "last-name" : "Figge",
+        "affiliations-list" : [ "Applied Systems Biology, Leibniz Institute for Natural Product Research and Infection Biology – Hans-Knöll-Institute, Jena, Germany", "Institute of Microbiology, Faculty of Biological Sciences, Friedrich Schiller University Jena, Germany" ],
+        "website" : "https://www.leibniz-hki.de/en/staff-details.html?member=81",
+        "contact" : "thilo.figge@leibniz-hki.de",
+        "first-author" : false,
+        "corresponding-author" : true,
+        "orcid" : "https://orcid.org/0000-0002-4044-9166",
+        "custom-text" : "<html><head></head><body></body></html>"
+      } ],
+      "acknowledgements" : [ {
+        "title" : null,
+        "first-name" : "Curtis T.",
+        "last-name" : "Rueden",
+        "affiliations-list" : [ "Laboratory for Optical and Computational Instrumentation, University of Wisconsin at Madison, Madison, Wisconsin, USA" ],
+        "website" : "",
+        "contact" : "",
+        "first-author" : true,
+        "corresponding-author" : false,
+        "orcid" : "",
+        "custom-text" : "<html><head></head><body></body></html>"
+      }, {
+        "title" : null,
+        "first-name" : "Johannes",
+        "last-name" : "Schindelin",
+        "affiliations-list" : [ "Laboratory for Optical and Computational Instrumentation, University of Wisconsin at Madison, Madison, Wisconsin, USA", "Morgridge Institute for Research, Madison, Wisconsin, USA" ],
+        "website" : "",
+        "contact" : "",
+        "first-author" : false,
+        "corresponding-author" : false,
+        "orcid" : "",
+        "custom-text" : "<html><head></head><body></body></html>"
+      }, {
+        "title" : null,
+        "first-name" : "Mark C.",
+        "last-name" : "Hiner",
+        "affiliations-list" : [ "Laboratory for Optical and Computational Instrumentation, University of Wisconsin at Madison, Madison, Wisconsin, USA" ],
+        "website" : "",
+        "contact" : "",
+        "first-author" : false,
+        "corresponding-author" : false,
+        "orcid" : "",
+        "custom-text" : "<html><head></head><body></body></html>"
+      }, {
+        "title" : null,
+        "first-name" : "Barry E.",
+        "last-name" : "DeZonia",
+        "affiliations-list" : [ "Laboratory for Optical and Computational Instrumentation, University of Wisconsin at Madison, Madison, Wisconsin, USA" ],
+        "website" : "",
+        "contact" : "",
+        "first-author" : false,
+        "corresponding-author" : false,
+        "orcid" : "",
+        "custom-text" : "<html><head></head><body></body></html>"
+      }, {
+        "title" : null,
+        "first-name" : "Alison E.",
+        "last-name" : "Walter",
+        "affiliations-list" : [ "Laboratory for Optical and Computational Instrumentation, University of Wisconsin at Madison, Madison, Wisconsin, USA", "Morgridge Institute for Research, Madison, Wisconsin, USA" ],
+        "website" : "",
+        "contact" : "",
+        "first-author" : false,
+        "corresponding-author" : false,
+        "orcid" : "",
+        "custom-text" : "<html><head></head><body></body></html>"
+      }, {
+        "title" : null,
+        "first-name" : "Ellen T.",
+        "last-name" : "Arena",
+        "affiliations-list" : [ "Laboratory for Optical and Computational Instrumentation, University of Wisconsin at Madison, Madison, Wisconsin, USA", "Morgridge Institute for Research, Madison, Wisconsin, USA" ],
+        "website" : "",
+        "contact" : "",
+        "first-author" : false,
+        "corresponding-author" : false,
+        "orcid" : "",
+        "custom-text" : "<html><head></head><body></body></html>"
+      }, {
+        "title" : null,
+        "first-name" : "Kevin W.",
+        "last-name" : "Eliceiri",
+        "affiliations-list" : [ "Laboratory for Optical and Computational Instrumentation, University of Wisconsin at Madison, Madison, Wisconsin, USA", "Morgridge Institute for Research, Madison, Wisconsin, USA" ],
+        "website" : "",
+        "contact" : "",
+        "first-author" : false,
+        "corresponding-author" : true,
+        "orcid" : "",
+        "custom-text" : "<html><head></head><body></body></html>"
+      }, {
+        "title" : null,
+        "first-name" : "Caroline A.",
+        "last-name" : "Schneider",
+        "affiliations-list" : [ "Laboratory for Optical and Computational Instrumentation, University of Wisconsin at Madison, Madison, Wisconsin, USA" ],
+        "website" : "",
+        "contact" : "",
+        "first-author" : true,
+        "corresponding-author" : false,
+        "orcid" : "",
+        "custom-text" : "<html><head></head><body></body></html>"
+      }, {
+        "title" : null,
+        "first-name" : "Wayne S.",
+        "last-name" : "Rasband",
+        "affiliations-list" : [ "Section on Instrumentation, US National Institutes of Health, Bethesda, Maryland, USA" ],
+        "website" : "",
+        "contact" : "",
+        "first-author" : false,
+        "corresponding-author" : false,
+        "orcid" : "",
+        "custom-text" : "<html><head></head><body></body></html>"
+      }, {
+        "title" : null,
+        "first-name" : "Melissa",
+        "last-name" : "Linkert",
+        "affiliations-list" : [ "Laboratory for Optical and Computational Instrumentation, Department of Molecular Biology", "Department of Biomedical Engineering, Graduate School, University of Wisconsin at Madison, Madison, WI 53711", "Glencoe Software, Inc., Seattle, WA 98101" ],
+        "website" : "",
+        "contact" : "",
+        "first-author" : true,
+        "corresponding-author" : false,
+        "orcid" : "",
+        "custom-text" : "<html><head></head><body></body></html>"
+      }, {
+        "title" : null,
+        "first-name" : "Chris",
+        "last-name" : "Allan",
+        "affiliations-list" : [ "Wellcome Trust Centre for Gene Regulation and Expression, College of Life Sciences, University of Dundee, Dundee DD1 5EH, Scotland, UK", "Glencoe Software, Inc., Seattle, WA 98101" ],
+        "website" : "",
+        "contact" : "",
+        "first-author" : false,
+        "corresponding-author" : false,
+        "orcid" : "",
+        "custom-text" : "<html><head></head><body></body></html>"
+      }, {
+        "title" : null,
+        "first-name" : "Jean-Marie",
+        "last-name" : "Burel",
+        "affiliations-list" : [ "Wellcome Trust Centre for Gene Regulation and Expression, College of Life Sciences, University of Dundee, Dundee DD1 5EH, Scotland, UK" ],
+        "website" : "",
+        "contact" : "",
+        "first-author" : false,
+        "corresponding-author" : false,
+        "orcid" : "",
+        "custom-text" : "<html><head></head><body></body></html>"
+      }, {
+        "title" : null,
+        "first-name" : "Will",
+        "last-name" : "Moore",
+        "affiliations-list" : [ "Wellcome Trust Centre for Gene Regulation and Expression, College of Life Sciences, University of Dundee, Dundee DD1 5EH, Scotland, UK" ],
+        "website" : "",
+        "contact" : "",
+        "first-author" : false,
+        "corresponding-author" : false,
+        "orcid" : "",
+        "custom-text" : "<html><head></head><body></body></html>"
+      }, {
+        "title" : null,
+        "first-name" : "Andrew",
+        "last-name" : "Patterson",
+        "affiliations-list" : [ "Wellcome Trust Centre for Gene Regulation and Expression, College of Life Sciences, University of Dundee, Dundee DD1 5EH, Scotland, UK" ],
+        "website" : "",
+        "contact" : "",
+        "first-author" : false,
+        "corresponding-author" : false,
+        "orcid" : "",
+        "custom-text" : "<html><head></head><body></body></html>"
+      }, {
+        "title" : null,
+        "first-name" : "Brian",
+        "last-name" : "Loranger",
+        "affiliations-list" : [ "Wellcome Trust Centre for Gene Regulation and Expression, College of Life Sciences, University of Dundee, Dundee DD1 5EH, Scotland, UK" ],
+        "website" : "",
+        "contact" : "",
+        "first-author" : false,
+        "corresponding-author" : false,
+        "orcid" : "",
+        "custom-text" : "<html><head></head><body></body></html>"
+      }, {
+        "title" : null,
+        "first-name" : "Josh",
+        "last-name" : "Moore",
+        "affiliations-list" : [ "Glencoe Software, Inc., Seattle, WA 98101" ],
+        "website" : "",
+        "contact" : "",
+        "first-author" : false,
+        "corresponding-author" : false,
+        "orcid" : "",
+        "custom-text" : "<html><head></head><body></body></html>"
+      }, {
+        "title" : null,
+        "first-name" : "Carlos",
+        "last-name" : "Neves",
+        "affiliations-list" : [ "Glencoe Software, Inc., Seattle, WA 98101" ],
+        "website" : "",
+        "contact" : "",
+        "first-author" : false,
+        "corresponding-author" : false,
+        "orcid" : "",
+        "custom-text" : "<html><head></head><body></body></html>"
+      }, {
+        "title" : null,
+        "first-name" : "Donald",
+        "last-name" : "MacDonald",
+        "affiliations-list" : [ "Wellcome Trust Centre for Gene Regulation and Expression, College of Life Sciences, University of Dundee, Dundee DD1 5EH, Scotland, UK" ],
+        "website" : "",
+        "contact" : "",
+        "first-author" : false,
+        "corresponding-author" : false,
+        "orcid" : "",
+        "custom-text" : "<html><head></head><body></body></html>"
+      }, {
+        "title" : null,
+        "first-name" : "Aleksandra",
+        "last-name" : "Tarkowska",
+        "affiliations-list" : [ "Wellcome Trust Centre for Gene Regulation and Expression, College of Life Sciences, University of Dundee, Dundee DD1 5EH, Scotland, UK" ],
+        "website" : "",
+        "contact" : "",
+        "first-author" : false,
+        "corresponding-author" : false,
+        "orcid" : "",
+        "custom-text" : "<html><head></head><body></body></html>"
+      }, {
+        "title" : null,
+        "first-name" : "Caitlin",
+        "last-name" : "Sticco",
+        "affiliations-list" : [ "Laboratory for Optical and Computational Instrumentation, Department of Molecular Biology", "Department of Biomedical Engineering, Graduate School, University of Wisconsin at Madison, Madison, WI 53711" ],
+        "website" : "",
+        "contact" : "",
+        "first-author" : false,
+        "corresponding-author" : false,
+        "orcid" : "",
+        "custom-text" : "<html><head></head><body></body></html>"
+      }, {
+        "title" : null,
+        "first-name" : "Emma",
+        "last-name" : "Hill",
+        "affiliations-list" : [ "The Rockefeller University Press, New York, NY 10065" ],
+        "website" : "",
+        "contact" : "",
+        "first-author" : false,
+        "corresponding-author" : false,
+        "orcid" : "",
+        "custom-text" : "<html><head></head><body></body></html>"
+      }, {
+        "title" : null,
+        "first-name" : "Mike",
+        "last-name" : "Rossner",
+        "affiliations-list" : [ "The Rockefeller University Press, New York, NY 10065" ],
+        "website" : "",
+        "contact" : "",
+        "first-author" : false,
+        "corresponding-author" : false,
+        "orcid" : "",
+        "custom-text" : "<html><head></head><body></body></html>"
+      }, {
+        "title" : null,
+        "first-name" : "Jason R.",
+        "last-name" : "Swedlow",
+        "affiliations-list" : [ "Wellcome Trust Centre for Gene Regulation and Expression, College of Life Sciences, University of Dundee, Dundee DD1 5EH, Scotland, UK", "Glencoe Software, Inc., Seattle, WA 98101" ],
+        "website" : "",
+        "contact" : "",
+        "first-author" : false,
+        "corresponding-author" : true,
+        "orcid" : "",
+        "custom-text" : "<html><head></head><body></body></html>"
+      } ],
+      "website" : "https://www.jipipe.org/",
+      "license" : "MIT",
+      "citation" : "Gerst, R., Cseresnyés, Z. & Figge, M.T. JIPipe: visual batch processing for ImageJ. Nat Methods (2023). https://doi.org/10.1038/s41592-022-01744-4",
+      "dependency-citations" : [ "Rueden, C. T.; Schindelin, J. & Hiner, M. C. et al. (2017), \"ImageJ2: ImageJ for the next generation of scientific image data\", BMC Bioinformatics 18:529", "Schneider, C. A.; Rasband, W. S. & Eliceiri, K. W. (2012), \"NIH Image to ImageJ: 25 years of image analysis\", Nature methods 9(7): 671-675", "Melissa Linkert, Curtis T. Rueden, Chris Allan, Jean-Marie Burel, Will Moore, Andrew Patterson, Brian Loranger, Josh Moore, Carlos Neves, Donald MacDonald, Aleksandra Tarkowska, Caitlin Sticco, Emma Hill, Mike Rossner, Kevin W. Eliceiri, and Jason R. Swedlow (2010) Metadata matters: access to image data in the real world. The Journal of Cell Biology 189(5), 777-782" ],
+      "categories" : [ "Import-Export", "Image Annotation", "OME" ]
+    },
+    "id" : "org.hkijena.jipipe:imagej-integration",
+    "version" : "5.3.0",
+    "provides" : [ ],
+    "ij:update-site-dependencies" : [ ],
+    "dependencies" : [ ],
+    "ij:update-site-providers" : [ ]
+  }, {
+    "metadata" : {
+      "name" : "Standard table operations",
+      "description" : "<html><head></head><body>A JIPipe project</body></html>",
+      "summary" : "<html><head></head><body></body></html>",
+      "authors" : [ ],
+      "acknowledgements" : [ ],
+      "website" : "",
+      "license" : "",
+      "citation" : "",
+      "dependency-citations" : [ ],
+      "categories" : [ ]
+    },
+    "id" : "org.hkijena.jipipe:table-operations",
+    "version" : "5.3.0",
+    "provides" : [ ],
+    "ij:update-site-dependencies" : [ ],
+    "dependencies" : [ ],
+    "ij:update-site-providers" : [ ]
+  }, {
+    "metadata" : {
+      "name" : "Filesystem types and algorithms",
+      "description" : "<html><head></head><body>A JIPipe project</body></html>",
+      "summary" : "<html><head></head><body></body></html>",
+      "authors" : [ ],
+      "acknowledgements" : [ ],
+      "website" : "",
+      "license" : "",
+      "citation" : "",
+      "dependency-citations" : [ ],
+      "categories" : [ ]
+    },
+    "id" : "org.hkijena.jipipe:filesystem",
+    "version" : "5.3.0",
+    "provides" : [ ],
+    "ij:update-site-dependencies" : [ ],
+    "dependencies" : [ ],
+    "ij:update-site-providers" : [ ]
+  }, {
+    "metadata" : {
+      "name" : "Node grouping",
+      "description" : "<html><head></head><body>Provides algorithms that wrap around algorithm graphs</body></html>",
+      "summary" : "<html><head></head><body>Provides algorithms that wrap around algorithm graphs</body></html>",
       "authors" : [ {
         "title" : null,
         "first-name" : "Zoltán",
@@ -1297,7 +1207,130 @@
       "dependency-citations" : [ ],
       "categories" : [ "Core" ]
     },
-    "id" : "org.hkijena.jipipe:compartments",
+    "id" : "org.hkijena.jipipe:grouping",
+    "version" : "5.3.0",
+    "provides" : [ ],
+    "ij:update-site-dependencies" : [ ],
+    "dependencies" : [ ],
+    "ij:update-site-providers" : [ ]
+  }, {
+    "metadata" : {
+      "name" : "Strings",
+      "description" : "<html><head></head><body>A JIPipe project</body></html>",
+      "summary" : "<html><head></head><body></body></html>",
+      "authors" : [ ],
+      "acknowledgements" : [ ],
+      "website" : "",
+      "license" : "",
+      "citation" : "",
+      "dependency-citations" : [ ],
+      "categories" : [ ]
+    },
+    "id" : "org.hkijena.jipipe:strings",
+    "version" : "5.3.0",
+    "provides" : [ ],
+    "ij:update-site-dependencies" : [ ],
+    "dependencies" : [ ],
+    "ij:update-site-providers" : [ ]
+  }, {
+    "metadata" : {
+      "name" : "Multi parameters data types",
+      "description" : "<html><head></head><body>Extension that provides the necessary data types for handling multiple parameters</body></html>",
+      "summary" : "<html><head></head><body>Extension that provides the necessary data types for handling multiple parameters</body></html>",
+      "authors" : [ {
+        "title" : null,
+        "first-name" : "Zoltán",
+        "last-name" : "Cseresnyés",
+        "affiliations-list" : [ "Applied Systems Biology, Leibniz Institute for Natural Product Research and Infection Biology – Hans-Knöll-Institute, Jena, Germany" ],
+        "website" : "https://www.leibniz-hki.de/en/staff-details.html?member=144",
+        "contact" : "zoltan.cseresnyes@leibniz-hki.de",
+        "first-author" : true,
+        "corresponding-author" : false,
+        "orcid" : "https://orcid.org/0000-0002-6574-2588",
+        "custom-text" : "<html><head></head><body></body></html>"
+      }, {
+        "title" : null,
+        "first-name" : "Ruman",
+        "last-name" : "Gerst",
+        "affiliations-list" : [ "Applied Systems Biology, Leibniz Institute for Natural Product Research and Infection Biology – Hans-Knöll-Institute, Jena, Germany", "Faculty of Biological Sciences, Friedrich Schiller University Jena, Germany" ],
+        "website" : "https://www.leibniz-hki.de/en/staff-details.html?member=1027",
+        "contact" : "ruman.gerst@leibniz-hki.de",
+        "first-author" : true,
+        "corresponding-author" : false,
+        "orcid" : "https://orcid.org/0000-0002-0723-6038",
+        "custom-text" : "<html><head></head><body></body></html>"
+      }, {
+        "title" : null,
+        "first-name" : "Marc Thilo",
+        "last-name" : "Figge",
+        "affiliations-list" : [ "Applied Systems Biology, Leibniz Institute for Natural Product Research and Infection Biology – Hans-Knöll-Institute, Jena, Germany", "Institute of Microbiology, Faculty of Biological Sciences, Friedrich Schiller University Jena, Germany" ],
+        "website" : "https://www.leibniz-hki.de/en/staff-details.html?member=81",
+        "contact" : "thilo.figge@leibniz-hki.de",
+        "first-author" : false,
+        "corresponding-author" : true,
+        "orcid" : "https://orcid.org/0000-0002-4044-9166",
+        "custom-text" : "<html><head></head><body></body></html>"
+      } ],
+      "acknowledgements" : [ ],
+      "website" : "https://www.jipipe.org/",
+      "license" : "MIT",
+      "citation" : "Gerst, R., Cseresnyés, Z. & Figge, M.T. JIPipe: visual batch processing for ImageJ. Nat Methods (2023). https://doi.org/10.1038/s41592-022-01744-4",
+      "dependency-citations" : [ ],
+      "categories" : [ "Core" ]
+    },
+    "id" : "org.hkijena.jipipe:multi-parameters",
+    "version" : "5.3.0",
+    "provides" : [ ],
+    "ij:update-site-dependencies" : [ ],
+    "dependencies" : [ ],
+    "ij:update-site-providers" : [ ]
+  }, {
+    "metadata" : {
+      "name" : "Utilities",
+      "description" : "<html><head></head><body>Utility algorithms</body></html>",
+      "summary" : "<html><head></head><body>Utility algorithms</body></html>",
+      "authors" : [ {
+        "title" : null,
+        "first-name" : "Zoltán",
+        "last-name" : "Cseresnyés",
+        "affiliations-list" : [ "Applied Systems Biology, Leibniz Institute for Natural Product Research and Infection Biology – Hans-Knöll-Institute, Jena, Germany" ],
+        "website" : "https://www.leibniz-hki.de/en/staff-details.html?member=144",
+        "contact" : "zoltan.cseresnyes@leibniz-hki.de",
+        "first-author" : true,
+        "corresponding-author" : false,
+        "orcid" : "https://orcid.org/0000-0002-6574-2588",
+        "custom-text" : "<html><head></head><body></body></html>"
+      }, {
+        "title" : null,
+        "first-name" : "Ruman",
+        "last-name" : "Gerst",
+        "affiliations-list" : [ "Applied Systems Biology, Leibniz Institute for Natural Product Research and Infection Biology – Hans-Knöll-Institute, Jena, Germany", "Faculty of Biological Sciences, Friedrich Schiller University Jena, Germany" ],
+        "website" : "https://www.leibniz-hki.de/en/staff-details.html?member=1027",
+        "contact" : "ruman.gerst@leibniz-hki.de",
+        "first-author" : true,
+        "corresponding-author" : false,
+        "orcid" : "https://orcid.org/0000-0002-0723-6038",
+        "custom-text" : "<html><head></head><body></body></html>"
+      }, {
+        "title" : null,
+        "first-name" : "Marc Thilo",
+        "last-name" : "Figge",
+        "affiliations-list" : [ "Applied Systems Biology, Leibniz Institute for Natural Product Research and Infection Biology – Hans-Knöll-Institute, Jena, Germany", "Institute of Microbiology, Faculty of Biological Sciences, Friedrich Schiller University Jena, Germany" ],
+        "website" : "https://www.leibniz-hki.de/en/staff-details.html?member=81",
+        "contact" : "thilo.figge@leibniz-hki.de",
+        "first-author" : false,
+        "corresponding-author" : true,
+        "orcid" : "https://orcid.org/0000-0002-4044-9166",
+        "custom-text" : "<html><head></head><body></body></html>"
+      } ],
+      "acknowledgements" : [ ],
+      "website" : "https://www.jipipe.org/",
+      "license" : "MIT",
+      "citation" : "Gerst, R., Cseresnyés, Z. & Figge, M.T. JIPipe: visual batch processing for ImageJ. Nat Methods (2023). https://doi.org/10.1038/s41592-022-01744-4",
+      "dependency-citations" : [ ],
+      "categories" : [ "Data processing", "Scripting" ]
+    },
+    "id" : "org.hkijena.jipipe:utils",
     "version" : "5.3.0",
     "provides" : [ ],
     "ij:update-site-dependencies" : [ ],
@@ -1371,7 +1404,7 @@
         "always-export-compartment-outputs" : true
       },
       "continue-on-failure-settings" : {
-        "continue-on-failure" : false,
+        "continue-on-failure" : true,
         "export-failed-loop-inputs" : true,
         "export-failed-partition-inputs" : false,
         "disable-on-update-cache" : false
@@ -1883,7 +1916,7 @@
     "org.hkijena.jipipe.ui:project-tabs" : {
       "jipipe:type" : "jipipe:desktop:project-tabs",
       "data" : {
-        "open-tabs" : [ "singleton:COMPARTMENT_EDITOR", "singleton:PROJECT_OVERVIEW", "graph-compartment:fb3bfe3a-c9c1-4ec4-908b-3f1b7380a851" ],
+        "open-tabs" : [ "singleton:PROJECT_OVERVIEW", "singleton:COMPARTMENT_EDITOR", "graph-compartment:fb3bfe3a-c9c1-4ec4-908b-3f1b7380a851" ],
         "selected-tab" : "graph-compartment:fb3bfe3a-c9c1-4ec4-908b-3f1b7380a851"
       }
     }
@@ -2000,8 +2033,8 @@
         "jipipe:adaptive-parameters/attach-parameter-annotations" : true,
         "jipipe:adaptive-parameters/attach-only-non-default-parameter-annotations" : true,
         "jipipe:adaptive-parameters/parameter-annotations-prefix" : "",
-        "jipipe:adaptive-parameters/overridden-parameters" : [ ],
         "jipipe:adaptive-parameters/enabled" : true,
+        "jipipe:adaptive-parameters/overridden-parameters" : [ ],
         "jipipe:adaptive-parameters/parameter-annotations-use-internal-names" : false,
         "jipipe:parameter-slot-algorithm/has-parameter-slot" : false,
         "jipipe:parameter-slot-algorithm/attach-parameter-annotations" : true,
@@ -2080,8 +2113,8 @@
         "jipipe:adaptive-parameters/attach-parameter-annotations" : true,
         "jipipe:adaptive-parameters/attach-only-non-default-parameter-annotations" : true,
         "jipipe:adaptive-parameters/parameter-annotations-prefix" : "",
-        "jipipe:adaptive-parameters/overridden-parameters" : [ ],
         "jipipe:adaptive-parameters/enabled" : true,
+        "jipipe:adaptive-parameters/overridden-parameters" : [ ],
         "jipipe:adaptive-parameters/parameter-annotations-use-internal-names" : false,
         "jipipe:parameter-slot-algorithm/has-parameter-slot" : false,
         "jipipe:parameter-slot-algorithm/attach-parameter-annotations" : true,
@@ -2164,8 +2197,8 @@
         "jipipe:adaptive-parameters/attach-parameter-annotations" : true,
         "jipipe:adaptive-parameters/attach-only-non-default-parameter-annotations" : true,
         "jipipe:adaptive-parameters/parameter-annotations-prefix" : "",
-        "jipipe:adaptive-parameters/overridden-parameters" : [ ],
         "jipipe:adaptive-parameters/enabled" : true,
+        "jipipe:adaptive-parameters/overridden-parameters" : [ ],
         "jipipe:adaptive-parameters/parameter-annotations-use-internal-names" : false,
         "jipipe:parameter-slot-algorithm/has-parameter-slot" : false,
         "jipipe:parameter-slot-algorithm/attach-parameter-annotations" : true,
@@ -2260,8 +2293,8 @@
         "jipipe:adaptive-parameters/attach-parameter-annotations" : true,
         "jipipe:adaptive-parameters/attach-only-non-default-parameter-annotations" : true,
         "jipipe:adaptive-parameters/parameter-annotations-prefix" : "",
-        "jipipe:adaptive-parameters/overridden-parameters" : [ ],
         "jipipe:adaptive-parameters/enabled" : true,
+        "jipipe:adaptive-parameters/overridden-parameters" : [ ],
         "jipipe:adaptive-parameters/parameter-annotations-use-internal-names" : false,
         "jipipe:parameter-slot-algorithm/has-parameter-slot" : false,
         "jipipe:parameter-slot-algorithm/attach-parameter-annotations" : true,
@@ -2529,8 +2562,8 @@
               "jipipe:adaptive-parameters/attach-parameter-annotations" : true,
               "jipipe:adaptive-parameters/attach-only-non-default-parameter-annotations" : true,
               "jipipe:adaptive-parameters/parameter-annotations-prefix" : "",
-              "jipipe:adaptive-parameters/overridden-parameters" : [ ],
               "jipipe:adaptive-parameters/enabled" : true,
+              "jipipe:adaptive-parameters/overridden-parameters" : [ ],
               "jipipe:adaptive-parameters/parameter-annotations-use-internal-names" : false,
               "jipipe:parameter-slot-algorithm/has-parameter-slot" : false,
               "jipipe:parameter-slot-algorithm/attach-parameter-annotations" : true,
@@ -2629,7 +2662,7 @@
               "max-particle-circularity" : 1.0,
               "exclude-edges" : false,
               "measurements" : {
-                "values" : [ "PixelValueStandardDeviation", "ShapeDescriptors", "PixelValueModal", "Centroid", "FitEllipse", "IntegratedDensity", "AreaFraction", "Perimeter", "BoundingRectangle", "PixelValueMedian", "PixelValueKurtosis", "PixelValueSkewness", "StackPosition", "FeretDiameter", "Area", "PixelValueMean", "PixelValueMinMax", "CenterOfMass" ],
+                "values" : [ "CenterOfMass", "PixelValueModal", "PixelValueMinMax", "PixelValueSkewness", "Perimeter", "IntegratedDensity", "PixelValueMedian", "AreaFraction", "ShapeDescriptors", "StackPosition", "PixelValueMean", "BoundingRectangle", "FitEllipse", "PixelValueKurtosis", "Area", "PixelValueStandardDeviation", "Centroid", "FeretDiameter" ],
                 "collapsed" : true
               },
               "jipipe:algorithm:enabled" : true,
@@ -2643,8 +2676,8 @@
               "jipipe:adaptive-parameters/attach-parameter-annotations" : true,
               "jipipe:adaptive-parameters/attach-only-non-default-parameter-annotations" : true,
               "jipipe:adaptive-parameters/parameter-annotations-prefix" : "",
-              "jipipe:adaptive-parameters/overridden-parameters" : [ ],
               "jipipe:adaptive-parameters/enabled" : true,
+              "jipipe:adaptive-parameters/overridden-parameters" : [ ],
               "jipipe:adaptive-parameters/parameter-annotations-use-internal-names" : false,
               "jipipe:data-batch-generation/limit" : {
                 "content" : {
@@ -2744,8 +2777,8 @@
               "jipipe:adaptive-parameters/attach-parameter-annotations" : true,
               "jipipe:adaptive-parameters/attach-only-non-default-parameter-annotations" : true,
               "jipipe:adaptive-parameters/parameter-annotations-prefix" : "",
-              "jipipe:adaptive-parameters/overridden-parameters" : [ ],
               "jipipe:adaptive-parameters/enabled" : true,
+              "jipipe:adaptive-parameters/overridden-parameters" : [ ],
               "jipipe:adaptive-parameters/parameter-annotations-use-internal-names" : false,
               "jipipe:parameter-slot-algorithm/has-parameter-slot" : true,
               "jipipe:parameter-slot-algorithm/attach-parameter-annotations" : false,
@@ -2825,8 +2858,8 @@
               "jipipe:adaptive-parameters/attach-parameter-annotations" : true,
               "jipipe:adaptive-parameters/attach-only-non-default-parameter-annotations" : true,
               "jipipe:adaptive-parameters/parameter-annotations-prefix" : "",
-              "jipipe:adaptive-parameters/overridden-parameters" : [ ],
               "jipipe:adaptive-parameters/enabled" : true,
+              "jipipe:adaptive-parameters/overridden-parameters" : [ ],
               "jipipe:adaptive-parameters/parameter-annotations-use-internal-names" : false,
               "jipipe:algorithm:custom-expression-variables" : {
                 "parameters" : { }
@@ -3059,8 +3092,8 @@
               "jipipe:adaptive-parameters/attach-parameter-annotations" : true,
               "jipipe:adaptive-parameters/attach-only-non-default-parameter-annotations" : true,
               "jipipe:adaptive-parameters/parameter-annotations-prefix" : "",
-              "jipipe:adaptive-parameters/overridden-parameters" : [ ],
               "jipipe:adaptive-parameters/enabled" : true,
+              "jipipe:adaptive-parameters/overridden-parameters" : [ ],
               "jipipe:adaptive-parameters/parameter-annotations-use-internal-names" : false,
               "jipipe:data-batch-generation/limit" : {
                 "content" : {
@@ -3195,8 +3228,8 @@
               "jipipe:adaptive-parameters/attach-parameter-annotations" : true,
               "jipipe:adaptive-parameters/attach-only-non-default-parameter-annotations" : true,
               "jipipe:adaptive-parameters/parameter-annotations-prefix" : "",
-              "jipipe:adaptive-parameters/overridden-parameters" : [ ],
               "jipipe:adaptive-parameters/enabled" : true,
+              "jipipe:adaptive-parameters/overridden-parameters" : [ ],
               "jipipe:adaptive-parameters/parameter-annotations-use-internal-names" : false,
               "jipipe:parameter-slot-algorithm/has-parameter-slot" : false,
               "jipipe:parameter-slot-algorithm/attach-parameter-annotations" : true,
@@ -3302,8 +3335,8 @@
               "jipipe:adaptive-parameters/attach-parameter-annotations" : true,
               "jipipe:adaptive-parameters/attach-only-non-default-parameter-annotations" : true,
               "jipipe:adaptive-parameters/parameter-annotations-prefix" : "",
-              "jipipe:adaptive-parameters/overridden-parameters" : [ ],
               "jipipe:adaptive-parameters/enabled" : true,
+              "jipipe:adaptive-parameters/overridden-parameters" : [ ],
               "jipipe:adaptive-parameters/parameter-annotations-use-internal-names" : false,
               "jipipe:parameter-slot-algorithm/has-parameter-slot" : false,
               "jipipe:parameter-slot-algorithm/attach-parameter-annotations" : true,
@@ -3447,8 +3480,8 @@
               "jipipe:adaptive-parameters/attach-parameter-annotations" : true,
               "jipipe:adaptive-parameters/attach-only-non-default-parameter-annotations" : true,
               "jipipe:adaptive-parameters/parameter-annotations-prefix" : "",
-              "jipipe:adaptive-parameters/overridden-parameters" : [ ],
               "jipipe:adaptive-parameters/enabled" : true,
+              "jipipe:adaptive-parameters/overridden-parameters" : [ ],
               "jipipe:adaptive-parameters/parameter-annotations-use-internal-names" : false,
               "jipipe:data-batch-generation/limit" : {
                 "content" : {
@@ -3480,9 +3513,9 @@
               "ui-shape" : "Elbow"
             }
           }, {
-            "source-node" : "2d459aba-16e1-42e1-8455-7dcc769f9ded",
-            "target-node" : "d3ad0d56-6151-4b22-80ae-1591d24511a7",
-            "source-slot" : "Output",
+            "source-node" : "f5b43109-ee14-4a52-9650-7f2c28d3da34",
+            "target-node" : "cf1b98c5-fad0-4158-b989-3ec0e09ebaa5",
+            "source-slot" : "ROI",
             "target-slot" : "Input",
             "metadata" : {
               "ui-visibility" : "Smart",
@@ -3498,19 +3531,19 @@
               "ui-shape" : "Elbow"
             }
           }, {
-            "source-node" : "d3ad0d56-6151-4b22-80ae-1591d24511a7",
-            "target-node" : "c1e74e66-c6aa-404f-ae98-341cf8651c49",
-            "source-slot" : "Output",
-            "target-slot" : "Input",
+            "source-node" : "8d086108-d836-4e5e-867d-708e048649a4",
+            "target-node" : "29a808b0-fe8f-4354-9d87-19b46851524d",
+            "source-slot" : "Input",
+            "target-slot" : "Image",
             "metadata" : {
               "ui-visibility" : "Smart",
               "ui-shape" : "Elbow"
             }
           }, {
-            "source-node" : "48b781f7-967d-4703-b001-3b1ab9cf5c91",
-            "target-node" : "2d459aba-16e1-42e1-8455-7dcc769f9ded",
+            "source-node" : "a2151084-f0dc-4972-a9e6-8205de133f95",
+            "target-node" : "3f3d04ce-8043-4d94-a024-45d3089d3d9c",
             "source-slot" : "Output",
-            "target-slot" : "Input",
+            "target-slot" : "Output",
             "metadata" : {
               "ui-visibility" : "Smart",
               "ui-shape" : "Elbow"
@@ -3525,24 +3558,6 @@
               "ui-shape" : "Elbow"
             }
           }, {
-            "source-node" : "f5b43109-ee14-4a52-9650-7f2c28d3da34",
-            "target-node" : "cf1b98c5-fad0-4158-b989-3ec0e09ebaa5",
-            "source-slot" : "ROI",
-            "target-slot" : "Input",
-            "metadata" : {
-              "ui-visibility" : "Smart",
-              "ui-shape" : "Elbow"
-            }
-          }, {
-            "source-node" : "8d086108-d836-4e5e-867d-708e048649a4",
-            "target-node" : "29a808b0-fe8f-4354-9d87-19b46851524d",
-            "source-slot" : "Input",
-            "target-slot" : "Image",
-            "metadata" : {
-              "ui-visibility" : "Smart",
-              "ui-shape" : "Elbow"
-            }
-          }, {
             "source-node" : "c1e74e66-c6aa-404f-ae98-341cf8651c49",
             "target-node" : "a2151084-f0dc-4972-a9e6-8205de133f95",
             "source-slot" : "Output",
@@ -3552,10 +3567,28 @@
               "ui-shape" : "Elbow"
             }
           }, {
-            "source-node" : "a2151084-f0dc-4972-a9e6-8205de133f95",
-            "target-node" : "3f3d04ce-8043-4d94-a024-45d3089d3d9c",
+            "source-node" : "48b781f7-967d-4703-b001-3b1ab9cf5c91",
+            "target-node" : "2d459aba-16e1-42e1-8455-7dcc769f9ded",
             "source-slot" : "Output",
-            "target-slot" : "Output",
+            "target-slot" : "Input",
+            "metadata" : {
+              "ui-visibility" : "Smart",
+              "ui-shape" : "Elbow"
+            }
+          }, {
+            "source-node" : "2d459aba-16e1-42e1-8455-7dcc769f9ded",
+            "target-node" : "d3ad0d56-6151-4b22-80ae-1591d24511a7",
+            "source-slot" : "Output",
+            "target-slot" : "Input",
+            "metadata" : {
+              "ui-visibility" : "Smart",
+              "ui-shape" : "Elbow"
+            }
+          }, {
+            "source-node" : "d3ad0d56-6151-4b22-80ae-1591d24511a7",
+            "target-node" : "c1e74e66-c6aa-404f-ae98-341cf8651c49",
+            "source-slot" : "Output",
+            "target-slot" : "Input",
             "metadata" : {
               "ui-visibility" : "Smart",
               "ui-shape" : "Elbow"
@@ -3700,8 +3733,8 @@
         "jipipe:adaptive-parameters/attach-parameter-annotations" : true,
         "jipipe:adaptive-parameters/attach-only-non-default-parameter-annotations" : true,
         "jipipe:adaptive-parameters/parameter-annotations-prefix" : "",
-        "jipipe:adaptive-parameters/overridden-parameters" : [ ],
         "jipipe:adaptive-parameters/enabled" : true,
+        "jipipe:adaptive-parameters/overridden-parameters" : [ ],
         "jipipe:adaptive-parameters/parameter-annotations-use-internal-names" : false,
         "jipipe:parameter-slot-algorithm/has-parameter-slot" : false,
         "jipipe:parameter-slot-algorithm/attach-parameter-annotations" : true,
@@ -3802,10 +3835,10 @@
           "content" : 1,
           "enabled" : false
         },
-        "border-parameters/border-mode" : "Constant",
         "border-parameters/margin-top" : {
           "expression" : "10"
         },
+        "border-parameters/border-mode" : "Constant",
         "border-parameters/margin-bottom" : {
           "expression" : "10"
         },
@@ -3815,8 +3848,8 @@
         "border-parameters/jipipe:adaptive-parameters/attach-parameter-annotations" : true,
         "border-parameters/jipipe:adaptive-parameters/attach-only-non-default-parameter-annotations" : true,
         "border-parameters/jipipe:adaptive-parameters/parameter-annotations-prefix" : "",
-        "border-parameters/jipipe:adaptive-parameters/overridden-parameters" : [ ],
         "border-parameters/jipipe:adaptive-parameters/enabled" : true,
+        "border-parameters/jipipe:adaptive-parameters/overridden-parameters" : [ ],
         "border-parameters/jipipe:adaptive-parameters/parameter-annotations-use-internal-names" : false,
         "border-parameters/jipipe:parameter-slot-algorithm/has-parameter-slot" : false,
         "border-parameters/jipipe:parameter-slot-algorithm/attach-parameter-annotations" : true,
@@ -3839,8 +3872,8 @@
         "jipipe:adaptive-parameters/attach-parameter-annotations" : true,
         "jipipe:adaptive-parameters/attach-only-non-default-parameter-annotations" : true,
         "jipipe:adaptive-parameters/parameter-annotations-prefix" : "",
-        "jipipe:adaptive-parameters/overridden-parameters" : [ ],
         "jipipe:adaptive-parameters/enabled" : true,
+        "jipipe:adaptive-parameters/overridden-parameters" : [ ],
         "jipipe:adaptive-parameters/parameter-annotations-use-internal-names" : false,
         "jipipe:parameter-slot-algorithm/has-parameter-slot" : false,
         "jipipe:parameter-slot-algorithm/attach-parameter-annotations" : true,
@@ -3941,10 +3974,10 @@
           "content" : 1,
           "enabled" : false
         },
-        "border-parameters/border-mode" : "Constant",
         "border-parameters/margin-top" : {
           "expression" : "10"
         },
+        "border-parameters/border-mode" : "Constant",
         "border-parameters/margin-bottom" : {
           "expression" : "10"
         },
@@ -3954,8 +3987,8 @@
         "border-parameters/jipipe:adaptive-parameters/attach-parameter-annotations" : true,
         "border-parameters/jipipe:adaptive-parameters/attach-only-non-default-parameter-annotations" : true,
         "border-parameters/jipipe:adaptive-parameters/parameter-annotations-prefix" : "",
-        "border-parameters/jipipe:adaptive-parameters/overridden-parameters" : [ ],
         "border-parameters/jipipe:adaptive-parameters/enabled" : true,
+        "border-parameters/jipipe:adaptive-parameters/overridden-parameters" : [ ],
         "border-parameters/jipipe:adaptive-parameters/parameter-annotations-use-internal-names" : false,
         "border-parameters/jipipe:parameter-slot-algorithm/has-parameter-slot" : false,
         "border-parameters/jipipe:parameter-slot-algorithm/attach-parameter-annotations" : true,
@@ -3978,8 +4011,8 @@
         "jipipe:adaptive-parameters/attach-parameter-annotations" : true,
         "jipipe:adaptive-parameters/attach-only-non-default-parameter-annotations" : true,
         "jipipe:adaptive-parameters/parameter-annotations-prefix" : "",
-        "jipipe:adaptive-parameters/overridden-parameters" : [ ],
         "jipipe:adaptive-parameters/enabled" : true,
+        "jipipe:adaptive-parameters/overridden-parameters" : [ ],
         "jipipe:adaptive-parameters/parameter-annotations-use-internal-names" : false,
         "jipipe:parameter-slot-algorithm/has-parameter-slot" : false,
         "jipipe:parameter-slot-algorithm/attach-parameter-annotations" : true,
@@ -4061,8 +4094,8 @@
         "jipipe:adaptive-parameters/attach-parameter-annotations" : true,
         "jipipe:adaptive-parameters/attach-only-non-default-parameter-annotations" : true,
         "jipipe:adaptive-parameters/parameter-annotations-prefix" : "",
-        "jipipe:adaptive-parameters/overridden-parameters" : [ ],
         "jipipe:adaptive-parameters/enabled" : true,
+        "jipipe:adaptive-parameters/overridden-parameters" : [ ],
         "jipipe:adaptive-parameters/parameter-annotations-use-internal-names" : false,
         "jipipe:parameter-slot-algorithm/has-parameter-slot" : false,
         "jipipe:parameter-slot-algorithm/attach-parameter-annotations" : true,
@@ -4146,10 +4179,10 @@
           "content" : 1,
           "enabled" : false
         },
-        "border-mode" : "Constant",
         "margin-top" : {
           "expression" : "250"
         },
+        "border-mode" : "Constant",
         "margin-bottom" : {
           "expression" : "250"
         },
@@ -4159,8 +4192,8 @@
         "jipipe:adaptive-parameters/attach-parameter-annotations" : true,
         "jipipe:adaptive-parameters/attach-only-non-default-parameter-annotations" : true,
         "jipipe:adaptive-parameters/parameter-annotations-prefix" : "",
-        "jipipe:adaptive-parameters/overridden-parameters" : [ ],
         "jipipe:adaptive-parameters/enabled" : true,
+        "jipipe:adaptive-parameters/overridden-parameters" : [ ],
         "jipipe:adaptive-parameters/parameter-annotations-use-internal-names" : false,
         "jipipe:parameter-slot-algorithm/has-parameter-slot" : false,
         "jipipe:parameter-slot-algorithm/attach-parameter-annotations" : true,
@@ -4243,8 +4276,8 @@
         "jipipe:adaptive-parameters/attach-parameter-annotations" : true,
         "jipipe:adaptive-parameters/attach-only-non-default-parameter-annotations" : true,
         "jipipe:adaptive-parameters/parameter-annotations-prefix" : "",
-        "jipipe:adaptive-parameters/overridden-parameters" : [ ],
         "jipipe:adaptive-parameters/enabled" : true,
+        "jipipe:adaptive-parameters/overridden-parameters" : [ ],
         "jipipe:adaptive-parameters/parameter-annotations-use-internal-names" : false,
         "jipipe:parameter-slot-algorithm/has-parameter-slot" : false,
         "jipipe:parameter-slot-algorithm/attach-parameter-annotations" : true,
@@ -4276,8 +4309,53 @@
       }
     },
     "edges" : [ {
+      "source-node" : "4fe0f2d8-040b-4097-82ed-5dd931f1a347",
+      "target-node" : "919d6b38-cef7-4008-82eb-fc8ea4b5a907",
+      "source-slot" : "Annotated paths",
+      "target-slot" : "Files",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
       "source-node" : "2c85ea8b-a8cd-4faa-bfb4-5ac667c46836",
       "target-node" : "3a93b7ce-7d08-4da7-bad0-10bc5baf96b6",
+      "source-slot" : "Output",
+      "target-slot" : "Input",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "919d6b38-cef7-4008-82eb-fc8ea4b5a907",
+      "target-node" : "e3712715-1957-49a7-94e9-4a64f7b35e4d",
+      "source-slot" : "Image",
+      "target-slot" : "Input",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "ff44442e-35bb-4a72-93b5-9120ac784474",
+      "target-node" : "4fe0f2d8-040b-4097-82ed-5dd931f1a347",
+      "source-slot" : "Files",
+      "target-slot" : "Paths",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "0532d90d-f1ce-4223-bb55-3d6dc5ed326c",
+      "target-node" : "3002f4e5-a01f-4595-b77e-04accd82f78a",
+      "source-slot" : "Output",
+      "target-slot" : "Input",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "2130e2a1-ed72-4982-9140-4134a9614dc0",
+      "target-node" : "2c85ea8b-a8cd-4faa-bfb4-5ac667c46836",
       "source-slot" : "Output",
       "target-slot" : "Input",
       "metadata" : {
@@ -4294,28 +4372,19 @@
         "ui-shape" : "Elbow"
       }
     }, {
-      "source-node" : "a621f3e1-b9f3-4bd9-b83f-ea9d56ccb8c0",
-      "target-node" : "2130e2a1-ed72-4982-9140-4134a9614dc0",
-      "source-slot" : "Output",
-      "target-slot" : "Input",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "ff44442e-35bb-4a72-93b5-9120ac784474",
-      "target-node" : "4fe0f2d8-040b-4097-82ed-5dd931f1a347",
-      "source-slot" : "Files",
-      "target-slot" : "Paths",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
       "source-node" : "3a93b7ce-7d08-4da7-bad0-10bc5baf96b6",
       "target-node" : "0532d90d-f1ce-4223-bb55-3d6dc5ed326c",
       "source-slot" : "Output",
       "target-slot" : "Input",
+      "metadata" : {
+        "ui-visibility" : "Smart",
+        "ui-shape" : "Elbow"
+      }
+    }, {
+      "source-node" : "919d6b38-cef7-4008-82eb-fc8ea4b5a907",
+      "target-node" : "4e4fd694-1ae2-4856-b13f-bd9255840717",
+      "source-slot" : "Image",
+      "target-slot" : "Image",
       "metadata" : {
         "ui-visibility" : "Smart",
         "ui-shape" : "Elbow"
@@ -4330,24 +4399,6 @@
         "ui-shape" : "Elbow"
       }
     }, {
-      "source-node" : "919d6b38-cef7-4008-82eb-fc8ea4b5a907",
-      "target-node" : "e3712715-1957-49a7-94e9-4a64f7b35e4d",
-      "source-slot" : "Image",
-      "target-slot" : "Input",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "2130e2a1-ed72-4982-9140-4134a9614dc0",
-      "target-node" : "2c85ea8b-a8cd-4faa-bfb4-5ac667c46836",
-      "source-slot" : "Output",
-      "target-slot" : "Input",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
       "source-node" : "f36582ae-18ad-44cb-bc44-217083720b93",
       "target-node" : "ff44442e-35bb-4a72-93b5-9120ac784474",
       "source-slot" : "Folder paths",
@@ -4357,28 +4408,10 @@
         "ui-shape" : "Elbow"
       }
     }, {
-      "source-node" : "4fe0f2d8-040b-4097-82ed-5dd931f1a347",
-      "target-node" : "919d6b38-cef7-4008-82eb-fc8ea4b5a907",
-      "source-slot" : "Annotated paths",
-      "target-slot" : "Files",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "0532d90d-f1ce-4223-bb55-3d6dc5ed326c",
-      "target-node" : "3002f4e5-a01f-4595-b77e-04accd82f78a",
+      "source-node" : "a621f3e1-b9f3-4bd9-b83f-ea9d56ccb8c0",
+      "target-node" : "2130e2a1-ed72-4982-9140-4134a9614dc0",
       "source-slot" : "Output",
       "target-slot" : "Input",
-      "metadata" : {
-        "ui-visibility" : "Smart",
-        "ui-shape" : "Elbow"
-      }
-    }, {
-      "source-node" : "919d6b38-cef7-4008-82eb-fc8ea4b5a907",
-      "target-node" : "4e4fd694-1ae2-4856-b13f-bd9255840717",
-      "source-slot" : "Image",
-      "target-slot" : "Image",
       "metadata" : {
         "ui-visibility" : "Smart",
         "ui-shape" : "Elbow"
@@ -4421,12 +4454,12 @@
           "jipipe:node-info-id" : "jipipe:project-compartment",
           "jipipe:node:ui-locked" : false,
           "show-limited-parameters" : false,
-          "exported-parameters" : {
-            "parameter-reference-groups" : [ ]
-          },
           "project-overview-color" : {
             "content" : "#FFFFFF",
             "enabled" : false
+          },
+          "exported-parameters" : {
+            "parameter-reference-groups" : [ ]
           },
           "show-in-project-overview" : true,
           "jipipe:node:bookmarked" : false,
