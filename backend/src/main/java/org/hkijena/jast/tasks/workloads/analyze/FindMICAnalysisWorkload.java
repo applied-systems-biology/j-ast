@@ -142,25 +142,6 @@ public class FindMICAnalysisWorkload implements BackendTaskWorkload {
         Map<String, Object> parameterOverrides = new HashMap<>();
 
         taskUtils.writeRawImages(params, params.getPayload().getImageIds(), imageRepository, fileStorageService, progressInfo, verbose);
-        taskUtils.writeMetadata(params, params.getPayload().getImageIds(), imageRepository, progressInfo, verbose, new ImageMetadata("StripSequence", image -> {
-            Object stripPreset = image.getMetadata().get("stripPreset");
-            if(stripPreset == null){
-                throw new NullPointerException("No strip preset found");
-            }
-            if(stripPreset instanceof String){
-                // parse as JSON object
-                stripPreset = JsonUtils.readFromString((String) stripPreset, JsonNode.class);
-            }
-            if(stripPreset instanceof Map map) {
-                return ((List<?>)map.get("ticks")).stream().map(Object::toString).collect(Collectors.joining(","));
-            }
-            if(stripPreset instanceof JsonNode node) {
-                List<Double> items = new ArrayList<>();
-                node.get("ticks").elements().forEachRemaining(nd -> items.add(nd.asDouble()));
-                return items.stream().map(Object::toString).collect(Collectors.joining(","));
-            }
-            throw new UnsupportedOperationException("Not supported");
-        }));
         taskUtils.writeMaskAnnotations(params, params.getPayload().getImageIds(), "plate", imageRepository, fileStorageService, progressInfo, verbose);
         taskUtils.writeMaskAnnotations(params, params.getPayload().getImageIds(), "strip-disk", imageRepository, fileStorageService, progressInfo, verbose);
 
