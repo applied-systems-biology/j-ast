@@ -19,67 +19,38 @@
         no-wrap />
     </q-toolbar>
     <q-scroll-area class="q-pa-md project-list" v-if="authStore.isLoggedIn">
-      <div class="row q-gutter-md">
-        <q-skeleton
-          v-if="projectList == null"
-          class="project-item"
-          type="rect"
-        />
-        <q-btn
-          v-for="project in projectList"
-          :key="project.id"
-          color="blue-grey-2"
-          class="project-item"
-          size="lg"
-          outline
-          no-caps
-          @click="openProject(project.id)"
-          push
-        >
-          <div class="row items-start no-wrap full-width text-blue-grey">
-            <q-icon left name="folder" />
-          </div>
-          <div class="row items-start no-wrap full-width text-blue-grey">
-            <div class="text-center ellipsis">
-              {{ project.name }}
+      <q-toolbar class="bg-white text-black edit-toolbar">
+        <q-input v-model="filterText" class="q-ma-sm" clearable debounce="1000" dense outlined
+                 style="width: 500px; max-width: 50vw;">
+          <template v-slot:prepend>
+            <q-icon name="search"/>
+          </template>
+        </q-input>
+      </q-toolbar>
+      <q-table flat :rows="projectTableRows" :columns="projectTableColumns" :pagination="filesViewPagination"
+               @row-click="onRowClick" row-key="key">
+        <template v-slot:body-cell-thumbnail="props">
+          <q-td :props="props">
+            <q-icon class="thumbnail" name="fa-solid fa-folder" color="blue" size="xl"/>
+          </q-td>
+        </template>
+        <template v-slot:body-cell-owner="props">
+          <q-td :props="props">
+            <div class="row items-center">
+              <q-icon class="q-mr-sm" name="fa-solid fa-user" />
+              <div>{{ props.row.owner || 'Admin' }}</div>
             </div>
-          </div>
-          <div
-            class="row items-start no-wrap full-width text-caption text-blue-grey"
-          >
-            <div class="flex column">
-              <div class="text-left ellipsis">ID {{ project.id }}</div>
-              <div class="text-left">Owner: {{ project.owner || 'Admin' }}</div>
+          </q-td>
+        </template>
+        <template v-slot:body-cell-actions="props">
+          <q-td :props="props">
+            <div class="q-gutter-sm" v-if="props.row.id >= 0">
+              <q-btn icon="search" @click.stop="openProject(props.row.id)"/>
+              <q-btn icon="delete" @click.stop="deleteProject(props.row)"/>
             </div>
-          </div>
-        </q-btn>
-        <q-btn
-          v-if="canAddProject"
-          class="project-item"
-          size="lg"
-          icon="add"
-          color="green"
-          outline
-          no-caps
-          @click="newProject"
-          >New project
-        </q-btn>
-        <q-btn
-          v-else-if="authStore.isGuest"
-          class="project-item"
-          size="lg"
-          icon="block"
-          color="red"
-          outline
-          no-caps
-          @click="
-            sendFailureNotification(
-              'Too many projects. Please contact the administrator if you want more.'
-            )
-          "
-          >Project limit reached
-        </q-btn>
-      </div>
+          </q-td>
+        </template>
+      </q-table>
     </q-scroll-area>
     <q-scroll-area class="project-list" v-if="!authStore.isLoggedIn">
       <div class="bg-blue-grey-2 q-pt-lg q-pb-lg hero">
@@ -177,7 +148,7 @@
   </q-page>
 </template>
 <script setup lang="ts">
-import { Dialog, QSpinnerHourglass, useQuasar } from 'quasar';
+import {Dialog, QSpinnerHourglass, QTableColumn, useQuasar} from 'quasar';
 import { useAuthStore } from 'stores/auth-store';
 import { computed, ref } from 'vue';
 import { storeToRefs } from 'pinia';
@@ -201,6 +172,7 @@ import heroResultsBrowser from 'assets/hero/hero-results-browser.png';
 import CreateProjectDialog from 'components/CreateProjectDialog.vue';
 import { plainToInstance } from 'class-transformer';
 import { uploadProjectArchive } from 'src/types/projectArchive';
+import {onDialogYes} from "src/types/dialog";
 
 const $q = useQuasar();
 const authStore = useAuthStore();
@@ -218,6 +190,74 @@ const canAddProject = computed(() => {
     return false;
   }
 });
+
+const filterText = ref("")
+
+const filesViewPagination = {
+  rowsPerPage: 0
+}
+
+const projectTableColumns : QTableColumn[] = [
+  {
+    name: "thumbnail",
+    label: "",
+    field: "id",
+    sortable: false,
+    align: 'center',
+    style: 'width: 120px; height: 120px;',
+  },
+  {
+    name: "name",
+    label: "Name",
+    field: "name",
+    sortable: true,
+    align: 'left',
+  },
+  {
+    name: "owner",
+    label: "Owner",
+    field: "owner",
+    sortable: true,
+    align: 'left',
+  },
+  {
+    name: "id",
+    label: "ID",
+    field: "id",
+    sortable: true,
+    align: 'left',
+  },
+  {
+    name: "actions",
+    label: "",
+    field: "id",
+    sortable: false,
+    align: 'right',
+  }
+]
+
+const projectTableRows = computed(() => {
+  if (!projectList.value) {
+    return []
+  }
+
+  // Create a filtered copy if filter text exists
+  const filteredProjects = filterText.value
+      ? projectList.value.filter(project =>
+          project.name?.toLowerCase().includes(filterText.value.toLowerCase())
+      )
+      : [...projectList.value]
+
+  // Sort alphabetically (case-insensitive)
+  return filteredProjects.sort((a, b) =>
+      a.name?.localeCompare(b.name)
+  )
+})
+
+function onRowClick(evt: any, row: ProjectMetadataPayload) {
+  openProject(row.id)
+}
+
 
 /**
  * Creates a new project
@@ -298,6 +338,23 @@ function refreshProjectList() {
 
 function openProject(id: number) {
   router.push(`/project/${id}`);
+}
+
+function deleteProject(id: number) {
+  onDialogYes(
+      'Delete project',
+      'Do your really want to delete the project?'
+  ).then(() => {
+    $q.loading.show({
+      message: 'This may take some time for large projects ...'
+    })
+    api.post(`/project/${id}/delete`, {}).then(() => {
+      refreshProjectList()
+    })
+        .finally(() => {
+          $q.loading.hide()
+        })
+  });
 }
 
 /**
