@@ -233,7 +233,7 @@
       />
     </q-drawer>
     <q-drawer
-        v-model="drawerRight"
+        :model-value="true"
         bordered
         class="q-pa-md q-gutter-sm properties-panel"
         elevated
@@ -241,7 +241,10 @@
         :width="400"
     >
       <div class="row q-gutter-sm">
-        <q-btn dense icon="deselect" outline @click="selectedImageIds = []">
+        <q-btn dense icon="select_all"  v-if="selectedImageIds.length == 0" outline @click="selectAll()">
+          <q-tooltip>Selects all images</q-tooltip>
+        </q-btn>
+        <q-btn dense icon="deselect"  v-if="selectedImageIds.length > 0" outline @click="selectedImageIds = []">
           <q-badge color="primary" floating>{{ selectedImageIds.length }}</q-badge>
           <q-tooltip>Deselects the images</q-tooltip>
         </q-btn>
@@ -256,6 +259,7 @@
           <q-tooltip>Shows the image in a viewer</q-tooltip>
         </q-btn>
         <q-btn
+            v-if="selectedImageIds.length > 0"
             no-caps no-wrap
             :disable="hasTaskRunning"
             color="red-4"
@@ -267,12 +271,6 @@
           <q-tooltip>Deletes the selected image(s)</q-tooltip>
         </q-btn>
         <q-space/>
-        <q-btn
-            no-caps no-wrap
-            flat
-            icon="close"
-            padding="none"
-            @click="selectedImageIds = []"/>
       </div>
       <q-separator/>
       <q-card v-if="hasTaskRunning" class="q-mb-lg">
@@ -282,6 +280,13 @@
         </q-card-section>
         <q-card-section> You will not be able to make any changes</q-card-section>
       </q-card>
+      <ProjectEmptySelectionEditor
+          v-if="selectedImageIds.length == 0"
+          v-model="selectedImages"
+          v-model:project-images="projectImages"
+          v-model:selected-image-ids="selectedImageIds"
+          v-model:uploader-toggle="drawerLeft"
+      />
       <ProjectMultiImageEditor
           v-if="selectedImageIds.length > 1"
           v-model="selectedImages"
@@ -358,6 +363,7 @@ import DocumentationComponent from "components/layout/DocumentationComponent.vue
 import {ViewMode} from 'src/types/view';
 import GridViewComponent from 'components/arranger/GridViewComponent.vue';
 import {collectProjectArchiveContents} from 'src/types/projectArchive';
+import ProjectEmptySelectionEditor from "components/drawers/ProjectEmptySelectionEditor.vue";
 
 function createDummyBackendTask() {
   const task = new BackendTaskPayload()
@@ -402,7 +408,6 @@ const hasTaskRunning = computed(() => {
 
 
 // Computed values
-const drawerRight = computed(() => selectedImageIds.value.length > 0);
 const lastSelectedImage = computed(() =>
     projectImages.value.getImageById(
         selectedImageIds.value.length > 0
