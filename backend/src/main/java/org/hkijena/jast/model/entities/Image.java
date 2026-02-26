@@ -80,7 +80,7 @@ public class Image {
     private Integer version = 1;
 
     @Column(name = "pixel_size_mm")
-    private Double pixelSizeMillimeter = 0.144;
+    private Double pixelSizeMillimeter = 0d;
 
     @Column(name = "metadata", columnDefinition = "JSON")
     @Type(JsonType.class)

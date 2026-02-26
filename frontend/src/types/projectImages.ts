@@ -430,4 +430,12 @@ export class ProjectImagesPayload {
   getNumImages() {
     return this.imageIds.length;
   }
+
+  getAllImages() : ImagePayload[] {
+      const result : ImagePayload[] = [];
+      for (const id of this.imageIds) {
+          result.push(this.getImageById(id))
+      }
+      return result
+  }
 }

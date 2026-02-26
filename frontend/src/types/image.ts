@@ -238,6 +238,15 @@ export function incrementImageMaskAnnotationVersion(image: ImagePayload, annotat
     found.version++
 }
 
+export function imageHasMaskAnnotation(image: ImagePayload, annotationType: string) {
+    for (const annotation of image.maskImageAnnotations) {
+        if(annotation.annotationTypeId == annotationType) {
+            return annotation.version > 0
+        }
+    }
+    return false
+}
+
 export function imageSupportsMaskAnnotation(img: ImagePayload, name: string): boolean {
     if (img.assayType == AssayType.DDA && name == "zoi-shape") {
         return false;
