@@ -36,7 +36,7 @@
       </q-scroll-area>
       <q-toolbar>
         <q-btn color="secondary" icon="fa-solid fa-chevron-left" @click="goToPreviousImage"/>
-        <q-space/>
+        <q-btn class="grow" flat :label="(currentIndex + 1) + ' / ' + projectImages.imageIds.length" />
         <q-btn color="secondary" icon="fa-solid fa-chevron-right" @click="goToNextImage"/>
       </q-toolbar>
     </q-drawer>
@@ -62,9 +62,13 @@
         <ImageViewer
             v-if="selectedImageId > 0"
             :filename="selectedImage.fileName"
-            :image-backend-url="`/image/${selectedImageId}/raw`"
+            :image-backend-url="`/image/${selectedImageId}/${showVisualization ? 'visualization' : 'raw'}`"
             class="viewer"
-        />
+        >
+          <template v-slot:toolbar>
+            <ToggleButton v-model="showVisualization" label="Visualization" color="blue" selected-icon="fa-regular fa-square-check" not-selected-icon="fa-regular fa-square"/>
+          </template>
+        </ImageViewer>
         <BackendTaskProgressOverlay
             v-model:backend-tasks="projectBackendTasks"
         />
@@ -92,6 +96,7 @@ import DocumentationComponent from 'components/layout/DocumentationComponent.vue
 import ProjectImageButtonFlat from 'components/arranger/ProjectImageButtonFlat.vue';
 import ImageViewer from 'components/dataViewers/ImageViewer.vue';
 import {filterAppliesToImage} from 'src/types/filters';
+import ToggleButton from "components/utils/ToggleButton.vue";
 
 function createDummyBackendTask() {
   const task = new BackendTaskPayload();
@@ -135,6 +140,10 @@ const filteredImageIds = computed(() => {
     return projectImages.value.imageIds
   }
 })
+const currentIndex = computed(() => {
+  return projectImages.value.imageIds.indexOf(selectedImageId.value)
+})
+const showVisualization = ref<boolean>(true);
 
 defineOptions({
   name: 'ProjectLayout',

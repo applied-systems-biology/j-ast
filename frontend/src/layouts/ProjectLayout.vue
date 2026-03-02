@@ -253,7 +253,17 @@
             @click="showSelectedImage"
             v-if="selectedImageIds.length == 1"
         >
-          <q-tooltip>Shows the image in a viewer</q-tooltip>
+          <q-tooltip>Shows the raw image in a viewer</q-tooltip>
+        </q-btn>
+        <q-btn
+          no-caps no-wrap
+          dense
+          icon="fa-solid fa-magnifying-glass-plus"
+          outline
+          @click="showSelectedImageVisualization"
+          v-if="selectedImageIds.length == 1"
+        >
+          <q-tooltip>Shows the image with annotations in a viewer</q-tooltip>
         </q-btn>
         <q-btn
             no-caps no-wrap
@@ -502,6 +512,17 @@ function showSelectedImage() {
     item.type = ResultItemType.Image;
     item.visualizationType = ResultItemType.Null;
     item.overrideUrl = `/image/${selectedImages.value[0].id}/raw`;
+    item.name = selectedImages.value[0].fileName || 'Unnamed';
+    showResultItem(item);
+  }
+}
+
+function showSelectedImageVisualization() {
+  if (selectedImages.value.length == 1) {
+    const item = new ResultItemPayload();
+    item.type = ResultItemType.Image;
+    item.visualizationType = ResultItemType.Null;
+    item.overrideUrl = `/image/${selectedImages.value[0].id}/visualization`;
     item.name = selectedImages.value[0].fileName || 'Unnamed';
     showResultItem(item);
   }
