@@ -318,6 +318,18 @@ public class Image {
         rebuildThumbnail(fileStorageService, raw);
     }
 
+    public BufferedImage getVisualization(FileStorageService fileStorageService) {
+        BufferedImage result = ImageUtils.convertImageType(ImageUtils.fromPNGBytes(getRawData(fileStorageService)), BufferedImage.TYPE_INT_ARGB);
+        for (MaskImageAnnotation annotation : getFilteredMaskImageAnnotations()) {
+            BufferedImage annotationImg = ImageUtils.fromPNGBytes(annotation.getRawData(fileStorageService));
+            if (annotationImg != null) {
+                BufferedImage gradient = ImageUtils.calculateGradient(annotationImg);
+                ImageUtils.overlayMask(result, gradient, ColorUtils.paletteColorFromString(annotation.getType()), 0.8);
+            }
+        }
+        return result;
+    }
+
     @Transactional
     public void rebuildThumbnail(FileStorageService fileStorageService, BufferedImage originalImage) {
         BufferedImage thumbnail = ImageUtils.createThumbnail(originalImage);

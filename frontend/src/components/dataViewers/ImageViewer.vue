@@ -4,6 +4,7 @@
       <q-btn no-caps no-wrap label="Download" icon="fa-solid fa-download" color="green" @click="download"/>
       <q-btn no-caps no-wrap label="Reset view" icon="fa-solid fa-expand" color="blue" @click="resetLocationAndZoom"/>
       <ZoomControl v-model="zoom" />
+      <slot name="toolbar"></slot>
     </q-toolbar>
     <div class="row col-grow" style="width: calc(100vw - 10px)">
       <div class="col flex column">

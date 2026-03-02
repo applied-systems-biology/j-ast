@@ -11,6 +11,7 @@ import org.hkijena.jast.repositories.ProjectRepository;
 import org.hkijena.jast.services.FileStorageService;
 import org.hkijena.jast.services.ProjectService;
 import org.hkijena.jast.services.UserService;
+import org.hkijena.jast.utils.ImageUtils;
 import org.hkijena.jast.utils.MimeTypeUtils;
 import org.hkijena.jast.utils.RequestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -117,6 +118,24 @@ public class ImageController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
     }
+
+    @GetMapping("/api/image/{id}/visualization")
+    public void getVisualization(HttpServletResponse response, Authentication authentication, @PathVariable long id) throws IOException {
+        userService.validateAuthentication(authentication);
+        Optional<Image> inputData_ = imageRepository.findById(id);
+        if (inputData_.isPresent()) {
+            Image image = inputData_.get();
+
+            if (!image.getProject().canAccess(authentication, accountConfig)) {
+                throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+            }
+
+            RequestUtils.sendContent(response, ImageUtils.toPNGByteArray(image.getVisualization(fileStorageService)), MimeTypeUtils.MIME_TYPE_PNG);
+        } else {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
+    }
+
 
     @PostMapping("/api/image/{id}/delete")
     public void deleteImage(Authentication authentication, @PathVariable long id) {
