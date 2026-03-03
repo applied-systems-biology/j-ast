@@ -148,8 +148,11 @@ public class ImageController {
                 throw new ResponseStatusException(HttpStatus.FORBIDDEN);
             }
 
+            Project project = image.getProject();
             image.deleteFilesLater(fileStorageService);
             imageRepository.delete(image);
+            project.markAsModified();
+            projectRepository.save(project);
         } else {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
@@ -189,6 +192,9 @@ public class ImageController {
 
         images = project.fixImageTableConsistency();
         imageRepository.saveAll(images);
+
+        project.markAsModified();
+        projectRepository.save(project);
     }
 
     @PostMapping("/api/image/{id}/update")
@@ -202,9 +208,12 @@ public class ImageController {
         if (!image.getProject().canEdit(authentication, accountConfig)) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN);
         }
+        Project project = image.getProject();
         image.updateFromPayload(imagePayload);
         imageRepository.save(image);
 
-        imageRepository.saveAll(image.getProject().fixImageTableConsistency());
+        imageRepository.saveAll(project.fixImageTableConsistency());
+        project.markAsModified();
+        projectRepository.save(project);
     }
 }

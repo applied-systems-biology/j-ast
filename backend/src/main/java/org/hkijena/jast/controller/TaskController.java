@@ -91,6 +91,7 @@ public class TaskController {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
         }
         project.clearTasks(fileStorageService);
+        project.markAsModified();
         projectRepository.save(project);
     }
 
@@ -133,6 +134,7 @@ public class TaskController {
         task = backendTaskRepository.save(task);
 
         project.addTask(task);
+        project.markAsModified();
         projectRepository.save(project);
 
         // Update the payload
