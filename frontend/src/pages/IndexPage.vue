@@ -221,6 +221,18 @@ const projectTableColumns : QTableColumn[] = [
     align: 'left',
   },
   {
+    name: "updatedAt",
+    label: "Last Modified",
+    field: "updatedAt",
+    sortable: false,
+    align: 'left',
+    format: (val: string) => {
+      if (!val) return '-'
+      const date = new Date(val)
+      return date.toLocaleString()
+    }
+  },
+  {
     name: "id",
     label: "ID",
     field: "id",
@@ -248,10 +260,12 @@ const projectTableRows = computed(() => {
       )
       : [...projectList.value]
 
-  // Sort alphabetically (case-insensitive)
-  return filteredProjects.sort((a, b) =>
-      a.name?.localeCompare(b.name)
-  )
+  // Sort by updatedAt descending (most recent first)
+  return filteredProjects.sort((a, b) => {
+    const dateA = a.updatedAt ? new Date(a.updatedAt).getTime() : 0
+    const dateB = b.updatedAt ? new Date(b.updatedAt).getTime() : 0
+    return dateB - dateA  // Descending order (newest first)
+  })
 })
 
 function onRowClick(evt: any, row: ProjectMetadataPayload) {

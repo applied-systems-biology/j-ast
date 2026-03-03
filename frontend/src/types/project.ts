@@ -17,6 +17,12 @@ export class ProjectMetadataPayload {
 
   @Expose()
   viewMode: ViewMode = ViewMode.Timeline;
+
+  @Expose()
+  createdAt: string = '';
+
+  @Expose()
+  updatedAt: string = '';
 }
 
 /**

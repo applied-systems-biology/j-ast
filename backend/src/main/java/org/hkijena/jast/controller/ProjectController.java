@@ -80,6 +80,7 @@ public class ProjectController {
         if (project.canEdit(authentication, accountConfig)) {
             project.setName(StringUtils.orElse(request.getName(), "Unnamed project"));
             project.setViewMode(request.getViewMode() != null ? request.getViewMode() : ViewMode.Timeline);
+            project.markAsModified();
             projectRepository.save(project);
             return ResponseEntity.ok(new ProjectMetadataPayload(project));
         } else {
@@ -131,6 +132,7 @@ public class ProjectController {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid image data");
         }
 
+        project.markAsModified();
         projectRepository.save(project);
 
         return new ImagePayload(image);

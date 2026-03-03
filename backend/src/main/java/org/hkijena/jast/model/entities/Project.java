@@ -52,6 +52,32 @@ public class Project {
     @Column(name ="view_mode")
     private ViewMode viewMode = ViewMode.Timeline;
 
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private LocalDateTime createdAt;
+
+    @Column(name = "updated_at", nullable = false)
+    private LocalDateTime updatedAt;
+
+    @PrePersist
+    protected void onCreate() {
+        createdAt = LocalDateTime.now();
+        updatedAt = LocalDateTime.now();
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        updatedAt = LocalDateTime.now();
+    }
+
+    /**
+     * Marks the project as modified by updating the updatedAt timestamp.
+     * This should be called whenever project content is modified (images, tasks, etc.)
+     * to ensure the @PreUpdate callback is triggered.
+     */
+    public void markAsModified() {
+        this.updatedAt = LocalDateTime.now();
+    }
+
     public Long getId() {
         return id;
     }
@@ -207,5 +233,13 @@ public class Project {
 
     public void setViewMode(ViewMode viewMode) {
         this.viewMode = viewMode;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
     }
 }
