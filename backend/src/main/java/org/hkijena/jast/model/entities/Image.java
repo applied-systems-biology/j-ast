@@ -323,7 +323,7 @@ public class Image {
         for (MaskImageAnnotation annotation : getFilteredMaskImageAnnotations()) {
             BufferedImage annotationImg = ImageUtils.fromPNGBytes(annotation.getRawData(fileStorageService));
             if (annotationImg != null) {
-                BufferedImage gradient = ImageUtils.calculateGradient(annotationImg);
+                BufferedImage gradient = ImageUtils.calculateSobel(annotationImg);
                 ImageUtils.overlayMask(result, gradient, ColorUtils.paletteColorFromString(annotation.getType()), 0.8);
             }
         }
@@ -336,7 +336,7 @@ public class Image {
         for (MaskImageAnnotation annotation : getFilteredMaskImageAnnotations()) {
             BufferedImage annotationThumbnail = ImageUtils.fromPNGBytes(annotation.getThumbnailData(fileStorageService));
             if (annotationThumbnail != null) {
-                BufferedImage gradient = ImageUtils.calculateGradient(annotationThumbnail);
+                BufferedImage gradient = ImageUtils.calculateSobel(annotationThumbnail);
                 ImageUtils.overlayMask(thumbnail, gradient, ColorUtils.paletteColorFromString(annotation.getType()), 0.8);
             }
         }
