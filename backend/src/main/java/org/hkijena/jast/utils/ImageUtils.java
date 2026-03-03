@@ -167,6 +167,93 @@ public class ImageUtils {
     }
 
     /**
+     * Applies Sobel edge detection to the input image.
+     * Uses 3x3 Sobel kernels for both X and Y directions to compute gradient magnitude.
+     * This method is optimized for speed using direct pixel manipulation.
+     *
+     * @param inputImage The input BufferedImage (will be converted to grayscale if needed)
+     * @return A new BufferedImage containing the edge detection result (grayscale)
+     */
+    public static BufferedImage calculateSobel(BufferedImage inputImage) {
+        // Convert to grayscale if needed
+        if (inputImage.getType() != BufferedImage.TYPE_BYTE_GRAY) {
+            inputImage = convertImageType(inputImage, BufferedImage.TYPE_BYTE_GRAY);
+        }
+
+        int width = inputImage.getWidth();
+        int height = inputImage.getHeight();
+
+        // Get direct access to pixel data for performance
+        byte[] inputPixels = ((DataBufferByte) inputImage.getRaster().getDataBuffer()).getData();
+
+        // Create output image
+        BufferedImage outputImage = new BufferedImage(width, height, BufferedImage.TYPE_BYTE_GRAY);
+        byte[] outputPixels = ((DataBufferByte) outputImage.getRaster().getDataBuffer()).getData();
+
+        // Sobel kernels
+        // Gx: [[-1, 0, 1], [-2, 0, 2], [-1, 0, 1]]
+        // Gy: [[-1, -2, -1], [0, 0, 0], [1, 2, 1]]
+
+        // Process each pixel (skip borders to avoid boundary checks)
+        for (int y = 1; y < height - 1; y++) {
+            for (int x = 1; x < width - 1; x++) {
+                // Calculate pixel indices for 3x3 neighborhood
+                int idx = y * width + x;
+                int idxLeft = y * width + (x - 1);
+                int idxRight = y * width + (x + 1);
+                int idxTop = (y - 1) * width + x;
+                int idxBottom = (y + 1) * width + x;
+                int idxTopLeft = (y - 1) * width + (x - 1);
+                int idxTopRight = (y - 1) * width + (x + 1);
+                int idxBottomLeft = (y + 1) * width + (x - 1);
+                int idxBottomRight = (y + 1) * width + (x + 1);
+
+                // Convert to unsigned values
+                int p00 = inputPixels[idxTopLeft] & 0xFF;
+                int p01 = inputPixels[idxTop] & 0xFF;
+                int p02 = inputPixels[idxTopRight] & 0xFF;
+                int p10 = inputPixels[idxLeft] & 0xFF;
+                int p11 = inputPixels[idx] & 0xFF;
+                int p12 = inputPixels[idxRight] & 0xFF;
+                int p20 = inputPixels[idxBottomLeft] & 0xFF;
+                int p21 = inputPixels[idxBottom] & 0xFF;
+                int p22 = inputPixels[idxBottomRight] & 0xFF;
+
+                // Apply Sobel operator for X direction
+                // Gx = -1*p00 + 0*p01 + 1*p02 + -2*p10 + 0*p11 + 2*p12 + -1*p20 + 0*p21 + 1*p22
+                int gx = -p00 + p02 - 2 * p10 + 2 * p12 - p20 + p22;
+
+                // Apply Sobel operator for Y direction
+                // Gy = -1*p00 + -2*p01 + -1*p02 + 0*p10 + 0*p11 + 0*p12 + 1*p20 + 2*p21 + 1*p22
+                int gy = -p00 - 2 * p01 - p02 + p20 + 2 * p21 + p22;
+
+                // Calculate gradient magnitude: sqrt(Gx² + Gy²)
+                // Use integer approximation for speed: |Gx| + |Gy| (sufficient for edge detection)
+                int magnitude = Math.abs(gx) + Math.abs(gy);
+
+                // Clamp to 0-255 range
+                if (magnitude > 255) {
+                    magnitude = 255;
+                }
+
+                outputPixels[idx] = (byte) magnitude;
+            }
+        }
+
+        // Handle border pixels (set to 0)
+        for (int x = 0; x < width; x++) {
+            outputPixels[x] = 0; // Top row
+            outputPixels[(height - 1) * width + x] = 0; // Bottom row
+        }
+        for (int y = 0; y < height; y++) {
+            outputPixels[y * width] = 0; // Left column
+            outputPixels[y * width + (width - 1)] = 0; // Right column
+        }
+
+        return outputImage;
+    }
+
+    /**
      * Converts a BufferedImage to a new type.
      *
      * @param sourceImage The original image to convert.
