@@ -56,6 +56,13 @@ export function uploadProjectArchive(projectId: number,
 
     return metadataEntry.async("text").then((metadataText) => {
       const metadata: Record<string, ImagePayload> = JSON.parse(metadataText);
+
+      for (const item of Object.values(metadata)) {
+        if (item.metadata?.stripPreset?.values && !item.metadata?.stripPreset?.ticks) {
+          item.metadata.stripPreset.ticks = item.metadata.stripPreset.values;
+        }
+      }
+
       const totalItems = Object.keys(metadata).length;
       let processedItems = 0;
 

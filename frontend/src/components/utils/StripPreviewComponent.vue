@@ -1,6 +1,6 @@
 <template>
-  <div class="ticks-preview" :style="{ width: (props.ticks.length) * 48 + 'px' }">
-    <template v-for="(mark, index) in props.ticks" :key="index">
+  <div class="ticks-preview" :style="{ width: (effectiveTicks.length) * 48 + 'px' }">
+    <template v-for="(mark, index) in effectiveTicks" :key="index">
       <div class="tick">
         <div>|</div>
         <div>{{ mark }}</div>
@@ -9,9 +9,14 @@
   </div>
 </template>
 <script setup lang="ts">
+import {computed} from 'vue';
+
 const props = defineProps<{
-  ticks: Array<number>;
+  ticks: Array<number> | undefined;
 }>();
+
+const effectiveTicks = computed(() => props.ticks ?? []);
+
 
 </script>
 <style scoped lang="scss">

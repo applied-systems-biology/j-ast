@@ -170,7 +170,10 @@ export class ImagePayload {
     getStripPreset() : StripPresetPayload | undefined {
         const v = this.getMetadata("stripPreset")
         if(v) {
-            return plainToInstance(StripPresetPayload, v)
+            const instance = plainToInstance(StripPresetPayload, v)
+            if (instance.isPresent()) {
+                return instance
+            }
         }
         return undefined
     }
@@ -186,8 +189,12 @@ export class ImagePayload {
                 return value > 0
             }
             else if(name == "stripPreset") {
-                const instance = plainToInstance(StripPresetPayload, value)
-                return instance.isPresent()
+                try {
+                    const instance = plainToInstance(StripPresetPayload, value)
+                    return instance.isPresent()
+                } catch {
+                    return false
+                }
             }
             else {
                 return true

@@ -19,7 +19,7 @@
       <q-card-section v-if="props.existing">
         <div class="text-bold">Current</div>
         <q-scroll-area v-if="payload" visible class="w-100" style="height: 64px;">
-          <StripPreviewComponent :ticks="props.existing.ticks" />
+          <StripPreviewComponent :ticks="props.existing.getEffectiveTicks()" />
         </q-scroll-area>
         <q-separator/>
         <div class="w-100 text-center">
@@ -37,7 +37,7 @@
       <q-card-section>
         <div class="text-bold">Preview</div>
         <q-scroll-area v-if="payload" visible class="w-100" style="height: 64px;">
-          <StripPreviewComponent :ticks="payload.ticks" />
+          <StripPreviewComponent :ticks="payload.getEffectiveTicks()" />
         </q-scroll-area>
       </q-card-section>
       <q-card-actions align="right">
