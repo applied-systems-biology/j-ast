@@ -143,7 +143,7 @@ export class ImagePayload {
         if(this.assayType == AssayType.ETest) {
             const stripPreset = this.getStripPreset()
             if(stripPreset) {
-                result.push(createStripPresetBadge(stripPreset.name))
+                result.push(createStripPresetBadge(stripPreset.getName()))
             }
         }
         if (this.assayType && this.assayType != AssayType.Unknown) {

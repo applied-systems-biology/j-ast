@@ -30,4 +30,14 @@ export class StripPresetPayload {
     isPresent() : boolean {
         return this.getEffectiveTicks().length > 0;
     }
+
+    ticksMatch(other: StripPresetPayload): boolean {
+        const a = this.getEffectiveTicks();
+        const b = other.getEffectiveTicks();
+        if (a.length !== b.length) return false;
+        for (let i = 0; i < a.length; i++) {
+            if (a[i] !== b[i]) return false;
+        }
+        return true;
+    }
 }
