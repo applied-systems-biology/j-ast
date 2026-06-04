@@ -5,24 +5,24 @@
       <ToggleButton v-model="enhancedView" label="Enhanced display"
                     not-selected-icon="fa-regular fa-square" selected-icon="fa-regular fa-square-check"/>
     </q-toolbar>
-  </div>
-  <q-scroll-area class="row col-grow q-pa-sm" style="height: 400px; max-width: 100vw;">
-    <q-table :columns="tableColumns" :pagination="tablePagination" :rows="tableData">
-      <template v-slot:body-cell="props">
-        <q-td :props="props">
-          <div v-if="!enhancedView">
-            {{ props.value }}
-          </div>
-          <div v-else class="row q-gutter-md" style="align-items: center">
-            <ProjectImageIdThumbnailComponent v-if="props.col.field.startsWith('#ImageId')" :image-id="props.value"/>
-            <div>
+    <q-scroll-area class="row col-grow q-pa-sm" style="height: 400px; max-width: 100vw;">
+      <q-table :columns="tableColumns" :pagination="tablePagination" :rows="tableData">
+        <template v-slot:body-cell="props">
+          <q-td :props="props">
+            <div v-if="!enhancedView">
               {{ props.value }}
             </div>
-          </div>
-        </q-td>
-      </template>
-    </q-table>
-  </q-scroll-area>
+            <div v-else class="row q-gutter-md" style="align-items: center">
+              <ProjectImageIdThumbnailComponent v-if="props.col.field.startsWith('#ImageId')" :image-id="Number(props.value)"/>
+              <div>
+                {{ props.value }}
+              </div>
+            </div>
+          </q-td>
+        </template>
+      </q-table>
+    </q-scroll-area>
+  </div>
   <!--  <div class="row col-grow q-pa-sm" style="width: calc(100vw - 10px); border: 1px solid red;">-->
 
   <!--  </div>-->
