@@ -428,7 +428,6 @@ function downloadZip(path: string) {
     })
     dialog.onCancel(() => {
       shouldCancel.value = true
-      dialog.hide()
     })
 
     generateAndDownloadResultsZip(toDownload, path, resultPayload.value.name, (percentage, info) => {
@@ -437,7 +436,9 @@ function downloadZip(path: string) {
       })
     }, () => shouldCancel.value)
         .finally(() => {
-          dialog.hide()
+          if (!shouldCancel.value) {
+            dialog.hide()
+          }
         })
 
   })
