@@ -158,6 +158,7 @@ public class FindMICAnalysisWorkload implements BackendTaskWorkload {
         Map<String, Object> parameterOverrides = new HashMap<>();
 
         taskUtils.writeRawImages(params, params.getPayload().getImageIds(), imageRepository, fileStorageService, progressInfo, verbose);
+        taskUtils.writeMetadata(params, params.getPayload().getImageIds(), imageRepository, progressInfo, verbose);
         taskUtils.writeMaskAnnotations(params, params.getPayload().getImageIds(), "plate", imageRepository, fileStorageService, progressInfo, verbose);
         taskUtils.writeMaskAnnotations(params, params.getPayload().getImageIds(), "strip-disk", imageRepository, fileStorageService, progressInfo, verbose);
 
@@ -209,9 +210,14 @@ public class FindMICAnalysisWorkload implements BackendTaskWorkload {
             for (Map<String, String> map : updatedMetadata) {
                 String imageId = map.get("#ImageId");
                 String mic = map.get("MIC");
-                if (imageId != null && mic != null) {
+                if (imageId != null && mic != null && !mic.equalsIgnoreCase("N/A")) {
                     long imageId_ = Long.parseLong(imageId);
-                    double mic_ = Double.parseDouble(mic);
+                    double mic_;
+                    try {
+                        mic_ = Double.parseDouble(mic);
+                    } catch (NumberFormatException e) {
+                        continue;
+                    }
                     Optional<Image> image = imageRepository.findById(imageId_);
                     if (image.isPresent()) {
                         image.get().setMic(mic_);

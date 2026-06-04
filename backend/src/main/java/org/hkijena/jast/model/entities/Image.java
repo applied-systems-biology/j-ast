@@ -306,6 +306,7 @@ public class Image {
         setTimePoint(payload.getTimePoint());
         setGroupColumn(payload.getGroupColumn());
         setGroupRow(payload.getGroupRow());
+        setPixelSizeMillimeter(payload.getPixelSizeMillimeter());
         setMetadata(payload.getMetadata());
     }
 
