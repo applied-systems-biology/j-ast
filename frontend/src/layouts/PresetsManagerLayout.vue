@@ -36,7 +36,7 @@
               <q-separator/>
               <q-card-section>
                 <q-scroll-area class="w-100" style="height: 64px;" visible>
-                  <StripPreviewComponent :ticks="preset.ticks"/>
+                   <StripPreviewComponent :ticks="preset.getEffectiveTicks()"/>
                 </q-scroll-area>
               </q-card-section>
             </q-card>

@@ -117,7 +117,7 @@ import {sendFailureNotification} from 'src/types/notification';
 import {AssayType} from 'src/types/assayType';
 import {ImagePayload, imageSupportsMaskAnnotation, imageSupportsMetadata} from 'src/types/image';
 import {BackendTaskPayload} from 'src/types/backendTasks';
-import {computed} from 'vue';
+import {computed, provide} from 'vue';
 import StripPresetAnnotationButton from "components/annotationEditors/StripPresetAnnotationButton.vue";
 import ProjectImageProcessorList from "components/drawers/ProjectImageProcessorList.vue";
 import {ViewMode} from "src/types/view";
@@ -129,6 +129,7 @@ type SelectValue = string | number | null;
 const model = defineModel<ImagePayload>({required: true});
 const selectedImageIds = defineModel<Array<number>>("selectedImageIds", {required: true})
 const projectImages = defineModel<ProjectImagesPayload>("projectImages", {required: true})
+provide('projectImages', projectImages)
 const currentViewMode = defineModel<ViewMode>("currentViewMode", {required: true});
 const projectBackendTasks = defineModel<BackendTaskPayload[]>('projectBackendTasks', {required: true});
 const propertiesPanelTab = defineModel<string>('propertiesPanelTab', {required: true})

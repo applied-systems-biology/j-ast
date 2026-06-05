@@ -292,7 +292,6 @@
       </q-card>
       <ProjectEmptySelectionEditor
           v-if="selectedImageIds.length == 0"
-          v-model="selectedImages"
           v-model:project-images="projectImages"
           v-model:selected-image-ids="selectedImageIds"
           v-model:uploader-toggle="drawerLeft"

@@ -13,10 +13,13 @@ import {
   sendSuccessNotification,
 } from 'src/types/notification';
 import { AssayType, parseAssayType } from 'src/types/assayType';
-import { ImagePayload } from 'src/types/image';
+import { ImagePayload, setImageMetadata } from 'src/types/image';
 import { ProjectImagesPayload } from 'src/types/projectImages';
 import { splitByDelimiters } from 'src/types/utils';
 import { ViewMode } from 'src/types/view';
+import { StripPresetPayload } from 'src/types/presets';
+import { api } from 'boot/axios';
+import { plainToInstance } from 'class-transformer';
 
 export interface FrontEndImageProcessorResponse {
   images: ImagePayload[];
@@ -275,6 +278,71 @@ export function doImageUnsort(images: ImagePayload[]): Promise<FrontEndImageProc
   })
 }
 
+export function doImageMatchStripPresets(
+  images: ImagePayload[],
+  projectImages: ProjectImagesPayload
+): Promise<FrontEndImageProcessorResponse> {
+  return new Promise<FrontEndImageProcessorResponse>((resolve, reject) => {
+    const eTestImages = projectImages.getAllImages().filter(
+      (img) => img.assayType === AssayType.ETest
+    );
+    if (eTestImages.length === 0) {
+      sendFailureNotification('No E-Test images found in project');
+      reject();
+      return;
+    }
+
+    api.get("/get-presets/strip").then((response) => {
+      const stripPresets = plainToInstance(StripPresetPayload, response.data as StripPresetPayload[]);
+      if (stripPresets.length === 0) {
+        sendFailureNotification('No strip presets found in the preset library');
+        reject();
+        return;
+      }
+
+      let matched = 0;
+      let alreadyMatched = 0;
+
+      for (const image of eTestImages) {
+        const raw = image.metadata?.stripPreset;
+        if (!raw) continue;
+        const imported = plainToInstance(StripPresetPayload, raw);
+        if (!imported.isPresent()) continue;
+
+        if (imported.name && imported.id > 0) {
+          alreadyMatched++;
+          continue;
+        }
+
+        for (const preset of stripPresets) {
+          if (preset.ticksMatch(imported)) {
+            setImageMetadata(image, "stripPreset", preset);
+            image.version += 1;
+            matched++;
+            break;
+          }
+        }
+      }
+
+      if (matched === 0) {
+        sendFailureNotification(
+          `No unmatched strip presets could be matched to the library. (${alreadyMatched} already matched, ${eTestImages.length - alreadyMatched - matched} no match found)`
+        );
+        reject();
+        return;
+      }
+
+      sendSuccessNotification(
+        `Matched ${matched} strip preset(s) to the library. (${alreadyMatched} already matched, ${eTestImages.length - alreadyMatched - matched} no match found)`
+      );
+      resolve({needsUpload: true, needsFullReload: true, images: images});
+    }).catch(() => {
+      sendFailureNotification('Failed to load strip presets from server');
+      reject();
+    });
+  });
+}
+
 export const frontEndImageProcessors: Array<FrontEndImageProcessor> = [
   {
     label: 'Remove file name extensions',
@@ -310,5 +378,12 @@ export const frontEndImageProcessors: Array<FrontEndImageProcessor> = [
     tooltip: 'Moves the selected images back into the "Unsorted" drawer',
     viewMode: ViewMode.Timeline,
     fn: doImageUnsort,
+  },
+  {
+    label: 'Match strip presets to library',
+    icon: 'fa-solid fa-ruler-vertical',
+    tooltip: 'Matches E-Test strip presets with unknown names to the preset library by comparing tick sequences',
+    viewMode: undefined,
+    fn: doImageMatchStripPresets,
   },
 ];

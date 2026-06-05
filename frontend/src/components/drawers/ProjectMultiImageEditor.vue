@@ -155,6 +155,7 @@ function setAllStripPreset() {
     component: StripPresetSelectorDialog,
     componentProps: {
       persistent: true,
+      projectImages: projectImages.value,
     },
   })
       .onOk((payload : StripPresetPayload) => {

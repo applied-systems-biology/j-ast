@@ -2,6 +2,7 @@ import { ZipItem } from 'src/types/zip';
 import { ensureExtension } from 'src/types/common';
 import { plainToInstance } from 'class-transformer';
 import { ImagePayload } from 'src/types/image';
+import { StripPresetPayload } from 'src/types/presets';
 import { api } from 'boot/axios';
 import JSZip from 'jszip';
 
@@ -56,6 +57,35 @@ export function uploadProjectArchive(projectId: number,
 
     return metadataEntry.async("text").then((metadataText) => {
       const metadata: Record<string, ImagePayload> = JSON.parse(metadataText);
+
+      for (const item of Object.values(metadata)) {
+        if (item.metadata?.stripPreset) {
+          if (item.metadata.stripPreset.values && !item.metadata.stripPreset.ticks) {
+            item.metadata.stripPreset.ticks = item.metadata.stripPreset.values;
+          }
+        }
+      }
+
+      return api.get("/get-presets/strip").then((presetsResponse) => {
+        const stripPresets = plainToInstance(StripPresetPayload, presetsResponse.data as StripPresetPayload[]);
+
+        for (const item of Object.values(metadata)) {
+          if (item.metadata?.stripPreset) {
+            const imported = plainToInstance(StripPresetPayload, item.metadata.stripPreset);
+            if (imported.isPresent() && (!imported.name || imported.id <= 0)) {
+              for (const preset of stripPresets) {
+                if (preset.ticksMatch(imported)) {
+                  item.metadata.stripPreset = preset;
+                  break;
+                }
+              }
+            }
+          }
+        }
+
+        return metadata;
+      });
+    }).then((metadata) => {
       const totalItems = Object.keys(metadata).length;
       let processedItems = 0;
 

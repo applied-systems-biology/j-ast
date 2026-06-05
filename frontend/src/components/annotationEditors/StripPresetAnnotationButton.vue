@@ -17,16 +17,17 @@
   </q-card>
 </template>
 <script lang="ts" setup>
-import {computed} from 'vue';
+import {computed, inject, Ref} from 'vue';
 import {ImagePayload, setImageMetadata} from 'src/types/image';
 import {StripPresetPayload} from "src/types/presets";
 import {Dialog} from "quasar";
 import StripPresetSelectorDialog from "components/annotationEditors/StripPresetSelectorDialog.vue";
 import {sendFailureNotification} from "src/types/notification";
 import {plainToInstance} from "class-transformer";
+import {ProjectImagesPayload} from "src/types/projectImages";
 
-// const $q = useQuasar();
 const image = defineModel<ImagePayload>({required: true});
+const projectImagesRef = inject<Ref<ProjectImagesPayload>>('projectImages');
 const annotation = computed(() => {
   if(image.value) {
     const v = plainToInstance(ImagePayload, image.value).getMetadata("stripPreset")
@@ -42,12 +43,12 @@ const props = defineProps<{
 }>();
 
 function openEditor() {
-  // router.push(`/mask-image-annotation/${image.value?.id}/${props.annotationTypeId}`)
   Dialog.create({
     component: StripPresetSelectorDialog,
     componentProps: {
       persistent: true,
-      existing: annotation.value
+      existing: annotation.value,
+      projectImages: projectImagesRef?.value,
     },
   })
     .onOk((payload : StripPresetPayload) => {

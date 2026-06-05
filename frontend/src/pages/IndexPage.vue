@@ -46,7 +46,7 @@
           <q-td :props="props">
             <div class="q-gutter-sm" v-if="props.row.id >= 0">
               <q-btn icon="search" @click.stop="openProject(props.row.id)"/>
-              <q-btn icon="delete" @click.stop="deleteProject(props.row)"/>
+              <q-btn icon="delete" @click.stop="deleteProject(props.row.id)"/>
             </div>
           </q-td>
         </template>
