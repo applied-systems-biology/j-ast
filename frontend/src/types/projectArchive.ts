@@ -86,7 +86,14 @@ export function uploadProjectArchive(projectId: number,
         return metadata;
       });
     }).then((metadata) => {
-      const totalItems = Object.keys(metadata).length;
+      const imageCount = Object.keys(metadata).length;
+      let annotationCount = 0;
+      for (const item of Object.values(metadata)) {
+        if (item.maskImageAnnotations) {
+          annotationCount += item.maskImageAnnotations.length;
+        }
+      }
+      const totalItems = imageCount * 2 + annotationCount; // upload images + update metadata + upload annotations
       let processedItems = 0;
 
       // Track mapping between original keys and new image IDs
@@ -103,8 +110,8 @@ export function uploadProjectArchive(projectId: number,
         const imageEntry = zip.file(`${key}.png`);
         if (!imageEntry) {
           console.warn(`Image ${key}.png not found in ZIP, skipping`);
-          processedItems++;
-          onProgress((processedItems / totalItems) * 100, `Processing ${processedItems}/${totalItems} items...`);
+          const currentCount = ++processedItems;
+          onProgress(Math.min(100, Math.round((currentCount / totalItems) * 100)), `Processing ${currentCount}/${totalItems} items...`);
           continue;
         }
 
@@ -125,8 +132,8 @@ export function uploadProjectArchive(projectId: number,
                 console.log(`Uploading raw image ${key}.png ... Found ID mapping ${key}=${imagePayload.id}`);
                 idMapping[key] = imagePayload.id;
               }
-              processedItems++;
-              onProgress((processedItems / totalItems) * 100, `Uploaded ${processedItems}/${totalItems} images...`);
+              const currentCount = ++processedItems;
+              onProgress(Math.min(100, Math.round((currentCount / totalItems) * 100)), `Processing ${currentCount}/${totalItems} items...`);
             });
           })
         );
@@ -163,8 +170,8 @@ export function uploadProjectArchive(projectId: number,
           console.log(`Updating image metadata for ${key}=${imageId} ...`);
           updatePromises.push(
             api.post(`/image/${imageId}/update`, updatedImagePayload).then(() => {
-              processedItems++;
-              onProgress((processedItems / totalItems) * 100, `Updated ${processedItems}/${totalItems} image metadata...`);
+              const currentCount = ++processedItems;
+              onProgress(Math.min(100, Math.round((currentCount / totalItems) * 100)), `Processing ${currentCount}/${totalItems} items...`);
             })
           );
         }
@@ -198,8 +205,8 @@ export function uploadProjectArchive(projectId: number,
                     'Content-Type': 'multipart/form-data'
                   }
                 }).then(() => {
-                  processedItems++;
-                  onProgress((processedItems / totalItems) * 100, `Uploaded ${processedItems}/${totalItems} annotations...`);
+                  const currentCount = ++processedItems;
+                  onProgress(Math.min(100, Math.round((currentCount / totalItems) * 100)), `Processing ${currentCount}/${totalItems} items...`);
                 });
               })
             );
