@@ -29,7 +29,8 @@ public class SegmentETestStripBackendTaskWorkload implements BackendTaskWorkload
     private static final List<BackendTaskWorkloadDataSlot> INPUTS = Collections.singletonList(JASTDataSlot.Plate.toSlot());
     private static final List<BackendTaskWorkloadDataSlot> OUTPUTS = Collections.singletonList(JASTDataSlot.StripDisk.toSlot());
     private static final List<BackendTaskWorkloadParameterSlot> PARAMETERS = List.of(
-            new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotDataType.Number, BackendTaskWorkloadParameterSlotType.Common, "expectedAR", "Strip aspect ratio", "The expected aspect ratio of the strip", 11)
+            new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotDataType.Number, BackendTaskWorkloadParameterSlotType.Common, "expectedAR", "Strip aspect ratio", "The expected aspect ratio of the strip", 11),
+            new BackendTaskWorkloadParameterSlot(BackendTaskWorkloadParameterSlotDataType.Boolean, BackendTaskWorkloadParameterSlotType.Common, "whiteOutline", "White outline around strip", "If enabled, the strip is expected to have a white outline. Otherwise, a black outline is expected.", true)
     );
     private static final Map<String, String> PARAMETER_OVERRIDES = new HashMap<>();
 
@@ -61,7 +62,7 @@ public class SegmentETestStripBackendTaskWorkload implements BackendTaskWorkload
 
     @Override
     public String getDescription() {
-        return "Automatically detects the strip in E-tests";
+        return "Automatically detects the strip in E-tests. Important: The strip must have a black or white outline.";
     }
 
     @Override
@@ -119,6 +120,14 @@ public class SegmentETestStripBackendTaskWorkload implements BackendTaskWorkload
         Map<String, Object> parameterOverrides = new HashMap<>();
         for (BackendTaskParameterPayload parameter : params.getPayload().getParameters()) {
             parameterOverrides.put(PARAMETER_OVERRIDES.get(parameter.getId()), parameter.getValue());
+        }
+
+        // White Top Hat or Black Top Hat are required depending on the outline type.
+        if(params.getPayload().getParameterAsBoolean("whiteOutline", true)) {
+            parameterOverrides.put("985fd5ee-eacc-4531-9c5f-ce82d77f8c0e/operation", "TOPHAT");
+        }
+        else {
+            parameterOverrides.put("985fd5ee-eacc-4531-9c5f-ce82d77f8c0e/operation", "BOTTOMHAT");
         }
 
         Path projectFilePath = taskUtils.writeSharedFile(params, Path.of("workflows","image-segment-etest-strip.jip"));
