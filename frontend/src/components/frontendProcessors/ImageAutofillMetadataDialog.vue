@@ -50,6 +50,19 @@
           </q-card-section>
           <q-separator />
           <q-card-section class="q-gutter-sm">
+            <q-input
+              v-if="isCustomField(value)"
+              v-model="value.fieldName"
+              filled
+              label="Custom key"
+              :rules="[v => !!v || 'Required', v => !isReservedMetadataKey(v) || 'Reserved key']"
+            />
+            <q-input
+              v-if="isCustomField(value)"
+              v-model="value.label"
+              filled
+              label="Label"
+            />
             <q-select v-model="value.mode" filled label="Mode" :options="[ImageAutofillMetadataDialogFieldPayloadMode.Dynamic, ImageAutofillMetadataDialogFieldPayloadMode.Static, ImageAutofillMetadataDialogFieldPayloadMode.Ignore]"/>
             <q-input
               v-if="value.mode == ImageAutofillMetadataDialogFieldPayloadMode.Dynamic"
@@ -75,6 +88,9 @@
             />
           </q-card-section>
         </q-card>
+      </q-card-section>
+      <q-card-section>
+        <q-btn no-caps no-wrap icon="fa-solid fa-plus" label="Add custom field" color="blue-grey" @click="onAddCustomField" />
       </q-card-section>
       <q-card-section>
         <q-toggle
@@ -118,6 +134,7 @@ export interface ImageAutofillMetadataDialogPayload {
 import { useDialogPluginComponent } from 'quasar';
 import { ref } from 'vue';
 import { AssayType } from 'src/types/assayType';
+import { isReservedMetadataKey } from 'src/types/image';
 
 const payload = ref<ImageAutofillMetadataDialogPayload>({
   delimiter: '_-',
@@ -158,6 +175,23 @@ const payload = ref<ImageAutofillMetadataDialogPayload>({
     },
   ],
 });
+
+const NAMED_FIELDS = ['assayType', 'experiment', 'sample', 'timePoint'];
+
+function isCustomField(field: ImageAutofillMetadataDialogFieldPayload): boolean {
+  return !NAMED_FIELDS.includes(field.fieldName);
+}
+
+function onAddCustomField() {
+  payload.value.fields.push({
+    fieldName: '',
+    label: '',
+    mode: ImageAutofillMetadataDialogFieldPayloadMode.Ignore,
+    index: 1,
+    staticValue: '',
+    staticValueOptions: [],
+  });
+}
 
 // const props = defineProps({
 //   // ...your custom props

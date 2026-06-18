@@ -4,6 +4,7 @@ import {api} from 'boot/axios';
 import {
     Badge,
     createAssayTypeBadge,
+    createCustomMetadataBadge,
     createExperimentBadge,
     createPixelSizeBadge,
     createSampleBadge,
@@ -11,6 +12,16 @@ import {
     createTimePointBadge
 } from 'src/types/badge';
 import {StripPresetPayload} from "src/types/presets";
+
+export const RESERVED_METADATA_KEYS: Set<string> = new Set([
+  'experiment', 'sample', 'timePoint', 'assayType', 'mic',
+  'pixelSizeMillimeter', 'stripPreset', 'groupRow', 'groupColumn',
+  'version', 'fileName', 'id', 'owner',
+]);
+
+export function isReservedMetadataKey(key: string): boolean {
+  return RESERVED_METADATA_KEYS.has(key);
+}
 
 export class MaskImageAnnotationPayload {
     @Expose()
@@ -123,7 +134,17 @@ export class ImagePayload {
             version: this.version,
             pixelSizeMillimeter: this.pixelSizeMillimeter
         }
-        return { ...a, ...this.metadata }
+        const flatMetadata: Record<string, any> = {};
+        for (const [key, val] of Object.entries(this.metadata || {})) {
+            if (key === 'stripPreset') {
+                flatMetadata[key] = val;  // keep full object
+            } else if (val && typeof val === 'object' && 'value' in val) {
+                flatMetadata[key] = val.value;  // unwrap custom metadata
+            } else {
+                flatMetadata[key] = val;  // legacy scalar
+            }
+        }
+        return { ...a, ...flatMetadata };
     }
 
     getMetadataAsBadges(): Array<Badge> {
@@ -148,6 +169,13 @@ export class ImagePayload {
         }
         if (this.assayType && this.assayType != AssayType.Unknown) {
             result.push(createAssayTypeBadge(this.assayType));
+        }
+        // Custom metadata badges
+        for (const key of getCustomMetadataKeys(this)) {
+            const entry = this.metadata[key];
+            if (entry && typeof entry === 'object' && entry.showBadge === true) {
+                result.push(createCustomMetadataBadge(key, String(entry.value)));
+            }
         }
         return result;
     }
@@ -226,6 +254,53 @@ export function setImageMetadata(image: ImagePayload, key: string, value: any) {
     else if(key == "stripPreset") {
         image.metadata["stripPreset"] = value;
     }
+    else {
+        // Custom metadata: write as object-based value
+        image.metadata[key] = { ...(image.metadata[key] || {}), value };
+    }
+}
+
+export function getCustomMetadataKeys(image: ImagePayload): string[] {
+    return Object.keys(image.metadata || {}).filter(
+        key => key !== 'stripPreset' && !isReservedMetadataKey(key)
+    );
+}
+
+export function getCustomMetadataValue(image: ImagePayload, key: string): any {
+    const entry = image.metadata?.[key];
+    if (entry && typeof entry === 'object' && 'value' in entry) {
+        return entry.value;
+    }
+    // Legacy scalar fallback
+    return entry;
+}
+
+export function setCustomMetadata(image: ImagePayload, key: string, value: any, showBadge?: boolean) {
+    if (isReservedMetadataKey(key)) {
+        throw new Error(`'${key}' is a reserved metadata key`);
+    }
+    const existing = image.metadata[key];
+    const isObject = existing && typeof existing === 'object' && !Array.isArray(existing);
+    image.metadata[key] = {
+        ...(isObject ? existing : {}),
+        value,
+        ...(showBadge !== undefined ? { showBadge } : {}),
+    };
+}
+
+export function setCustomMetadataBadgeVisibility(image: ImagePayload, key: string, showBadge: boolean) {
+    if (isReservedMetadataKey(key)) return;
+    const existing = image.metadata[key];
+    if (existing && typeof existing === 'object') {
+        existing.showBadge = showBadge;
+    } else if (existing !== undefined) {
+        image.metadata[key] = { value: existing, showBadge };
+    }
+}
+
+export function deleteCustomMetadata(image: ImagePayload, key: string) {
+    if (isReservedMetadataKey(key)) return;
+    delete image.metadata[key];
 }
 
 export function incrementImageMaskAnnotationVersion(image: ImagePayload, annotationType: string) {

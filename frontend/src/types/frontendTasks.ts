@@ -13,13 +13,15 @@ import {
   sendSuccessNotification,
 } from 'src/types/notification';
 import { AssayType, parseAssayType } from 'src/types/assayType';
-import { ImagePayload, setImageMetadata } from 'src/types/image';
+import { ImagePayload, setImageMetadata, isReservedMetadataKey, getCustomMetadataValue, setCustomMetadata } from 'src/types/image';
 import { ProjectImagesPayload } from 'src/types/projectImages';
 import { splitByDelimiters } from 'src/types/utils';
 import { ViewMode } from 'src/types/view';
 import { StripPresetPayload } from 'src/types/presets';
 import { api } from 'boot/axios';
 import { plainToInstance } from 'class-transformer';
+
+const NAMED_FIELDS = ['assayType', 'experiment', 'sample', 'timePoint'];
 
 export interface FrontEndImageProcessorResponse {
   images: ImagePayload[];
@@ -62,10 +64,35 @@ export function doImageAutofillMetadata(
                 if(fieldPayload.mode == ImageAutofillMetadataDialogFieldPayloadMode.Dynamic) {
                   const zindex = fieldPayload.index - 1
                   if (zindex >= 0 && zindex < elements.length) {
+                    const isNamed = NAMED_FIELDS.includes(fieldPayload.fieldName);
+                    if (isNamed) {
+                      const currentValue = (image as any)[fieldPayload.fieldName];
+                      if (payload.overrideExisting || !currentValue) {
+                        // Read out the current value
+                        let newValue = elements[zindex]
+
+                        // Special case for assay Type
+                        if (fieldPayload.fieldName == "assayType") {
+                          newValue = parseAssayType(newValue)
+                        }
+
+                        (image as any)[fieldPayload.fieldName] = newValue;
+                      }
+                    } else if (!isReservedMetadataKey(fieldPayload.fieldName)) {
+                      // Custom metadata
+                      const currentValue = getCustomMetadataValue(image, fieldPayload.fieldName);
+                      if (payload.overrideExisting || !currentValue) {
+                        setCustomMetadata(image, fieldPayload.fieldName, elements[zindex]);
+                      }
+                    }
+                  }
+                }
+                else if(fieldPayload.mode == ImageAutofillMetadataDialogFieldPayloadMode.Static) {
+                  const isNamed = NAMED_FIELDS.includes(fieldPayload.fieldName);
+                  if (isNamed) {
                     const currentValue = (image as any)[fieldPayload.fieldName];
                     if (payload.overrideExisting || !currentValue) {
-                      // Read out the current value
-                      let newValue = elements[zindex]
+                      let newValue = fieldPayload.staticValue
 
                       // Special case for assay Type
                       if (fieldPayload.fieldName == "assayType") {
@@ -74,19 +101,12 @@ export function doImageAutofillMetadata(
 
                       (image as any)[fieldPayload.fieldName] = newValue;
                     }
-                  }
-                }
-                else if(fieldPayload.mode == ImageAutofillMetadataDialogFieldPayloadMode.Static) {
-                  const currentValue = (image as any)[fieldPayload.fieldName];
-                  if (payload.overrideExisting || !currentValue) {
-                    let newValue = fieldPayload.staticValue
-
-                    // Special case for assay Type
-                    if (fieldPayload.fieldName == "assayType") {
-                      newValue = parseAssayType(newValue)
+                  } else if (!isReservedMetadataKey(fieldPayload.fieldName)) {
+                    // Custom metadata
+                    const currentValue = getCustomMetadataValue(image, fieldPayload.fieldName);
+                    if (payload.overrideExisting || !currentValue) {
+                      setCustomMetadata(image, fieldPayload.fieldName, fieldPayload.staticValue);
                     }
-
-                    (image as any)[fieldPayload.fieldName] = newValue;
                   }
                 }
 

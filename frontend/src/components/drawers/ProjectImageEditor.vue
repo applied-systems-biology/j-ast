@@ -98,6 +98,55 @@
           :disable="hasTaskRunning"
           class="w-100"
       />
+      <q-separator/>
+      <div class="text-bold q-mt-sm">Custom metadata</div>
+      <template v-for="(entry, index) in customMetadataEntries" :key="index">
+        <q-card  class="w-100">
+          <q-card-section class="flex q-gutter-sm" >
+            <q-input
+                v-model="entry.key"
+                :disable="hasTaskRunning"
+                :rules="[v => !!v || 'Required', v => !isReservedMetadataKey(v) || 'Reserved key']"
+                class="col"
+                dense
+                filled
+                label="Key"
+                @update:model-value="onCustomMetadataKeyChange(index)"
+            />
+            <q-input
+                v-model="entry.value"
+                :disable="hasTaskRunning"
+                class="col"
+                dense
+                filled
+                label="Value"
+                @update:model-value="onCustomMetadataValueChange(index)"
+            />
+          </q-card-section>
+          <q-separator />
+          <q-card-actions>
+            <q-btn :disable="hasTaskRunning"
+                   dense
+                   flat
+                   icon="delete"
+                   no-caps no-wrap
+                   @click="onRemoveCustomMetadata(index)" label="Delete"/>
+            <q-space />
+            <q-btn
+                :color="entry.showBadge ? 'primary' : 'grey'"
+                :icon="entry.showBadge ? 'fa-solid fa-eye' : 'fa-solid fa-eye-slash'"
+                dense
+                flat
+                size="xs"
+                @click="onToggleBadge(index)"
+            >
+              <q-tooltip>Show as badge</q-tooltip>
+            </q-btn>
+          </q-card-actions>
+        </q-card>
+      </template>
+      <q-btn :disable="hasTaskRunning" icon="fa-solid fa-plus" label="Add custom metadata" no-caps no-wrap
+             @click="onAddCustomMetadata"/>
       <div style="height: 32px"></div>
     </q-tab-panel>
     <q-tab-panel class="d-flex-column" name="process">
@@ -115,9 +164,19 @@ import {plainToInstance} from 'class-transformer';
 import MaskImageAnnotationButton from 'components/annotationEditors/MaskImageAnnotationButton.vue';
 import {sendFailureNotification} from 'src/types/notification';
 import {AssayType} from 'src/types/assayType';
-import {ImagePayload, imageSupportsMaskAnnotation, imageSupportsMetadata} from 'src/types/image';
+import {
+  deleteCustomMetadata,
+  getCustomMetadataKeys,
+  getCustomMetadataValue,
+  ImagePayload,
+  imageSupportsMaskAnnotation,
+  imageSupportsMetadata,
+  isReservedMetadataKey,
+  setCustomMetadata,
+  setCustomMetadataBadgeVisibility
+} from 'src/types/image';
 import {BackendTaskPayload} from 'src/types/backendTasks';
-import {computed, provide} from 'vue';
+import {computed, provide, ref, watch} from 'vue';
 import StripPresetAnnotationButton from "components/annotationEditors/StripPresetAnnotationButton.vue";
 import ProjectImageProcessorList from "components/drawers/ProjectImageProcessorList.vue";
 import {ViewMode} from "src/types/view";
@@ -211,6 +270,88 @@ function onUpdateMIC(newValue: SelectValue) {
     model.value.mic = Number(newValue);
     uploadToBackend();
   }
+}
+
+interface CustomMetadataEntry {
+  key: string;
+  value: string;
+  showBadge: boolean;
+}
+
+const customMetadataEntries = ref<CustomMetadataEntry[]>([]);
+const previousKeys = new Map<number, string>();
+
+// Rebuild entries whenever the selected image changes
+watch(() => model.value?.id, () => {
+  rebuildCustomMetadataEntries();
+}, {immediate: true});
+
+function rebuildCustomMetadataEntries() {
+  if (!model.value) {
+    customMetadataEntries.value = [];
+    previousKeys.clear();
+    return;
+  }
+  const entries: CustomMetadataEntry[] = [];
+  previousKeys.clear();
+  let idx = 0;
+  for (const key of getCustomMetadataKeys(model.value)) {
+    const raw = model.value.metadata[key];
+    const isObject = raw && typeof raw === 'object' && !Array.isArray(raw);
+    entries.push({
+      key,
+      value: String(getCustomMetadataValue(model.value, key) ?? ''),
+      showBadge: isObject ? raw.showBadge === true : false,
+    });
+    previousKeys.set(idx, key);
+    idx++;
+  }
+  customMetadataEntries.value = entries;
+}
+
+function onAddCustomMetadata() {
+  customMetadataEntries.value.push({key: '', value: '', showBadge: false});
+}
+
+function onCustomMetadataKeyChange(index: number) {
+  const entry = customMetadataEntries.value[index];
+  if (!entry || !entry.key || isReservedMetadataKey(entry.key)) return;
+  if (!model.value) return;
+  const oldKey = previousKeys.get(index);
+  if (oldKey && oldKey !== entry.key) {
+    deleteCustomMetadata(model.value, oldKey);
+  }
+  setCustomMetadata(model.value, entry.key, entry.value, entry.showBadge);
+  previousKeys.set(index, entry.key);
+  uploadToBackend();
+}
+
+function onCustomMetadataValueChange(index: number) {
+  const entry = customMetadataEntries.value[index];
+  if (!entry || !entry.key || isReservedMetadataKey(entry.key)) return;
+  if (!model.value) return;
+  setCustomMetadata(model.value, entry.key, entry.value, entry.showBadge);
+  uploadToBackend();
+}
+
+function onToggleBadge(index: number) {
+  const entry = customMetadataEntries.value[index];
+  if (!entry || !entry.key || isReservedMetadataKey(entry.key)) return;
+  if (!model.value) return;
+  entry.showBadge = !entry.showBadge;
+  setCustomMetadataBadgeVisibility(model.value, entry.key, entry.showBadge);
+  uploadToBackend();
+}
+
+function onRemoveCustomMetadata(index: number) {
+  const entry = customMetadataEntries.value[index];
+  if (!model.value) return;
+  if (entry && entry.key && !isReservedMetadataKey(entry.key)) {
+    deleteCustomMetadata(model.value, entry.key);
+  }
+  customMetadataEntries.value.splice(index, 1);
+  previousKeys.delete(index);
+  uploadToBackend();
 }
 </script>
 <style scoped></style>

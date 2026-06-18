@@ -58,3 +58,12 @@ export function createStripPresetBadge(value: string): Badge {
         type: 'Strip preset'
     };
 }
+
+export function createCustomMetadataBadge(key: string, value: string): Badge {
+  return {
+    text: `${key}: ${value}`,
+    icon: 'fa-solid fa-tag',
+    color: '#888888',
+    type: 'custom-metadata/' + key
+  };
+}
