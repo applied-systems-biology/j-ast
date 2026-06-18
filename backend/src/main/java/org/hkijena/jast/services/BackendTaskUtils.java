@@ -134,12 +134,41 @@ public class BackendTaskUtils {
         metadata.add(new ImageMetadata("StripSequence", Image::getStripSequenceString));
         metadata.addAll(Arrays.asList(additionalMetadata));
 
+        // Load images (moved up from inside try block)
+        ImmutableList<Image> images = ImmutableList.copyOf(repository.findAllById(imageIds));
+
+        // Collect union of custom metadata keys (exclude stripPreset and reserved keys)
+        Set<String> RESERVED = Set.of("stripPreset", "experiment", "sample", "timePoint",
+                "assayType", "mic", "pixelSizeMillimeter", "groupRow", "groupColumn",
+                "version", "fileName", "id", "owner");
+        LinkedHashSet<String> customKeys = new LinkedHashSet<>();
+        for (Image image : images) {
+            for (String key : image.getMetadata().keySet()) {
+                if (!RESERVED.contains(key)) {
+                    customKeys.add(key);
+                }
+            }
+        }
+
+        // Add prefixed columns for custom metadata
+        for (String customKey : customKeys) {
+            final String ck = customKey;
+            metadata.add(new ImageMetadata("jast-custom-meta:" + ck, image -> {
+                Object entry = image.getMetadata().get(ck);
+                if (entry instanceof Map<?, ?> map) {
+                    Object value = map.get("value");
+                    return value != null ? value : "";
+                }
+                // Legacy scalar fallback
+                return entry != null ? entry : "";
+            }));
+        }
+
         progressInfo.log("Writing image metadata ...");
         Path csvPath = params.getTmpPath().resolve("metadata.csv");
         final String[] csvHeader = metadata.stream().map(ImageMetadata::getColumnName).toArray(String[]::new);
         try (FileWriter csvFileWriter = new FileWriter(csvPath.toFile())) {
             CSVPrinter csvPrinter = new CSVPrinter(csvFileWriter, CSVFormat.Builder.create().setDelimiter(',').setQuote('"').setHeader(csvHeader).build());
-            ImmutableList<Image> images = ImmutableList.copyOf(repository.findAllById(imageIds));
             for (int i = 0; i < images.size(); i++) {
                 Image image = images.get(i);
 

@@ -23,6 +23,11 @@
              label="Set pixel size" @click="setAllPixelSize"/>
       <q-btn v-if="hasSelectedETest" no-caps no-wrap :disable="hasTaskRunning" align="left" class="w-100" color="primary" icon="fa-solid fa-ruler-vertical"
              label="Set E-Test strip preset" @click="setAllStripPreset"/>
+      <q-separator/>
+      <q-btn no-caps no-wrap :disable="hasTaskRunning" align="left" class="w-100" color="blue-grey"
+             icon="fa-solid fa-plus" label="Add/set custom metadata key" @click="setAllCustomMetadata"/>
+      <q-btn no-caps no-wrap :disable="hasTaskRunning" align="left" class="w-100" color="negative"
+             icon="fa-solid fa-trash" label="Delete custom metadata key" @click="deleteAllCustomMetadata"/>
     </q-tab-panel>
     <q-tab-panel class="d-flex-column" name="process">
       <ProjectImageProcessorList v-model:current-view-mode="currentViewMode"
@@ -37,7 +42,7 @@
 import {Dialog, useQuasar} from "quasar";
 import {BackendTaskPayload} from "src/types/backendTasks";
 import {computed} from "vue";
-import {ImagePayload, setImageMetadata} from "src/types/image";
+import {ImagePayload, setImageMetadata, isReservedMetadataKey, setCustomMetadata, deleteCustomMetadata} from "src/types/image";
 import {plainToInstance} from "class-transformer";
 import {sendFailureNotification} from "src/types/notification";
 import ProjectImageProcessorList from "components/drawers/ProjectImageProcessorList.vue";
@@ -171,6 +176,73 @@ function setAllStripPreset() {
       })
       .onCancel(() => {})
       .onDismiss(() => {});
+}
+
+function setAllCustomMetadata() {
+  $q.dialog({
+    title: 'Add/set custom metadata key',
+    message: 'Enter the custom metadata key for all selected ' + model.value!.length + ' images.',
+    prompt: {
+      model: '',
+      type: 'text',
+      isValid: (val: string) => !!val && !isReservedMetadataKey(val)
+    },
+    cancel: true
+  }).onOk((key: string) => {
+    $q.dialog({
+      title: 'Add/set custom metadata value',
+      message: 'Enter the value for key "' + key + '" for all selected images.',
+      prompt: {
+        model: '',
+        type: 'text',
+      },
+      cancel: true
+    }).onOk((value: string) => {
+      $q.dialog({
+        title: 'Show as badge?',
+        message: 'Should this metadata be shown as a gray badge in image views?',
+        options: {
+          type: 'radio',
+          model: 'no',
+          items: [
+            {label: 'No', value: 'no'},
+            {label: 'Yes', value: 'yes'}
+          ]
+        },
+        cancel: true
+      }).onOk((badgeChoice: string) => {
+        const showBadge = badgeChoice === 'yes';
+        for (const image of model.value!) {
+          setCustomMetadata(image, key, value, showBadge);
+          const payload = plainToInstance(ImagePayload, image);
+          payload.uploadToBackend().catch(() => {
+            sendFailureNotification('Error while updating');
+          });
+        }
+      });
+    });
+  });
+}
+
+function deleteAllCustomMetadata() {
+  $q.dialog({
+    title: 'Delete custom metadata key',
+    message: 'Enter the custom metadata key to delete from all selected ' + model.value!.length + ' images.',
+    prompt: {
+      model: '',
+      type: 'text',
+      isValid: (val: string) => !!val && !isReservedMetadataKey(val)
+    },
+    cancel: true
+  }).onOk((key: string) => {
+    for (const image of model.value!) {
+      deleteCustomMetadata(image, key);
+      const payload = plainToInstance(ImagePayload, image);
+      payload.uploadToBackend().catch(() => {
+        sendFailureNotification('Error while updating');
+      });
+    }
+  });
 }
 
 </script>
