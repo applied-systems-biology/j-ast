@@ -215,7 +215,7 @@ async function createWindow() {
       sandbox: false,
       // More info: https://v2.quasar.dev/quasar-cli-vite/developing-electron-apps/electron-preload-script
       preload: path.resolve(__dirname, process.env.QUASAR_ELECTRON_PRELOAD),
-      additionalArguments: [`--api-base=http://localhost:${springPort}/api`],
+      additionalArguments: [`--api-base=http://127.0.0.1:${springPort}/api`],
     },
   });
 
@@ -283,6 +283,11 @@ app.on('before-quit', (event) => {
     }
   );
   req.on('error', () => {
+    springBootProcess?.kill('SIGTERM');
+    app.exit(0);
+  });
+  req.setTimeout(5000, () => {
+    req.destroy();
     springBootProcess?.kill('SIGTERM');
     app.exit(0);
   });
