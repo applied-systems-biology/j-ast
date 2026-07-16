@@ -1,13 +1,14 @@
 export function isDesktopApp(): boolean {
-  if(typeof process !== 'undefined') {
-    return process.env.MODE === 'electron' ||
-      (typeof window !== 'undefined' &&
-        typeof window.process === 'object' &&
-        window.process.type === 'renderer');
+  if (typeof window !== 'undefined') {
+    if (typeof window.process === 'object' &&
+        window.process?.type === 'renderer') {
+      return true;
+    }
+    if (window.electronAPI) {
+      return true;
+    }
   }
-  else {
-    return false;
-  }
+  return import.meta.env.MODE === 'electron';
 }
 
 export function isWebApp() {
