@@ -37,7 +37,7 @@
         </div>
         <q-file
             v-model="payload.projectArchiveFile"
-            accept="application/zip"
+            accept=".zip"
             bottom-slots
             filled
         >
