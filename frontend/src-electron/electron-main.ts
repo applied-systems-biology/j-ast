@@ -2,6 +2,7 @@ import { app, BrowserWindow } from 'electron';
 import os from 'os';
 import { spawn } from 'child_process';
 import * as net from 'net';
+import http from 'node:http';
 import { ChildProcess } from 'node:child_process';
 import { mkdirSync } from 'fs';
 import path from 'path';
@@ -16,14 +17,39 @@ const platform = process.platform || os.platform();
 let mainWindow: BrowserWindow | undefined;
 let springBootProcess: ChildProcess | undefined;
 let springPort: number;
+let isQuitting = false;
 
 function findFreePort(): Promise<number> {
   return new Promise((resolve) => {
     const server = net.createServer();
-    server.listen(0, () => {
+    server.listen(0, '127.0.0.1', () => {
       const port = (server.address() as net.AddressInfo).port;
       server.close(() => resolve(port));
     });
+  });
+}
+
+function waitForBackend(port: number, timeoutMs = 30000): Promise<void> {
+  const start = Date.now();
+  return new Promise((resolve, reject) => {
+    const check = () => {
+      if (Date.now() - start > timeoutMs) {
+        reject(new Error(`Backend did not start within ${timeoutMs}ms`));
+        return;
+      }
+      const req = http.get(`http://127.0.0.1:${port}/`, (res) => {
+        res.destroy();
+        resolve();
+      });
+      req.on('error', () => {
+        setTimeout(check, 500);
+      });
+      req.setTimeout(2000, () => {
+        req.destroy();
+        setTimeout(check, 500);
+      });
+    };
+    check();
   });
 }
 
@@ -59,6 +85,7 @@ async function startSpringBoot(): Promise<number> {
   const appConfig = {
     server: {
       port: port,
+      address: '127.0.0.1',
     },
     spring: {
       datasource: {
@@ -76,6 +103,20 @@ async function startSpringBoot(): Promise<number> {
     },
     accounts: {
       disableAuth: true
+    },
+    management: {
+      endpoint: {
+        shutdown: {
+          enabled: true
+        }
+      },
+      endpoints: {
+        web: {
+          exposure: {
+            include: 'shutdown'
+          }
+        }
+      }
     }
   }
 
@@ -118,7 +159,8 @@ async function startSpringBoot(): Promise<number> {
       break
     case "linux":
       javaProcess = path.join(backendDir, "jdk", "bin", "java")
-     default:
+      break
+    default:
       console.error("UNABLE TO DETERMINE CURRENT PLATFORM, RETURNED " + os.platform())
       break
   }
@@ -128,12 +170,37 @@ async function startSpringBoot(): Promise<number> {
     stdio: 'inherit',
   });
 
+  springBootProcess.on('exit', (code) => {
+    if (code !== 0 && code !== null) {
+      dialog.showErrorBox(
+        'Backend Error',
+        `The J-AST backend exited with code ${code}. Check the console for details.`
+      );
+    }
+  });
+
+  springBootProcess.on('error', (err) => {
+    dialog.showErrorBox(
+      'Backend Error',
+      `Failed to start the J-AST backend: ${err.message}`
+    );
+  });
+
   return port;
 }
 
 async function createWindow() {
 
   springPort = await startSpringBoot();
+
+  try {
+    await waitForBackend(springPort);
+  } catch (err) {
+    dialog.showErrorBox(
+      'Backend Error',
+      `The J-AST backend failed to start: ${err instanceof Error ? err.message : String(err)}`
+    );
+  }
 
   /**
    * Initial window options
@@ -148,7 +215,7 @@ async function createWindow() {
       sandbox: false,
       // More info: https://v2.quasar.dev/quasar-cli-vite/developing-electron-apps/electron-preload-script
       preload: path.resolve(__dirname, process.env.QUASAR_ELECTRON_PRELOAD),
-      additionalArguments: [`--api-base=http://localhost:${springPort}/api`],
+      additionalArguments: [`--api-base=http://127.0.0.1:${springPort}/api`],
     },
   });
 
@@ -200,8 +267,29 @@ app.on('activate', () => {
   }
 });
 
-app.on('before-quit', () => {
-  if (springBootProcess) {
-    springBootProcess.kill('SIGTERM');
-  }
+app.on('before-quit', (event) => {
+  if (isQuitting || !springBootProcess) return;
+  event.preventDefault();
+  isQuitting = true;
+
+  const req = http.request(
+    `http://127.0.0.1:${springPort}/actuator/shutdown`,
+    { method: 'POST' },
+    () => {
+      setTimeout(() => {
+        springBootProcess?.kill('SIGTERM');
+        app.exit(0);
+      }, 2000);
+    }
+  );
+  req.on('error', () => {
+    springBootProcess?.kill('SIGTERM');
+    app.exit(0);
+  });
+  req.setTimeout(5000, () => {
+    req.destroy();
+    springBootProcess?.kill('SIGTERM');
+    app.exit(0);
+  });
+  req.end();
 });
