@@ -58,6 +58,22 @@ quasar build -m electron
 cp -r ./dist/electron/Packaged/J-AST-linux-x64 "$TMP_DIR/j-ast-linux-x64"
 cp -r ./dist/electron/Packaged/J-AST-win32-x64 "$TMP_DIR/j-ast-windows-x64"
 cp -r ./dist/electron/Packaged/J-AST-darwin-arm64 "$TMP_DIR/j-ast-macos-arm64"
+
+# Linux: remove chrome-sandbox (requires root-owned setuid, impossible in a
+# tar.gz) and wrap the Electron binary with --no-sandbox so Chromium doesn't
+# abort with "No usable sandbox!" on systems that also restrict unprivileged
+# user namespaces (e.g. Ubuntu 23.10+ with AppArmor). The switch must be on
+# the real command line — app.commandLine.appendSwitch() in electron-main.ts
+# only affects renderer processes, not the browser-process sandbox init that
+# happens before V8 runs.
+rm -f "$TMP_DIR/j-ast-linux-x64/chrome-sandbox"
+mv "$TMP_DIR/j-ast-linux-x64/J-AST" "$TMP_DIR/j-ast-linux-x64/J-AST-bin"
+cat > "$TMP_DIR/j-ast-linux-x64/J-AST" << 'WRAPPER'
+#!/bin/bash
+DIR="$(dirname "$(readlink -f "$0")")"
+exec "$DIR/J-AST-bin" --no-sandbox "$@"
+WRAPPER
+chmod +x "$TMP_DIR/j-ast-linux-x64/J-AST"
 popd || exit 1
 
 # Build backend directories
