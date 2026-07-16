@@ -17,6 +17,7 @@ const platform = process.platform || os.platform();
 let mainWindow: BrowserWindow | undefined;
 let springBootProcess: ChildProcess | undefined;
 let springPort: number;
+let isQuitting = false;
 
 function findFreePort(): Promise<number> {
   return new Promise((resolve) => {
@@ -36,14 +37,17 @@ function waitForBackend(port: number, timeoutMs = 30000): Promise<void> {
         reject(new Error(`Backend did not start within ${timeoutMs}ms`));
         return;
       }
-      const req = http.get(`http://localhost:${port}/`, (res) => {
+      const req = http.get(`http://127.0.0.1:${port}/`, (res) => {
         res.destroy();
         resolve();
       });
       req.on('error', () => {
         setTimeout(check, 500);
       });
-      req.end();
+      req.setTimeout(2000, () => {
+        req.destroy();
+        setTimeout(check, 500);
+      });
     };
     check();
   });
@@ -263,21 +267,24 @@ app.on('activate', () => {
   }
 });
 
-app.on('before-quit', async () => {
-  if (!springBootProcess) return;
-  try {
-    await new Promise<void>((resolve) => {
-      const req = http.request(
-        `http://localhost:${springPort}/actuator/shutdown`,
-        { method: 'POST' },
-        () => resolve()
-      );
-      req.on('error', () => resolve());
-      req.end();
-    });
-    await new Promise((resolve) => setTimeout(resolve, 2000));
-  } catch {
-    // Ignore — fall through to SIGTERM
-  }
-  springBootProcess.kill('SIGTERM');
+app.on('before-quit', (event) => {
+  if (isQuitting || !springBootProcess) return;
+  event.preventDefault();
+  isQuitting = true;
+
+  const req = http.request(
+    `http://127.0.0.1:${springPort}/actuator/shutdown`,
+    { method: 'POST' },
+    () => {
+      setTimeout(() => {
+        springBootProcess?.kill('SIGTERM');
+        app.exit(0);
+      }, 2000);
+    }
+  );
+  req.on('error', () => {
+    springBootProcess?.kill('SIGTERM');
+    app.exit(0);
+  });
+  req.end();
 });
