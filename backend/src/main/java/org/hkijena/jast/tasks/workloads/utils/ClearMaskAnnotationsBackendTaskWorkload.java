@@ -1,3 +1,16 @@
+/*
+ * Copyright (c) 2026.
+ *
+ * Research Group Applied Systems Biology - Head: Prof. Dr. Marc Thilo Figge
+ * https://www.leibniz-hki.de/en/applied-systems-biology.html
+ * HKI-Center for Systems Biology of Infection
+ * Leibniz Institute for Natural Product Research and Infection Biology - Hans Knöll Institute (HKI)
+ * Adolf-Reichwein-Straße 23, 07745 Jena, Germany
+ *
+ * The project code is licensed under MIT.
+ * See the LICENSE file provided with the code for the full license.
+ */
+
 package org.hkijena.jast.tasks.workloads.utils;
 
 import jakarta.transaction.Transactional;
@@ -107,7 +120,7 @@ public class ClearMaskAnnotationsBackendTaskWorkload implements BackendTaskWorkl
         boolean clearStripDisk = params.getPayload().getParameterAsBoolean("clear-strip-disk", true);
         boolean clearZoiShape = params.getPayload().getParameterAsBoolean("clear-zoi-shape", true);
 
-        if(!clearPlate && !clearStripDisk && !clearZoiShape) {
+        if (!clearPlate && !clearStripDisk && !clearZoiShape) {
             progressInfo.log("Nothing to do.");
             return;
         }
@@ -117,27 +130,27 @@ public class ClearMaskAnnotationsBackendTaskWorkload implements BackendTaskWorkl
             progressInfo.resolveAndLog("Clearing image", i, imageIds.size());
             Long imageId = imageIds.get(i);
             Optional<Image> image_ = imageRepository.findById(imageId);
-            if(image_.isPresent()) {
+            if (image_.isPresent()) {
                 Image image = image_.get();
-                if(clearPlate) {
+                if (clearPlate) {
                     MaskImageAnnotation annotation = image.getMaskImageAnnotation("plate");
-                    if(annotation != null) {
+                    if (annotation != null) {
                         annotation.resetToEmptyMask(fileStorageService, image);
                         annotation.setVersion(0);
                         maskImageAnnotationRepository.save(annotation);
                     }
                 }
-                if(clearStripDisk) {
+                if (clearStripDisk) {
                     MaskImageAnnotation annotation = image.getMaskImageAnnotation("strip-disk");
-                    if(annotation != null) {
+                    if (annotation != null) {
                         annotation.resetToEmptyMask(fileStorageService, image);
                         annotation.setVersion(0);
                         maskImageAnnotationRepository.save(annotation);
                     }
                 }
-                if(clearZoiShape) {
+                if (clearZoiShape) {
                     MaskImageAnnotation annotation = image.getMaskImageAnnotation("zoi-shape");
-                    if(annotation != null) {
+                    if (annotation != null) {
                         annotation.resetToEmptyMask(fileStorageService, image);
                         annotation.setVersion(0);
                         maskImageAnnotationRepository.save(annotation);

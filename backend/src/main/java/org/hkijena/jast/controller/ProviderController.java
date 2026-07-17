@@ -1,3 +1,16 @@
+/*
+ * Copyright (c) 2026.
+ *
+ * Research Group Applied Systems Biology - Head: Prof. Dr. Marc Thilo Figge
+ * https://www.leibniz-hki.de/en/applied-systems-biology.html
+ * HKI-Center for Systems Biology of Infection
+ * Leibniz Institute for Natural Product Research and Infection Biology - Hans Knöll Institute (HKI)
+ * Adolf-Reichwein-Straße 23, 07745 Jena, Germany
+ *
+ * The project code is licensed under MIT.
+ * See the LICENSE file provided with the code for the full license.
+ */
+
 package org.hkijena.jast.controller;
 
 import org.hkijena.jast.config.ProviderConfig;
@@ -31,7 +44,7 @@ public class ProviderController {
 
     @GetMapping("/api/provider/imprint")
     public ResponseEntity<String> getImprint() {
-        if(!StringUtils.isNullOrEmpty(providerConfig.getImprintFile()) && Files.isRegularFile(Paths.get(providerConfig.getImprintFile()))) {
+        if (!StringUtils.isNullOrEmpty(providerConfig.getImprintFile()) && Files.isRegularFile(Paths.get(providerConfig.getImprintFile()))) {
             try {
                 String s = Files.readString(Paths.get(providerConfig.getImprintFile()));
                 return ResponseEntity.ok(s);
@@ -43,7 +56,7 @@ public class ProviderController {
 
     @GetMapping("/api/provider/privacy")
     public ResponseEntity<String> getPrivacyStatement() {
-        if(!StringUtils.isNullOrEmpty(providerConfig.getPrivacyStatementFile()) && Files.isRegularFile(Paths.get(providerConfig.getPrivacyStatementFile()))) {
+        if (!StringUtils.isNullOrEmpty(providerConfig.getPrivacyStatementFile()) && Files.isRegularFile(Paths.get(providerConfig.getPrivacyStatementFile()))) {
             try {
                 String s = Files.readString(Paths.get(providerConfig.getPrivacyStatementFile()));
                 return ResponseEntity.ok(s);

@@ -1,3 +1,16 @@
+/*
+ * Copyright (c) 2026.
+ *
+ * Research Group Applied Systems Biology - Head: Prof. Dr. Marc Thilo Figge
+ * https://www.leibniz-hki.de/en/applied-systems-biology.html
+ * HKI-Center for Systems Biology of Infection
+ * Leibniz Institute for Natural Product Research and Infection Biology - Hans Knöll Institute (HKI)
+ * Adolf-Reichwein-Straße 23, 07745 Jena, Germany
+ *
+ * The project code is licensed under MIT.
+ * See the LICENSE file provided with the code for the full license.
+ */
+
 package org.hkijena.jast.model.entities;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -96,6 +109,10 @@ public class Image {
         return metadata;
     }
 
+    public void setMetadata(Map<String, Object> metadata) {
+        this.metadata = metadata;
+    }
+
     public double getMic() {
         if (mic == null) {
             mic = 0d;
@@ -115,15 +132,15 @@ public class Image {
         this.rawDataFileSize = rawDataFileSize;
     }
 
-    public void setMetadata(Map<String, Object> metadata) {
-        this.metadata = metadata;
-    }
-
     public int getVersion() {
         return version != null ? version : 1;
     }
 
     public void setVersion(int version) {
+        this.version = version;
+    }
+
+    public void setVersion(Integer version) {
         this.version = version;
     }
 
@@ -133,6 +150,10 @@ public class Image {
 
     public List<MaskImageAnnotation> getMaskImageAnnotations() {
         return maskImageAnnotations;
+    }
+
+    public void setMaskImageAnnotations(List<MaskImageAnnotation> maskImageAnnotations) {
+        this.maskImageAnnotations = maskImageAnnotations;
     }
 
     public List<MaskImageAnnotation> getFilteredMaskImageAnnotations() {
@@ -163,12 +184,20 @@ public class Image {
         this.pixelSizeMillimeter = pixelSizeMillimeter;
     }
 
+    public void setPixelSizeMillimeter(Double pixelSizeMillimeter) {
+        this.pixelSizeMillimeter = pixelSizeMillimeter;
+    }
+
     @NotNull
     public int getGroupColumn() {
         return groupColumn != null ? groupColumn : -1;
     }
 
     public void setGroupColumn(@NotNull int groupColumn) {
+        this.groupColumn = groupColumn;
+    }
+
+    public void setGroupColumn(Integer groupColumn) {
         this.groupColumn = groupColumn;
     }
 
@@ -181,6 +210,10 @@ public class Image {
         this.groupRow = groupRow;
     }
 
+    public void setGroupRow(Integer groupRow) {
+        this.groupRow = groupRow;
+    }
+
     public String getRawDataFileId() {
         return rawDataFileId;
     }
@@ -189,40 +222,12 @@ public class Image {
         this.rawDataFileId = rawDataFileId;
     }
 
-    public void setGroupColumn(Integer groupColumn) {
-        this.groupColumn = groupColumn;
-    }
-
-    public void setGroupRow(Integer groupRow) {
-        this.groupRow = groupRow;
-    }
-
-    public void setImageHeight(Integer imageHeight) {
-        this.imageHeight = imageHeight;
-    }
-
-    public void setImageWidth(Integer imageWidth) {
-        this.imageWidth = imageWidth;
-    }
-
-    public void setMaskImageAnnotations(List<MaskImageAnnotation> maskImageAnnotations) {
-        this.maskImageAnnotations = maskImageAnnotations;
-    }
-
-    public void setPixelSizeMillimeter(Double pixelSizeMillimeter) {
-        this.pixelSizeMillimeter = pixelSizeMillimeter;
-    }
-
     public String getThumbnailDataFileId() {
         return thumbnailDataFileId;
     }
 
     public void setThumbnailDataFileId(String thumbnailDataFileId) {
         this.thumbnailDataFileId = thumbnailDataFileId;
-    }
-
-    public void setVersion(Integer version) {
-        this.version = version;
     }
 
     public @NotNull AssayType getAssayType() {
@@ -237,12 +242,20 @@ public class Image {
         return imageWidth != null ? imageWidth : 0;
     }
 
+    public void setImageWidth(Integer imageWidth) {
+        this.imageWidth = imageWidth;
+    }
+
     public void setImageWidth(int imageWidth) {
         this.imageWidth = imageWidth;
     }
 
     public int getImageHeight() {
         return imageHeight != null ? imageHeight : 0;
+    }
+
+    public void setImageHeight(Integer imageHeight) {
+        this.imageHeight = imageHeight;
     }
 
     public void setImageHeight(int imageHeight) {

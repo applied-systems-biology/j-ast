@@ -1,3 +1,16 @@
+/*
+ * Copyright (c) 2026.
+ *
+ * Research Group Applied Systems Biology - Head: Prof. Dr. Marc Thilo Figge
+ * https://www.leibniz-hki.de/en/applied-systems-biology.html
+ * HKI-Center for Systems Biology of Infection
+ * Leibniz Institute for Natural Product Research and Infection Biology - Hans Knöll Institute (HKI)
+ * Adolf-Reichwein-Straße 23, 07745 Jena, Germany
+ *
+ * The project code is licensed under MIT.
+ * See the LICENSE file provided with the code for the full license.
+ */
+
 package org.hkijena.jast.tasks.workloads.ddadisk;
 
 import jakarta.transaction.Transactional;
@@ -120,12 +133,12 @@ public class SegmentDDADiskV2BackendTaskWorkload implements BackendTaskWorkload 
         Map<String, Object> parameterOverrides = new HashMap<>();
         for (BackendTaskParameterPayload parameter : params.getPayload().getParameters()) {
             String key = PARAMETER_OVERRIDES.get(parameter.getId());
-            if(key != null) {
+            if (key != null) {
                 parameterOverrides.put(key, parameter.getValue());
             }
         }
 
-        Path projectFilePath = taskUtils.writeSharedFile(params, Path.of("workflows","image-segment-dda-disk-v2.jip"));
+        Path projectFilePath = taskUtils.writeSharedFile(params, Path.of("workflows", "image-segment-dda-disk-v2.jip"));
         progressInfo.log("Project file is " + projectFilePath);
         taskUtils.runJIPipe(params, projectFilePath, parameterOverrides, "", progressInfo, systemPackages, preferSystemPackages, verbose);
 

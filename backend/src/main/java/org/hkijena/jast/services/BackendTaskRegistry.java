@@ -1,3 +1,16 @@
+/*
+ * Copyright (c) 2026.
+ *
+ * Research Group Applied Systems Biology - Head: Prof. Dr. Marc Thilo Figge
+ * https://www.leibniz-hki.de/en/applied-systems-biology.html
+ * HKI-Center for Systems Biology of Infection
+ * Leibniz Institute for Natural Product Research and Infection Biology - Hans Knöll Institute (HKI)
+ * Adolf-Reichwein-Straße 23, 07745 Jena, Germany
+ *
+ * The project code is licensed under MIT.
+ * See the LICENSE file provided with the code for the full license.
+ */
+
 package org.hkijena.jast.services;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -29,7 +42,7 @@ import java.util.*;
 public class BackendTaskRegistry {
     private final RuntimeConfig runtimeConfig;
     private final ApplicationContext applicationContext;
-    private final JIPipePluginBackendTaskWorkloadFactory  taskWorkloadFactory;
+    private final JIPipePluginBackendTaskWorkloadFactory taskWorkloadFactory;
     private final Map<String, BackendTaskWorkload> registeredTasks = new HashMap<>();
     private final Logger logger = LoggerFactory.getLogger(BackendTaskRegistry.class.getName());
 
@@ -106,13 +119,13 @@ public class BackendTaskRegistry {
         // Auto-discover inputs and outputs
         for (String slotName : readGlobalStringListParameterFromJIPipeWorkflow(rootNode, "jast_plugin_inputs", Collections.emptyList())) {
             BackendTaskWorkloadDataSlot slot = readSlotName(slotName);
-            if(slot != null) {
+            if (slot != null) {
                 inputs.add(slot);
             }
         }
         for (String slotName : readGlobalStringListParameterFromJIPipeWorkflow(rootNode, "jast_plugin_outputs", Collections.emptyList())) {
             BackendTaskWorkloadDataSlot slot = readSlotName(slotName);
-            if(slot != null) {
+            if (slot != null) {
                 outputs.add(slot);
             }
         }
@@ -267,15 +280,13 @@ public class BackendTaskRegistry {
 
         // Read out the postfix (! = always, ? = optional, # = once)
         BackendTaskWorkloadDataSlotValidationMode mode = BackendTaskWorkloadDataSlotValidationMode.Always;
-        if(slotName.endsWith("!")) {
+        if (slotName.endsWith("!")) {
             mode = BackendTaskWorkloadDataSlotValidationMode.Always;
             slotName = slotName.substring(0, slotName.length() - 1);
-        }
-        else if(slotName.endsWith("?")) {
+        } else if (slotName.endsWith("?")) {
             mode = BackendTaskWorkloadDataSlotValidationMode.Optional;
             slotName = slotName.substring(0, slotName.length() - 1);
-        }
-        else if(slotName.endsWith("#")) {
+        } else if (slotName.endsWith("#")) {
             mode = BackendTaskWorkloadDataSlotValidationMode.OncePerRow;
             slotName = slotName.substring(0, slotName.length() - 1);
         }

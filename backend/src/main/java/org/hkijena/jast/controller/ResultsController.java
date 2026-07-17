@@ -1,8 +1,20 @@
+/*
+ * Copyright (c) 2026.
+ *
+ * Research Group Applied Systems Biology - Head: Prof. Dr. Marc Thilo Figge
+ * https://www.leibniz-hki.de/en/applied-systems-biology.html
+ * HKI-Center for Systems Biology of Infection
+ * Leibniz Institute for Natural Product Research and Infection Biology - Hans Knöll Institute (HKI)
+ * Adolf-Reichwein-Straße 23, 07745 Jena, Germany
+ *
+ * The project code is licensed under MIT.
+ * See the LICENSE file provided with the code for the full license.
+ */
+
 package org.hkijena.jast.controller;
 
 import jakarta.servlet.http.HttpServletResponse;
 import org.hkijena.jast.config.AccountConfig;
-import org.hkijena.jast.config.WebSecurityConfig;
 import org.hkijena.jast.model.entities.Project;
 import org.hkijena.jast.model.entities.Result;
 import org.hkijena.jast.model.entities.ResultItem;

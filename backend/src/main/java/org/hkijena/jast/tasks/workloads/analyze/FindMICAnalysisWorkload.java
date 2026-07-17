@@ -1,6 +1,18 @@
+/*
+ * Copyright (c) 2026.
+ *
+ * Research Group Applied Systems Biology - Head: Prof. Dr. Marc Thilo Figge
+ * https://www.leibniz-hki.de/en/applied-systems-biology.html
+ * HKI-Center for Systems Biology of Infection
+ * Leibniz Institute for Natural Product Research and Infection Biology - Hans Knöll Institute (HKI)
+ * Adolf-Reichwein-Straße 23, 07745 Jena, Germany
+ *
+ * The project code is licensed under MIT.
+ * See the LICENSE file provided with the code for the full license.
+ */
+
 package org.hkijena.jast.tasks.workloads.analyze;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.google.common.base.Predicates;
 import jakarta.transaction.Transactional;
 import org.hkijena.jast.config.SystemPackage;
@@ -14,10 +26,8 @@ import org.hkijena.jast.repositories.ResultRepository;
 import org.hkijena.jast.services.BackendTaskRegistry;
 import org.hkijena.jast.services.BackendTaskUtils;
 import org.hkijena.jast.services.FileStorageService;
-import org.hkijena.jast.services.ImageMetadata;
 import org.hkijena.jast.tasks.*;
 import org.hkijena.jast.utils.JASTDataSlot;
-import org.hkijena.jast.utils.JsonUtils;
 import org.hkijena.jast.utils.ProgressInfo;
 import org.hkijena.jast.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,9 +35,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Component
 @BackendTaskType(typeId = "find-mic")
@@ -203,8 +211,8 @@ public class FindMICAnalysisWorkload implements BackendTaskWorkload {
 
         taskUtils.readResultsDirectory(resultName, resultDescription, params.getTmpPath().resolve("results"), project, projectRepository, fileStorageService, Predicates.alwaysTrue(), progressInfo, verbose);
 
-        if(params.getPayload().getParameterAsBoolean("write-mic", true)) {
-            List<Map<String, String>> updatedMetadata = taskUtils.readCsv(params,  params.getTmpPath().resolve("results").resolve("mic_results.csv"));
+        if (params.getPayload().getParameterAsBoolean("write-mic", true)) {
+            List<Map<String, String>> updatedMetadata = taskUtils.readCsv(params, params.getTmpPath().resolve("results").resolve("mic_results.csv"));
             List<Image> toSave = new ArrayList<>();
             for (Map<String, String> map : updatedMetadata) {
                 String imageId = map.get("#ImageId");

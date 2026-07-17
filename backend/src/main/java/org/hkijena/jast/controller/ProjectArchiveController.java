@@ -1,3 +1,16 @@
+/*
+ * Copyright (c) 2026.
+ *
+ * Research Group Applied Systems Biology - Head: Prof. Dr. Marc Thilo Figge
+ * https://www.leibniz-hki.de/en/applied-systems-biology.html
+ * HKI-Center for Systems Biology of Infection
+ * Leibniz Institute for Natural Product Research and Infection Biology - Hans Knöll Institute (HKI)
+ * Adolf-Reichwein-Straße 23, 07745 Jena, Germany
+ *
+ * The project code is licensed under MIT.
+ * See the LICENSE file provided with the code for the full license.
+ */
+
 package org.hkijena.jast.controller;
 
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -100,10 +113,10 @@ public class ProjectArchiveController {
                 image.rebuildThumbnail(fileStorageService, rawImageData);
 
                 // Create the annotations
-                for(String annotationType : List.of("strip-disk", "plate", "zoi-shape")) {
+                for (String annotationType : List.of("strip-disk", "plate", "zoi-shape")) {
                     Path annotationFile = tmpPath.resolve(annotationType).resolve(entry.getKey() + ".png");
 
-                    if(Files.isRegularFile(annotationFile)) {
+                    if (Files.isRegularFile(annotationFile)) {
                         // Import the raw image
                         BufferedImage annotationImageData = ImageIO.read(rawFile.toFile());
                         if (annotationImageData == null) {

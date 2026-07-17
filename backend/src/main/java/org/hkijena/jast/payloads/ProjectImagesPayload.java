@@ -1,3 +1,16 @@
+/*
+ * Copyright (c) 2026.
+ *
+ * Research Group Applied Systems Biology - Head: Prof. Dr. Marc Thilo Figge
+ * https://www.leibniz-hki.de/en/applied-systems-biology.html
+ * HKI-Center for Systems Biology of Infection
+ * Leibniz Institute for Natural Product Research and Infection Biology - Hans Knöll Institute (HKI)
+ * Adolf-Reichwein-Straße 23, 07745 Jena, Germany
+ *
+ * The project code is licensed under MIT.
+ * See the LICENSE file provided with the code for the full license.
+ */
+
 package org.hkijena.jast.payloads;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
@@ -7,7 +20,6 @@ import org.hkijena.jast.model.entities.Image;
 import org.hkijena.jast.model.entities.Project;
 import org.hkijena.jast.utils.ProgressInfo;
 
-import javax.swing.*;
 import java.util.*;
 
 /**
@@ -114,87 +126,6 @@ public class ProjectImagesPayload {
         this.imagesById = imagesById;
     }
 
-    public static class RowPayload {
-        private List<ImagePayload> images = new ArrayList<>();
-
-        @JsonGetter("images")
-        public List<ImagePayload> getImages() {
-            return images;
-        }
-
-        @JsonSetter("images")
-        public void setImages(List<ImagePayload> images) {
-            this.images = images;
-        }
-
-        public ImagePayload getImageByColumn(int columnIndex) {
-            return this.getImages().stream()
-                    .filter(img -> img.getGroupColumn() == columnIndex)
-                    .findFirst()
-                    .orElse(null);
-        }
-
-        /**
-         * Sorts the images according to the group column
-         */
-        public void sortImages() {
-            this.getImages().sort(Comparator.comparingInt(ImagePayload::getGroupColumn));
-            for (int i = 0; i < this.getImages().size(); i++) {
-                this.getImages().get(i).setGroupColumn(i);
-            }
-        }
-
-        /**
-         * Removes duplicate images based on their ID
-         */
-        public void removeDuplicates() {
-            Map<Long, ImagePayload> byId = new HashMap<>();
-            for (ImagePayload image : this.getImages()) {
-                byId.put(image.getId(), image);
-            }
-            this.getImages().clear();
-            this.getImages().addAll(byId.values());
-        }
-
-        /**
-         * Removes an image by its ID
-         */
-        public void removeById(long id) {
-            this.getImages().removeIf(image -> image.getId() == id);
-        }
-
-        public Map<String, String> getUniqueRowMetadata() {
-            Map<String, String> result = new HashMap<>();
-            Set<String> allExperiments = new HashSet<>();
-            Set<String> allSamples = new HashSet<>();
-            Set<String> allAssayTypes = new HashSet<>();
-
-            for (ImagePayload image : this.getImages()) {
-                if (image.getExperiment() != null) {
-                    allExperiments.add(image.getExperiment());
-                }
-                if (image.getSample() != null) {
-                    allSamples.add(image.getSample());
-                }
-                if (image.getAssayType() != null && !image.getAssayType().equals(AssayType.Unknown)) {
-                    allAssayTypes.add(image.getAssayType().toString());
-                }
-            }
-
-            if (allExperiments.size() == 1) {
-                result.put("experiment", allExperiments.iterator().next());
-            }
-            if (allSamples.size() == 1) {
-                result.put("sample", allSamples.iterator().next());
-            }
-            if (allAssayTypes.size() == 1) {
-                result.put("assayType", allAssayTypes.iterator().next());
-            }
-
-            return result;
-        }
-    }
-
     public void autoSort(List<ImagePayload> images, List<String> timePointOrder, ProgressInfo progressInfo) {
         Map<String, Integer> columnIndicesPlus1 = new HashMap<>();
         int maxColumn = maxColumn();
@@ -274,7 +205,8 @@ public class ProjectImagesPayload {
 
     /**
      * Gets an image payload from a slot
-     * @param rowIndex the row (can be -1 to target the unsorted row)
+     *
+     * @param rowIndex    the row (can be -1 to target the unsorted row)
      * @param columnIndex the column (for unsorted this is the index in the list)
      */
     public ImagePayload getImageBySlot(int rowIndex, int columnIndex) {
@@ -401,14 +333,6 @@ public class ProjectImagesPayload {
         return result;
     }
 
-    public static class Position {
-        int row, column;
-        public Position(int row, int column) {
-            this.row = row;
-            this.column = column;
-        }
-    }
-
     public int maxColumn() {
         return this.getGroupRows().stream()
                 .mapToInt(row -> row.getImages().stream()
@@ -417,6 +341,96 @@ public class ProjectImagesPayload {
                         .orElse(-1))
                 .max()
                 .orElse(-1);
+    }
+
+    public static class RowPayload {
+        private List<ImagePayload> images = new ArrayList<>();
+
+        @JsonGetter("images")
+        public List<ImagePayload> getImages() {
+            return images;
+        }
+
+        @JsonSetter("images")
+        public void setImages(List<ImagePayload> images) {
+            this.images = images;
+        }
+
+        public ImagePayload getImageByColumn(int columnIndex) {
+            return this.getImages().stream()
+                    .filter(img -> img.getGroupColumn() == columnIndex)
+                    .findFirst()
+                    .orElse(null);
+        }
+
+        /**
+         * Sorts the images according to the group column
+         */
+        public void sortImages() {
+            this.getImages().sort(Comparator.comparingInt(ImagePayload::getGroupColumn));
+            for (int i = 0; i < this.getImages().size(); i++) {
+                this.getImages().get(i).setGroupColumn(i);
+            }
+        }
+
+        /**
+         * Removes duplicate images based on their ID
+         */
+        public void removeDuplicates() {
+            Map<Long, ImagePayload> byId = new HashMap<>();
+            for (ImagePayload image : this.getImages()) {
+                byId.put(image.getId(), image);
+            }
+            this.getImages().clear();
+            this.getImages().addAll(byId.values());
+        }
+
+        /**
+         * Removes an image by its ID
+         */
+        public void removeById(long id) {
+            this.getImages().removeIf(image -> image.getId() == id);
+        }
+
+        public Map<String, String> getUniqueRowMetadata() {
+            Map<String, String> result = new HashMap<>();
+            Set<String> allExperiments = new HashSet<>();
+            Set<String> allSamples = new HashSet<>();
+            Set<String> allAssayTypes = new HashSet<>();
+
+            for (ImagePayload image : this.getImages()) {
+                if (image.getExperiment() != null) {
+                    allExperiments.add(image.getExperiment());
+                }
+                if (image.getSample() != null) {
+                    allSamples.add(image.getSample());
+                }
+                if (image.getAssayType() != null && !image.getAssayType().equals(AssayType.Unknown)) {
+                    allAssayTypes.add(image.getAssayType().toString());
+                }
+            }
+
+            if (allExperiments.size() == 1) {
+                result.put("experiment", allExperiments.iterator().next());
+            }
+            if (allSamples.size() == 1) {
+                result.put("sample", allSamples.iterator().next());
+            }
+            if (allAssayTypes.size() == 1) {
+                result.put("assayType", allAssayTypes.iterator().next());
+            }
+
+            return result;
+        }
+    }
+
+    public static class Position {
+        int row, column;
+
+        public Position(int row, int column) {
+            this.row = row;
+            this.column = column;
+        }
     }
 
 }
