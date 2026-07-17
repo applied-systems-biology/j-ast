@@ -1,3 +1,16 @@
+/*
+ * Copyright (c) 2026.
+ *
+ * Research Group Applied Systems Biology - Head: Prof. Dr. Marc Thilo Figge
+ * https://www.leibniz-hki.de/en/applied-systems-biology.html
+ * HKI-Center for Systems Biology of Infection
+ * Leibniz Institute for Natural Product Research and Infection Biology - Hans Knöll Institute (HKI)
+ * Adolf-Reichwein-Straße 23, 07745 Jena, Germany
+ *
+ * The project code is licensed under MIT.
+ * See the LICENSE file provided with the code for the full license.
+ */
+
 package org.hkijena.jast.tasks.workloads.calibrate;
 
 import jakarta.transaction.Transactional;
@@ -107,7 +120,7 @@ public class CalibratePixelSizeBackendTaskWorkload implements BackendTaskWorkloa
         taskUtils.writeMetadata(params, params.getPayload().getImageIds(), imageRepository, progressInfo, verbose);
         taskUtils.writeMaskAnnotations(params, params.getPayload().getImageIds(), "plate", imageRepository, fileStorageService, progressInfo, verbose);
 
-        Path projectFilePath = taskUtils.writeSharedFile(params, Path.of("workflows","image-calibrate-pixel-size-by-plate.jip"));
+        Path projectFilePath = taskUtils.writeSharedFile(params, Path.of("workflows", "image-calibrate-pixel-size-by-plate.jip"));
         progressInfo.log("Project file is " + projectFilePath);
         taskUtils.runJIPipe(params, projectFilePath, null, "", progressInfo, systemPackages, preferSystemPackages, verbose);
 

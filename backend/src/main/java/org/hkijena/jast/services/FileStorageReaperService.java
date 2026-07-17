@@ -1,3 +1,16 @@
+/*
+ * Copyright (c) 2026.
+ *
+ * Research Group Applied Systems Biology - Head: Prof. Dr. Marc Thilo Figge
+ * https://www.leibniz-hki.de/en/applied-systems-biology.html
+ * HKI-Center for Systems Biology of Infection
+ * Leibniz Institute for Natural Product Research and Infection Biology - Hans Knöll Institute (HKI)
+ * Adolf-Reichwein-Straße 23, 07745 Jena, Germany
+ *
+ * The project code is licensed under MIT.
+ * See the LICENSE file provided with the code for the full license.
+ */
+
 package org.hkijena.jast.services;
 
 import jakarta.annotation.PostConstruct;
@@ -40,31 +53,31 @@ public class FileStorageReaperService {
         Set<String> usedIds = new HashSet<>();
         LOGGER.info("Looking for unused files... images");
         for (Image image : imageRepository.findAll()) {
-            if(!StringUtils.isNullOrEmpty(image.getRawDataFileId())) {
+            if (!StringUtils.isNullOrEmpty(image.getRawDataFileId())) {
                 usedIds.add(image.getRawDataFileId());
             }
-            if(!StringUtils.isNullOrEmpty(image.getThumbnailDataFileId())) {
+            if (!StringUtils.isNullOrEmpty(image.getThumbnailDataFileId())) {
                 usedIds.add(image.getThumbnailDataFileId());
             }
         }
         LOGGER.info("Looking for unused files... annotations");
         for (MaskImageAnnotation maskImageAnnotation : maskImageAnnotationRepository.findAll()) {
-            if(!StringUtils.isNullOrEmpty(maskImageAnnotation.getRawDataFileId())) {
+            if (!StringUtils.isNullOrEmpty(maskImageAnnotation.getRawDataFileId())) {
                 usedIds.add(maskImageAnnotation.getRawDataFileId());
             }
-            if(!StringUtils.isNullOrEmpty(maskImageAnnotation.getThumbnailDataFileId())) {
+            if (!StringUtils.isNullOrEmpty(maskImageAnnotation.getThumbnailDataFileId())) {
                 usedIds.add(maskImageAnnotation.getThumbnailDataFileId());
             }
         }
         LOGGER.info("Looking for unused files... results");
         for (ResultItem resultItem : resultItemRepository.findAll()) {
-            if(!StringUtils.isNullOrEmpty(resultItem.getRawDataFileId())) {
+            if (!StringUtils.isNullOrEmpty(resultItem.getRawDataFileId())) {
                 usedIds.add(resultItem.getRawDataFileId());
             }
-            if(!StringUtils.isNullOrEmpty(resultItem.getThumbnailDataFileId())) {
+            if (!StringUtils.isNullOrEmpty(resultItem.getThumbnailDataFileId())) {
                 usedIds.add(resultItem.getThumbnailDataFileId());
             }
-            if(!StringUtils.isNullOrEmpty(resultItem.getVisualizationDataFileId())) {
+            if (!StringUtils.isNullOrEmpty(resultItem.getVisualizationDataFileId())) {
                 usedIds.add(resultItem.getVisualizationDataFileId());
             }
         }

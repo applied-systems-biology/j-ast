@@ -1,3 +1,16 @@
+/*
+ * Copyright (c) 2026.
+ *
+ * Research Group Applied Systems Biology - Head: Prof. Dr. Marc Thilo Figge
+ * https://www.leibniz-hki.de/en/applied-systems-biology.html
+ * HKI-Center for Systems Biology of Infection
+ * Leibniz Institute for Natural Product Research and Infection Biology - Hans Knöll Institute (HKI)
+ * Adolf-Reichwein-Straße 23, 07745 Jena, Germany
+ *
+ * The project code is licensed under MIT.
+ * See the LICENSE file provided with the code for the full license.
+ */
+
 package org.hkijena.jast.services;
 
 import jakarta.transaction.Transactional;
@@ -12,7 +25,6 @@ import org.springframework.transaction.support.TransactionSynchronizationManager
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -41,13 +53,13 @@ public class FileStorageService {
 
     public Set<String> findAllStoredFileIds() {
         Set<String> result = new HashSet<>();
-        try(var stream = Files.list(storageLocation)) {
-          stream.forEach(path -> {
-              String fileName = path.getFileName().toString();
-              if(!fileName.startsWith(".") && fileName.contains("-")) {
-                 result.add(fileName);
-             }
-          });
+        try (var stream = Files.list(storageLocation)) {
+            stream.forEach(path -> {
+                String fileName = path.getFileName().toString();
+                if (!fileName.startsWith(".") && fileName.contains("-")) {
+                    result.add(fileName);
+                }
+            });
         } catch (IOException e) {
             LOGGER.error("Could not list stored files", e);
         }
@@ -94,7 +106,7 @@ public class FileStorageService {
      * @return True if the file was successfully deleted, false otherwise.
      */
     public boolean delete(String fileId) {
-        if(StringUtils.isNullOrEmpty(fileId)) {
+        if (StringUtils.isNullOrEmpty(fileId)) {
             return false;
         }
         try {
@@ -122,7 +134,7 @@ public class FileStorageService {
      */
     @Transactional
     public void deleteLater(String fileId) {
-        if(StringUtils.isNullOrEmpty(fileId)) {
+        if (StringUtils.isNullOrEmpty(fileId)) {
             return;
         }
         if (TransactionSynchronizationManager.isSynchronizationActive()) {
@@ -138,11 +150,11 @@ public class FileStorageService {
     }
 
     public BufferedImage loadPngOrNull(String fileId) {
-        if(StringUtils.isNullOrEmpty(fileId)) {
+        if (StringUtils.isNullOrEmpty(fileId)) {
             return null;
         }
         Path filePath = storageLocation.resolve(fileId).normalize();
-        if(!Files.exists(filePath)) {
+        if (!Files.exists(filePath)) {
             return null;
         }
         try {
@@ -165,11 +177,11 @@ public class FileStorageService {
     }
 
     public String loadStringOrNull(String fileId) {
-        if(StringUtils.isNullOrEmpty(fileId)) {
+        if (StringUtils.isNullOrEmpty(fileId)) {
             return null;
         }
         Path filePath = storageLocation.resolve(fileId).normalize();
-        if(!Files.exists(filePath)) {
+        if (!Files.exists(filePath)) {
             return null;
         }
         try {

@@ -1,3 +1,16 @@
+/*
+ * Copyright (c) 2026.
+ *
+ * Research Group Applied Systems Biology - Head: Prof. Dr. Marc Thilo Figge
+ * https://www.leibniz-hki.de/en/applied-systems-biology.html
+ * HKI-Center for Systems Biology of Infection
+ * Leibniz Institute for Natural Product Research and Infection Biology - Hans Knöll Institute (HKI)
+ * Adolf-Reichwein-Straße 23, 07745 Jena, Germany
+ *
+ * The project code is licensed under MIT.
+ * See the LICENSE file provided with the code for the full license.
+ */
+
 package org.hkijena.jast.config;
 
 import jakarta.annotation.Resource;
@@ -15,7 +28,6 @@ import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.config.annotation.web.configurers.CorsConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.core.session.SessionRegistryImpl;
@@ -35,17 +47,15 @@ public class WebSecurityConfig {
 
     public static final Logger LOG = LoggerFactory.getLogger(WebSecurityConfig.class);
     private final AccountConfig accountConfig;
+    @Resource
+    private UserDetailsService userDetailsService;
+    @Resource
+    private JwtTokenFilter jwtTokenFilter;
 
     @Autowired
     public WebSecurityConfig(AccountConfig accountConfig) {
         this.accountConfig = accountConfig;
     }
-
-    @Resource
-    private UserDetailsService userDetailsService;
-
-    @Resource
-    private JwtTokenFilter jwtTokenFilter;
 
     @Bean
     public DaoAuthenticationProvider authProvider() {
@@ -89,7 +99,7 @@ public class WebSecurityConfig {
         // Enable CORS and disable CSRF
         http.csrf(AbstractHttpConfigurer::disable);
 
-        if(accountConfig.isDisableAuth()) {
+        if (accountConfig.isDisableAuth()) {
             LOG.warn("Authentication disabled");
             http.cors(Customizer.withDefaults());
         }
@@ -108,10 +118,9 @@ public class WebSecurityConfig {
         });
 
         // Configure permissions
-        if(accountConfig.isDisableAuth()) {
+        if (accountConfig.isDisableAuth()) {
             http.authorizeHttpRequests(authorize -> authorize.anyRequest().permitAll());
-        }
-        else {
+        } else {
             http.authorizeHttpRequests(authorize -> authorize
                     .requestMatchers(AntPathRequestMatcher.antMatcher("/api/auth/**")).permitAll()
                     .requestMatchers(AntPathRequestMatcher.antMatcher("/api/test")).permitAll()

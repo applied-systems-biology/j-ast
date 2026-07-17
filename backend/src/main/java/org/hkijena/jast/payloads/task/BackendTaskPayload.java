@@ -1,3 +1,16 @@
+/*
+ * Copyright (c) 2026.
+ *
+ * Research Group Applied Systems Biology - Head: Prof. Dr. Marc Thilo Figge
+ * https://www.leibniz-hki.de/en/applied-systems-biology.html
+ * HKI-Center for Systems Biology of Infection
+ * Leibniz Institute for Natural Product Research and Infection Biology - Hans Knöll Institute (HKI)
+ * Adolf-Reichwein-Straße 23, 07745 Jena, Germany
+ *
+ * The project code is licensed under MIT.
+ * See the LICENSE file provided with the code for the full license.
+ */
+
 package org.hkijena.jast.payloads.task;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -133,7 +146,7 @@ public class BackendTaskPayload {
 
     public void setParameter(String key, BackendTaskWorkloadParameterSlotDataType slotType, Object value) {
         BackendTaskParameterPayload parameter = getParameter(key);
-        if(parameter == null) {
+        if (parameter == null) {
             parameter = new BackendTaskParameterPayload();
             parameter.setId(key);
             parameter.setDataType(slotType);
@@ -144,7 +157,7 @@ public class BackendTaskPayload {
 
     public boolean getParameterAsBoolean(String key, boolean defaultValue) {
         BackendTaskParameterPayload parameter = getParameter(key);
-        if(parameter == null) {
+        if (parameter == null) {
             return defaultValue;
         }
         return (boolean) parameter.getValue();
@@ -152,7 +165,7 @@ public class BackendTaskPayload {
 
     public double getParameterAsDouble(String key, double defaultValue) {
         BackendTaskParameterPayload parameter = getParameter(key);
-        if(parameter == null) {
+        if (parameter == null) {
             return defaultValue;
         }
         return ((Number) parameter.getValue()).doubleValue();
@@ -160,7 +173,7 @@ public class BackendTaskPayload {
 
     public String getParameterAsString(String key, String defaultValue) {
         BackendTaskParameterPayload parameter = getParameter(key);
-        if(parameter == null) {
+        if (parameter == null) {
             return defaultValue;
         }
         return StringUtils.orElse(parameter.getValue(), defaultValue);

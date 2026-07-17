@@ -1,3 +1,16 @@
+/*
+ * Copyright (c) 2026.
+ *
+ * Research Group Applied Systems Biology - Head: Prof. Dr. Marc Thilo Figge
+ * https://www.leibniz-hki.de/en/applied-systems-biology.html
+ * HKI-Center for Systems Biology of Infection
+ * Leibniz Institute for Natural Product Research and Infection Biology - Hans Knöll Institute (HKI)
+ * Adolf-Reichwein-Straße 23, 07745 Jena, Germany
+ *
+ * The project code is licensed under MIT.
+ * See the LICENSE file provided with the code for the full license.
+ */
+
 package org.hkijena.jast.tasks.workloads;
 
 import com.google.common.collect.ImmutableList;
@@ -64,6 +77,113 @@ public class AllInOnePreparationBackendTaskWorkload implements BackendTaskWorklo
         this.imageRepository = imageRepository;
         this.projectRepository = projectRepository;
         this.fileStorageService = fileStorageService;
+    }
+
+    private static void autoSortPayload(ProgressInfo progressInfo, ProjectImagesPayload payload, List<String> timePointOrder) {
+        // Identify which images we can actually auto-sort
+        List<ImagePayload> toSort = payload.getImagesById().values().stream().filter(imagePayload -> {
+            if (StringUtils.isNullOrEmpty(imagePayload.getTimePoint()) || !timePointOrder.contains(imagePayload.getTimePoint())) {
+                return false;
+            }
+            if (StringUtils.isNullOrEmpty(imagePayload.getExperiment())) {
+                return false;
+            }
+            if (StringUtils.isNullOrEmpty(imagePayload.getSample())) {
+                return false;
+            }
+            if (imagePayload.getAssayType() == AssayType.Unknown) {
+                return false;
+            }
+            return true;
+        }).toList();
+        progressInfo.log("Auto-sort will attempt to sort " + toSort.size() + " images");
+        Set<String> allTimePointsToSort = toSort.stream().map(ImagePayload::getTimePoint).collect(Collectors.toSet());
+        List<String> finalTimePoints = timePointOrder.stream().filter(allTimePointsToSort::contains).toList();
+        if (!toSort.isEmpty() && !finalTimePoints.isEmpty()) {
+            progressInfo.log("Sorting with time points: " + JsonUtils.toJsonString(finalTimePoints));
+            payload.autoSort(toSort, finalTimePoints, progressInfo.resolve("Auto sort"));
+        } else {
+            progressInfo.log("ERROR: Nothing to sort. Either no images or no time points!");
+        }
+    }
+
+    private static void autofillPayload(BackendTaskWorkloadParams params, ProgressInfo progressInfo, ProjectImagesPayload payload, AssayType defaultAssayType, List<String> timePointOrder) {
+        final String delimiters = params.getPayload().getParameterAsString("filename-delimiters", "-_;.");
+        final Set<String> ddaKeywords = Set.of(params.getPayload().getParameterAsString("metadata-key-dda", "DDA dda").split(" "));
+        final Set<String> etestKeywords = Set.of(params.getPayload().getParameterAsString("metadata-key-etest", "ETest E-test").split(" "));
+
+        for (ImagePayload value : payload.getImagesById().values()) {
+
+            ProgressInfo imageProgress = progressInfo.resolve(value.getFileName());
+
+            String str = value.getFileName();
+            str = str.replace(".png", "");
+            str = str.replace(".jpg", "");
+            str = str.replace(".jpeg", "");
+
+            // Try to find the assay type
+            if (value.getAssayType() == AssayType.Unknown) {
+                for (String ddaKeyword : ddaKeywords) {
+                    if (str.toLowerCase().contains(ddaKeyword.toLowerCase())) {
+                        value.setAssayType(AssayType.DDA);
+                        break;
+                    }
+                }
+                if (value.getAssayType() == AssayType.Unknown) {
+                    for (String etestKeyword : etestKeywords) {
+                        if (str.toLowerCase().contains(etestKeyword.toLowerCase())) {
+                            value.setAssayType(AssayType.ETest);
+                        }
+                    }
+                    if (value.getAssayType() == AssayType.Unknown) {
+                        value.setAssayType(defaultAssayType);
+                    }
+                }
+            }
+            imageProgress.log("Mapped to assay type " + value.getAssayType());
+
+            // Erase the assay type keywords from the string
+            for (String ddaKeyword : ddaKeywords) {
+                str = StringUtils.replaceAllIgnoreCase(str, ddaKeyword, "");
+            }
+            for (String etestKeyword : etestKeywords) {
+                str = StringUtils.replaceAllIgnoreCase(str, etestKeyword, "");
+            }
+
+            List<String> splitItems = new ArrayList<>(List.of(str.split("[" + delimiters + "]+")));
+
+            // Try to find the time point
+            if (StringUtils.isNullOrEmpty(value.getTimePoint())) {
+                for (int i = splitItems.size() - 1; i >= 0; i--) {
+                    String splitItem = splitItems.get(i);
+                    if (timePointOrder.contains(splitItem)) {
+                        value.setTimePoint(splitItem);
+                        break;
+                    }
+                }
+                imageProgress.log("Assigned TimePoint=" + value.getTimePoint());
+            }
+
+            // Erase time points
+            splitItems.removeIf(timePointOrder::contains);
+
+            // Experiment and sample
+            if (StringUtils.isNullOrEmpty(value.getExperiment()) && StringUtils.isNullOrEmpty(value.getSample())) {
+                splitItems.removeIf(item -> item.trim().isEmpty());
+                imageProgress.log("Split file name into " + JsonUtils.toJsonString(splitItems));
+
+                if (splitItems.size() > 1) {
+                    value.setExperiment(splitItems.get(0));
+                    value.setSample(splitItems.stream().skip(1).collect(Collectors.joining("_")));
+                    imageProgress.log("Assigned Experiment=" + value.getExperiment() + ", Sample=" + value.getSample());
+                } else if (splitItems.size() == 1) {
+                    value.setExperiment(splitItems.get(0));
+                    imageProgress.log("WARNING: Only one metadata item! Using this as experiment!");
+                } else {
+                    imageProgress.log("ERROR: Unable to find metadata mapping (not enough metadata!)");
+                }
+            }
+        }
     }
 
     @Override
@@ -146,12 +266,12 @@ public class AllInOnePreparationBackendTaskWorkload implements BackendTaskWorklo
         ProjectImagesPayload payload = new ProjectImagesPayload(project);
 
         // Do auto-fill-in metadata
-        if(doAutofill) {
+        if (doAutofill) {
             autofillPayload(params, progressInfo, payload, defaultAssayType, timePointOrder);
         }
 
         // Do auto-sort
-        if(doAutosort) {
+        if (doAutosort) {
             autoSortPayload(progressInfo, payload, timePointOrder);
         }
 
@@ -161,7 +281,7 @@ public class AllInOnePreparationBackendTaskWorkload implements BackendTaskWorklo
         }
 
         // Write payload back into the database and update the local entities
-        if(doAutofill || doAutosort) {
+        if (doAutofill || doAutosort) {
             for (Map.Entry<Long, ImagePayload> entry : payload.getImagesById().entrySet()) {
                 Image imageEntity = imageMap.get(entry.getKey());
                 ImagePayload imagePayload = entry.getValue();
@@ -172,9 +292,9 @@ public class AllInOnePreparationBackendTaskWorkload implements BackendTaskWorklo
             }
         }
 
-        if(doFindCalibratePlate) {
+        if (doFindCalibratePlate) {
             List<Long> idsToProcess = filterValidImageIds(params.getPayload().getImageIds(), imageMap);
-            if(!idsToProcess.isEmpty()) {
+            if (!idsToProcess.isEmpty()) {
                 // Find plate
                 ProgressInfo plateProgress = progressInfo.resolve("Find/calibrate plate");
                 {
@@ -196,7 +316,7 @@ public class AllInOnePreparationBackendTaskWorkload implements BackendTaskWorklo
                     taskUtils.writeMetadata(params, idsToProcess, imageRepository, plateProgress, verbose);
                     taskUtils.writeMaskAnnotations(params, idsToProcess, "plate", imageRepository, fileStorageService, plateProgress, verbose);
 
-                    Path projectFilePath = taskUtils.writeSharedFile(params, Path.of("workflows","image-calibrate-pixel-size-by-plate.jip"));
+                    Path projectFilePath = taskUtils.writeSharedFile(params, Path.of("workflows", "image-calibrate-pixel-size-by-plate.jip"));
                     plateProgress.log("Project file is " + projectFilePath);
                     taskUtils.runJIPipe(params, projectFilePath, null, "", plateProgress, systemPackages, preferSystemPackages, verbose);
 
@@ -218,15 +338,14 @@ public class AllInOnePreparationBackendTaskWorkload implements BackendTaskWorklo
 
                     imageRepository.saveAll(toSave);
                 }
-            }
-            else {
+            } else {
                 progressInfo.log("Find/calibrate plate: nothing to do!");
             }
         }
 
-        if(doFindDDADisk) {
+        if (doFindDDADisk) {
             List<Long> idsToProcess = filterDDAImageIds(params.getPayload().getImageIds(), imageMap);
-            if(!idsToProcess.isEmpty()) {
+            if (!idsToProcess.isEmpty()) {
                 ProgressInfo ddaProgress = progressInfo.resolve("Find DDA disk");
                 taskUtils.clearTmp(params.getTmpPath(), ddaProgress);
 
@@ -234,7 +353,7 @@ public class AllInOnePreparationBackendTaskWorkload implements BackendTaskWorklo
                 taskUtils.writeMetadata(params, idsToProcess, imageRepository, ddaProgress, verbose);
                 taskUtils.writeMaskAnnotations(params, idsToProcess, "plate", imageRepository, fileStorageService, ddaProgress, verbose);
 
-                Path projectFilePath = taskUtils.writeSharedFile(params, Path.of("workflows","image-segment-dda-disk-v3.jip"));
+                Path projectFilePath = taskUtils.writeSharedFile(params, Path.of("workflows", "image-segment-dda-disk-v3.jip"));
                 ddaProgress.log("Project file is " + projectFilePath);
                 Map<String, Object> ddaParameters = new HashMap<>();
                 ddaParameters.put("/expectedDiskDiameter", params.getPayload().getParameterAsDouble("dda-disk-diameter-mm", 6));
@@ -243,15 +362,14 @@ public class AllInOnePreparationBackendTaskWorkload implements BackendTaskWorklo
                 Map<String, Path> maskAnnotationsConfig = new HashMap<>();
                 maskAnnotationsConfig.put("strip-disk", params.getTmpPath().resolve("strip-disk"));
                 taskUtils.readMaskAnnotations(idsToProcess, maskAnnotationsConfig, imageRepository, fileStorageService, ddaProgress, verbose);
-            }
-            else {
+            } else {
                 progressInfo.log("Find DDA disk: nothing to do!");
             }
         }
 
-        if(doFindETestStrip) {
+        if (doFindETestStrip) {
             List<Long> idsToProcess = filterETestImageIds(params.getPayload().getImageIds(), imageMap);
-            if(!idsToProcess.isEmpty()) {
+            if (!idsToProcess.isEmpty()) {
                 ProgressInfo etestProgress = progressInfo.resolve("Find E-Test strip");
                 taskUtils.clearTmp(params.getTmpPath(), etestProgress);
 
@@ -259,22 +377,21 @@ public class AllInOnePreparationBackendTaskWorkload implements BackendTaskWorklo
                 taskUtils.writeMetadata(params, idsToProcess, imageRepository, etestProgress, verbose);
                 taskUtils.writeMaskAnnotations(params, idsToProcess, "plate", imageRepository, fileStorageService, etestProgress, verbose);
 
-                Path projectFilePath = taskUtils.writeSharedFile(params, Path.of("workflows","image-segment-etest-strip.jip"));
+                Path projectFilePath = taskUtils.writeSharedFile(params, Path.of("workflows", "image-segment-etest-strip.jip"));
                 etestProgress.log("Project file is " + projectFilePath);
                 taskUtils.runJIPipe(params, projectFilePath, Collections.emptyMap(), "", etestProgress, systemPackages, preferSystemPackages, verbose);
 
                 Map<String, Path> maskAnnotationsConfig = new HashMap<>();
                 maskAnnotationsConfig.put("strip-disk", params.getTmpPath().resolve("strip-disk"));
                 taskUtils.readMaskAnnotations(idsToProcess, maskAnnotationsConfig, imageRepository, fileStorageService, etestProgress, verbose);
-            }
-            else {
+            } else {
                 progressInfo.log("Find E-test strip: nothing to do!");
             }
         }
 
-        if(doFindETestZOIShape) {
+        if (doFindETestZOIShape) {
             List<Long> idsToProcess = filterFirstETestImageIds(params.getPayload().getImageIds(), imageMap);
-            if(!idsToProcess.isEmpty()) {
+            if (!idsToProcess.isEmpty()) {
                 ProgressInfo zoiShapeProgress = progressInfo.resolve("Find ZOI shape");
                 taskUtils.clearTmp(params.getTmpPath(), zoiShapeProgress);
                 taskUtils.writeRawImages(params, idsToProcess, imageRepository, fileStorageService, zoiShapeProgress, verbose);
@@ -282,21 +399,20 @@ public class AllInOnePreparationBackendTaskWorkload implements BackendTaskWorklo
                 taskUtils.writeMaskAnnotations(params, idsToProcess, "plate", imageRepository, fileStorageService, zoiShapeProgress, verbose);
                 taskUtils.writeMaskAnnotations(params, idsToProcess, "strip-disk", imageRepository, fileStorageService, zoiShapeProgress, verbose);
 
-                Path projectFilePath = taskUtils.writeSharedFile(params, Path.of("workflows","image-segment-zoi-shape.jip"));
+                Path projectFilePath = taskUtils.writeSharedFile(params, Path.of("workflows", "image-segment-zoi-shape.jip"));
                 zoiShapeProgress.log("Project file is " + projectFilePath);
                 taskUtils.runJIPipe(params, projectFilePath, Collections.emptyMap(), "", zoiShapeProgress, systemPackages, preferSystemPackages, verbose);
 
                 Map<String, Path> maskAnnotationsConfig = new HashMap<>();
                 maskAnnotationsConfig.put("zoi-shape", params.getTmpPath().resolve("zoi-shape"));
                 taskUtils.readMaskAnnotations(idsToProcess, maskAnnotationsConfig, imageRepository, fileStorageService, zoiShapeProgress, verbose);
-            }
-            else {
+            } else {
                 progressInfo.log("Find E-test ZOI shape: nothing to do!");
             }
         }
-        if(doFindETestZOIShape) {
+        if (doFindETestZOIShape) {
             List<Long> idsToProcess = filterETestImageIds(params.getPayload().getImageIds(), imageMap);
-            if(!idsToProcess.isEmpty()) {
+            if (!idsToProcess.isEmpty()) {
                 ProgressInfo zoiShapeProgress = progressInfo.resolve("Register ZOI shape");
                 taskUtils.clearTmp(params.getTmpPath(), zoiShapeProgress);
 
@@ -305,15 +421,14 @@ public class AllInOnePreparationBackendTaskWorkload implements BackendTaskWorklo
                 taskUtils.writeMaskAnnotations(params, idsToProcess, "strip-disk", imageRepository, fileStorageService, zoiShapeProgress, verbose);
                 taskUtils.writeRowFirstMaskAnnotations(params, idsToProcess, "zoi-shape", imageRepository, fileStorageService, zoiShapeProgress, verbose);
 
-                Path projectFilePath = taskUtils.writeSharedFile(params, Path.of("workflows","etest-copy-registered-zoi-shape.jip"));
+                Path projectFilePath = taskUtils.writeSharedFile(params, Path.of("workflows", "etest-copy-registered-zoi-shape.jip"));
                 zoiShapeProgress.log("Project file is " + projectFilePath);
                 taskUtils.runJIPipe(params, projectFilePath, Collections.emptyMap(), "", zoiShapeProgress, systemPackages, preferSystemPackages, verbose);
 
                 Map<String, Path> maskAnnotationsConfig = new HashMap<>();
                 maskAnnotationsConfig.put("zoi-shape", params.getTmpPath().resolve("zoi-shape-aligned"));
                 taskUtils.readMaskAnnotations(idsToProcess, maskAnnotationsConfig, imageRepository, fileStorageService, zoiShapeProgress, verbose);
-            }
-            else {
+            } else {
                 progressInfo.log("Register E-test ZOI shape: nothing to do!");
             }
         }
@@ -334,116 +449,6 @@ public class AllInOnePreparationBackendTaskWorkload implements BackendTaskWorklo
     }
 
     private List<Long> filterFirstETestImageIds(List<Long> imageIds, Map<Long, Image> imageMap) {
-        return imageIds.stream().filter(id -> imageMap.get(id).getAssayType() == AssayType.ETest  && imageMap.get(id).getGroupRow() >= 0 && imageMap.get(id).getGroupColumn() == 0).toList();
-    }
-
-    private static void autoSortPayload(ProgressInfo progressInfo, ProjectImagesPayload payload, List<String> timePointOrder) {
-        // Identify which images we can actually auto-sort
-        List<ImagePayload> toSort = payload.getImagesById().values().stream().filter(imagePayload -> {
-            if(StringUtils.isNullOrEmpty(imagePayload.getTimePoint()) || !timePointOrder.contains(imagePayload.getTimePoint())) {
-                return false;
-            }
-            if(StringUtils.isNullOrEmpty(imagePayload.getExperiment())) {
-                return false;
-            }
-            if(StringUtils.isNullOrEmpty(imagePayload.getSample())) {
-                return false;
-            }
-            if(imagePayload.getAssayType() == AssayType.Unknown) {
-                return false;
-            }
-            return true;
-        }).toList();
-        progressInfo.log("Auto-sort will attempt to sort " + toSort.size() + " images");
-        Set<String> allTimePointsToSort = toSort.stream().map(ImagePayload::getTimePoint).collect(Collectors.toSet());
-        List<String> finalTimePoints = timePointOrder.stream().filter(allTimePointsToSort::contains).toList();
-        if(!toSort.isEmpty() && !finalTimePoints.isEmpty()) {
-            progressInfo.log("Sorting with time points: " + JsonUtils.toJsonString(finalTimePoints));
-            payload.autoSort(toSort, finalTimePoints, progressInfo.resolve("Auto sort"));
-        }
-        else {
-            progressInfo.log("ERROR: Nothing to sort. Either no images or no time points!");
-        }
-    }
-
-    private static void autofillPayload(BackendTaskWorkloadParams params, ProgressInfo progressInfo, ProjectImagesPayload payload, AssayType defaultAssayType, List<String> timePointOrder) {
-        final String delimiters = params.getPayload().getParameterAsString("filename-delimiters", "-_;.");
-        final Set<String> ddaKeywords = Set.of(params.getPayload().getParameterAsString("metadata-key-dda", "DDA dda").split(" "));
-        final Set<String> etestKeywords = Set.of(params.getPayload().getParameterAsString("metadata-key-etest", "ETest E-test").split(" "));
-
-        for (ImagePayload value : payload.getImagesById().values()) {
-
-            ProgressInfo imageProgress = progressInfo.resolve(value.getFileName());
-
-            String str = value.getFileName();
-            str = str.replace(".png", "");
-            str = str.replace(".jpg", "");
-            str = str.replace(".jpeg", "");
-
-            // Try to find the assay type
-            if(value.getAssayType() == AssayType.Unknown) {
-                for (String ddaKeyword : ddaKeywords) {
-                    if(str.toLowerCase().contains(ddaKeyword.toLowerCase())) {
-                        value.setAssayType(AssayType.DDA);
-                        break;
-                    }
-                }
-                if(value.getAssayType() == AssayType.Unknown) {
-                    for (String etestKeyword : etestKeywords) {
-                        if(str.toLowerCase().contains(etestKeyword.toLowerCase())) {
-                            value.setAssayType(AssayType.ETest);
-                        }
-                    }
-                    if(value.getAssayType() == AssayType.Unknown) {
-                        value.setAssayType(defaultAssayType);
-                    }
-                }
-            }
-            imageProgress.log("Mapped to assay type " + value.getAssayType());
-
-            // Erase the assay type keywords from the string
-            for (String ddaKeyword : ddaKeywords) {
-                str = StringUtils.replaceAllIgnoreCase(str, ddaKeyword, "");
-            }
-            for (String etestKeyword : etestKeywords) {
-                str = StringUtils.replaceAllIgnoreCase(str, etestKeyword, "");
-            }
-
-            List<String> splitItems = new ArrayList<>(List.of(str.split("[" + delimiters + "]+")));
-
-            // Try to find the time point
-            if(StringUtils.isNullOrEmpty(value.getTimePoint())) {
-                for (int i = splitItems.size() - 1; i >= 0; i--) {
-                    String splitItem = splitItems.get(i);
-                    if(timePointOrder.contains(splitItem)) {
-                        value.setTimePoint(splitItem);
-                        break;
-                    }
-                }
-                imageProgress.log("Assigned TimePoint=" + value.getTimePoint());
-            }
-
-            // Erase time points
-            splitItems.removeIf(timePointOrder::contains);
-
-            // Experiment and sample
-            if(StringUtils.isNullOrEmpty(value.getExperiment()) && StringUtils.isNullOrEmpty(value.getSample())) {
-                splitItems.removeIf(item -> item.trim().isEmpty());
-                imageProgress.log("Split file name into " + JsonUtils.toJsonString(splitItems));
-
-                if(splitItems.size() > 1) {
-                    value.setExperiment(splitItems.get(0));
-                    value.setSample(splitItems.stream().skip(1).collect(Collectors.joining("_")));
-                    imageProgress.log("Assigned Experiment=" + value.getExperiment() + ", Sample=" + value.getSample());
-                }
-                else if(splitItems.size() == 1) {
-                    value.setExperiment(splitItems.get(0));
-                    imageProgress.log("WARNING: Only one metadata item! Using this as experiment!");
-                }
-                else {
-                    imageProgress.log("ERROR: Unable to find metadata mapping (not enough metadata!)");
-                }
-            }
-        }
+        return imageIds.stream().filter(id -> imageMap.get(id).getAssayType() == AssayType.ETest && imageMap.get(id).getGroupRow() >= 0 && imageMap.get(id).getGroupColumn() == 0).toList();
     }
 }

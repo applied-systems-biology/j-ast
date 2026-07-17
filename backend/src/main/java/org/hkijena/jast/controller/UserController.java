@@ -1,3 +1,16 @@
+/*
+ * Copyright (c) 2026.
+ *
+ * Research Group Applied Systems Biology - Head: Prof. Dr. Marc Thilo Figge
+ * https://www.leibniz-hki.de/en/applied-systems-biology.html
+ * HKI-Center for Systems Biology of Infection
+ * Leibniz Institute for Natural Product Research and Infection Biology - Hans Knöll Institute (HKI)
+ * Adolf-Reichwein-Straße 23, 07745 Jena, Germany
+ *
+ * The project code is licensed under MIT.
+ * See the LICENSE file provided with the code for the full license.
+ */
+
 package org.hkijena.jast.controller;
 
 import org.hkijena.jast.config.AccountConfig;
@@ -19,10 +32,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.time.Duration;
-import java.time.LocalDateTime;
 import java.util.Objects;
-import java.util.Optional;
 
 @RestController
 public class UserController {
@@ -43,7 +53,7 @@ public class UserController {
     @PostMapping("/api/current-user/update-metadata")
     public ResponseEntity<String> editUserMetadata(Authentication authentication, @RequestBody UserPayload userPayload) {
 
-        if(authentication.getPrincipal() instanceof UserPrincipal) {
+        if (authentication.getPrincipal() instanceof UserPrincipal) {
             User user = ((UserPrincipal) authentication.getPrincipal()).getUser();
             if (!Objects.equals(user.getEmail(), userPayload.getEmail())) {
                 throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Inconsistent email. Cancelling!");
@@ -63,7 +73,7 @@ public class UserController {
     @PostMapping("/api/current-user/update-password")
     public ResponseEntity<String> editUserPassword(Authentication authentication, @RequestBody UserPayload userPayload) {
 
-        if(authentication.getPrincipal() instanceof UserPrincipal) {
+        if (authentication.getPrincipal() instanceof UserPrincipal) {
             User user = ((UserPrincipal) authentication.getPrincipal()).getUser();
             if (!Objects.equals(user.getEmail(), userPayload.getEmail())) {
                 throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Inconsistent email. Cancelling!");
@@ -85,16 +95,14 @@ public class UserController {
 
     @GetMapping("/api/current-user")
     public ResponseEntity<UserPayload> getInfo(Authentication authentication) {
-        if(authentication.getPrincipal() instanceof UserPrincipal) {
+        if (authentication.getPrincipal() instanceof UserPrincipal) {
             return ResponseEntity.ok(new UserPayload(((UserPrincipal) authentication.getPrincipal()).getUser()));
-        }
-        else if(authentication.getPrincipal() instanceof AdminPrincipal) {
+        } else if (authentication.getPrincipal() instanceof AdminPrincipal) {
             UserPayload payload = new UserPayload();
             payload.setEmail(accountConfig.getAdminUsername());
             payload.setRole(User.Role.Admin);
             return ResponseEntity.ok(payload);
-        }
-        else {
+        } else {
             return ResponseEntity.ok(new UserPayload());
         }
     }

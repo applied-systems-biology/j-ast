@@ -1,8 +1,20 @@
+/*
+ * Copyright (c) 2026.
+ *
+ * Research Group Applied Systems Biology - Head: Prof. Dr. Marc Thilo Figge
+ * https://www.leibniz-hki.de/en/applied-systems-biology.html
+ * HKI-Center for Systems Biology of Infection
+ * Leibniz Institute for Natural Product Research and Infection Biology - Hans Knöll Institute (HKI)
+ * Adolf-Reichwein-Straße 23, 07745 Jena, Germany
+ *
+ * The project code is licensed under MIT.
+ * See the LICENSE file provided with the code for the full license.
+ */
+
 package org.hkijena.jast.controller;
 
 import org.hkijena.jast.config.AccountConfig;
 import org.hkijena.jast.config.RuntimeConfig;
-import org.hkijena.jast.config.WebSecurityConfig;
 import org.hkijena.jast.model.entities.BackendTask;
 import org.hkijena.jast.model.entities.Image;
 import org.hkijena.jast.model.entities.Project;
@@ -163,8 +175,7 @@ public class TaskController {
                 if (Files.isRegularFile(logFile)) {
                     return ResponseEntity.ok(String.join("\n", StringUtils.readLastNLines(logFile, 5)));
                 }
-            }
-            catch (Throwable e) {
+            } catch (Throwable e) {
                 return ResponseEntity.ok("Error while reading the log file");
             }
         }
@@ -195,23 +206,21 @@ public class TaskController {
         if (!task.getProject().canEdit(authentication, accountConfig)) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
         }
-        if(task.isRunning()) {
-            if(Files.exists(Paths.get(task.getTmpPath()).resolve("job_started"))) {
+        if (task.isRunning()) {
+            if (Files.exists(Paths.get(task.getTmpPath()).resolve("job_started"))) {
                 // Delete the lockfile
                 try {
                     Files.delete(Paths.get(task.getTmpPath()).resolve("lockfile"));
-                }
-                catch (Exception e) {
+                } catch (Exception e) {
                     LOGGER.error("Error while deleting task " + task.getId() + " lockfile", e);
 
                     // Try it another way
-                    if(!StringUtils.isNullOrEmpty(task.getJobId())) {
+                    if (!StringUtils.isNullOrEmpty(task.getJobId())) {
                         JobId jobId = JobId.parse(task.getJobId());
                         jobScheduler.delete(jobId);
                     }
                 }
-            }
-            else {
+            } else {
                 JobId jobId = JobId.parse(task.getJobId());
                 jobScheduler.delete(jobId);
             }

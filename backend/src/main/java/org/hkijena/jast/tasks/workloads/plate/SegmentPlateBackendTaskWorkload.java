@@ -1,3 +1,16 @@
+/*
+ * Copyright (c) 2026.
+ *
+ * Research Group Applied Systems Biology - Head: Prof. Dr. Marc Thilo Figge
+ * https://www.leibniz-hki.de/en/applied-systems-biology.html
+ * HKI-Center for Systems Biology of Infection
+ * Leibniz Institute for Natural Product Research and Infection Biology - Hans Knöll Institute (HKI)
+ * Adolf-Reichwein-Straße 23, 07745 Jena, Germany
+ *
+ * The project code is licensed under MIT.
+ * See the LICENSE file provided with the code for the full license.
+ */
+
 package org.hkijena.jast.tasks.workloads.plate;
 
 import jakarta.transaction.Transactional;
@@ -109,7 +122,7 @@ public class SegmentPlateBackendTaskWorkload implements BackendTaskWorkload {
 
         taskUtils.writeRawImages(params, params.getPayload().getImageIds(), imageRepository, fileStorageService, progressInfo, verbose);
         taskUtils.writeMetadata(params, params.getPayload().getImageIds(), imageRepository, progressInfo, verbose);
-        Path projectFilePath = taskUtils.writeSharedFile(params, fastAlgorithm ? Path.of("workflows","image-segment-plate-fast.jip") : Path.of("workflows","image-segment-plate.jip"));
+        Path projectFilePath = taskUtils.writeSharedFile(params, fastAlgorithm ? Path.of("workflows", "image-segment-plate-fast.jip") : Path.of("workflows", "image-segment-plate.jip"));
         progressInfo.log("Project file is " + projectFilePath);
         taskUtils.runJIPipe(params, projectFilePath, null, "", progressInfo, systemPackages, preferSystemPackages, params.getRuntimeConfig().isVerbose());
 
@@ -117,7 +130,7 @@ public class SegmentPlateBackendTaskWorkload implements BackendTaskWorkload {
         maskAnnotationsConfig.put("plate", params.getTmpPath().resolve("plate"));
         taskUtils.readMaskAnnotations(params.getPayload().getImageIds(), maskAnnotationsConfig, imageRepository, fileStorageService, progressInfo, verbose);
 
-        if(withCalibrate) {
+        if (withCalibrate) {
             BackendTaskPayload subTaskPayload = new BackendTaskPayload();
             subTaskPayload.setTaskId("image-calibrate-pixel-size-by-plate");
             subTaskPayload.setParameter("plate-diameter-mm", BackendTaskWorkloadParameterSlotDataType.Number, plateDiameterMillimeters);

@@ -1,3 +1,16 @@
+/*
+ * Copyright (c) 2026.
+ *
+ * Research Group Applied Systems Biology - Head: Prof. Dr. Marc Thilo Figge
+ * https://www.leibniz-hki.de/en/applied-systems-biology.html
+ * HKI-Center for Systems Biology of Infection
+ * Leibniz Institute for Natural Product Research and Infection Biology - Hans Knöll Institute (HKI)
+ * Adolf-Reichwein-Straße 23, 07745 Jena, Germany
+ *
+ * The project code is licensed under MIT.
+ * See the LICENSE file provided with the code for the full license.
+ */
+
 package org.hkijena.jast.model.entities;
 
 import com.google.common.collect.ImmutableList;
@@ -5,7 +18,6 @@ import jakarta.persistence.*;
 import jakarta.transaction.Transactional;
 import jakarta.validation.constraints.NotNull;
 import org.hkijena.jast.config.AccountConfig;
-import org.hkijena.jast.config.WebSecurityConfig;
 import org.hkijena.jast.model.AdminPrincipal;
 import org.hkijena.jast.model.Privileges;
 import org.hkijena.jast.model.UserPrincipal;
@@ -19,8 +31,8 @@ import org.springframework.security.core.Authentication;
 import java.awt.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
 import java.util.*;
+import java.util.List;
 
 @Entity
 @Table(name = "projects")
@@ -49,7 +61,7 @@ public class Project {
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true, mappedBy = "project")
     private List<Result> results = new ArrayList<>();
 
-    @Column(name ="view_mode")
+    @Column(name = "view_mode")
     private ViewMode viewMode = ViewMode.Timeline;
 
     @Column(name = "created_at", nullable = false, updatable = false)
@@ -142,7 +154,7 @@ public class Project {
     }
 
     public boolean isOwnedBy(Authentication authentication, AccountConfig accountConfig) {
-        if(accountConfig.isDisableAuth()) {
+        if (accountConfig.isDisableAuth()) {
             return true;
         }
         if (authentication == null || !authentication.isAuthenticated()) {
@@ -159,7 +171,7 @@ public class Project {
     }
 
     public boolean canEdit(Authentication authentication, AccountConfig accountConfig) {
-        if(accountConfig.isDisableAuth()) {
+        if (accountConfig.isDisableAuth()) {
             return true;
         }
         if (authentication == null || !authentication.isAuthenticated()) {
@@ -174,7 +186,7 @@ public class Project {
     }
 
     public boolean canAccess(Authentication authentication, AccountConfig accountConfig) {
-        if(accountConfig.isDisableAuth()) {
+        if (accountConfig.isDisableAuth()) {
             return true;
         }
         if (authentication == null || !authentication.isAuthenticated()) {
@@ -225,7 +237,7 @@ public class Project {
     }
 
     public ViewMode getViewMode() {
-        if(viewMode == null) {
+        if (viewMode == null) {
             viewMode = ViewMode.Timeline;
         }
         return viewMode;
