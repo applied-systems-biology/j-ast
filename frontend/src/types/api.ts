@@ -31,11 +31,9 @@ export const apiBase: string = (() => {
     }
   }
 
-  if(typeof process !== 'undefined') {
-    if(process?.env?.API_LOCATION) {
-      console.log("--> Obtaining API_BASE from env as " + process.env.API_LOCATION)
-      return process.env.API_LOCATION;
-    }
+  if(process.env.API_LOCATION) {
+    console.log("--> Obtaining API_BASE from env as " + process.env.API_LOCATION)
+    return process.env.API_LOCATION;
   }
 
   console.log("--> Obtaining API_BASE as default /api")
