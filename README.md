@@ -26,10 +26,18 @@ The automated detection algorithms don't work or yield unsatisfactory results? D
 Annotate your data with essential metadata by either doing the work manually or using our automated tool that extracts the information from the file name.
 Then you can proceed to either arrange your time lines manually via drag and drop or use the included automated tool that utilizes the metadata.
 
+## Download and usage
+
+Please download J-AST from https://asb.hki-jena.de/j-ast/
+
+We also host a free web instance with guest access. Alternatively, you can download the desktop software. 
+
+You can find more information on how to use J-AST on our website, including documentation and tutorials.
+
 ## Setting up a development environment
 
 1. Create a mariadb database `jast-dev` with user `jast-dev` and password `jast`
-2. Setup JIPipe in `/bin/jipipe-linux`, so the ImageJ executable is located in this directory (currently only Linux)
+2. Set up JIPipe in `/bin/jipipe-linux`, so the ImageJ executable is located in this directory (currently only Linux)
 3. Start the frontend 
 4. Start the backend
 
