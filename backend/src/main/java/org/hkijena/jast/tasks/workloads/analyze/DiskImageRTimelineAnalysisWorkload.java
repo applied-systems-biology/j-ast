@@ -91,12 +91,12 @@ public class DiskImageRTimelineAnalysisWorkload implements BackendTaskWorkload {
 
     @Override
     public String getName() {
-        return "DiskImageR-style analysis (RAD/FoG/ZOI) - Timeline only";
+        return "DiskImageR (RAD/FoG/ZOI) - Timeline only";
     }
 
     @Override
     public String getShortDescription() {
-        return "Applies an analysis that is based on the DiskImageR tool (Gerstein et al).";
+        return "Applies an analysis that is based on the DiskImageR tool (Gerstein et al). This is for timelines. A single-image variant is also available.";
     }
 
     @Override
