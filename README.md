@@ -3,36 +3,44 @@
 The JIPipe Antimicrobial Susceptibility Test (J-AST) platform is
 your tool for managing, annotating, and analyzing disk diffusion assays and E-tests.
 
-**Upload your data**
+**Features**
 
-Use the uploader component to store your data into a J-AST project.
-You can later at any time download your data as *.zip.
-
-**Annotate and arrange**
-
-Annotate your data with essential metadata by either doing the work manually or using our automated tool that extracts the information from the file name.
-Then you can proceed to either arrange your time lines manually via drag and drop or use the included automated tool that utilizes the metadata.
-
-**Automated processing**
-
-Select which data to process and run a variety of automated image processing and analysis algorithms directly from within J-AST.
-
-**Manually guide the automated analysis**
-
-The automated detection algorithms don't work or yield unsatisfactory results? Don't worry - all annotations can be edited manually directly within J-AST.
-
-**Review results**
-
-Annotate your data with essential metadata by either doing the work manually or using our automated tool that extracts the information from the file name.
-Then you can proceed to either arrange your time lines manually via drag and drop or use the included automated tool that utilizes the metadata.
+* **Upload your data**:  Use the uploader component to store your data into a J-AST project. You can later at any time download your data as *.zip.
+* **Annotate and arrange**: Annotate your data with essential metadata by either doing the work manually or using our automated tool that extracts the information from the file name. Then you can proceed to either arrange your time lines manually via drag and drop or use the included automated tool that utilizes the metadata.
+* **Automated processing**: Select which data to process and run a variety of automated image processing and analysis algorithms directly from within J-AST.
+* **Manually guide the automated analysis**: The automated detection algorithms don't work or yield unsatisfactory results? Don't worry - all annotations can be edited manually directly within J-AST.
+*  **Review results**: Annotate your data with essential metadata by either doing the work manually or using our automated tool that extracts the information from the file name. Then you can proceed to either arrange your time lines manually via drag and drop or use the included automated tool that utilizes the metadata.
 
 ## Download and usage
 
-Please download J-AST from https://asb.hki-jena.de/j-ast/
+J-AST can be run through our free cloud instance (guest account) or on desktops.
 
-We also host a free web instance with guest access. Alternatively, you can download the desktop software. 
+* **Free cloud instance** (web): https://asb.hki-jena.de/j-ast-app/ (Plese note that limits apply to guest accounts)
+* **Desktop software**: You can download the desktop software here: https://asb.hki-jena.de/j-ast/download
+
+To install the desktop software, you can follow our short guide: https://applied-systems-biology.github.io/J-AST-Documentation/desktop.html
 
 You can find more information on how to use J-AST on our website, including documentation and tutorials.
+
+A full tutorial (video + text) and data is available here: https://asb.hki-jena.de/j-ast/tutorials/basic
+
+### System requirements
+
+**Web instance**
+
+* Desktop computer with sufficiently large screen (at least 1920x1024)
+* Modern web browser (Firefox 150+, Chrome 151+)
+
+**Desktop software**
+
+* Windows 11 / Ubuntu Linux 26.04 / macOS 14¹
+* At least 16GB RAM
+
+¹ We do not recommend to run the software on macOS due to dependency on x86_x64 components and the macOS security functions interfering with the software
+
+# Development documentation
+
+The following sections are only for **developers**. 
 
 ## Setting up a development environment
 
