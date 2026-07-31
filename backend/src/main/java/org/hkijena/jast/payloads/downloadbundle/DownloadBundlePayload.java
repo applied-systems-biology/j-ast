@@ -14,6 +14,7 @@
 package org.hkijena.jast.payloads.downloadbundle;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.hkijena.jast.model.DownloadBundleMode;
 import org.hkijena.jast.model.DownloadBundleStatus;
 import org.hkijena.jast.model.entities.DownloadBundle;
 
@@ -45,6 +46,12 @@ public class DownloadBundlePayload {
     @JsonProperty
     private String errorMessage;
 
+    @JsonProperty
+    private DownloadBundleMode mode;
+
+    @JsonProperty
+    private String outputFileName;
+
     public DownloadBundlePayload() {
     }
 
@@ -56,6 +63,8 @@ public class DownloadBundlePayload {
         this.totalSize = bundle.getTotalSize();
         this.partCount = bundle.getPartCount();
         this.errorMessage = bundle.getErrorMessage();
+        this.mode = bundle.getMode();
+        this.outputFileName = bundle.getOutputFileName();
         for (DownloadBundle.DownloadBundlePart part : bundle.getParts()) {
             this.parts.add(new DownloadBundlePartPayload(part));
         }
@@ -77,4 +86,8 @@ public class DownloadBundlePayload {
     public void setParts(List<DownloadBundlePartPayload> parts) { this.parts = parts; }
     public String getErrorMessage() { return errorMessage; }
     public void setErrorMessage(String errorMessage) { this.errorMessage = errorMessage; }
+    public DownloadBundleMode getMode() { return mode; }
+    public void setMode(DownloadBundleMode mode) { this.mode = mode; }
+    public String getOutputFileName() { return outputFileName; }
+    public void setOutputFileName(String outputFileName) { this.outputFileName = outputFileName; }
 }

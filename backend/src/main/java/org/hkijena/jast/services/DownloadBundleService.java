@@ -17,6 +17,7 @@ import jakarta.annotation.PostConstruct;
 import jakarta.transaction.Transactional;
 import org.hkijena.jast.config.AccountConfig;
 import org.hkijena.jast.config.DownloadConfig;
+import org.hkijena.jast.model.DownloadBundleMode;
 import org.hkijena.jast.model.DownloadBundleStatus;
 import org.hkijena.jast.model.entities.DownloadBundle;
 import org.hkijena.jast.model.entities.DownloadBundle.DownloadBundlePart;
@@ -91,7 +92,7 @@ public class DownloadBundleService {
         }
     }
 
-    public DownloadBundle prepareDownload(long resultId, String path, Authentication authentication) {
+    public DownloadBundle prepareDownload(long resultId, String path, DownloadBundleMode mode, Authentication authentication) {
         userService.validateAuthentication(authentication);
         Optional<Result> result_ = resultRepository.findById(resultId);
         if (result_.isEmpty()) {
@@ -107,6 +108,10 @@ public class DownloadBundleService {
         bundle.setResult(result);
         bundle.setStatus(DownloadBundleStatus.Preparing);
         bundle.setPath(path != null ? path : "/");
+        bundle.setMode(mode);
+        if (mode == DownloadBundleMode.SPLIT_ZIP) {
+            bundle.setOutputFileName(sanitizeFileName(result.getName()) + ".zip");
+        }
         bundle.setCreatedAt(LocalDateTime.now());
         bundle.setExpiresAt(LocalDateTime.now().plusHours(downloadConfig.getExpiryHours()));
         bundle.setProgressPercent(0);
