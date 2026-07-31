@@ -459,6 +459,7 @@ function pollDownloadBundle(bundle: DownloadBundlePayload, accessToken: string) 
 
   progressDialog.onCancel(() => {
     shouldCancel.value = true;
+    clearInterval(pollInterval);
   });
 
   const pollInterval = setInterval(() => {
@@ -468,6 +469,7 @@ function pollDownloadBundle(bundle: DownloadBundlePayload, accessToken: string) 
     }
 
     api.get(`/download-bundle/${bundle.id}`).then((response) => {
+      if (shouldCancel.value) return;
       const updated: DownloadBundlePayload = response.data;
 
       if (updated.status === DownloadBundleStatus.Preparing) {
