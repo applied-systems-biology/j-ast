@@ -63,6 +63,9 @@ provider:
 accounts:
   admin-username: 'admin@localhost'
   admin-password: 'Ckw55ryzy1mXGxb8'
+download:
+  max-part-size-mb: 2048
+  expiry-hours: 1
 security:
   jwt-secret: "8TJGD0tLb0M20pxRyasR3ajktjYVfhzqVauIleiKfRJdy3SVKr95JYpC7enixXeD"
   jwt-access-token-expiration-in-minutes: 60
