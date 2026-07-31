@@ -493,37 +493,58 @@ function pollDownloadBundle(bundle: DownloadBundlePayload, accessToken: string) 
         clearInterval(pollInterval);
 
         if (updated.mode === DownloadBundleMode.SPLIT_ZIP && supportsFileSystemAccess()) {
-          // Chromium: stream parts into one file via File System Access API
+          // Chromium: show a Save button to get a fresh user gesture (required for showSaveFilePicker)
           progressDialog.update({
-            title: 'Downloading ...',
-            message: 'Starting download ...',
-            progress: { spinner: QSpinnerHourglass },
-            ok: false,
-            cancel: true,
+            title: 'Download ready!',
+            message: 'Your file is ready. Click "Save" to choose where to download it.',
+            progress: false,
+            ok: 'Save',
+            cancel: 'Done',
           });
 
-          streamPartsToFile(updated, accessToken, (part, totalParts, partPercent, overallPercent) => {
-            progressDialog.update({
-              message: `Part ${part}/${totalParts} — ${partPercent}%<br/>Overall: ${overallPercent}%`,
-              html: true,
+          progressDialog.onOk(() => {
+            // Fresh user gesture — showSaveFilePicker will work now
+            const downloadDialog = $q.dialog({
+              title: 'Downloading ...',
+              message: 'Starting download ...',
+              progress: { spinner: QSpinnerHourglass },
+              persistent: true,
+              ok: false,
+              cancel: true,
             });
-          }, shouldCancel).then(() => {
-            if (!shouldCancel.value) {
-              progressDialog.update({
-                title: 'Download complete!',
-                message: 'Your file has been saved.',
-                progress: false,
-                ok: 'Done',
-                cancel: false,
+
+            downloadDialog.onCancel(() => {
+              shouldCancel.value = true;
+            });
+
+            streamPartsToFile(updated, accessToken, (part, totalParts, partPercent, overallPercent) => {
+              downloadDialog.update({
+                message: `Part ${part}/${totalParts} — ${partPercent}%<br/>Overall: ${overallPercent}%`,
+                html: true,
               });
-            }
-          }).catch((e) => {
-            progressDialog.hide();
-            if (e instanceof DOMException && e.name === 'AbortError') {
-              // User cancelled the save-file dialog — not an error
-              return;
-            }
-            sendFailureNotification("Download failed: " + (e.message || "Unknown error"));
+            }, shouldCancel).then(() => {
+              if (!shouldCancel.value) {
+                downloadDialog.update({
+                  title: 'Download complete!',
+                  message: 'Your file has been saved.',
+                  progress: false,
+                  ok: 'Done',
+                  cancel: false,
+                });
+              } else {
+                downloadDialog.hide();
+              }
+            }).catch((e) => {
+              downloadDialog.hide();
+              if (e instanceof DOMException && (e.name === 'AbortError' || e.name === 'SecurityError' || e.name === 'NotAllowedError')) {
+                // User cancelled the save-file dialog or permission denied — not a hard error
+                if (e.name !== 'AbortError') {
+                  sendFailureNotification("Could not open file picker: " + e.message);
+                }
+                return;
+              }
+              sendFailureNotification("Download failed: " + (e.message || "Unknown error"));
+            });
           });
 
         } else {
@@ -583,18 +604,17 @@ async function streamPartsToFile(
   onProgress: (part: number, totalParts: number, partPercent: number, overallPercent: number) => void,
   shouldCancel: Ref<boolean>
 ): Promise<void> {
+  const totalParts = bundle.parts.length;
+  if (totalParts === 0) {
+    throw new Error("No parts to download");
+  }
+  const totalSize = bundle.parts.reduce((sum, p) => sum + p.size, 0);
+  let receivedTotal = 0;
+
   const fileHandle = await (window as any).showSaveFilePicker({
     suggestedName: bundle.outputFileName || 'download.zip'
   });
   const writable = await fileHandle.createWritable();
-  const totalParts = bundle.parts.length;
-  const totalSize = bundle.parts.reduce((sum, p) => sum + p.size, 0);
-  let receivedTotal = 0;
-
-  if (totalParts === 0) {
-    await writable.close();
-    throw new Error("No parts to download");
-  }
 
   try {
     for (let i = 0; i < totalParts; i++) {

@@ -250,6 +250,17 @@ public class DownloadBundleService {
                     completedParts = splitZipIntoParts(tempZip, baseName,
                             Paths.get(fileStorageService.getStorageLocation()), zipSize);
 
+                    // Persist completed parts incrementally for crash recovery
+                    for (int i = 0; i < completedParts.size(); i++) {
+                        DownloadBundle progressBundle = downloadBundleRepository.findById(bundleId).orElse(null);
+                        if (progressBundle != null) {
+                            progressBundle.setParts(new ArrayList<>(completedParts.subList(0, i + 1)));
+                            downloadBundleRepository.save(progressBundle);
+                        }
+                        updateProgress(bundleId, 50 + (int) ((i + 1) * 50L / completedParts.size()),
+                                "Splitting into parts (" + (i + 1) + "/" + completedParts.size() + ")");
+                    }
+
                     bundle = downloadBundleRepository.findById(bundleId).orElseThrow();
                     bundle.setParts(completedParts);
                     bundle.setPartCount(completedParts.size());
@@ -257,13 +268,6 @@ public class DownloadBundleService {
                     bundle.setProgressPercent(100);
                     bundle.setProgressMessage("Ready");
                     downloadBundleRepository.save(bundle);
-
-                    // Persist completed parts incrementally for crash recovery
-                    DownloadBundle progressBundle = downloadBundleRepository.findById(bundleId).orElse(null);
-                    if (progressBundle != null) {
-                        progressBundle.setParts(new ArrayList<>(completedParts));
-                        downloadBundleRepository.save(progressBundle);
-                    }
 
                 } finally {
                     Files.deleteIfExists(tempZip);
@@ -409,6 +413,7 @@ public class DownloadBundleService {
 
     List<DownloadBundlePart> splitZipIntoParts(Path zipFile, String baseName, Path storageDir, long zipSize) throws IOException {
         List<DownloadBundlePart> parts = new ArrayList<>();
+        List<Path> createdPaths = new ArrayList<>();
         long maxPartSize = downloadConfig.getMaxPartSizeMb() * 1_000_000L;
         int partNumber = 1;
         long remaining = zipSize;
@@ -418,6 +423,7 @@ public class DownloadBundleService {
             while (remaining > 0) {
                 String fileId = UUID.randomUUID().toString();
                 Path partPath = storageDir.resolve(fileId);
+                createdPaths.add(partPath);
                 long partSize = Math.min(maxPartSize, remaining);
 
                 try (var outputStream = Files.newOutputStream(partPath)) {
@@ -429,6 +435,7 @@ public class DownloadBundleService {
                         outputStream.write(buffer, 0, read);
                         written += read;
                     }
+                    remaining -= written;
                 }
 
                 DownloadBundlePart part = new DownloadBundlePart();
@@ -437,9 +444,17 @@ public class DownloadBundleService {
                 part.setSize(Files.size(partPath));
                 parts.add(part);
 
-                remaining -= partSize;
                 partNumber++;
             }
+        } catch (Exception e) {
+            // Clean up orphaned part files on failure
+            for (Path path : createdPaths) {
+                try {
+                    Files.deleteIfExists(path);
+                } catch (IOException ignored) {
+                }
+            }
+            throw e;
         }
 
         return parts;
