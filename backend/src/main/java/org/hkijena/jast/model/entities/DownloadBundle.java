@@ -27,7 +27,7 @@ import java.util.List;
 public class DownloadBundle {
 
     @Id
-    @Column(name = "id", columnDefinition = "TEXT")
+    @Column(name = "id", columnDefinition = "VARCHAR(36)")
     private String id;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -75,6 +75,21 @@ public class DownloadBundle {
         public void setFileName(String fileName) { this.fileName = fileName; }
         public long getSize() { return size; }
         public void setSize(long size) { this.size = size; }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            DownloadBundlePart that = (DownloadBundlePart) o;
+            return size == that.size
+                    && java.util.Objects.equals(fileId, that.fileId)
+                    && java.util.Objects.equals(fileName, that.fileName);
+        }
+
+        @Override
+        public int hashCode() {
+            return java.util.Objects.hash(fileId, fileName, size);
+        }
     }
 
     public String getId() { return id; }
