@@ -16,6 +16,7 @@ package org.hkijena.jast.services;
 import jakarta.annotation.PostConstruct;
 import jakarta.transaction.Transactional;
 import org.hkijena.jast.config.AccountConfig;
+import org.hkijena.jast.config.DownloadConfig;
 import org.hkijena.jast.model.DownloadBundleStatus;
 import org.hkijena.jast.model.entities.DownloadBundle;
 import org.hkijena.jast.model.entities.DownloadBundle.DownloadBundlePart;
@@ -52,13 +53,13 @@ import java.util.zip.ZipOutputStream;
 public class DownloadBundleService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DownloadBundleService.class);
-    private static final long MAX_PART_SIZE = 2_048_000_000L; // ~1.9GB to account for ZIP overhead
     private static final int BUFFER_SIZE = 8192;
 
     private final DownloadBundleRepository downloadBundleRepository;
     private final ResultRepository resultRepository;
     private final FileStorageService fileStorageService;
     private final AccountConfig accountConfig;
+    private final DownloadConfig downloadConfig;
     private final UserService userService;
     private final JobScheduler jobScheduler;
 
@@ -68,13 +69,15 @@ public class DownloadBundleService {
                                   FileStorageService fileStorageService,
                                   AccountConfig accountConfig,
                                   UserService userService,
-                                  JobScheduler jobScheduler) {
+                                  JobScheduler jobScheduler,
+                                  DownloadConfig downloadConfig) {
         this.downloadBundleRepository = downloadBundleRepository;
         this.resultRepository = resultRepository;
         this.fileStorageService = fileStorageService;
         this.accountConfig = accountConfig;
         this.userService = userService;
         this.jobScheduler = jobScheduler;
+        this.downloadConfig = downloadConfig;
     }
 
     @PostConstruct
@@ -105,7 +108,7 @@ public class DownloadBundleService {
         bundle.setStatus(DownloadBundleStatus.Preparing);
         bundle.setPath(path != null ? path : "/");
         bundle.setCreatedAt(LocalDateTime.now());
-        bundle.setExpiresAt(LocalDateTime.now().plusHours(1));
+        bundle.setExpiresAt(LocalDateTime.now().plusHours(downloadConfig.getExpiryHours()));
         bundle.setProgressPercent(0);
         bundle.setProgressMessage("Preparing...");
 
@@ -303,14 +306,14 @@ public class DownloadBundleService {
         }
     }
 
-    private List<List<ResultItem>> splitIntoParts(List<ResultItem> items) {
+    List<List<ResultItem>> splitIntoParts(List<ResultItem> items) {
         List<List<ResultItem>> parts = new ArrayList<>();
         List<ResultItem> currentPart = new ArrayList<>();
         long currentSize = 0;
 
         for (ResultItem item : items) {
             long itemSize = item.getRawDataFileSize();
-            if (currentSize + itemSize > MAX_PART_SIZE && !currentPart.isEmpty()) {
+            if (currentSize + itemSize > downloadConfig.getMaxPartSizeMb() * 1_000_000L && !currentPart.isEmpty()) {
                 parts.add(currentPart);
                 currentPart = new ArrayList<>();
                 currentSize = 0;

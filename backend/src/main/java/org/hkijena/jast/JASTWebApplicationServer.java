@@ -21,7 +21,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication
 @EnableScheduling
-@EnableConfigurationProperties({RuntimeConfig.class, AccountConfig.class, JwtConfig.class, ProviderConfig.class, PresetsConfig.class})
+@EnableConfigurationProperties({RuntimeConfig.class, AccountConfig.class, JwtConfig.class, ProviderConfig.class, PresetsConfig.class, DownloadConfig.class})
 public class JASTWebApplicationServer {
 
     public JASTWebApplicationServer() {
