@@ -127,12 +127,14 @@ import UserManagerComponent from 'components/layout/UserManagerComponent.vue';
 import {useRoute, useRouter} from 'vue-router';
 import {ComponentPublicInstance, computed, onBeforeUnmount, onMounted, ref, Ref, useTemplateRef, watch} from 'vue';
 import {ProjectMetadataPayload} from 'src/types/project';
-import {downloadFromApi, ensureExtension, loadPayloadInstanceFromApi} from 'src/types/common';
+import {downloadFromApi, loadPayloadInstanceFromApi} from 'src/types/common';
 import {FullResultPayload, ResultItemPayload, showResultItem} from 'src/types/results';
-import {formatFileSize, makeFilesystemCompatible, sortPathsByHierarchy} from "src/types/utils";
+import {formatFileSize, sortPathsByHierarchy} from "src/types/utils";
 import {useAuthStore} from "stores/auth-store";
 import {apiBase} from "src/types/api";
-import {QTableColumn, QTreeNode, useQuasar} from "quasar";
+import {api} from 'boot/axios';
+import {DownloadBundlePayload, DownloadBundleStatus} from "src/types/downloadBundle";
+import {QSpinnerHourglass, QTableColumn, QTreeNode, useQuasar} from "quasar";
 import ResultItemThumbnailComponent from "components/results/ResultItemThumbnailComponent.vue";
 import {sendFailureNotification} from "src/types/notification";
 import DocumentationComponent from "components/layout/DocumentationComponent.vue";
@@ -431,14 +433,94 @@ function downloadZip(path: string) {
     persistent: true
   }).onOk(() => {
     const authStore = useAuthStore();
-    const url = `${apiBase}/result/${resultId}/download-zip?path=${encodeURIComponent(path)}&token=${encodeURIComponent(authStore.accessToken)}`;
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = ensureExtension(makeFilesystemCompatible(resultPayload.value.name || "result"), [".zip"]);
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    api.post(`/result/${resultId}/prepare-download`, null, {
+      params: { path: path }
+    }).then((response) => {
+      const bundle: DownloadBundlePayload = response.data;
+      pollDownloadBundle(bundle, authStore.accessToken);
+    }).catch(() => {
+      sendFailureNotification("Failed to start download preparation.");
+    });
   })
+}
+
+function pollDownloadBundle(bundle: DownloadBundlePayload, accessToken: string) {
+  const shouldCancel = ref<boolean>(false);
+  const progressDialog = $q.dialog({
+    title: 'Preparing download ...',
+    message: 'Starting ...',
+    progress: {
+      spinner: QSpinnerHourglass,
+    },
+    persistent: true,
+    ok: false,
+    cancel: true,
+  });
+
+  progressDialog.onCancel(() => {
+    shouldCancel.value = true;
+  });
+
+  const pollInterval = setInterval(() => {
+    if (shouldCancel.value) {
+      clearInterval(pollInterval);
+      return;
+    }
+
+    api.get(`/download-bundle/${bundle.id}`).then((response) => {
+      const updated: DownloadBundlePayload = response.data;
+
+      if (updated.status === DownloadBundleStatus.Preparing) {
+        progressDialog.update({
+          message: `${updated.progressPercent}% - ${updated.progressMessage}`
+        });
+      } else if (updated.status === DownloadBundleStatus.Ready) {
+        clearInterval(pollInterval);
+        progressDialog.update({
+          title: 'Download ready!',
+          message: '',
+          progress: false,
+          ok: 'Done',
+          cancel: false,
+        });
+
+        if (updated.parts.length === 1) {
+          triggerDownload(bundle.id, 0, accessToken);
+        } else {
+          let message = `Download ready! (${updated.parts.length} parts)<br/><br/>`;
+          for (let i = 0; i < updated.parts.length; i++) {
+            const part = updated.parts[i];
+            message += `<a href="${apiBase}/download-bundle/${bundle.id}/part/${i}?token=${encodeURIComponent(accessToken)}" download="${part.fileName}">Download ${part.fileName} (${formatFileSize(part.size)})</a><br/>`;
+          }
+          progressDialog.update({
+            message: message,
+            html: true,
+          });
+        }
+      } else if (updated.status === DownloadBundleStatus.Failed) {
+        clearInterval(pollInterval);
+        progressDialog.hide();
+        sendFailureNotification("Download preparation failed: " + (updated.errorMessage || "Unknown error"));
+      } else if (updated.status === DownloadBundleStatus.Expired) {
+        clearInterval(pollInterval);
+        progressDialog.hide();
+        sendFailureNotification("Download bundle expired. Please try again.");
+      }
+    }).catch(() => {
+      clearInterval(pollInterval);
+      progressDialog.hide();
+      sendFailureNotification("Failed to check download status.");
+    });
+  }, 2000);
+}
+
+function triggerDownload(bundleId: string, partIndex: number, accessToken: string) {
+  const link = document.createElement('a');
+  link.href = `${apiBase}/download-bundle/${bundleId}/part/${partIndex}?token=${encodeURIComponent(accessToken)}`;
+  link.download = '';
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
 }
 
 // Table height sync
