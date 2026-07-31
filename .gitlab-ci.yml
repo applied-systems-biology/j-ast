@@ -146,9 +146,33 @@ package_server_leibniz_hki:
 # Deploy to GitLab packages repository
 deploy_electron:
   stage: deploy
-  image: curlimages/curl:8.10.1
+  image: alpine:3.20
+  before_script:
+    - apk add --no-cache curl jq
   script:
+    - set -euo pipefail
     - echo "Deploying packages to GitLab Generic Package Registry..."
+
+    # Verify that the upload token is available and valid
+    - |
+      test -n "${PACKAGE_UPLOAD_TOKEN:-}" || {
+        echo "PACKAGE_UPLOAD_TOKEN is not set. Create a masked CI/CD variable containing a GitLab project access token with api scope."
+        exit 1
+      }
+      echo "Testing PACKAGE_UPLOAD_TOKEN against project API ..."
+      token_test_code="$(
+        curl --silent --show-error \
+          --output /tmp/package-token-test-body.txt \
+          --write-out "%{http_code}" \
+          --header "PRIVATE-TOKEN: $PACKAGE_UPLOAD_TOKEN" \
+          "$CI_API_V4_URL/projects/$CI_PROJECT_ID"
+      )"
+      echo "Token test HTTP status: $token_test_code"
+      if [ "$token_test_code" != "200" ]; then
+        echo "PACKAGE_UPLOAD_TOKEN could not access this project via the GitLab API."
+        cat /tmp/package-token-test-body.txt || true
+        exit 1
+      fi
 
     # Discover a version from the first artifact filename: j-ast-<VERSION>-<platform>.<ext>
     - |
@@ -161,20 +185,52 @@ deploy_electron:
       PACKAGE_NAME="j-ast-desktop"
       PACKAGE_VERSION="$(basename "$FIRST_FILE" | sed -E 's/^j-ast-([^ -]+)-.*$/\1/')"
       echo "Detected version: ${PACKAGE_VERSION}"
+      BASE_API="$CI_API_V4_URL/projects/$CI_PROJECT_ID/packages/generic/$PACKAGE_NAME/$PACKAGE_VERSION"
 
-    # Upload helper (PUT raw bytes, no multipart)
+    # Upload helper (PUT raw bytes via --upload-file, no multipart)
     - |
       upload_generic () {
         file="$1"; fname="$(basename "$file")"
+        url="$BASE_API/$fname"
         echo "Uploading $file ..."
         echo "File size: $(du -h "$file" | cut -f1)"
-        curl -sS \
-          --header "JOB-TOKEN: ${CI_JOB_TOKEN}" \
-          --header "Content-Type: application/octet-stream" \
-          --retry 3 --retry-delay 2 --fail \
-          --request PUT \
-          --upload-file "$file" \
-          "${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/generic/${PACKAGE_NAME}/${PACKAGE_VERSION}/${fname}"
+
+        body="$(mktemp)"
+        headers="$(mktemp)"
+
+        http_code="$(
+          curl \
+            --retry 3 \
+            --retry-delay 5 \
+            --retry-all-errors \
+            --silent \
+            --show-error \
+            --fail-with-body \
+            --upload-file "$file" \
+            --dump-header "$headers" \
+            --output "$body" \
+            --write-out "%{http_code}" \
+            --header "PRIVATE-TOKEN: $PACKAGE_UPLOAD_TOKEN" \
+            --header "Expect:" \
+            "$url"
+        )"
+
+        echo "HTTP status for $fname: $http_code"
+
+        if [ "$http_code" != "201" ]; then
+          echo "Upload failed for $fname"
+          echo
+          echo "Response headers:"
+          cat "$headers" || true
+          echo
+          echo "Response body:"
+          cat "$body" || true
+          echo
+          exit 1
+        fi
+
+        echo "Upload successful for $fname"
+        cat "$body" || true
         echo
       }
 
@@ -190,6 +246,43 @@ deploy_electron:
           echo "File not found: $file"
         fi
       done
+
+    # Verify uploaded files are present in the registry
+    - |
+      echo "Verifying uploaded package files ..."
+      package_lookup_url="$CI_API_V4_URL/projects/$CI_PROJECT_ID/packages?package_type=generic&package_name=$PACKAGE_NAME&package_version=$PACKAGE_VERSION"
+      package_json="$(
+        curl --silent --show-error --fail-with-body \
+          --header "PRIVATE-TOKEN: $PACKAGE_UPLOAD_TOKEN" \
+          "$package_lookup_url"
+      )"
+      package_id="$(echo "$package_json" | jq -r '.[0].id // empty')"
+      if [ -z "$package_id" ]; then
+        echo "Could not find package after upload: $PACKAGE_NAME/$PACKAGE_VERSION"
+        echo "$package_json" | jq . || echo "$package_json"
+        exit 1
+      fi
+      echo "Found package ID: $package_id"
+      package_files_url="$CI_API_V4_URL/projects/$CI_PROJECT_ID/packages/$package_id/package_files?per_page=100"
+      files_json="$(
+        curl --silent --show-error --fail-with-body \
+          --header "PRIVATE-TOKEN: $PACKAGE_UPLOAD_TOKEN" \
+          "$package_files_url"
+      )"
+      for file in dist/electron/j-ast-*-*.tar.gz \
+                  dist/electron/j-ast-*-*.zip \
+                  dist/electron/j-ast-*-*.exe
+      do
+        [ -f "$file" ] || continue
+        fname="$(basename "$file")"
+        if ! echo "$files_json" | jq -e --arg name "$fname" '.[] | select(.file_name == $name)' >/dev/null; then
+          echo "Missing uploaded package file: $fname"
+          echo "$files_json" | jq . || echo "$files_json"
+          exit 1
+        fi
+        echo "Verified package file: $fname"
+      done
+      echo "All expected package files are present."
   rules:
     - if: '$CI_COMMIT_BRANCH == "master"'
   needs:
@@ -198,11 +291,35 @@ deploy_electron:
 # Deploy to GitLab packages repository
 deploy_server_packages:
   stage: deploy
-  image: curlimages/curl:8.10.1
+  image: alpine:3.20
+  before_script:
+    - apk add --no-cache curl jq
   script:
+    - set -euo pipefail
     - echo "Deploying server packages to GitLab Generic Package Registry..."
 
-    # Discover a version from the first artifact filename: j-ast-<VERSION>-<platform>.<ext>
+    # Verify that the upload token is available and valid
+    - |
+      test -n "${PACKAGE_UPLOAD_TOKEN:-}" || {
+        echo "PACKAGE_UPLOAD_TOKEN is not set. Create a masked CI/CD variable containing a GitLab project access token with api scope."
+        exit 1
+      }
+      echo "Testing PACKAGE_UPLOAD_TOKEN against project API ..."
+      token_test_code="$(
+        curl --silent --show-error \
+          --output /tmp/package-token-test-body.txt \
+          --write-out "%{http_code}" \
+          --header "PRIVATE-TOKEN: $PACKAGE_UPLOAD_TOKEN" \
+          "$CI_API_V4_URL/projects/$CI_PROJECT_ID"
+      )"
+      echo "Token test HTTP status: $token_test_code"
+      if [ "$token_test_code" != "200" ]; then
+        echo "PACKAGE_UPLOAD_TOKEN could not access this project via the GitLab API."
+        cat /tmp/package-token-test-body.txt || true
+        exit 1
+      fi
+
+    # Discover a version from the first artifact filename: j-ast-server-<VERSION>-<platform>.<ext>
     - |
       find dist/server -maxdepth 1 -type f \( -name 'j-ast-server-*-*.tar.gz' -o -name 'j-ast-server-*-*.zip' \) | head -n1 > .first_file || true
       if [ ! -s .first_file ]; then
@@ -213,20 +330,52 @@ deploy_server_packages:
       PACKAGE_NAME="j-ast-server"
       PACKAGE_VERSION="$(basename "$FIRST_FILE" | sed -E 's/^j-ast-server-([^ -]+)-.*$/\1/')"
       echo "Detected version: ${PACKAGE_VERSION}"
+      BASE_API="$CI_API_V4_URL/projects/$CI_PROJECT_ID/packages/generic/$PACKAGE_NAME/$PACKAGE_VERSION"
 
-    # Upload helper (PUT raw bytes, no multipart)
+    # Upload helper (PUT raw bytes via --upload-file, no multipart)
     - |
       upload_generic () {
         file="$1"; fname="$(basename "$file")"
+        url="$BASE_API/$fname"
         echo "Uploading $file ..."
         echo "File size: $(du -h "$file" | cut -f1)"
-        curl -sS \
-          --header "JOB-TOKEN: ${CI_JOB_TOKEN}" \
-          --header "Content-Type: application/octet-stream" \
-          --retry 3 --retry-delay 2 --fail \
-          --request PUT \
-          --upload-file "$file" \
-          "${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/generic/${PACKAGE_NAME}/${PACKAGE_VERSION}/${fname}"
+
+        body="$(mktemp)"
+        headers="$(mktemp)"
+
+        http_code="$(
+          curl \
+            --retry 3 \
+            --retry-delay 5 \
+            --retry-all-errors \
+            --silent \
+            --show-error \
+            --fail-with-body \
+            --upload-file "$file" \
+            --dump-header "$headers" \
+            --output "$body" \
+            --write-out "%{http_code}" \
+            --header "PRIVATE-TOKEN: $PACKAGE_UPLOAD_TOKEN" \
+            --header "Expect:" \
+            "$url"
+        )"
+
+        echo "HTTP status for $fname: $http_code"
+
+        if [ "$http_code" != "201" ]; then
+          echo "Upload failed for $fname"
+          echo
+          echo "Response headers:"
+          cat "$headers" || true
+          echo
+          echo "Response body:"
+          cat "$body" || true
+          echo
+          exit 1
+        fi
+
+        echo "Upload successful for $fname"
+        cat "$body" || true
         echo
       }
 
@@ -242,6 +391,43 @@ deploy_server_packages:
           echo "File not found: $file"
         fi
       done
+
+    # Verify uploaded files are present in the registry
+    - |
+      echo "Verifying uploaded package files ..."
+      package_lookup_url="$CI_API_V4_URL/projects/$CI_PROJECT_ID/packages?package_type=generic&package_name=$PACKAGE_NAME&package_version=$PACKAGE_VERSION"
+      package_json="$(
+        curl --silent --show-error --fail-with-body \
+          --header "PRIVATE-TOKEN: $PACKAGE_UPLOAD_TOKEN" \
+          "$package_lookup_url"
+      )"
+      package_id="$(echo "$package_json" | jq -r '.[0].id // empty')"
+      if [ -z "$package_id" ]; then
+        echo "Could not find package after upload: $PACKAGE_NAME/$PACKAGE_VERSION"
+        echo "$package_json" | jq . || echo "$package_json"
+        exit 1
+      fi
+      echo "Found package ID: $package_id"
+      package_files_url="$CI_API_V4_URL/projects/$CI_PROJECT_ID/packages/$package_id/package_files?per_page=100"
+      files_json="$(
+        curl --silent --show-error --fail-with-body \
+          --header "PRIVATE-TOKEN: $PACKAGE_UPLOAD_TOKEN" \
+          "$package_files_url"
+      )"
+      for file in dist/server/j-ast-server-*-*.tar.gz \
+                  dist/server/j-ast-server-*-*.zip \
+                  dist/server/j-ast-server-*-*.exe
+      do
+        [ -f "$file" ] || continue
+        fname="$(basename "$file")"
+        if ! echo "$files_json" | jq -e --arg name "$fname" '.[] | select(.file_name == $name)' >/dev/null; then
+          echo "Missing uploaded package file: $fname"
+          echo "$files_json" | jq . || echo "$files_json"
+          exit 1
+        fi
+        echo "Verified package file: $fname"
+      done
+      echo "All expected package files are present."
   rules:
     - if: '$CI_COMMIT_BRANCH == "master"'
   needs:
