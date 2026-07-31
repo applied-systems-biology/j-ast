@@ -591,6 +591,11 @@ async function streamPartsToFile(
   const totalSize = bundle.parts.reduce((sum, p) => sum + p.size, 0);
   let receivedTotal = 0;
 
+  if (totalParts === 0) {
+    await writable.close();
+    throw new Error("No parts to download");
+  }
+
   try {
     for (let i = 0; i < totalParts; i++) {
       if (shouldCancel.value) {
@@ -601,6 +606,9 @@ async function streamPartsToFile(
       const response = await fetch(
         `${apiBase}/download-bundle/${bundle.id}/part/${i}?token=${encodeURIComponent(accessToken)}`
       );
+      if (!response.ok) {
+        throw new Error(`Part ${i + 1} download failed (HTTP ${response.status})`);
+      }
       const reader = response.body!.getReader();
       let received = 0;
       const partSize = bundle.parts[i].size;
