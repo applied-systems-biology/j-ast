@@ -35,6 +35,7 @@ import org.springframework.http.HttpStatus;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -167,6 +168,8 @@ public class DownloadBundleService {
         DownloadBundle bundle = bundle_.get();
         Result result = bundle.getResult();
         List<DownloadBundlePart> completedParts = new ArrayList<>();
+        Path currentZipPath = null;
+        String currentFileId = null;
 
         try {
             String normalizedPath = bundle.getPath();
@@ -180,9 +183,12 @@ public class DownloadBundleService {
                 String displayPath = "/" + itemPath;
                 String filterPath = bundle.getPath();
                 if (!filterPath.startsWith("/")) {
-                    filterPath = "/" + filterPath;
+                    filterPath = "/";
                 }
-                if (displayPath.startsWith(filterPath)) {
+                if (!filterPath.endsWith("/")) {
+                    filterPath = filterPath + "/";
+                }
+                if (displayPath.startsWith(filterPath) || displayPath.equals(filterPath.substring(0, filterPath.length() - 1))) {
                     matchingItems.add(item);
                 }
             }
@@ -201,6 +207,8 @@ public class DownloadBundleService {
             for (int partIdx = 0; partIdx < parts.size(); partIdx++) {
                 String fileId = UUID.randomUUID().toString();
                 Path zipPath = storageDir.resolve(fileId);
+                currentFileId = fileId;
+                currentZipPath = zipPath;
                 String partName;
                 if (parts.size() == 1) {
                     partName = baseName + ".zip";
@@ -246,6 +254,16 @@ public class DownloadBundleService {
                 part.setSize(zipSize);
                 completedParts.add(part);
 
+                // Persist completed parts incrementally for crash recovery
+                DownloadBundle progressBundle = downloadBundleRepository.findById(bundleId).orElse(null);
+                if (progressBundle != null) {
+                    progressBundle.setParts(new ArrayList<>(completedParts));
+                    downloadBundleRepository.save(progressBundle);
+                }
+
+                currentZipPath = null;
+                currentFileId = null;
+
                 updateProgress(bundleId, (int) ((partIdx + 1) * 100L / parts.size()),
                         "Completed part " + (partIdx + 1) + " of " + parts.size());
             }
@@ -260,6 +278,13 @@ public class DownloadBundleService {
 
         } catch (Exception e) {
             LOGGER.error("Failed to generate download bundle {}", bundleId, e);
+            if (currentZipPath != null && Files.exists(currentZipPath)) {
+                try {
+                    Files.deleteIfExists(currentZipPath);
+                } catch (IOException ioEx) {
+                    LOGGER.warn("Could not delete partial ZIP file: {}", currentZipPath, ioEx);
+                }
+            }
             bundle = downloadBundleRepository.findById(bundleId).orElseThrow();
             bundle.setStatus(DownloadBundleStatus.Failed);
             bundle.setParts(completedParts);

@@ -509,6 +509,7 @@ function pollDownloadBundle(bundle: DownloadBundlePayload, accessToken: string) 
         sendFailureNotification("Download bundle expired. Please try again.");
       }
     }).catch(() => {
+      if (shouldCancel.value) return;
       clearInterval(pollInterval);
       progressDialog.hide();
       sendFailureNotification("Failed to check download status.");
