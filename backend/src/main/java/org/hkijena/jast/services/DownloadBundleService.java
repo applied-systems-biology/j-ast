@@ -166,6 +166,7 @@ public class DownloadBundleService {
         }
         DownloadBundle bundle = bundle_.get();
         Result result = bundle.getResult();
+        List<DownloadBundlePart> completedParts = new ArrayList<>();
 
         try {
             String normalizedPath = bundle.getPath();
@@ -193,7 +194,6 @@ public class DownloadBundleService {
             updateProgress(bundleId, 0, "Creating " + parts.size() + " part(s)");
 
             String baseName = sanitizeFileName(result.getName());
-            List<DownloadBundlePart> completedParts = new ArrayList<>();
             int totalItems = matchingItems.size();
             int processedItems = 0;
             Path storageDir = Paths.get(fileStorageService.getStorageLocation());
@@ -252,6 +252,7 @@ public class DownloadBundleService {
 
             bundle = downloadBundleRepository.findById(bundleId).orElseThrow();
             bundle.setParts(completedParts);
+            bundle.setPartCount(parts.size());
             bundle.setStatus(DownloadBundleStatus.Ready);
             bundle.setProgressPercent(100);
             bundle.setProgressMessage("Ready");
@@ -261,6 +262,7 @@ public class DownloadBundleService {
             LOGGER.error("Failed to generate download bundle {}", bundleId, e);
             bundle = downloadBundleRepository.findById(bundleId).orElseThrow();
             bundle.setStatus(DownloadBundleStatus.Failed);
+            bundle.setParts(completedParts);
             bundle.setErrorMessage(e.getMessage() != null ? e.getMessage() : "Unknown error");
             downloadBundleRepository.save(bundle);
         }
