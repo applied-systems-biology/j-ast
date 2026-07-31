@@ -607,7 +607,6 @@ function downloadZip(imageIds: Array<number> | null) {
     })
     dialog.onCancel(() => {
       shouldCancel.value = true
-      dialog.hide()
     })
 
     generateAndDownloadZip(zipItems, projectPayload.value.name, (percentage, info) => {
@@ -616,7 +615,9 @@ function downloadZip(imageIds: Array<number> | null) {
       })
     }, () => shouldCancel.value)
         .finally(() => {
-          dialog.hide()
+          if (!shouldCancel.value) {
+            dialog.hide()
+          }
         })
 
   })
@@ -654,7 +655,6 @@ function downloadProjectArchive(imageIds: Array<number> | null) {
     })
     dialog.onCancel(() => {
       shouldCancel.value = true
-      dialog.hide()
     })
 
     generateAndDownloadZip(zipItems, projectPayload.value.name + ".jast.zip", (percentage, info) => {
@@ -663,7 +663,9 @@ function downloadProjectArchive(imageIds: Array<number> | null) {
       })
     }, () => shouldCancel.value)
         .finally(() => {
-          dialog.hide()
+          if (!shouldCancel.value) {
+            dialog.hide()
+          }
         })
 
   })

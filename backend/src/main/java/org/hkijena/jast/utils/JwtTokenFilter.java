@@ -14,6 +14,7 @@
 package org.hkijena.jast.utils;
 
 import com.google.common.net.HttpHeaders;
+import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -58,59 +59,72 @@ public class JwtTokenFilter extends OncePerRequestFilter implements ApplicationC
             throws ServletException, IOException {
         // Get authorization header and validate
         final String header = request.getHeader(HttpHeaders.AUTHORIZATION);
-        if (StringUtils.isNullOrEmpty(header) || !header.startsWith("Bearer ")) {
-            chain.doFilter(request, response);
-            return;
-        }
-
-        // Get jwt token and validate
-        final String token = header.split(" ")[1].trim();
-        if (jwtUtil.isTokenExpired(token)) {
-            chain.doFilter(request, response);
-            return;
-        }
-
-        // Check if we have an access token
-        if (!jwtUtil.isAccessToken(token, true)) {
-            chain.doFilter(request, response);
-            return;
-        }
-
-        // Get user identity and set it on the spring security context
-        String username = jwtUtil.extractUsername(token, true);
-        if (accountConfig.getAdminUsername().equals(username)) {
-            // Admin authentication
-            AdminPrincipal principal = new AdminPrincipal(accountConfig, applicationContext.getBean(PasswordEncoder.class));
-            UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-                    principal, null,
-                    principal.getAuthorities()
-            );
-
-            authentication.setDetails(
-                    new WebAuthenticationDetailsSource().buildDetails(request)
-            );
-            SecurityContextHolder.getContext().setAuthentication(authentication);
+        String token = null;
+        if (header != null && header.startsWith("Bearer ")) {
+            token = header.split(" ")[1].trim();
         } else {
-            // User authentication
-            User user = userRepository
-                    .findByEmailIgnoreCase(username)
-                    .orElse(null);
+            // Fallback: check for token in query parameter (for browser-managed downloads)
+            String queryToken = request.getParameter("token");
+            if (queryToken != null && !queryToken.isEmpty()) {
+                token = queryToken.trim();
+            }
+        }
 
-            if (user == null) {
-                // User not found
+        if (token == null || token.isEmpty()) {
+            chain.doFilter(request, response);
+            return;
+        }
+        try {
+            if (jwtUtil.isTokenExpired(token)) {
                 chain.doFilter(request, response);
                 return;
             }
 
-            UserPrincipal principal = new UserPrincipal(user);
-            UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-                    principal, null,
-                    principal.getAuthorities()
-            );
-            authentication.setDetails(
-                    new WebAuthenticationDetailsSource().buildDetails(request)
-            );
-            SecurityContextHolder.getContext().setAuthentication(authentication);
+            // Check if we have an access token
+            if (!jwtUtil.isAccessToken(token, true)) {
+                chain.doFilter(request, response);
+                return;
+            }
+
+            // Get user identity and set it on the spring security context
+            String username = jwtUtil.extractUsername(token, true);
+            if (accountConfig.getAdminUsername().equals(username)) {
+                // Admin authentication
+                AdminPrincipal principal = new AdminPrincipal(accountConfig, applicationContext.getBean(PasswordEncoder.class));
+                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
+                        principal, null,
+                        principal.getAuthorities()
+                );
+
+                authentication.setDetails(
+                        new WebAuthenticationDetailsSource().buildDetails(request)
+                );
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+            } else {
+                // User authentication
+                User user = userRepository
+                        .findByEmailIgnoreCase(username)
+                        .orElse(null);
+
+                if (user == null) {
+                    // User not found
+                    chain.doFilter(request, response);
+                    return;
+                }
+
+                UserPrincipal principal = new UserPrincipal(user);
+                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
+                        principal, null,
+                        principal.getAuthorities()
+                );
+                authentication.setDetails(
+                        new WebAuthenticationDetailsSource().buildDetails(request)
+                );
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+            }
+        } catch (JwtException | IllegalArgumentException e) {
+            chain.doFilter(request, response);
+            return;
         }
         chain.doFilter(request, response);
     }
