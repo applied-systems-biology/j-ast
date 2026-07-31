@@ -201,6 +201,13 @@ public class FileStorageService {
         }
     }
 
+    public Path getFilePath(String fileId) {
+        if (StringUtils.isNullOrEmpty(fileId)) {
+            return null;
+        }
+        return storageLocation.resolve(fileId).normalize();
+    }
+
     public String store(String text) {
         return store(text.getBytes(StandardCharsets.UTF_8));
     }

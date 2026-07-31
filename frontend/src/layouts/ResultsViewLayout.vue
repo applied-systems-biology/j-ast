@@ -127,10 +127,12 @@ import UserManagerComponent from 'components/layout/UserManagerComponent.vue';
 import {useRoute, useRouter} from 'vue-router';
 import {ComponentPublicInstance, computed, onBeforeUnmount, onMounted, ref, Ref, useTemplateRef, watch} from 'vue';
 import {ProjectMetadataPayload} from 'src/types/project';
-import {downloadFromApi, loadPayloadInstanceFromApi} from 'src/types/common';
-import {FullResultPayload, generateAndDownloadResultsZip, ResultItemPayload, showResultItem} from 'src/types/results';
-import {formatFileSize, sortPathsByHierarchy} from "src/types/utils";
-import {QSpinnerHourglass, QTableColumn, QTreeNode, useQuasar} from "quasar";
+import {downloadFromApi, ensureExtension, loadPayloadInstanceFromApi} from 'src/types/common';
+import {FullResultPayload, ResultItemPayload, showResultItem} from 'src/types/results';
+import {formatFileSize, makeFilesystemCompatible, sortPathsByHierarchy} from "src/types/utils";
+import {useAuthStore} from "stores/auth-store";
+import {apiBase} from "src/types/api";
+import {QTableColumn, QTreeNode, useQuasar} from "quasar";
 import ResultItemThumbnailComponent from "components/results/ResultItemThumbnailComponent.vue";
 import {sendFailureNotification} from "src/types/notification";
 import DocumentationComponent from "components/layout/DocumentationComponent.vue";
@@ -423,37 +425,19 @@ function downloadZip(path: string) {
   }
   $q.dialog({
     title: 'Download results',
-    message: `You are about to download ${toDownload.length} files (${formatFileSize(downloadSizeBytes)}).<br/>Do you want to continue?<br/><br/>Please note that due how the ZIP file is created, your computer needs at least ${formatFileSize(downloadSizeBytes)} of free RAM space.`,
+    message: `You are about to download ${toDownload.length} files (${formatFileSize(downloadSizeBytes)}).<br/>Do you want to continue?`,
     html: true,
     cancel: true,
     persistent: true
   }).onOk(() => {
-    const shouldCancel = ref<boolean>(false);
-    const dialog = $q.dialog({
-      title: 'Downloading results ...',
-      message: 'Preparing ...',
-      progress: {
-        spinner: QSpinnerHourglass,
-      },
-      persistent: true,
-      ok: false,
-      cancel: true,
-    })
-    dialog.onCancel(() => {
-      shouldCancel.value = true
-    })
-
-    generateAndDownloadResultsZip(toDownload, path, resultPayload.value.name, (percentage, info) => {
-      dialog.update({
-        message: `${percentage}% ${info}`
-      })
-    }, () => shouldCancel.value)
-        .finally(() => {
-          if (!shouldCancel.value) {
-            dialog.hide()
-          }
-        })
-
+    const authStore = useAuthStore();
+    const url = `${apiBase}/result/${resultId}/download-zip?path=${encodeURIComponent(path)}&token=${encodeURIComponent(authStore.accessToken)}`;
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = ensureExtension(makeFilesystemCompatible(resultPayload.value.name || "result"), [".zip"]);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   })
 }
 

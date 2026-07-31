@@ -335,7 +335,6 @@ function doUploadProjectArchive(id: number, projectArchiveFile: File) {
   });
   dialog.onCancel(() => {
     shouldCancel.value = true;
-    dialog.hide();
   });
 
   uploadProjectArchive(id, projectArchiveFile, (percentage, info) => {
@@ -344,7 +343,9 @@ function doUploadProjectArchive(id: number, projectArchiveFile: File) {
       });
     },
     () => shouldCancel.value).finally(() => {
-    dialog.hide();
+    if (!shouldCancel.value) {
+      dialog.hide();
+    }
     refreshProjectList()
   });
 }

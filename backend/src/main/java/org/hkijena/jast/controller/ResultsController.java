@@ -35,13 +35,20 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 @RestController
 public class ResultsController {
@@ -148,6 +155,88 @@ public class ResultsController {
         }
         result.setViewed(true);
         resultRepository.save(result);
+    }
+
+    @GetMapping("/api/result/{id}/download-zip")
+    public void downloadResultZip(
+            HttpServletResponse response,
+            Authentication authentication,
+            @PathVariable("id") long id,
+            @RequestParam(value = "path", required = false, defaultValue = "/") String path
+    ) throws IOException {
+        userService.validateAuthentication(authentication);
+        Optional<Result> result_ = resultRepository.findById(id);
+        if (result_.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
+        Result result = result_.get();
+        if (!result.getProject().canAccess(authentication, accountConfig)) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
+        }
+
+        String normalizedPath = path == null ? "" : path;
+        while (normalizedPath.startsWith("/")) {
+            normalizedPath = normalizedPath.substring(1);
+        }
+
+        String zipFileName = sanitizeFileName(result.getName()) + ".zip";
+        response.setContentType("application/zip");
+        response.setHeader("Content-Disposition", "attachment; filename=\"" + zipFileName + "\"");
+
+        OutputStream outputStream = response.getOutputStream();
+        try (ZipOutputStream zipOut = new ZipOutputStream(outputStream)) {
+            byte[] buffer = new byte[8192];
+            for (ResultItem item : result.getResultItems()) {
+                String itemPath = item.getPath() == null ? "" : item.getPath();
+                String itemName = item.getName() == null ? "unnamed" : item.getName();
+
+                String displayPath = "/" + itemPath;
+                String filterPath = path == null ? "/" : (path.startsWith("/") ? path : "/" + path);
+                if (!displayPath.startsWith(filterPath)) {
+                    continue;
+                }
+
+                String entryName = itemPath + "/" + itemName;
+                if (!normalizedPath.isEmpty() && entryName.startsWith(normalizedPath)) {
+                    entryName = entryName.substring(normalizedPath.length());
+                }
+                while (entryName.startsWith("/")) {
+                    entryName = entryName.substring(1);
+                }
+                if (entryName.isEmpty()) {
+                    entryName = itemName;
+                }
+
+                String rawDataFileId = item.getRawDataFileId();
+                if (rawDataFileId == null || rawDataFileId.isEmpty()) {
+                    continue;
+                }
+                Path filePath = fileStorageService.getFilePath(rawDataFileId);
+                if (filePath == null || !Files.exists(filePath)) {
+                    continue;
+                }
+
+                ZipEntry zipEntry = new ZipEntry(entryName);
+                zipOut.putNextEntry(zipEntry);
+                try (FileInputStream fis = new FileInputStream(filePath.toFile())) {
+                    int len;
+                    while ((len = fis.read(buffer)) > 0) {
+                        zipOut.write(buffer, 0, len);
+                    }
+                }
+                zipOut.closeEntry();
+            }
+        }
+    }
+
+    private String sanitizeFileName(String input) {
+        if (input == null || input.isEmpty()) return "result";
+        String clean = input.replaceAll("[<>:\"/\\\\|?*\\x00]", "_").trim();
+        if (clean.isEmpty()) return "result";
+        if (clean.length() > 255) {
+            clean = clean.substring(0, 255);
+        }
+        return clean;
     }
 
 }

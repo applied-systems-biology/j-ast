@@ -58,13 +58,21 @@ public class JwtTokenFilter extends OncePerRequestFilter implements ApplicationC
             throws ServletException, IOException {
         // Get authorization header and validate
         final String header = request.getHeader(HttpHeaders.AUTHORIZATION);
-        if (StringUtils.isNullOrEmpty(header) || !header.startsWith("Bearer ")) {
+        String token = null;
+        if (header != null && header.startsWith("Bearer ")) {
+            token = header.split(" ")[1].trim();
+        } else {
+            // Fallback: check for token in query parameter (for browser-managed downloads)
+            String queryToken = request.getParameter("token");
+            if (queryToken != null && !queryToken.isEmpty()) {
+                token = queryToken.trim();
+            }
+        }
+
+        if (token == null || token.isEmpty()) {
             chain.doFilter(request, response);
             return;
         }
-
-        // Get jwt token and validate
-        final String token = header.split(" ")[1].trim();
         if (jwtUtil.isTokenExpired(token)) {
             chain.doFilter(request, response);
             return;
