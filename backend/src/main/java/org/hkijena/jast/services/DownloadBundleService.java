@@ -203,86 +203,155 @@ public class DownloadBundleService {
 
             matchingItems.sort(Comparator.comparing(item -> (item.getPath() == null ? "" : item.getPath()) + "/" + (item.getName() == null ? "" : item.getName())));
 
-            List<List<ResultItem>> parts = splitIntoParts(matchingItems);
-            bundle.setPartCount(parts.size());
-            updateProgress(bundleId, 0, "Creating " + parts.size() + " part(s)");
+            if (bundle.getMode() == DownloadBundleMode.SPLIT_ZIP) {
+                // Generate one ZIP, then split raw bytes into parts
+                Path tempZip = Paths.get(fileStorageService.getStorageLocation())
+                        .resolve(UUID.randomUUID().toString() + ".tmp");
+                String baseName = sanitizeFileName(result.getName());
+                bundle.setOutputFileName(baseName + ".zip");
 
-            String baseName = sanitizeFileName(result.getName());
-            int totalItems = matchingItems.size();
-            int processedItems = 0;
-            Path storageDir = Paths.get(fileStorageService.getStorageLocation());
+                try {
+                    updateProgress(bundleId, 0, "Creating ZIP");
 
-            for (int partIdx = 0; partIdx < parts.size(); partIdx++) {
-                String fileId = UUID.randomUUID().toString();
-                Path zipPath = storageDir.resolve(fileId);
-                currentFileId = fileId;
-                currentZipPath = zipPath;
-                String partName;
-                if (parts.size() == 1) {
-                    partName = baseName + ".zip";
-                } else {
-                    partName = baseName + "_part" + (partIdx + 1) + ".zip";
-                }
-
-                try (ZipOutputStream zipOut = new ZipOutputStream(new FileOutputStream(zipPath.toFile()))) {
-                    byte[] buffer = new byte[BUFFER_SIZE];
-                    for (ResultItem item : parts.get(partIdx)) {
-                        String rawDataFileId = item.getRawDataFileId();
-                        if (rawDataFileId == null || rawDataFileId.isEmpty()) {
-                            continue;
-                        }
-                        Path filePath = fileStorageService.getFilePath(rawDataFileId);
-                        if (filePath == null || !Files.exists(filePath)) {
-                            continue;
-                        }
-
-                        String entryName = buildEntryName(item, normalizedPath);
-                        ZipEntry zipEntry = new ZipEntry(entryName);
-                        zipOut.putNextEntry(zipEntry);
-                        try (FileInputStream fis = new FileInputStream(filePath.toFile())) {
-                            int len;
-                            while ((len = fis.read(buffer)) > 0) {
-                                zipOut.write(buffer, 0, len);
+                    // Write all items into one ZIP
+                    try (ZipOutputStream zipOut = new ZipOutputStream(new FileOutputStream(tempZip.toFile()))) {
+                        byte[] buffer = new byte[BUFFER_SIZE];
+                        for (int i = 0; i < matchingItems.size(); i++) {
+                            ResultItem item = matchingItems.get(i);
+                            String rawDataFileId = item.getRawDataFileId();
+                            if (rawDataFileId == null || rawDataFileId.isEmpty()) {
+                                continue;
                             }
+                            Path filePath = fileStorageService.getFilePath(rawDataFileId);
+                            if (filePath == null || !Files.exists(filePath)) {
+                                continue;
+                            }
+
+                            String entryName = buildEntryName(item, normalizedPath);
+                            ZipEntry zipEntry = new ZipEntry(entryName);
+                            zipOut.putNextEntry(zipEntry);
+                            try (FileInputStream fis = new FileInputStream(filePath.toFile())) {
+                                int len;
+                                while ((len = fis.read(buffer)) > 0) {
+                                    zipOut.write(buffer, 0, len);
+                                }
+                            }
+                            zipOut.closeEntry();
+
+                            int percent = (int) ((i * 50L) / matchingItems.size());
+                            updateProgress(bundleId, percent, "Creating ZIP (" + (i + 1) + "/" + matchingItems.size() + " files)");
                         }
-                        zipOut.closeEntry();
-
-                        processedItems++;
-                        int percent = (int) ((processedItems * 100L) / totalItems);
-                        updateProgress(bundleId, percent,
-                                "Creating part " + (partIdx + 1) + " of " + parts.size() +
-                                        " (" + processedItems + "/" + totalItems + " files)");
                     }
+
+                    long zipSize = Files.size(tempZip);
+                    updateProgress(bundleId, 50, "Splitting into parts (" + formatFileSize(zipSize) + ")");
+
+                    // Split raw bytes into part files
+                    completedParts = splitZipIntoParts(tempZip, baseName,
+                            Paths.get(fileStorageService.getStorageLocation()), zipSize);
+
+                    bundle = downloadBundleRepository.findById(bundleId).orElseThrow();
+                    bundle.setParts(completedParts);
+                    bundle.setPartCount(completedParts.size());
+                    bundle.setStatus(DownloadBundleStatus.Ready);
+                    bundle.setProgressPercent(100);
+                    bundle.setProgressMessage("Ready");
+                    downloadBundleRepository.save(bundle);
+
+                    // Persist completed parts incrementally for crash recovery
+                    DownloadBundle progressBundle = downloadBundleRepository.findById(bundleId).orElse(null);
+                    if (progressBundle != null) {
+                        progressBundle.setParts(new ArrayList<>(completedParts));
+                        downloadBundleRepository.save(progressBundle);
+                    }
+
+                } finally {
+                    Files.deleteIfExists(tempZip);
                 }
 
-                long zipSize = Files.size(zipPath);
-                DownloadBundlePart part = new DownloadBundlePart();
-                part.setFileId(fileId);
-                part.setFileName(partName);
-                part.setSize(zipSize);
-                completedParts.add(part);
+            } else {
+                // SEPARATE_ZIPS mode: existing behavior
+                List<List<ResultItem>> parts = splitIntoParts(matchingItems);
+                bundle.setPartCount(parts.size());
+                updateProgress(bundleId, 0, "Creating " + parts.size() + " part(s)");
 
-                // Persist completed parts incrementally for crash recovery
-                DownloadBundle progressBundle = downloadBundleRepository.findById(bundleId).orElse(null);
-                if (progressBundle != null) {
-                    progressBundle.setParts(new ArrayList<>(completedParts));
-                    downloadBundleRepository.save(progressBundle);
+                String baseName = sanitizeFileName(result.getName());
+                int totalItems = matchingItems.size();
+                int processedItems = 0;
+                Path storageDir = Paths.get(fileStorageService.getStorageLocation());
+
+                for (int partIdx = 0; partIdx < parts.size(); partIdx++) {
+                    String fileId = UUID.randomUUID().toString();
+                    Path zipPath = storageDir.resolve(fileId);
+                    currentFileId = fileId;
+                    currentZipPath = zipPath;
+                    String partName;
+                    if (parts.size() == 1) {
+                        partName = baseName + ".zip";
+                    } else {
+                        partName = baseName + "_part" + (partIdx + 1) + ".zip";
+                    }
+
+                    try (ZipOutputStream zipOut = new ZipOutputStream(new FileOutputStream(zipPath.toFile()))) {
+                        byte[] buffer = new byte[BUFFER_SIZE];
+                        for (ResultItem item : parts.get(partIdx)) {
+                            String rawDataFileId = item.getRawDataFileId();
+                            if (rawDataFileId == null || rawDataFileId.isEmpty()) {
+                                continue;
+                            }
+                            Path filePath = fileStorageService.getFilePath(rawDataFileId);
+                            if (filePath == null || !Files.exists(filePath)) {
+                                continue;
+                            }
+
+                            String entryName = buildEntryName(item, normalizedPath);
+                            ZipEntry zipEntry = new ZipEntry(entryName);
+                            zipOut.putNextEntry(zipEntry);
+                            try (FileInputStream fis = new FileInputStream(filePath.toFile())) {
+                                int len;
+                                while ((len = fis.read(buffer)) > 0) {
+                                    zipOut.write(buffer, 0, len);
+                                }
+                            }
+                            zipOut.closeEntry();
+
+                            processedItems++;
+                            int percent = (int) ((processedItems * 100L) / totalItems);
+                            updateProgress(bundleId, percent,
+                                    "Creating part " + (partIdx + 1) + " of " + parts.size() +
+                                            " (" + processedItems + "/" + totalItems + " files)");
+                        }
+                    }
+
+                    long zipSize = Files.size(zipPath);
+                    DownloadBundlePart part = new DownloadBundlePart();
+                    part.setFileId(fileId);
+                    part.setFileName(partName);
+                    part.setSize(zipSize);
+                    completedParts.add(part);
+
+                    // Persist completed parts incrementally for crash recovery
+                    DownloadBundle progressBundle = downloadBundleRepository.findById(bundleId).orElse(null);
+                    if (progressBundle != null) {
+                        progressBundle.setParts(new ArrayList<>(completedParts));
+                        downloadBundleRepository.save(progressBundle);
+                    }
+
+                    currentZipPath = null;
+                    currentFileId = null;
+
+                    updateProgress(bundleId, (int) ((partIdx + 1) * 100L / parts.size()),
+                            "Completed part " + (partIdx + 1) + " of " + parts.size());
                 }
 
-                currentZipPath = null;
-                currentFileId = null;
-
-                updateProgress(bundleId, (int) ((partIdx + 1) * 100L / parts.size()),
-                        "Completed part " + (partIdx + 1) + " of " + parts.size());
+                bundle = downloadBundleRepository.findById(bundleId).orElseThrow();
+                bundle.setParts(completedParts);
+                bundle.setPartCount(parts.size());
+                bundle.setStatus(DownloadBundleStatus.Ready);
+                bundle.setProgressPercent(100);
+                bundle.setProgressMessage("Ready");
+                downloadBundleRepository.save(bundle);
             }
-
-            bundle = downloadBundleRepository.findById(bundleId).orElseThrow();
-            bundle.setParts(completedParts);
-            bundle.setPartCount(parts.size());
-            bundle.setStatus(DownloadBundleStatus.Ready);
-            bundle.setProgressPercent(100);
-            bundle.setProgressMessage("Ready");
-            downloadBundleRepository.save(bundle);
 
         } catch (Exception e) {
             LOGGER.error("Failed to generate download bundle {}", bundleId, e);
@@ -338,6 +407,44 @@ public class DownloadBundleService {
         return parts;
     }
 
+    List<DownloadBundlePart> splitZipIntoParts(Path zipFile, String baseName, Path storageDir, long zipSize) throws IOException {
+        List<DownloadBundlePart> parts = new ArrayList<>();
+        long maxPartSize = downloadConfig.getMaxPartSizeMb() * 1_000_000L;
+        int partNumber = 1;
+        long remaining = zipSize;
+
+        try (var inputStream = Files.newInputStream(zipFile)) {
+            byte[] buffer = new byte[BUFFER_SIZE];
+            while (remaining > 0) {
+                String fileId = UUID.randomUUID().toString();
+                Path partPath = storageDir.resolve(fileId);
+                long partSize = Math.min(maxPartSize, remaining);
+
+                try (var outputStream = Files.newOutputStream(partPath)) {
+                    long written = 0;
+                    while (written < partSize) {
+                        int toRead = (int) Math.min(buffer.length, partSize - written);
+                        int read = inputStream.read(buffer, 0, toRead);
+                        if (read <= 0) break;
+                        outputStream.write(buffer, 0, read);
+                        written += read;
+                    }
+                }
+
+                DownloadBundlePart part = new DownloadBundlePart();
+                part.setFileId(fileId);
+                part.setFileName(baseName + ".zip.part" + partNumber);
+                part.setSize(Files.size(partPath));
+                parts.add(part);
+
+                remaining -= partSize;
+                partNumber++;
+            }
+        }
+
+        return parts;
+    }
+
     private String buildEntryName(ResultItem item, String normalizedPath) {
         String itemPath = item.getPath() == null ? "" : item.getPath();
         String itemName = item.getName() == null ? "unnamed" : item.getName();
@@ -362,6 +469,12 @@ public class DownloadBundleService {
             clean = clean.substring(0, 255);
         }
         return clean;
+    }
+
+    private String formatFileSize(long bytes) {
+        if (bytes < 1_000_000) return (bytes / 1000) + " KB";
+        if (bytes < 1_000_000_000) return (bytes / 1_000_000) + " MB";
+        return (bytes / 1_000_000_000) + " GB";
     }
 
     @Scheduled(fixedRate = 5 * 60 * 1000)
