@@ -18,6 +18,11 @@ export enum DownloadBundleStatus {
   Expired = "Expired",
 }
 
+export enum DownloadBundleMode {
+  SEPARATE_ZIPS = "SEPARATE_ZIPS",
+  SPLIT_ZIP = "SPLIT_ZIP",
+}
+
 export class DownloadBundlePartPayload {
   fileName: string = "";
   size: number = 0;
@@ -32,4 +37,6 @@ export class DownloadBundlePayload {
   partCount: number = 0;
   parts: DownloadBundlePartPayload[] = [];
   errorMessage: string = "";
+  mode: DownloadBundleMode = DownloadBundleMode.SEPARATE_ZIPS;
+  outputFileName: string = "";
 }

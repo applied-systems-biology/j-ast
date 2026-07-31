@@ -133,11 +133,15 @@ import {formatFileSize, sortPathsByHierarchy} from "src/types/utils";
 import {useAuthStore} from "stores/auth-store";
 import {apiBase} from "src/types/api";
 import {api} from 'boot/axios';
-import {DownloadBundlePayload, DownloadBundleStatus} from "src/types/downloadBundle";
+import {DownloadBundlePayload, DownloadBundleStatus, DownloadBundleMode} from "src/types/downloadBundle";
 import {QSpinnerHourglass, QTableColumn, QTreeNode, useQuasar} from "quasar";
 import ResultItemThumbnailComponent from "components/results/ResultItemThumbnailComponent.vue";
 import {sendFailureNotification} from "src/types/notification";
 import DocumentationComponent from "components/layout/DocumentationComponent.vue";
+
+function supportsFileSystemAccess(): boolean {
+  return typeof window !== 'undefined' && 'showSaveFilePicker' in window;
+}
 
 const filesViewPagination = {
   rowsPerPage: 0
@@ -425,16 +429,25 @@ function downloadZip(path: string) {
   for (const resultItem of toDownload) {
     downloadSizeBytes += resultItem.size
   }
+
+  const useSplitZip = supportsFileSystemAccess();
+  const mode = useSplitZip ? DownloadBundleMode.SPLIT_ZIP : DownloadBundleMode.SEPARATE_ZIPS;
+
+  let message = `You are about to download ${toDownload.length} files (${formatFileSize(downloadSizeBytes)}).<br/>Do you want to continue?`;
+  if (!useSplitZip) {
+    message += `<br/><br/><small>Tip: For large downloads, Chrome, Edge, or the desktop app provide a better experience with automatic file assembly and save-location selection.</small>`;
+  }
+
   $q.dialog({
     title: 'Download results',
-    message: `You are about to download ${toDownload.length} files (${formatFileSize(downloadSizeBytes)}).<br/>Do you want to continue?`,
+    message: message,
     html: true,
     cancel: true,
     persistent: true
   }).onOk(() => {
     const authStore = useAuthStore();
     api.post(`/result/${resultId}/prepare-download`, null, {
-      params: { path: path }
+      params: { path: path, mode: mode }
     }).then((response) => {
       const bundle: DownloadBundlePayload = response.data;
       pollDownloadBundle(bundle, authStore.accessToken);
@@ -478,26 +491,85 @@ function pollDownloadBundle(bundle: DownloadBundlePayload, accessToken: string) 
         });
       } else if (updated.status === DownloadBundleStatus.Ready) {
         clearInterval(pollInterval);
-        progressDialog.update({
-          title: 'Download ready!',
-          message: '',
-          progress: false,
-          ok: 'Done',
-          cancel: false,
-        });
 
-        if (updated.parts.length === 1) {
-          triggerDownload(bundle.id, 0, accessToken);
-        } else {
-          let message = `Download ready! (${updated.parts.length} parts)<br/><br/>`;
-          for (let i = 0; i < updated.parts.length; i++) {
-            const part = updated.parts[i];
-            message += `<a href="${apiBase}/download-bundle/${bundle.id}/part/${i}?token=${encodeURIComponent(accessToken)}" download="${part.fileName}">Download ${part.fileName} (${formatFileSize(part.size)})</a><br/>`;
-          }
+        if (updated.mode === DownloadBundleMode.SPLIT_ZIP && supportsFileSystemAccess()) {
+          // Chromium: show a Save button to get a fresh user gesture (required for showSaveFilePicker)
           progressDialog.update({
-            message: message,
-            html: true,
+            title: 'Download ready!',
+            message: 'Your file is ready. Click "Save" to choose where to download it.',
+            progress: false,
+            ok: 'Save',
+            cancel: 'Done',
           });
+
+          progressDialog.onOk(() => {
+            // Fresh user gesture — showSaveFilePicker will work now
+            const downloadDialog = $q.dialog({
+              title: 'Downloading ...',
+              message: 'Starting download ...',
+              progress: { spinner: QSpinnerHourglass },
+              persistent: true,
+              ok: false,
+              cancel: true,
+            });
+
+            downloadDialog.onCancel(() => {
+              shouldCancel.value = true;
+            });
+
+            streamPartsToFile(updated, accessToken, (part, totalParts, partPercent, overallPercent) => {
+              downloadDialog.update({
+                message: `Part ${part}/${totalParts} — ${partPercent}%<br/>Overall: ${overallPercent}%`,
+                html: true,
+              });
+            }, shouldCancel).then(() => {
+              if (!shouldCancel.value) {
+                downloadDialog.update({
+                  title: 'Download complete!',
+                  message: 'Your file has been saved.',
+                  progress: false,
+                  ok: 'Done',
+                  cancel: false,
+                });
+              } else {
+                downloadDialog.hide();
+              }
+            }).catch((e) => {
+              downloadDialog.hide();
+              if (e instanceof DOMException && (e.name === 'AbortError' || e.name === 'SecurityError' || e.name === 'NotAllowedError')) {
+                // User cancelled the save-file dialog or permission denied — not a hard error
+                if (e.name !== 'AbortError') {
+                  sendFailureNotification("Could not open file picker: " + e.message);
+                }
+                return;
+              }
+              sendFailureNotification("Download failed: " + (e.message || "Unknown error"));
+            });
+          });
+
+        } else {
+          // SEPARATE_ZIPS or Firefox: existing behavior
+          progressDialog.update({
+            title: 'Download ready!',
+            message: '',
+            progress: false,
+            ok: 'Done',
+            cancel: false,
+          });
+
+          if (updated.parts.length === 1) {
+            triggerDownload(bundle.id, 0, accessToken);
+          } else {
+            let message = `Download ready! (${updated.parts.length} parts)<br/><br/>`;
+            for (let i = 0; i < updated.parts.length; i++) {
+              const part = updated.parts[i];
+              message += `<a href="${apiBase}/download-bundle/${bundle.id}/part/${i}?token=${encodeURIComponent(accessToken)}" download="${part.fileName}">Download ${part.fileName} (${formatFileSize(part.size)})</a><br/>`;
+            }
+            progressDialog.update({
+              message: message,
+              html: true,
+            });
+          }
         }
       } else if (updated.status === DownloadBundleStatus.Failed) {
         clearInterval(pollInterval);
@@ -524,6 +596,67 @@ function triggerDownload(bundleId: string, partIndex: number, accessToken: strin
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);
+}
+
+async function streamPartsToFile(
+  bundle: DownloadBundlePayload,
+  accessToken: string,
+  onProgress: (part: number, totalParts: number, partPercent: number, overallPercent: number) => void,
+  shouldCancel: Ref<boolean>
+): Promise<void> {
+  const totalParts = bundle.parts.length;
+  if (totalParts === 0) {
+    throw new Error("No parts to download");
+  }
+  const totalSize = bundle.parts.reduce((sum, p) => sum + p.size, 0);
+  let receivedTotal = 0;
+
+  const fileHandle = await (window as any).showSaveFilePicker({
+    suggestedName: bundle.outputFileName || 'download.zip'
+  });
+  const writable = await fileHandle.createWritable();
+
+  try {
+    for (let i = 0; i < totalParts; i++) {
+      if (shouldCancel.value) {
+        await writable.abort();
+        return;
+      }
+
+      const response = await fetch(
+        `${apiBase}/download-bundle/${bundle.id}/part/${i}?token=${encodeURIComponent(accessToken)}`
+      );
+      if (!response.ok) {
+        throw new Error(`Part ${i + 1} download failed (HTTP ${response.status})`);
+      }
+      const reader = response.body!.getReader();
+      let received = 0;
+      const partSize = bundle.parts[i].size;
+
+      while (true) {
+        if (shouldCancel.value) {
+          await reader.cancel();
+          await writable.abort();
+          return;
+        }
+        const { done, value } = await reader.read();
+        if (done) break;
+        await writable.write(value);
+        received += value.byteLength;
+        receivedTotal += value.byteLength;
+        onProgress(
+          i + 1,
+          totalParts,
+          partSize > 0 ? Math.round((received / partSize) * 100) : 100,
+          totalSize > 0 ? Math.round((receivedTotal / totalSize) * 100) : 100
+        );
+      }
+    }
+    await writable.close();
+  } catch (e) {
+    await writable.abort();
+    throw e;
+  }
 }
 
 // Table height sync

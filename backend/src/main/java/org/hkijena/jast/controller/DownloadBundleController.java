@@ -14,6 +14,7 @@
 package org.hkijena.jast.controller;
 
 import jakarta.servlet.http.HttpServletResponse;
+import org.hkijena.jast.model.DownloadBundleMode;
 import org.hkijena.jast.model.entities.DownloadBundle;
 import org.hkijena.jast.payloads.downloadbundle.DownloadBundlePayload;
 import org.hkijena.jast.services.DownloadBundleService;
@@ -42,9 +43,10 @@ public class DownloadBundleController {
     public ResponseEntity<DownloadBundlePayload> prepareDownload(
             Authentication authentication,
             @PathVariable("id") long id,
-            @RequestParam(value = "path", required = false, defaultValue = "/") String path
+            @RequestParam(value = "path", required = false, defaultValue = "/") String path,
+            @RequestParam(value = "mode", required = false, defaultValue = "SEPARATE_ZIPS") DownloadBundleMode mode
     ) {
-        DownloadBundle bundle = downloadBundleService.prepareDownload(id, path, authentication);
+        DownloadBundle bundle = downloadBundleService.prepareDownload(id, path, mode, authentication);
         return ResponseEntity.ok(new DownloadBundlePayload(bundle));
     }
 

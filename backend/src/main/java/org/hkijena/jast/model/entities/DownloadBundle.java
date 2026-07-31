@@ -16,6 +16,7 @@ package org.hkijena.jast.model.entities;
 import io.hypersistence.utils.hibernate.type.json.JsonType;
 import jakarta.persistence.*;
 import org.hibernate.annotations.Type;
+import org.hkijena.jast.model.DownloadBundleMode;
 import org.hkijena.jast.model.DownloadBundleStatus;
 
 import java.time.LocalDateTime;
@@ -63,6 +64,12 @@ public class DownloadBundle {
 
     @Column(name = "error_message", columnDefinition = "TEXT")
     private String errorMessage;
+
+    @Enumerated(EnumType.STRING)
+    private DownloadBundleMode mode = DownloadBundleMode.SEPARATE_ZIPS;
+
+    @Column(name = "output_file_name")
+    private String outputFileName;
 
     public static class DownloadBundlePart {
         private String fileId;
@@ -116,4 +123,8 @@ public class DownloadBundle {
     public void setProgressMessage(String progressMessage) { this.progressMessage = progressMessage; }
     public String getErrorMessage() { return errorMessage; }
     public void setErrorMessage(String errorMessage) { this.errorMessage = errorMessage; }
+    public DownloadBundleMode getMode() { return mode; }
+    public void setMode(DownloadBundleMode mode) { this.mode = mode; }
+    public String getOutputFileName() { return outputFileName; }
+    public void setOutputFileName(String outputFileName) { this.outputFileName = outputFileName; }
 }
