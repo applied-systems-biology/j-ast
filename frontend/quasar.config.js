@@ -200,7 +200,28 @@ module.exports = configure(function (/* ctx */) {
       packager: {
         // https://electron.github.io/packager/main/interfaces/Options.html
         platform: ["linux", "win32", "darwin"],
-        arch: ["x64", "arm64"]
+        arch: ["x64", "arm64"],
+        // Release version, e.g. 1.0.0.132 (injected by dist/electron/build.sh).
+        // Falls back to the Maven base version for local builds. The 4th
+        // component is the CI build number: it goes into FileVersion /
+        // CFBundleVersion (buildVersion), while ProductVersion /
+        // CFBundleShortVersionString stays a 3-part version as required
+        // by the Windows and macOS version formats.
+        ...(process.env.JAST_RELEASE_VERSION
+          ? {
+              appVersion: process.env.JAST_RELEASE_VERSION.split('.').slice(0, 3).join('.'),
+              buildVersion: process.env.JAST_RELEASE_VERSION,
+            }
+          : {
+              appVersion: '1.0.0',
+              buildVersion: '1.0.0',
+            }),
+        appCopyright: process.env.JAST_COPYRIGHT || 'Copyright (c) 2023 Leibniz-HKI Jena',
+        win32metadata: {
+          CompanyName: 'Leibniz-HKI Jena',
+          FileDescription: 'J-AST - Analysis tool for antimicrobial susceptibility testing',
+          ProductName: 'J-AST',
+        },
       },
 
       builder: {
