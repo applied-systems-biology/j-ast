@@ -53,7 +53,7 @@ echo "-----------------------------------------"
 
 pushd "../../frontend" || exit 1
 npm install
-quasar build -m electron
+JAST_RELEASE_VERSION="$JAST_VERSION" JAST_COPYRIGHT="Copyright (c) 2023 Leibniz-HKI Jena" quasar build -m electron
 
 cp -r ./dist/electron/Packaged/J-AST-linux-x64 "$TMP_DIR/j-ast-linux-x64"
 cp -r ./dist/electron/Packaged/J-AST-win32-x64 "$TMP_DIR/j-ast-windows-x64"

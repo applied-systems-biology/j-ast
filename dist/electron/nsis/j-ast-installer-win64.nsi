@@ -9,7 +9,7 @@
 ; Constants
 !define PRODUCT_NAME "J-AST"
 !define PRODUCT_DESCRIPTION "Analysis tool for AST"
-!define COPYRIGHT "Copyright © 2025 HKI Jena"
+!define COPYRIGHT "Copyright © 2023 Leibniz-HKI Jena"
 !define PRODUCT_VERSION "%%JAST_VERSION%%"
 !define PRODUCT_VERSION_SHORT "%%JAST_VERSION%%"
 !define SETUP_VERSION 1.0.0.0
@@ -85,7 +85,7 @@ Section "-PostInstall"
     WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PRODUCT_NAME}-${PRODUCT_VERSION}" "UninstallString" "$INSTDIR\Uninstall.exe"
     WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PRODUCT_NAME}-${PRODUCT_VERSION}" "InstallLocation" "$INSTDIR"
     WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PRODUCT_NAME}-${PRODUCT_VERSION}" "DisplayIcon" "$INSTDIR\j-ast-icon.ico"
-    WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PRODUCT_NAME}-${PRODUCT_VERSION}" "Publisher" "HKI Jena"
+    WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PRODUCT_NAME}-${PRODUCT_VERSION}" "Publisher" "Leibniz-HKI Jena"
     WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PRODUCT_NAME}-${PRODUCT_VERSION}" "DisplayVersion" "${PRODUCT_VERSION_SHORT}"
     WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PRODUCT_NAME}-${PRODUCT_VERSION}" "NoModify" 1
     WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PRODUCT_NAME}-${PRODUCT_VERSION}" "NoRepair" 1
